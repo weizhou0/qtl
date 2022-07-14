@@ -115,18 +115,20 @@ ReadModel = function(GMMATmodelFile = "", chrom="", LOCO=TRUE, is_Firth_beta=FAL
 
   }
 
- modglmm$mu = as.vector(modglmm$fitted.values)
- tau = modglmm$theta
- N = length(modglmm$mu)
-     if(modglmm$traitType == "binary"){
-             modglmm$mu2 = (modglmm$mu) *(1-modglmm$mu)
-	     modglmm$obj_cc = SKAT::SKAT_Null_Model(modglmm$y ~ modglmm$X-1, out_type="D", Adjustment = FALSE)
-	     modglmm$obj_cc$mu = modglmm$mu
-	     modglmm$obj_cc$res = modglmm$res
-	     modglmm$obj_cc$pi_1 = modglmm$mu2
-           }else if(modglmm$traitType == "quantitative"){
-             modglmm$mu2 = (1/tau[1])*rep(1,N)
-           }
+  modglmm$mu = as.vector(modglmm$fitted.values)
+  tau = modglmm$theta
+  N = length(modglmm$mu)
+  if(modglmm$traitType == "binary"){
+    modglmm$mu2 = (modglmm$mu) *(1-modglmm$mu)
+    modglmm$obj_cc = SKAT::SKAT_Null_Model(modglmm$y ~ modglmm$X-1, out_type="D", Adjustment = FALSE)
+    modglmm$obj_cc$mu = modglmm$mu
+    modglmm$obj_cc$res = modglmm$res
+    modglmm$obj_cc$pi_1 = modglmm$mu2
+  }else if(modglmm$traitType == "quantitative"){
+    modglmm$mu2 = (1/tau[1])*rep(1,N)
+  }else if(obj.glmm.null$traitType == "count"){
+    modglmm$mu2 = modglmml$mu
+  }
  #if(FALSE){
 
  if(is_Firth_beta){

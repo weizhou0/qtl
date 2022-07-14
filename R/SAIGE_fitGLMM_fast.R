@@ -1033,13 +1033,14 @@ fitNULLGLMM = function(plinkFile = "",
     if (traitType == "binary") {
             modwitcov = glm(formula.new, data = data.new, 
                 family = binomial)
-    }else {
+    }else if(traitType == "quantitative"){
 	    modwitcov = glm(formula.new, data = data.new,
                 family = gaussian(link = "identity"))	
+    }else if(traitType == "count"){
+	     modwitcov = glm(formula.new, data = data.new,
+	                     family = "poisson")
     }
-    #if(!hasCovariate){ 		
-#	covoffset = rep(0,nrow(data.new))
-#    }	    
+
 
     if (isCovariateOffset) {
     	covoffset = mmat[,-1, drop=F] %*%  modwitcov$coefficients[-1]  
@@ -1056,6 +1057,9 @@ fitNULLGLMM = function(plinkFile = "",
     if (useSparseGRMtoFitNULL | useSparseGRMforVarRatio) {
         sparseGRMtest = getsubGRM(sparseGRMFile, sparseGRMSampleIDFile,
             relatednessCutoff, dataMerge_sort$IID)
+
+        
+	    
         m4 = gen_sp_v2(sparseGRMtest)
         cat("Setting up sparse GRM using ", sparseGRMFile, " and ", sparseGRMSampleIDFile, "\n")
         cat("Dimension of the sparse GRM is ", dim(m4), "\n")
@@ -1117,17 +1121,49 @@ fitNULLGLMM = function(plinkFile = "",
                 family = binomial)
         }
 
+    }else if(traitType == "quantitative"){
+        cat(phenoCol, " is a quantitative trait\n")
+        if (!isCovariateOffset) {
+            fit0 = glm(formula.new, data = data.new, family = gaussian(link = "identity"))
+            Xorig = NULL
+        }else{
+            fit0orig = glm(formula.new.withCov, data = data.new, family = gaussian(link = "identity"))
+            Xorig = model.matrix(fit0orig)
+            rm(fit0orig)
+            gc()
+            fit0 = glm(formula.new, data = data.new, offset = covoffset,
+            family = gaussian(link = "identity"))
+        }	
+    }else if(traitType == "count"){
+        cat(phenoCol, " is a count trait\n")
+        miny = min(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)])
+        if (miny < 0 ) {
+            stop("ERROR! phenotype value needs to be non-negative \n")
+        }
 
-        cat("glm:\n")
-        print(fit0)
+        if (!isCovariateOffset) {
+            fit0 = glm(formula.new, data = data.new, family = "poisson")
+            Xorig = NULL
+        }else{
+            fit0orig = glm(formula.new.withCov, data = data.new, family = "poisson")
+            Xorig = model.matrix(fit0orig)
+            rm(fit0orig)
+            gc()
+            fit0 = glm(formula.new, data = data.new, offset = covoffset,
+            family = "poisson")
+        }
+    }
+    
 
-        obj.noK = NULL
-        if (!skipModelFitting) {
-            setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
-            cat("Start fitting the NULL GLMM\n")
-            t_begin = proc.time()
-            print(t_begin)
-            system.time(modglmm <- glmmkin.ai_PCG_Rcpp_Binary(bedFile, bimFile, famFile, Xorig, isCovariateOffset, 
+    cat("glm:\n")
+    print(fit0)
+    obj.noK = NULL
+    if (!skipModelFitting) {
+        setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
+        cat("Start fitting the NULL GLMM\n")
+        t_begin = proc.time()
+        print(t_begin)
+        system.time(modglmm <- glmmkin.ai_PCG_Rcpp(bedFile, bimFile, famFile, Xorig, isCovariateOffset, 
                 fit0, tau = c(0, 0), fixtau = c(0, 0), maxiter = maxiter, 
                 tol = tol, verbose = TRUE, nrun = nrun, tolPCG = tolPCG, 
                 maxiterPCG = maxiterPCG, subPheno = dataMerge_sort, indicatorGenoSamplesWithPheno = indicatorGenoSamplesWithPheno, 
@@ -1136,102 +1172,105 @@ fitNULLGLMM = function(plinkFile = "",
                 LOCO = LOCO, chromosomeStartIndexVec = chromosomeStartIndexVec, 
                 chromosomeEndIndexVec = chromosomeEndIndexVec, 
                 traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform, 
-                isDiagofKinSetAsOne = isDiagofKinSetAsOne,
+                isDiagofKinSetAsOne = isDiagofKinSetAsOne, 
 		isLowMemLOCO = isLowMemLOCO))
-                modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
+         
+	modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
             
-	    for (x in names(modglmm$obj.glm.null)) {
-                attr(modglmm$obj.glm.null[[x]], ".Environment") <- c()
-            }
+	for (x in names(modglmm$obj.glm.null)) {
+            attr(modglmm$obj.glm.null[[x]], ".Environment") <- c()
+        }
 	    #modglmm$offset = covoffset
-	    if(isCovariateOffset){
-	    		modglmm$offset = covoffset
+	if(isCovariateOffset){
+	    modglmm$offset = covoffset
+	 }else{
+	    if(hasCovariate){
+	       data.new = data.new[,-c(1,2), drop=F]
+	       data.new = as.matrix(data.new[,-ncol(data.new), drop=F])
+	       modglmm$offset = data.new%*%(as.vector(modglmm$coefficients[-1]))
+	       if(LOCO){
+	           for(j in 1:22){	
+			if(modglmm$LOCOResult[[j]]$isLOCO){
+			    modglmm$LOCOResult[[j]]$offset = data.new %*%(as.vector(modglmm$LOCOResult[[j]]$coefficients[-1]))
+			}		       
+		   }
+	       }
 	    }else{
-	    	if(hasCovariate){
-	    	    	#modglmm$offset = covoffset
-		        data.new = data.new[,-c(1,2), drop=F]
-			data.new = as.matrix(data.new[,-ncol(data.new), drop=F])
-	    		modglmm$offset = data.new%*%(as.vector(modglmm$coefficients[-1]))
-			if(LOCO & !isLowMemLOCO){
-				for(j in 1:22){	
-					if(modglmm$LOCOResult[[j]]$isLOCO){
-						modglmm$LOCOResult[[j]]$offset = data.new %*%(as.vector(modglmm$LOCOResult[[j]]$coefficients[-1]))
-					}		       
-				}
-			}
+		modglmm$offset = covoffset
+	    }	
+	}
+       
+
+        if(skipVarianceRatioEstimation & useSparseGRMtoFitNULL){
+                family = fit0$family
+                eta = modglmm$linear.predictors
+                mu = modglmm$fitted.values
+                mu.eta = family$mu.eta(eta)
+                sqrtW = mu.eta/sqrt(family$variance(mu))
+                W = sqrtW^2
+                tauVecNew = modglmm$theta
+                Sigma_iX =  getSigma_X(W, tauVecNew, modglmm$X, maxiterPCG, tolPCG)
+                Sigma_iXXSigma_iX = Sigma_iX%*%(solve(t(modglmm$X)%*%Sigma_iX))
+                modglmm$Sigma_iXXSigma_iX = Sigma_iXXSigma_iX
+        }
+    
+        modglmm$useSparseGRMforVarRatio = useSparseGRMforVarRatio 	    
+        #save(modglmm, file = modelOut)
+        tau = modglmm$theta
+        alpha0 = modglmm$coefficients
+
+        if(!is.null(out.transform) & is.null(fit0$offset)){
+                coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
+                modglmm$coefficients = coef.alpha
+        }
 
 
-		}else{
-			modglmm$offset = covoffset
-		}	
-	    }
-           
-	    if(skipVarianceRatioEstimation & useSparseGRMtoFitNULL){
-		family = fit0$family
-		eta = modglmm$linear.predictors
-		mu = modglmm$fitted.values
-		mu.eta = family$mu.eta(eta)
-		sqrtW = mu.eta/sqrt(family$variance(mu))
-		W = sqrtW^2
-		tauVecNew = modglmm$theta
-		Sigma_iX =  getSigma_X(W, tauVecNew, modglmm$X, maxiterPCG, tolPCG)
-		Sigma_iXXSigma_iX = Sigma_iX%*%(solve(t(modglmm$X)%*%Sigma_iX))
-		modglmm$Sigma_iXXSigma_iX = Sigma_iXXSigma_iX
-	    }
-
-
-            modglmm$useSparseGRMtoFitNULL = useSparseGRMtoFitNULL 
-            #save(modglmm, file = modelOut)
-            tau = modglmm$theta
-      
-	    alpha0 = modglmm$coefficients
-  	    if(!is.null(out.transform) & is.null(fit0$offset)){
-		coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
-	    	modglmm$coefficients = coef.alpha
-  	    }
-
-            
-
-            if(LOCO & isLowMemLOCO){
+        if(LOCO & isLowMemLOCO){
                 modglmm$LOCOResult = NULL
                 modglmm$LOCO = FALSE
-		chromosomeStartIndexVec = modglmm$chromosomeStartIndexVec
-    		chromosomeEndIndexVec = modglmm$chromosomeEndIndexVec
-		modglmm$chromosomeStartIndexVec = NULL
-		modglmm$chromosomeEndIndexVec = NULL
-		modelOut = paste(c(outputPrefix,"_noLOCO.rda"), collapse="")
+                chromosomeStartIndexVec = modglmm$chromosomeStartIndexVec
+                chromosomeEndIndexVec = modglmm$chromosomeEndIndexVec
+                modglmm$chromosomeStartIndexVec = NULL
+                modglmm$chromosomeEndIndexVec = NULL
+                modelOut = paste(c(outputPrefix,"_noLOCO.rda"), collapse="")
                 save(modglmm, file = modelOut)
-		modglmm$LOCO = TRUE
-	        modglmm$Y = NULL
-		eta0 = modglmm$linear.predictors
-		modglmm$linear.predictors = NULL
-  		modglmm$coefficients = NULL
-  		modglmm$cov = NULL
-	        modglmm$fitted.values = NULL
-		modglmm$residuals = NULL
-		modglmm$obj.noK = NULL
-		offset0 = modglmm$offset
-		modglmm$offset = NULL	
-		y = fit0$y
-		gc()
+                modglmm$LOCO = TRUE
+                modglmm$Y = NULL
+                eta0 = modglmm$linear.predictors
+                modglmm$linear.predictors = NULL
+                modglmm$coefficients = NULL
+                modglmm$cov = NULL
+                modglmm$fitted.values = NULL
+                modglmm$residuals = NULL
+                modglmm$obj.noK = NULL
+                offset0 = modglmm$offset
+                modglmm$offset = NULL
+                y = fit0$y
+                gc()
                 #save(modglmm, file = modelOut)
                 set_Diagof_StdGeno_LOCO()
-		modglmm$LOCOResult = list()
+                modglmm$LOCOResult = list()
                 for(j in 1:22){
                         startIndex = chromosomeStartIndexVec[j]
                         endIndex = chromosomeEndIndexVec[j]
                         if(!is.na(startIndex) && !is.na(endIndex)){
-                        	cat("leave chromosome ", j, " out\n")
+                                cat("leave chromosome ", j, " out\n")
                                 setStartEndIndex(startIndex, endIndex, j-1)
 
-				re.coef_LOCO = Get_Coef_LOCO(y, X=model.matrix(fit0), tau, family = fit0$family, alpha = alpha0, eta = eta0,  offset =  offset0, verbose=TRUE, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter)
-      				cov = re.coef_LOCO$cov
-        			alpha = re.coef_LOCO$alpha
-        			eta = re.coef_LOCO$eta
-        			Y = re.coef_LOCO$Y
-        			mu = re.coef_LOCO$mu
-        			mu2 = mu * (1-mu)
-        			res = y - mu
+                                re.coef_LOCO = Get_Coef_LOCO(y, X=model.matrix(fit0), tau, family = fit0$family, alpha = alpha0, eta = eta0,  offset =  offset0, verbose=TRUE, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter)
+                                cov = re.coef_LOCO$cov
+                                alpha = re.coef_LOCO$alpha
+                                eta = re.coef_LOCO$eta
+                                Y = re.coef_LOCO$Y
+                                mu = re.coef_LOCO$mu
+        			if(family$family == "binomial"){
+          				mu2 = mu * (1-mu)
+        			}else if(family$family == "poisson"){
+          				mu2 = mu
+        			}else if(family$family == "gaussian"){
+          				mu2 = rep((1/(tau[1])),length(res))
+        			}
+                                res = y - mu
 
                                 if(!is.null(out.transform) & is.null(fit0$offset)){
                                         coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
@@ -1245,15 +1284,15 @@ fitNULLGLMM = function(plinkFile = "",
                                 }
 
                                 modglmm$LOCOResult[[j]] = list(isLOCO = TRUE, coefficients=coef.alpha, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, obj.noK = obj.noK)
-				if(!isCovariateOffset & hasCovariate){
-					 modglmm$LOCOResult[[j]]$offset = data.new %*%(as.vector(modglmm$LOCOResult[[j]]$coefficients[-1]))
-				}
+                                if(!isCovariateOffset & hasCovariate){
+                                         modglmm$LOCOResult[[j]]$offset = data.new %*%(as.vector(modglmm$LOCOResult[[j]]$coefficients[-1]))
+                                }
                                 modelOutbychr = paste(c(outputPrefix,"_chr",j,".rda"), collapse="")
-				if(j!=22){
-					for(j1 in (j+1):22){
-						modglmm$LOCOResult[[j1]] = list(NULL) 
-					}	
-				}	
+                                if(j!=22){
+                                        for(j1 in (j+1):22){
+                                                modglmm$LOCOResult[[j1]] = list(NULL)
+                                        }
+                                }
                                 save(modglmm, file = modelOutbychr)
                                 modglmm$LOCOResult[[j]] = list(NULL)
                                 gc()
@@ -1268,295 +1307,60 @@ fitNULLGLMM = function(plinkFile = "",
             save(modglmm, file = modelOut)
            }
 
-	    gc()
-            t_end = proc.time()
-            print(t_end)
-            cat("t_end - t_begin, fitting the NULL model took\n")
-            print(t_end - t_begin)
-        }else{
-            cat("Skip fitting the NULL GLMM\n")
 
-            
-	    if(!file.exists(modelOut)){
-		stop("skipModelFitting=TRUE but ", modelOut, " does not exist\n")
-	    }	
-
-            load(modelOut)
-            if (is.null(modglmm$LOCO)) {
-                modglmm$LOCO = FALSE
-            }
-            setgeno(bedFile, bimFile, famFile, dataMerge_sort$IndexGeno, indicatorGenoSamplesWithPheno, memoryChunk,
-                isDiagofKinSetAsOne)
-            setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
-
+        t_end = proc.time()
+        print(t_end)
+        cat("t_end - t_begin, fitting the NULL model took\n")
+        print(t_end - t_begin)
+    }else{
+	cat("Skip fitting the NULL GLMM\n")
+	if(!file.exists(modelOut)){
+            stop("skipModelFitting=TRUE but ", modelOut, " does not exist\n")
         }
-
-        if (!skipVarianceRatioEstimation) {
-	    if(LOCO){
-    		MsubIndVec = getQCdMarkerIndex()
-	        #cat("MsubIndVec", MsubIndVec, "\n")
-		print(length(MsubIndVec))
-    		chrVec = data.table:::fread(bimFile, header = F)[,1]
-		print(length(chrVec))
-   		chrVec = chrVec[which(MsubIndVec == TRUE)]
-    		updatechrList = updateChrStartEndIndexVec(chrVec)
-    		LOCO = updatechrList$LOCO
-    		chromosomeStartIndexVec = updatechrList$chromosomeStartIndexVec
-    		chromosomeEndIndexVec = updatechrList$chromosomeEndIndexVec
-                set_Diagof_StdGeno_LOCO()
-  	    }
-            cat("Start estimating variance ratios\n")
-	    load(modelOut)
-	    extractVarianceRatio(obj.glmm.null = modglmm,
-                obj.glm.null = fit0, maxiterPCG = maxiterPCG,
-                tolPCG = tolPCG, numMarkers = numMarkersForVarRatio, varRatioOutFile = varRatioFile,
-                ratioCVcutoff = ratioCVcutoff, testOut = SPAGMMATOut,
-                bedFile=bedFile, bimFile=bimFile, famFile=famFile, chromosomeStartIndexVec = chromosomeStartIndexVec,
-                chromosomeEndIndexVec = chromosomeEndIndexVec,
-                isCateVarianceRatio = isCateVarianceRatio, cateVarRatioIndexVec = cateVarRatioIndexVec,
-                useSparseGRMforVarRatio = useSparseGRMforVarRatio, sparseGRMFile = sparseGRMFile,
-                sparseGRMSampleIDFile = sparseGRMSampleIDFile,
-                numRandomMarkerforSparseKin = numRandomMarkerforSparseKin,
-                relatednessCutoff = relatednessCutoff, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL,
-                nThreads = nThreads, cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
-                cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
-                minMAFforGRM = minMAFforGRM, isDiagofKinSetAsOne = isDiagofKinSetAsOne,
-                includeNonautoMarkersforVarRatio = includeNonautoMarkersforVarRatio)
-
-	#print(gc(v=T))
-	gc()
-        }else {
-            cat("Skip estimating variance ratios\n")
+        load(modelOut)
+        if(is.null(modglmm$LOCO)) {
+           modglmm$LOCO = FALSE
         }
-        closeGenoFile_plink()
-    }else if (traitType == "quantitative") {
-        cat(phenoCol, " is a quantitative trait\n")
-        obj.noK = NULL
-
-	if (!isCovariateOffset) {
-            fit0 = glm(formula.new, data = data.new, family = gaussian(link = "identity"))
-	    Xorig = NULL
-        }else{
-	    fit0orig = glm(formula.new.withCov, data = data.new, family = gaussian(link = "identity"))
-	    Xorig = model.matrix(fit0orig)
-	    rm(fit0orig)
-	    gc()
-            fit0 = glm(formula.new, data = data.new, offset = covoffset,
-            family = gaussian(link = "identity"))
-        }
-
-        cat("glm:\n")
-        print(fit0)
-
-        if (!skipModelFitting) {
-            t_begin = proc.time()
-            print(t_begin)
-            setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
-            cat("Start fitting the NULL GLMM\n")
-            system.time(modglmm <- glmmkin.ai_PCG_Rcpp_Quantitative(bedFile, bimFile, famFile, Xorig, isCovariateOffset, 
-                fit0, tau = c(0, 0), fixtau = c(0, 0), maxiter = maxiter, 
-                tol = tol, verbose = TRUE, nrun = nrun, tolPCG = tolPCG, 
-                maxiterPCG = maxiterPCG, subPheno = dataMerge_sort, indicatorGenoSamplesWithPheno = indicatorGenoSamplesWithPheno, 
-                obj.noK = obj.noK, out.transform = out.transform, 
-                tauInit = tauInit, memoryChunk = memoryChunk, 
-                LOCO = LOCO, chromosomeStartIndexVec = chromosomeStartIndexVec, 
-                chromosomeEndIndexVec = chromosomeEndIndexVec, 
-                traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform, 
-                isDiagofKinSetAsOne = isDiagofKinSetAsOne,
-		isLowMemLOCO = isLowMemLOCO))
-            modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
-            for (x in names(modglmm$obj.glm.null)) {
-                attr(modglmm$obj.glm.null[[x]], ".Environment") <- c()
-            }
-
-
-	    if(isCovariateOffset){
-                        modglmm$offset = covoffset
-            }else{
-                if(hasCovariate){
-                        #modglmm$offset = covoffset
-                        data.new = data.new[,-c(1,2), drop=F]
-                        data.new = as.matrix(data.new[,-ncol(data.new), drop=F])
-                        modglmm$offset = data.new%*%(as.vector(modglmm$coefficients[-1]))
-                        if(LOCO & !isLowMemLOCO){
-                               for(j in 1:22){
-                                       if(modglmm$LOCOResult[[j]]$isLOCO){
-                                               modglmm$LOCOResult[[j]]$offset = data.new %*%(as.vector(modglmm$LOCOResult[[j]]$coefficients[-1]))
-                                       }
-                               }
-                        }
-
-
-                }else{
-                        modglmm$offset = covoffset
-                }
-            }
-
-
-
-	    #modglmm$offset = covoffset
-
-            if(skipVarianceRatioEstimation & useSparseGRMtoFitNULL){
-                family = fit0$family
-                eta = modglmm$linear.predictors
-                mu = modglmm$fitted.values
-                mu.eta = family$mu.eta(eta)
-                sqrtW = mu.eta/sqrt(family$variance(mu))
-                W = sqrtW^2
-                tauVecNew = modglmm$theta
-                Sigma_iX =  getSigma_X(W, tauVecNew, modglmm$X, maxiterPCG, tolPCG)
-                Sigma_iXXSigma_iX = Sigma_iX%*%(solve(t(modglmm$X)%*%Sigma_iX))
-                modglmm$Sigma_iXXSigma_iX = Sigma_iXXSigma_iX
-            }
-
-
-            modglmm$useSparseGRMtoFitNULL = useSparseGRMtoFitNULL
-            tau = modglmm$theta
-            alpha0 = modglmm$coefficients
-            if(!is.null(out.transform) & is.null(fit0$offset)){
-                coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
-                modglmm$coefficients = coef.alpha
-            }
-
-            if(LOCO & isLowMemLOCO){
-                modglmm$LOCOResult = NULL
-                modglmm$LOCO = FALSE
-		chromosomeStartIndexVec = modglmm$chromosomeStartIndexVec
-                chromosomeEndIndexVec = modglmm$chromosomeEndIndexVec
-                modglmm$chromosomeStartIndexVec = NULL
-                modglmm$chromosomeEndIndexVec = NULL
-		modelOut = paste(c(outputPrefix,"_noLOCO.rda"), collapse="")
-                save(modglmm, file = modelOut)
-                modglmm$LOCO = TRUE
-                modglmm$Y = NULL
-		eta0 = modglmm$linear.predictor
-                modglmm$linear.predictors = NULL
-                modglmm$coefficients = NULL
-                modglmm$cov = NULL
-                modglmm$fitted.values = NULL
-                modglmm$residuals = NULL
-                modglmm$obj.noK = NULL
-		offset0 = modglmm$offset
-                modglmm$offset = NULL
-                y = fit0$y
-                gc()
-
-
-
-                #save(modglmm, file = modelOut)
-	        set_Diagof_StdGeno_LOCO()
-		modglmm$LOCOResult = list()
-                for(j in 1:22){
-      			startIndex = chromosomeStartIndexVec[j]
-      			endIndex = chromosomeEndIndexVec[j]
-		 	if(!is.na(startIndex) && !is.na(endIndex)){
- 				cat("leave chromosome ", j, " out\n")
-        			setStartEndIndex(startIndex, endIndex, j-1)
-				re.coef_LOCO = Get_Coef_LOCO(y, X=model.matrix(fit0), tau, family = fit0$family, alpha = alpha0, eta = eta0,  offset =  offset0, verbose=TRUE, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter)
-
-        			cov = re.coef_LOCO$cov
-        			alpha = re.coef_LOCO$alpha
-        			eta = re.coef_LOCO$eta
-       		 		Y = re.coef_LOCO$Y
-        			mu = re.coef_LOCO$mu
-        			res = y - mu
-        			mu2 = rep((1/(tau[1])),length(res))
-          			if(!is.null(out.transform) & is.null(fit0$offset)){
-        				coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
-        			}else{
-        				coef.alpha = alpha
-        			}
-        			if(!isCovariateOffset){
-          				obj.noK = ScoreTest_NULL_Model(mu, mu2, y, X)
-        			}else{
-          				obj.noK = ScoreTest_NULL_Model(mu, mu2, y, Xorig)
-        			}
-        			modglmm$LOCOResult[[j]] = list(isLOCO = TRUE, coefficients=coef.alpha, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, obj.noK = obj.noK)
-
-				if(!isCovariateOffset & hasCovariate){
-					modglmm$LOCOResult[[j]]$offset = data.new %*%(as.vector(modglmm$LOCOResult[[j]]$coefficients[-1]))
-				
-				}
-		
-				modelOutbychr = paste(c(outputPrefix,"_chr",j,".rda"), collapse="")
-				if(j!=22){
-                                        for(j1 in (j+1):22){
-                                                modglmm$LOCOResult[[j1]] = list(NULL)
-                                        }
-                                }
-				save(modglmm, file = modelOutbychr)
-				modglmm$LOCOResult[[j]] = list(NULL)
-                          	gc()
-     		 	}else{
-        			modglmm$LOCOResult[[j]] = list(isLOCO = FALSE)
-      			}				
-
-                }
-                gc()
-                #modelOut_nonauto = paste(c(outputPrefix,"_noLOCO.rda"), collapse="")
-           }else{
-            save(modglmm, file = modelOut)
-           }
-
-
-	    gc()
-            t_end = proc.time()
-            print(t_end)
-            cat("t_end - t_begin, fitting the NULL model took\n")
-            print(t_end - t_begin)
-        }else{
-            cat("Skip fitting the NULL GLMM\n")
-            if(!file.exists(modelOut)){
-                stop("skipModelFitting=TRUE but ", modelOut, " does not exist\n")
-            }
-
-            load(modelOut)
-            if (is.null(modglmm$LOCO)) {
-                modglmm$LOCO = FALSE
-            }
-            setgeno(bedFile, bimFile, famFile, dataMerge_sort$IndexGeno, indicatorGenoSamplesWithPheno, memoryChunk, 
-                isDiagofKinSetAsOne)
-            setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
-
-        }
-        if (!skipVarianceRatioEstimation) {
-	    if(LOCO){
-    		MsubIndVec = getQCdMarkerIndex()
-	        #cat("MsubIndVec", MsubIndVec, "\n")
-		print(length(MsubIndVec))
-    		chrVec = data.table:::fread(bimFile, header = F)[,1]
-		print(length(chrVec))
-   		chrVec = chrVec[which(MsubIndVec == TRUE)]
-    		updatechrList = updateChrStartEndIndexVec(chrVec)
-    		LOCO = updatechrList$LOCO
-    		chromosomeStartIndexVec = updatechrList$chromosomeStartIndexVec
-    		chromosomeEndIndexVec = updatechrList$chromosomeEndIndexVec
-                set_Diagof_StdGeno_LOCO()
-  	    }
-            cat("Start estimating variance ratios\n")
-	  load(modelOut)
-          extractVarianceRatio(obj.glmm.null = modglmm,
-                obj.glm.null = fit0, maxiterPCG = maxiterPCG,
-                tolPCG = tolPCG, numMarkers = numMarkersForVarRatio, varRatioOutFile = varRatioFile,
-                ratioCVcutoff = ratioCVcutoff, testOut = SPAGMMATOut,
-                bedFile=bedFile, bimFile=bimFile, famFile=famFile, chromosomeStartIndexVec = chromosomeStartIndexVec,
-                chromosomeEndIndexVec = chromosomeEndIndexVec,
-                isCateVarianceRatio = isCateVarianceRatio, cateVarRatioIndexVec = cateVarRatioIndexVec,
-                useSparseGRMforVarRatio = useSparseGRMforVarRatio, sparseGRMFile = sparseGRMFile,
-                sparseGRMSampleIDFile = sparseGRMSampleIDFile,
-                numRandomMarkerforSparseKin = numRandomMarkerforSparseKin,
-                relatednessCutoff = relatednessCutoff, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL,
-                nThreads = nThreads, cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
-                cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
-                minMAFforGRM = minMAFforGRM, isDiagofKinSetAsOne = isDiagofKinSetAsOne,
-                includeNonautoMarkersforVarRatio = includeNonautoMarkersforVarRatio)
-
-
-        }else{
-            cat("Skip estimating variance ratios\n")
-        }
-        closeGenoFile_plink()
+        setgeno(bedFile, bimFile, famFile, dataMerge_sort$IndexGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+        tau = modglmm$theta	    
+        setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
     }
+
+    if(!skipVarianceRatioEstimation) {
+	if(LOCO){
+    	    MsubIndVec = getQCdMarkerIndex()
+            print(length(MsubIndVec))
+    	    chrVec = data.table:::fread(bimFile, header = F)[,1]
+	    print(length(chrVec))
+   	    chrVec = chrVec[which(MsubIndVec == TRUE)]
+    	    updatechrList = updateChrStartEndIndexVec(chrVec)
+    	    LOCO = updatechrList$LOCO
+    	    chromosomeStartIndexVec = updatechrList$chromosomeStartIndexVec
+    	    chromosomeEndIndexVec = updatechrList$chromosomeEndIndexVec
+            set_Diagof_StdGeno_LOCO()
+  	}
+        cat("Start estimating variance ratios\n")
+	load(modelOut)
+	extractVarianceRatio(obj.glmm.null = modglmm,
+                obj.glm.null = fit0, maxiterPCG = maxiterPCG,
+                tolPCG = tolPCG, numMarkers = numMarkersForVarRatio, varRatioOutFile = varRatioFile,
+                ratioCVcutoff = ratioCVcutoff, testOut = SPAGMMATOut,
+                bedFile=bedFile, bimFile=bimFile, famFile=famFile, chromosomeStartIndexVec = chromosomeStartIndexVec,
+                chromosomeEndIndexVec = chromosomeEndIndexVec,
+                isCateVarianceRatio = isCateVarianceRatio, cateVarRatioIndexVec = cateVarRatioIndexVec,
+                useSparseGRMforVarRatio = useSparseGRMforVarRatio, sparseGRMFile = sparseGRMFile,
+                sparseGRMSampleIDFile = sparseGRMSampleIDFile,
+                numRandomMarkerforSparseKin = numRandomMarkerforSparseKin,
+                relatednessCutoff = relatednessCutoff, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL,
+                nThreads = nThreads, cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
+                cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
+                minMAFforGRM = minMAFforGRM, isDiagofKinSetAsOne = isDiagofKinSetAsOne,
+                includeNonautoMarkersforVarRatio = includeNonautoMarkersforVarRatio)
+    }else{
+        cat("Skip estimating variance ratios\n")
+    }
+    closeGenoFile_plink()
+
 }
 
 
@@ -2017,7 +1821,12 @@ getsubGRM <- function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", related
     cat("set elements in the sparse GRM <= ", relatednessCutoff,
         " to zero\n")
     sparseGRMLarge = Matrix:::drop0(sparseGRMLarge, tol = relatednessCutoff)
+<<<<<<< HEAD
         sparseGRMLarge = sparseGRMLarge * 1
+=======
+    sparseGRMLarge = sparseGRMLarge * 1
+    print(sparseGRMLarge[1:50,1:50])
+>>>>>>> remotes/origin/poisson
     print(nnzero(sparseGRMLarge))
     if (!file.exists(sparseGRMSampleIDFile)) {
         stop("ERROR! sparseSigmaSampleIDFile ", sparseGRMSampleIDFile,
@@ -2312,7 +2121,10 @@ extractVarianceRatio = function(obj.glmm.null,
          var2null = innerProduct(mu*(1-mu), g*g)
     }else if(obj.glmm.null$traitType == "quantitative"){
          var2null = innerProduct(g, g)
+    }else if(obj.glmm.null$traitType == "count"){
+         var2null = innerProduct(mu, g*g)
     }
+
     varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
 
     #indexInMarkerList = indexInMarkerList + 1

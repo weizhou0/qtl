@@ -347,6 +347,7 @@ void mainMarkerInCPP(
     if((missingRate > g_missingRate_cutoff) || (MAF < g_marker_minMAF_cutoff) || (MAC < g_marker_minMAC_cutoff || imputeInfo < g_marker_minINFO_cutoff)){
       continue;
     }else{
+
     // Check UTIL.cpp
     //
     //
@@ -476,8 +477,8 @@ void mainMarkerInCPP(
     }
 	
     if(t_traitType == "binary"){ 
-	    arma::vec dosage_case = t_GVec.elem(ptr_gSAIGEobj->m_case_indices);
-	    arma::vec dosage_ctrl = t_GVec.elem(ptr_gSAIGEobj->m_ctrl_indices);
+      arma::vec dosage_case = t_GVec.elem(ptr_gSAIGEobj->m_case_indices);
+      arma::vec dosage_ctrl = t_GVec.elem(ptr_gSAIGEobj->m_ctrl_indices);
       AF_case = arma::mean(dosage_case) /2;
       AF_ctrl = arma::mean(dosage_ctrl) /2;
       N_case = dosage_case.n_elem;
@@ -508,9 +509,8 @@ void mainMarkerInCPP(
 		N_ctrl_homVec.at(i) = N_ctrl - N_ctrl_hetVec.at(i) - N_ctrl_homVec.at(i);
 	}		
       }	
-    }else if(t_traitType == "quantitative"){
+    }else if(t_traitType == "quantitative" || t_traitType == "count"){
       N_Vec.at(i) = n;
-
     }
 
     
@@ -1259,7 +1259,7 @@ Rcpp::List mainRegionInCPP(
                 N_ctrl_homVec.at(i) = N_ctrl - N_ctrl_hetVec.at(i) - N_ctrl_homVec.at(i);
           }
         }
-      }else if(t_traitType == "quantitative"){
+      }else if(t_traitType == "quantitative" || t_traitType == "count"){
         N_Vec.at(i) = t_n;
       }      
      } //if(t_regionTestType != "BURDEN" || t_isSingleinGroupTest){
@@ -1507,7 +1507,7 @@ if(i2 > 0){
           }
         }
 
-        }else if(t_traitType == "quantitative"){
+        }else if(t_traitType == "quantitative" || t_traitType == "count"){
           N_Vec.at(i) = n;
         }
       if(t_regionTestType != "BURDEN"){	
@@ -2324,7 +2324,7 @@ bool openOutfile_singleinGroup(std::string t_traitType, bool t_isImputation, boo
                                 OutFile_singleInGroup << "\tN_case_hom\tN_case_het\tN_ctrl_hom\tN_ctrl_het";
                         }
 			OutFile_singleInGroup << "\n";
-                }else if(t_traitType == "quantitative"){
+                }else if(t_traitType == "quantitative" || t_traitType == "count"){
 			OutFile_singleInGroup << "N\n";	
 			
 		}	
@@ -2377,7 +2377,7 @@ bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isapp
 			}
 			OutFile_single << "\n";
 
-                }else if(t_traitType == "quantitative"){
+                }else if(t_traitType == "quantitative" || t_traitType == "count"){
                         OutFile_single << "N\n";
 
                 }
@@ -2512,7 +2512,7 @@ void writeOutfile_single(bool t_isMoreOutput,
                                 OutFile_single << N_ctrl_hetVec.at(k);
                         }
                         OutFile_single << "\n";
-                }else if(t_traitType == "quantitative"){
+                }else if(t_traitType == "quantitative" || t_traitType == "count"){
                         OutFile_single << N_Vec.at(k);
                         OutFile_single << "\n";
 
@@ -2762,7 +2762,7 @@ int writeOutfile_singleInGroup(bool t_isMoreOutput,
                                 t_OutFile_singleInGroup << N_ctrl_hetVec.at(k);
                         }
                         t_OutFile_singleInGroup << "\n";
-                }else if(t_traitType == "quantitative"){
+                }else if(t_traitType == "quantitative" || t_traitType == "count"){
                         t_OutFile_singleInGroup << N_Vec.at(k);
                         t_OutFile_singleInGroup << "\n";
 
