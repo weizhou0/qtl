@@ -1164,6 +1164,34 @@ public:
 // //create a geno object as a global variable
 genoClass geno;
 
+std::vector<arma::sp_fmat> Kmat_vec;
+
+// [[Rcpp::export]]
+void addNewKat( arma::sp_mat & t_Kmat){
+	arma::sp_fmat t_Kmat_new = arma::conv_to< arma::sp_fmat >::from(t_Kmat);
+        Kmat_vec.push_back(t_Kmat_new); 	
+        std::cout << "Kmat_vec.size() " << Kmat_vec.size() << std::endl;
+}
+
+// [[Rcpp::export]]
+arma::sp_fmat getProdTauKmat(arma::fvec & tauVec){
+	arma::sp_fmat Kmat_sigma;
+	int n = geno.getNnomissing();
+	Kmat_sigma.set_size(n, n);
+	Kmat_sigma.zeros();
+	if(Kmat_vec.size() > 0){
+		for (int i = 0; i < Kmat_vec.size(); i++){
+			Kmat_sigma = Kmat_sigma = Kmat_vec[i] * tauVec(i);
+		}
+	}	
+}	
+
+// [[Rcpp::export]]
+int get_numofV(){
+	int k = Kmat_vec.size();
+	return(k);
+}
+
 // [[Rcpp::export]]
 void closeGenoFile_plink()
 {
@@ -1583,33 +1611,6 @@ float innerProductFun(std::vector<float> &x, std::vector<float> & y) {
 }
 
 
-/*
-// [[Rcpp::export]]
-arma::fvec parallelCrossProd_LOCO_2(arma::fcolvec & bVec) {
-
-  // declare the InnerProduct instance that takes a pointer to the vector data
-        //int Msub = geno.getMsub();
-	int M = geno.getM();
-	
-        CorssProd_LOCO CorssProd_LOCO(bVec);
-
-  // call paralleReduce to start the work
-        parallelReduce(0, M, CorssProd_LOCO);
-
-  // return the computed product
-	//cout << "Msub: " << Msub << endl;
-
-	for(int i=0; i<10; ++i)
-        {
-		std::cout << (CorssProd_LOCO.m_bout)[i] << ' ';
-        }
-	std::cout << std::endl;
-	std::cout << "CorssProd_LOCO.m_Msub_mafge1perc: " << CorssProd_LOCO.m_Msub_mafge1perc << std::endl;
-        //return CorssProd_LOCO.m_bout/Msub;
-	return CorssProd_LOCO.m_bout/(CorssProd_LOCO.m_Msub_mafge1perc);
-}
-*/
-
 
 
 // [[Rcpp::export]]
@@ -1695,8 +1696,8 @@ void setupSparseGRM(int r, arma::umat & locationMatinR, arma::vec & valueVecinR)
     // sparse x sparse -> sparse
     //arma::sp_mat result(a);
     //int r = a.n_rows;
-        locationMat.zeros(2,r);
-        valueVec.zeros(r);
+    locationMat.zeros(2,r);
+    valueVec.zeros(r);
 
     locationMat = locationMatinR;
     valueVec = valueVecinR;
@@ -1728,33 +1729,24 @@ bool isUseSparseSigmaforModelFitting = false;
 
 // [[Rcpp::export]]
 arma::fvec getCrossprodMatAndKin(arma::fcolvec& bVec){
-       arma::fvec crossProdVec;
-
-if(isUseSparseSigmaforInitTau | isUseSparseSigmaforModelFitting){
+    arma::fvec crossProdVec;
+    if(isUseSparseSigmaforInitTau | isUseSparseSigmaforModelFitting){
+        arma::dcolvec bVec_new = arma::conv_to<arma::dcolvec>::from(bVec);
         //cout << "use sparse kinship to estimate initial tau and for getCrossprodMatAndKin" <<  endl;
-
-
 	arma::sp_mat result(locationMat, valueVec, dimNum, dimNum);
-	arma::vec x = result * arma::conv_to<arma::dcolvec>::from(bVec);
+	arma::vec x = result * bVec_new;
+        // double wall3in = get_wall_time();
+        // double cpu3in  = get_cpu_time();
+        // cout << "Wall Time in gen_spsolve_v4 = " << wall3in - wall2in << endl;
+        // cout << "CPU Time  in gen_spsolve_v4 = " << cpu3in - cpu2in  << endl;
+        crossProdVec = arma::conv_to<arma::fvec>::from(x);
 
 
-//double wall3in = get_wall_time();
-// double cpu3in  = get_cpu_time();
-// cout << "Wall Time in gen_spsolve_v4 = " << wall3in - wall2in << endl;
-// cout << "CPU Time  in gen_spsolve_v4 = " << cpu3in - cpu2in  << endl;
-
-
-    crossProdVec = arma::conv_to<arma::fvec>::from(x);
-
-}else{ 
+    }else{ 
   	crossProdVec = parallelCrossProd(bVec) ;
-}  
-  	return(crossProdVec);
+    }  
+    return(crossProdVec);
 }
-
-
-
-
 
 
 // [[Rcpp::export]]
@@ -2033,25 +2025,38 @@ arma::fvec Get_OneSNP_StdGeno(int SNPIdx)
 
 //Sigma = tau[1] * diag(1/W) + tau[2] * kins 
 // [[Rcpp::export]]
-arma::fvec getDiagOfSigma(arma::fvec& wVec, arma::fvec& tauVec){
+arma::fvec getDiagOfSigma_multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO){
   
 	int Nnomissing = geno.getNnomissing();
+	arma::fvec diagVec(Nnomissing);
+	float diagElement;
+	float floatBuffer;
 	//int M = geno.getM();
 	int MminMAF = geno.getnumberofMarkerswithMAFge_minMAFtoConstructGRM();
 	//cout << "MminMAF=" << MminMAF << endl;
 	//cout << "M=" << M << endl;
-	arma::fvec diagVec(Nnomissing);
-	float diagElement;
-	float floatBuffer;
   	//float minvElement;
-  
   	if(!(geno.setKinDiagtoOne)){ 
 	  //diagVec = tauVec(1)* (*geno.Get_Diagof_StdGeno()) /M + tauVec(0)/wVec;
-	  diagVec = tauVec(1)* (*geno.Get_Diagof_StdGeno()) /MminMAF + tauVec(0)/wVec;
+          if(!LOCO){ 
+	    diagVec = tauVec(1)* (*geno.Get_Diagof_StdGeno()) /MminMAF + tauVec(0)/wVec;
+	  }else{
+	    diagVec = tauVec(1)* (*geno.Get_Diagof_StdGeno_LOCO());
+            int Msub_MAFge_minMAFtoConstructGRM_in_b = geno.getMsub_MAFge_minMAFtoConstructGRM_in();
+            int Msub_MAFge_minMAFtoConstructGRM_singleVar_b = geno.getMsub_MAFge_minMAFtoConstructGRM_singleChr_in();	    
+	    diagVec = diagVec/(Msub_MAFge_minMAFtoConstructGRM_in_b - Msub_MAFge_minMAFtoConstructGRM_singleVar_b) + tauVec(0)/wVec;
+          }
 
 	}else{
 	  diagVec = tauVec(1) + tauVec(0)/wVec;
 	}
+
+        if(Kmat_vec.size() > 0){
+          for(unsigned int i = 0; i < Kmat_vec.size(); i++){
+            diagVec = diagVec + (Kmat_vec[i]).diag() * tauVec(i+2);
+          }
+        } 
+
 
 	//std::cout << "M " << M << std::endl;
 	//std::cout << "tauVec(0) " << tauVec(0) << std::endl;
@@ -2070,45 +2075,15 @@ arma::fvec getDiagOfSigma(arma::fvec& wVec, arma::fvec& tauVec){
   			diagVec(i) = 1e-4 ;
   		}
   	}
-  
-
-
+ 
     //cout << *geno.Get_Diagof_StdGeno() << endl ;
     //cout << diagVec << endl ;
   	return(diagVec);
 }
 
-// [[Rcpp::export]]
-arma::fvec getDiagOfSigma_LOCO(arma::fvec& wVec, arma::fvec& tauVec){
-
-        int Nnomissing = geno.getNnomissing();
-        int Msub = geno.getMsub();
-        //cout << "N=" << N << endl;
-        arma::fvec diagVec(Nnomissing);
-        float diagElement;
-        float floatBuffer;
-        //float minvElement;
-        diagVec = tauVec(1)* (*geno.Get_Diagof_StdGeno_LOCO());
-	int Msub_MAFge_minMAFtoConstructGRM_in_b = geno.getMsub_MAFge_minMAFtoConstructGRM_in();
-	int Msub_MAFge_minMAFtoConstructGRM_singleVar_b = geno.getMsub_MAFge_minMAFtoConstructGRM_singleChr_in();
-	
-	diagVec = diagVec/(Msub_MAFge_minMAFtoConstructGRM_in_b - Msub_MAFge_minMAFtoConstructGRM_singleVar_b) + tauVec(0)/wVec;
-        //diagVec = tauVec(1)* (*geno.Get_Diagof_StdGeno_LOCO()) /(Msub_MAFge_minMAFtoConstructGRM) + tauVec(0)/wVec;
-        for(unsigned int i=0; i< Nnomissing; i++){
-                if(diagVec(i) < 1e-4){
-                        diagVec(i) = 1e-4 ;
-                }
-        }
-
-    //cout << *geno.Get_Diagof_StdGeno() << endl ;
-    //cout << diagVec << endl ;
-        return(diagVec);
-
-}
-
 
 // [[Rcpp::export]]
-arma::fcolvec getCrossprod(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec){
+arma::fcolvec getCrossprod_multiV(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO){
 
         arma::fcolvec crossProdVec;
         // Added by SLEE, 04/16/2017
@@ -2117,44 +2092,42 @@ arma::fcolvec getCrossprod(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& ta
                 return(crossProdVec);
         }
         //
-        arma::fvec crossProd1  = getCrossprodMatAndKin(bVec);
-	
+        arma::fvec crossProd1;
+      
+	if(!LOCO){
+		crossProd1 = getCrossprodMatAndKin(bVec);
+	}else{
+		crossProd1 = getCrossprodMatAndKin_LOCO(bVec);
+	}	
 	//for(int j = 0; j < 100; j++){
         //        std::cout << "bVec(j): " << bVec(j) << std::endl;
         //        std::cout << "crossProd1(j): " << crossProd1(j) << std::endl;
 
         //}
-
-
+	
         crossProdVec = tauVec(0)*(bVec % (1/wVec)) + tauVec(1)*crossProd1;
+
+        //arma::dcolvec bVec_new = arma::conv_to<arma::dcolvec>::from(bVec);
+        // double wall3in = get_wall_time();
+        // double cpu3in  = get_cpu_time();
+        // cout << "Wall Time in gen_spsolve_v4 = " << wall3in - wall2in << endl;
+        // cout << "CPU Time  in gen_spsolve_v4 = " << cpu3in - cpu2in  << endl;
+        //crossProdVec = arma::conv_to<arma::fvec>::from(x);
+        //arma::dcolvec crossProdVec_temp;
+	if(Kmat_vec.size() > 0){
+		for(unsigned int i = 0; i < Kmat_vec.size(); i++){
+			crossProdVec  = crossProdVec + tauVec(i+2)*(Kmat_vec[i] * bVec); 
+			//crossProdVec = crossProdVec + arma::conv_to<arma::fvec>::from(x);
+			//arma::conv_to<arma::dcolvec>::from(crossProdVec_temp);
+		}	
+	}	
 
 	//for(int j = 0; j < 10; j++){
         //        std::cout << "crossProdVec(j): " << j << " " << crossProdVec(j) << std::endl;
-
         //}
-
-
-
         return(crossProdVec);
 }
 
-
-
-// [[Rcpp::export]]
-arma::fcolvec getCrossprod_LOCO(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec){
-
-        arma::fcolvec crossProdVec;
-        // Added by SLEE, 04/16/2017
-        if(tauVec(1) == 0){
-                crossProdVec = tauVec(0)*(bVec % (1/wVec));
-                return(crossProdVec);
-        }
-        //
-        arma::fvec crossProd1  = getCrossprodMatAndKin_LOCO(bVec);
-        crossProdVec = tauVec(0)*(bVec % (1/wVec)) + tauVec(1)*crossProd1;
-
-        return(crossProdVec);
-}
 
 
 
@@ -2185,8 +2158,10 @@ arma::sp_mat gen_sp_GRM() {
 }
 
 
+
+
 // [[Rcpp::export]]
-arma::sp_mat gen_sp_Sigma(arma::fvec& wVec,  arma::fvec& tauVec){
+arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
    arma::fvec dtVec = (1/wVec) * (tauVec(0));
 //   dtVec.print();
    arma::vec valueVecNew = valueVec * tauVec(1);
@@ -2207,6 +2182,15 @@ arma::sp_mat gen_sp_Sigma(arma::fvec& wVec,  arma::fvec& tauVec){
 
     // sparse x sparse -> sparse
     arma::sp_mat result(locationMat, valueVecNew, dimNum, dimNum);
+
+    if(Kmat_vec.size() > 0){	
+      for(unsigned int i = 0; i < Kmat_vec.size(); i++){
+        result = result + Kmat_vec[i] * tauVec(i+2);
+	std::cout << "tauVec(i+2) " << tauVec(i+2) << std::endl;
+      }	      
+    }
+
+
 //    std::cout << "result.n_rows " << result.n_rows << std::endl;
 //    std::cout << "result.n_cols " << result.n_cols << std::endl;
     //result.print();
@@ -2216,26 +2200,8 @@ arma::sp_mat gen_sp_Sigma(arma::fvec& wVec,  arma::fvec& tauVec){
 }
 
 
-
 // [[Rcpp::export]]
-arma::vec gen_spsolve_v3(arma::vec & yvec){
-    // sparse x sparse -> sparse
-    //arma::sp_mat result(locationMat, valueVec, dimNum, dimNum);
-    //arma::sp_fmat A = sprandu<sp_fmat>(100, 200, 0.1);
-    //arma::sp_mat result1 = result * A;
-    //arma::vec y = arma::linspace<arma::vec>(0, 5, dimNum);
-    arma::sp_mat result = gen_sp_GRM();
-
-    std::cout << "yvec.n_elem: " << yvec.n_elem << std::endl;
-    std::cout << "result.n_rows: " << result.n_rows << std::endl;
-    std::cout << "result.n_cols: " << result.n_cols << std::endl;
-    arma::vec x = arma::spsolve(result, yvec);
-
-    return x;
-}
-
-// [[Rcpp::export]]
-arma::fvec gen_spsolve_v4(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec & yvec){
+arma::fvec gen_spsolve_v4_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec & yvec){
 
 //    double wall0in = get_wall_time();
 // double cpu0in  = get_cpu_time();
@@ -2246,7 +2212,7 @@ arma::fvec gen_spsolve_v4(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec & yv
 // cout << "Wall Time in gen_spsolve_v4 = " << wall1in - wall0in << endl;
 // cout << "CPU Time  in gen_spsolve_v4 = " << cpu1in - cpu0in  << endl;
 
-    arma::sp_mat result = gen_sp_Sigma(wVec, tauVec);
+    arma::sp_mat result = gen_sp_Sigma_multiV(wVec, tauVec);
 
 //double wall2in = get_wall_time();
 // double cpu2in  = get_cpu_time();
@@ -2300,74 +2266,62 @@ void setisUseSparseSigmaforNullModelFitting(bool isUseSparseSigmaforModelFitting
 }
 
 
-//Modified on 11-28-2018 to allow for a preconditioner for CG (the sparse Sigma)                                                                                                                                     //Sigma = tau[1] * diag(1/W) + tau[2] * kins
+//Modified on 11-28-2018 to allow for a preconditioner for CG (the sparse Sigma)                                                                                                                                     //Sigma = tau[1] * diag(1/W) + tau[2] * kins + tau[3] * V3 + .....
 //This function needs the function getDiagOfSigma and function getCrossprod
 
 // [[Rcpp::export]]
-arma::fvec getPCG1ofSigmaAndVector(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG){
-       
-                   //  Start Timers
+arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG, bool LOCO){       
+    // Start Timers
     double wall0 = get_wall_time();
     double cpu0  = get_cpu_time();
-	int Nnomissing = geno.getNnomissing();
-	arma::fvec xVec(Nnomissing);
-        xVec.zeros();
-
-
-
-if(isUseSparseSigmaforInitTau){
+    int Nnomissing = geno.getNnomissing();
+    arma::fvec xVec(Nnomissing);
+    xVec.zeros();
+    
+    if(isUseSparseSigmaforInitTau){
 	cout << "use sparse kinship to estimate initial tau " <<  endl;
-	xVec = gen_spsolve_v4(wVec, tauVec, bVec);
-}else if(isUseSparseSigmaforModelFitting){
+	xVec = gen_spsolve_v4_multiV(wVec, tauVec, bVec);
+    }else if(isUseSparseSigmaforModelFitting){
 	cout << "use sparse kinship to fit the model " << endl;
-        xVec = gen_spsolve_v4(wVec, tauVec, bVec);
-}else{
+        xVec = gen_spsolve_v4_multiV(wVec, tauVec, bVec);
+    }else{
         arma::fvec rVec = bVec;
         arma::fvec r1Vec;
         //cout << "HELLOb: "  << endl;
         //int Nnomissing = geno.getNnomissing();
         //cout << "HELL1: "  << endl;
-
         arma::fvec crossProdVec(Nnomissing);
-
         //arma::SpMat<float> precondM = sparseGRMinC;
         arma::fvec zVec(Nnomissing);
         arma::fvec minvVec(Nnomissing);
+ //     double wall1 = get_wall_time();
+ //     double cpu1  = get_cpu_time();
 
- //       double wall1 = get_wall_time();
- //       double cpu1  = get_cpu_time();
-
-//    cout << "Wall Time 1= " << wall1 - wall0 << endl;
-//    cout << "CPU Time 1 = " << cpu1  - cpu0  << endl;
+//      cout << "Wall Time 1= " << wall1 - wall0 << endl;
+//      cout << "CPU Time 1 = " << cpu1  - cpu0  << endl;
         if (!isUsePrecondM){
-		double wall1_gDiag = get_wall_time();
-		double cpu1_gDiag  = get_cpu_time();
+	    double wall1_gDiag = get_wall_time();
+	    double cpu1_gDiag  = get_cpu_time();
 /*		for(int i = 0; i < 10; i++){
                 	cout << "wVec[i]: " << i << " " << wVec[i] << endl;
                 	cout << "bVec[i]: " << i << " " << bVec[i] << endl;
         	}
 */
-		minvVec = 1/getDiagOfSigma(wVec, tauVec);
-	//	for(int i = 0; i < 10; i++){
+	    minvVec = 1/getDiagOfSigma_multiV(wVec, tauVec, LOCO);
+	    //	for(int i = 0; i < 10; i++){
           //      	cout << "minvVec[i]: " << i << " " << minvVec[i] << endl;
         //	}
 
-		double wall1_gDiag_2 = get_wall_time();
-		double cpu1_gDiag_2  = get_cpu_time();
+	    double wall1_gDiag_2 = get_wall_time();
+	    double cpu1_gDiag_2  = get_cpu_time();
 //		 cout << "Wall Time getDiagOfSigma = " << wall1_gDiag_2 - wall1_gDiag << endl;
 // cout << "CPU Time getDiagOfSigma = " << cpu1_gDiag_2 - cpu1_gDiag  << endl;
-                zVec = minvVec % rVec;
+            zVec = minvVec % rVec;
 
         }else{
-
-
 //      std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
 //        std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() <<std::endl;
-
-
-
-
-		zVec = gen_spsolve_v4(wVec, tauVec, rVec);
+	     zVec = gen_spsolve_v4_multiV(wVec, tauVec, rVec);
                 //sparseGRMinC = (sparseGRMinC) * (tauVec(1));
                 //arma::fvec dtVec = (1/wVec) * (tauVec(0));
                 //(sparseGRMinC).diag() = (sparseGRMinC).diag() + dtVec;
@@ -2417,18 +2371,16 @@ if(isUseSparseSigmaforInitTau){
 
 
                 iter = iter + 1;
-                arma::fcolvec ApVec = getCrossprod(pVec, wVec, tauVec);
+                arma::fcolvec ApVec = getCrossprod_multiV(pVec, wVec, tauVec, LOCO);
 //		for(int i = 0; i < 10; i++){
 //                	cout << "ApVec[i]: " << i << " " << ApVec[i] << endl;
 //        	}
                 arma::fvec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
-
 // double wall3 = get_wall_time();
 //        double cpu3  = get_cpu_time();
 
 //    cout << "Wall Time 3= " << wall3 - wall2 << endl;
 //    cout << "CPU Time 3 = " << cpu3  - cpu2  << endl;
-
                 float a = preA(0);
 
 /*           if(bVec[0] == 1 && bVec[2] == 1){
@@ -2472,7 +2424,7 @@ if(isUseSparseSigmaforInitTau){
         if (!isUsePrecondM){
                 z1Vec = minvVec % r1Vec;
         }else{
-		z1Vec = gen_spsolve_v4(wVec, tauVec, r1Vec);
+		z1Vec = gen_spsolve_v4_multiV(wVec, tauVec, r1Vec);
                 //z1Vec = arma::spsolve(sparseGRMinC, r1Vec) ;
         }
 
@@ -2521,232 +2473,6 @@ if(isUseSparseSigmaforInitTau){
 //        std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() <<std::endl;
         return(xVec);
 }
-
-
-
-
-
-
-//Sigma = tau[1] * diag(1/W) + tau[2] * kins 
-//This function needs the function getDiagOfSigma and function getCrossprod
-// [[Rcpp::export]]
-arma::fvec getPCG1ofSigmaAndVector_old(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG){
-	           //  Start Timers
-//    double wall0 = get_wall_time();
-//    double cpu0  = get_cpu_time();
-
-//	 std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-	//cout << "HELLO: "  << endl;
-	//cout << "HELL2: "  << endl;
-  	arma::fvec rVec = bVec;
-	//cout << "HELLOa: "  << endl;
-  	arma::fvec r1Vec;
-	//cout << "HELLOb: "  << endl;
-  	int Nnomissing = geno.getNnomissing();
-	//cout << "HELL1: "  << endl;
-
-  	arma::fvec crossProdVec(Nnomissing);
-	//cout << "HELL2: "  << endl;
-
-  	arma::fvec minvVec = 1/getDiagOfSigma(wVec, tauVec);
-//	cout << "HELL3: "  << endl;
-//	for(int i = 0; i < 10; i++){
-//                cout << "full set minvVec[i]: " << minvVec[i] << endl;
-//        }
-  	float sumr2 = sum(rVec % rVec);
-/*
-	if(bVec[0] == 1 && bVec[99] == 1){
-        for(int i = 0; i < 100; i++){
-                cout << "rVec[i]: " << i << " " << rVec[i] << endl;
-                cout << "minvVec[i]: " << i << " " << minvVec[i] << endl;
-                cout << "wVec[i]: " << i << " " << wVec[i] << endl;
-        }
-        }
-*/
-  	arma::fvec zVec = minvVec % rVec;
-  	arma::fvec z1Vec;
- 	arma::fvec pVec = zVec;
-	/*
-        if(bVec[0] == 1 && bVec[2] == 1){
-	for(int i = 0; i < 10; i++){ 
-		cout << "pVec[i]: " << i << " " << pVec[i] << endl;
- 	}
-	}
-*/
-  	arma::fvec xVec(Nnomissing);
-  	xVec.zeros();
-  
-  	int iter = 0;
-  	while (sumr2 > tolPCG && iter < maxiterPCG) {
-    		iter = iter + 1;
-    		arma::fcolvec ApVec = getCrossprod(pVec, wVec, tauVec);
-    		arma::fvec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
-
-    		float a = preA(0);
-	
-/*	     if(bVec[0] == 1 && bVec[2] == 1){
-			cout << "bVec[0] == 1 && bVec[2] == 1: " << endl;
-        		for(int i = 0; i < 10; i++){
-			
-                		cout << "ApVec[i]: " << i << " " << ApVec[i] << endl;
-                		cout << "pVec[i]: " << i << " " << pVec[i] << endl;
-                		cout << "zVec[i]: " << i << " " << zVec[i] << endl;
-                		cout << "rVec[i]: " << i << " " << rVec[i] << endl;
-        		}
-        	    }   
-*/	
- 
-    		xVec = xVec + a * pVec;
-/*
-		if(bVec[0] == 1 && bVec[2] == 1){
-        		for(int i = 0; i < 10; i++){
-                		cout << "xVec[i]: " << i << " " << xVec[i] << endl;
-        		}
-        	}   
-
-*/
-
- 
-    		r1Vec = rVec - a * ApVec;
-/*
-		if(bVec[0] == 1 && bVec[2] == 1){
-                        cout << "a: " << a  << endl;
-                        for(int i = 0; i < 10; i++){
-                                cout << "ApVec[i]: " << i << " " << ApVec[i] << endl;
-                                cout << "rVec[i]: " << i << " " << rVec[i] << endl;
-                                cout << "r1Vec[i]: " << i << " " << r1Vec[i] << endl;
-                        }
-                }
-*/
-    		z1Vec = minvVec % r1Vec;
-    		arma::fvec Prebet = (z1Vec.t() * r1Vec)/(zVec.t() * rVec);
-    		float bet = Prebet(0);
-    		pVec = z1Vec+ bet*pVec;
-    		zVec = z1Vec;
-    		rVec = r1Vec;
-    
-    		sumr2 = sum(rVec % rVec);
-/*
-		if(bVec[0] == 1 && bVec[2] == 1){
-			std::cout << "sumr2: " << sumr2 << std::endl;
-			std::cout << "tolPCG: " << tolPCG << std::endl;
-		}
-*/
-  	}
-  
-  	if (iter >= maxiterPCG){
-    		cout << "pcg did not converge. You may increase maxiter number." << endl;
-     
-  	}
-  	cout << "iter from getPCG1ofSigmaAndVector " << iter << endl;
-
-//        double wall1 = get_wall_time();
-//    double cpu1  = get_cpu_time();
-//    cout << "CPU Time  = " << cpu1  - cpu0  << endl;
-	
-//	std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
-//        std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() <<std::endl;
-  	return(xVec);
-}
-
-
-
-//Sigma = tau[1] * diag(1/W) + tau[2] * kins 
-//This function needs the function getDiagOfSigma and function getCrossprod
-// [[Rcpp::export]]
-arma::fvec getPCG1ofSigmaAndVector_LOCO(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG){
-//	 double wall0 = get_wall_time();
-//    double cpu0  = get_cpu_time();
-  	arma::fvec rVec = bVec;
-  	arma::fvec r1Vec;
-  	int Nnomissing = geno.getNnomissing();
-
-  	arma::fvec crossProdVec(Nnomissing);
-
-
-//                double wall1_gDiag = get_wall_time();
-//                double cpu1_gDiag  = get_cpu_time();
-  	arma::fvec minvVec = 1/getDiagOfSigma_LOCO(wVec, tauVec);
-//                double wall1_gDiag_2 = get_wall_time();
-//                double cpu1_gDiag_2  = get_cpu_time();
-//                 cout << "Wall Time getDiagOfSigma_LOCO = " << wall1_gDiag_2 - wall1_gDiag << endl;
-// cout << "CPU Time getDiagOfSigma = " << cpu1_gDiag_2 - cpu1_gDiag  << endl;
-
-//              double wall1 = get_wall_time();
-//        double cpu1  = get_cpu_time();
-
-//    cout << "Wall Time 1= " << wall1 - wall0 << endl;
-//    cout << "CPU Time 1 = " << cpu1  - cpu0  << endl;
-/*
-	for(int i = 0; i < 10; i++){
-		cout << "minvVec[i]: " << minvVec[i] << endl;
-        } 
-*/ 
-  	float sumr2 = sum(rVec % rVec);
-
-  	arma::fvec zVec = minvVec % rVec;
-  	arma::fvec z1Vec;
- 	arma::fvec pVec = zVec;
-  
-  	arma::fvec xVec(Nnomissing);
-  	xVec.zeros();
-  
-  	int iter = 0;
-
-
-
-	while (sumr2 > tolPCG && iter < maxiterPCG) {
-// double wall2 = get_wall_time();
-//        double cpu2  = get_cpu_time();
-
-//    cout << "Wall Time 2= " << wall2 - wall1 << endl;
-//    cout << "CPU Time 2 = " << cpu2  - cpu1  << endl;
-    		iter = iter + 1;
-    		arma::fcolvec ApVec = getCrossprod_LOCO(pVec, wVec, tauVec);
-    		arma::fvec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
-
-// double wall3 = get_wall_time();
-//        double cpu3  = get_cpu_time();
-
-//    cout << "Wall Time 3= " << wall3 - wall2 << endl;
-//    cout << "CPU Time 3 = " << cpu3  - cpu2  << endl;
-
-
-    		float a = preA(0);
-    
-    		xVec = xVec + a * pVec;
-    
-    		r1Vec = rVec - a * ApVec;
-
-    		z1Vec = minvVec % r1Vec;
-    		arma::fvec Prebet = (z1Vec.t() * r1Vec)/(zVec.t() * rVec);
-    		float bet = Prebet(0);
-    		pVec = z1Vec+ bet*pVec;
-    		zVec = z1Vec;
-    		rVec = r1Vec;
-//     double wall4 = get_wall_time();
-//        double cpu4  = get_cpu_time();
-
-//    cout << "Wall Time 4= " << wall4 - wall3 << endl;
-//    cout << "CPU Time 4 = " << cpu4  - cpu3  << endl;
-    		sumr2 = sum(rVec % rVec);
-  	}
-  
-  	if (iter >= maxiterPCG){
-    		cout << "pcg did not converge. You may increase maxiter number." << endl;
-     
-  	}
-  	cout << "iter from getPCG1ofSigmaAndVector " << iter << endl;
-//        double wall5 = get_wall_time();
-//    double cpu5  = get_cpu_time();
-
-//    cout << "Wall Time getPCG1ofSigmaAndVector_LOCO = " << wall5 - wall0 << endl;
-//    cout << "CPU Time  getPCG1ofSigmaAndVector_LOCO = " << cpu5  - cpu0  << endl;
-
-
-	return(xVec);
-}
-
 
 
 //http://thecoatlessprofessor.com/programming/set_rs_seed_in_rcpp_sequential_case/
@@ -2818,244 +2544,14 @@ float calCV(arma::fvec& xVec){
   return(vecCV);
 }
 
-// [[Rcpp::export]]
-float GetTrace(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::fmat& cov1, int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff){
-  set_seed(200);
-  int Nnomissing = geno.getNnomissing();
-  arma::fmat Sigma_iXt = Sigma_iX.t();
-  arma::fvec Sigma_iu;  
-  arma::fcolvec Pu;
-  arma::fvec Au;
-  arma::fvec uVec;
-
-  int nrunStart = 0;
-  int nrunEnd = nrun;
-  float traceCV = traceCVcutoff + 0.1;
-  arma::fvec tempVec(nrun);
-  tempVec.zeros();
-
-  while(traceCV > traceCVcutoff){     
-    //arma::fvec tempVec(nrun);
-    //tempVec.zeros();
-    //arma::fvec tempVec(nrun);
-    //tempVec.zeros();
-    for(int i = nrunStart; i < nrunEnd; i++){
-      Rcpp::NumericVector uVec0;
-      uVec0 = nb(Nnomissing);
-      uVec = as<arma::fvec>(uVec0);
-      uVec = uVec*2 - 1;
-      Sigma_iu = getPCG1ofSigmaAndVector(wVec, tauVec, uVec, maxiterPCG, tolPCG);
-      Pu = Sigma_iu - Sigma_iX * (cov1 *  (Sigma_iXt * uVec));
-      Au = getCrossprodMatAndKin(uVec);
-      tempVec(i) = dot(Au, Pu);
-      Au.clear();
-      Pu.clear();
-      Sigma_iu.clear();
-      uVec.clear();
-    }
-    traceCV = calCV(tempVec);
-    if(traceCV > traceCVcutoff){
-      nrunStart = nrunEnd;
-      nrunEnd = nrunEnd + 10;
-      tempVec.resize(nrunEnd); 
-      cout << "CV for trace random estimator using "<< nrun << " runs is " << traceCV <<  " > " << traceCVcutoff << endl;
-      cout << "try " << nrunEnd << " runs" << endl;      
-    }
-  }
-
-  float tra = arma::mean(tempVec);
-  tempVec.clear();
-  return(tra);
-}
 
 
-
-// Added by SLEE, 04/16/2017
-//      This function calculate fixed and random effect coefficients
-// [[Rcpp::export]]
-Rcpp::List getCoefficients(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int maxiterPCG, float tolPCG){
-
-  	int Nnomissing = geno.getNnomissing();
-  	arma::fvec Sigma_iY;
-	wVec.print("wVec");
-  	Sigma_iY = getPCG1ofSigmaAndVector(wVec, tauVec, Yvec, maxiterPCG, tolPCG);
-	std::cout << "after Sigma_iY" << std::endl;
-  	int colNumX = Xmat.n_cols;
-  	arma::fmat Sigma_iX(Nnomissing,colNumX);
-  	arma::fvec XmatVecTemp;
-  	for(int i = 0; i < colNumX; i++){
-    		XmatVecTemp = Xmat.col(i);
-
-    		Sigma_iX.col(i) = getPCG1ofSigmaAndVector(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG);
-
-  	}
-
-  	arma::fmat Xmatt = Xmat.t();
-  	//arma::fmat cov = inv_sympd(Xmatt * Sigma_iX);
-	arma::fmat cov;
-	try {
-	  cov = arma::inv_sympd(arma::symmatu(Xmatt * Sigma_iX));
-	} catch (const std::exception& e) {
-	  cov = arma::pinv(arma::symmatu(Xmatt * Sigma_iX));
-	  cout << "inv_sympd failed, inverted with pinv" << endl;
-	}
-
-
- 	arma::fmat Sigma_iXt = Sigma_iX.t();
-  	arma::fvec SigmaiXtY = Sigma_iXt * Yvec;
-  	arma::fvec alpha = cov * SigmaiXtY;
-
-  	arma::fvec eta = Yvec - tauVec(0) * (Sigma_iY - Sigma_iX * alpha) / wVec;
-  	return Rcpp::List::create(Named("Sigma_iY") = Sigma_iY, Named("Sigma_iX") = Sigma_iX, Named("cov") = cov, Named("alpha") = alpha, Named("eta") = eta);
-}
-
-
-// [[Rcpp::export]]
-Rcpp::List getCoefficients_LOCO(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int maxiterPCG, float tolPCG){
-
-        int Nnomissing = geno.getNnomissing();
-        arma::fvec Sigma_iY;
-
-        Sigma_iY = getPCG1ofSigmaAndVector_LOCO(wVec, tauVec, Yvec, maxiterPCG, tolPCG);
-        int colNumX = Xmat.n_cols;
-        arma::fmat Sigma_iX(Nnomissing,colNumX);
-        arma::fvec XmatVecTemp;
-        for(int i = 0; i < colNumX; i++){
-                XmatVecTemp = Xmat.col(i);
-                Sigma_iX.col(i) = getPCG1ofSigmaAndVector_LOCO(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG);
-
-        }
-        arma::fmat Xmatt = Xmat.t();
-        //arma::fmat cov = inv_sympd(Xmatt * Sigma_iX);
-        arma::fmat cov;
-        try {
-          cov = arma::inv_sympd(arma::symmatu(Xmatt * Sigma_iX));
-        } catch (const std::exception& e) {
-          cov = arma::pinv(arma::symmatu(Xmatt * Sigma_iX));
-          cout << "inv_sympd failed, inverted with pinv" << endl;
-        }
-
-        arma::fmat Sigma_iXt = Sigma_iX.t();
-        arma::fvec SigmaiXtY = Sigma_iXt * Yvec;
-        arma::fvec alpha = cov * SigmaiXtY;
-
-        arma::fvec eta = Yvec - tauVec(0) * (Sigma_iY - Sigma_iX * alpha) / wVec;
-        return Rcpp::List::create(Named("Sigma_iY") = Sigma_iY, Named("Sigma_iX") = Sigma_iX, Named("cov") = cov, Named("alpha") = alpha, Named("eta") = eta);
-}
-
-
-// [[Rcpp::export]]
-Rcpp::List getCoefficients_q_LOCO(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int maxiterPCG, float tolPCG){
-
-        int Nnomissing = geno.getNnomissing();
-        arma::fvec Sigma_iY;
-
-        Sigma_iY = getPCG1ofSigmaAndVector_LOCO(wVec, tauVec, Yvec, maxiterPCG, tolPCG);
-        int colNumX = Xmat.n_cols;
-        arma::fmat Sigma_iX(Nnomissing,colNumX);
-        arma::fvec XmatVecTemp;
-        for(int i = 0; i < colNumX; i++){
-                XmatVecTemp = Xmat.col(i);
-
-                Sigma_iX.col(i) = getPCG1ofSigmaAndVector_LOCO(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG);
-
-        }
-
-        arma::fmat Xmatt = Xmat.t();
-        //arma::fmat cov = inv_sympd(Xmatt * Sigma_iX);
-        arma::fmat cov;
-        try {
-          cov = arma::inv_sympd(arma::symmatu(Xmatt * Sigma_iX));
-        } catch (const std::exception& e) {
-          cov = arma::pinv(arma::symmatu(Xmatt * Sigma_iX));
-          cout << "inv_sympd failed, inverted with pinv" << endl;
-        }
-        arma::fmat Sigma_iXt = Sigma_iX.t();
-        arma::fvec SigmaiXtY = Sigma_iXt * Yvec;
-        arma::fvec alpha = cov * SigmaiXtY;
-
-        arma::fvec eta = Yvec - tauVec(0) * (Sigma_iY - Sigma_iX * alpha) / wVec;
-        return Rcpp::List::create(Named("Sigma_iY") = Sigma_iY, Named("Sigma_iX") = Sigma_iX, Named("cov") = cov, Named("alpha") = alpha, Named("eta") = eta);
-}
-
-
-
-
-
-
-// Modified by SLEE, 04/16/2017
-// Modified that (Sigma_iY, Sigma_iX, cov) are input parameters. Previously they are calculated in the function
-//      This function needs the function getPCG1ofSigmaAndVector and function getCrossprod and GetTrace
-// [[Rcpp::export]]
-Rcpp::List getAIScore(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec,
-arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
-int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff){
-
-	arma::fmat Sigma_iXt = Sigma_iX.t();
-
-  	arma::fvec PY1 = Sigma_iY - Sigma_iX * (cov * (Sigma_iXt * Yvec));
-  	arma::fvec APY = getCrossprodMatAndKin(PY1);
-  	float YPAPY = dot(PY1, APY);
-
-  	float Trace = GetTrace(Sigma_iX, Xmat, wVec, tauVec, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff);
-  	arma::fvec PAPY_1 = getPCG1ofSigmaAndVector(wVec, tauVec, APY, maxiterPCG, tolPCG);
-  	arma::fvec PAPY = PAPY_1 - Sigma_iX * (cov * (Sigma_iXt * PAPY_1));
-  	float AI = dot(APY, PAPY);
-
-  	return Rcpp::List::create(Named("YPAPY") = YPAPY, Named("Trace") = Trace, Named("PY") = PY1, Named("AI") = AI);
-}
-
-//Rcpp::List fitglmmaiRPCG(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec,
-// Modified by SLEE, 04/16/2017
-// Modified that (Sigma_iY, Sigma_iX, cov) are input parameters. Previously they are calculated in the function
-//This function needs the function getPCG1ofSigmaAndVector and function getCrossprod, getAIScore
-// [[Rcpp::export]]
-Rcpp::List fitglmmaiRPCG(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec &wVec,  arma::fvec &tauVec,
-arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
-int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff){
-
-	//double mem1,mem2;
-        //process_mem_usage(mem1, mem2);
-
-  	Rcpp::List re = getAIScore(Yvec, Xmat,wVec,  tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff);
-        //process_mem_usage(mem1, mem2);
-  	float YPAPY = re["YPAPY"];
-  	float Trace = re["Trace"];
-  	float score1 = YPAPY - Trace;
-  	float AI1 = re["AI"];
-  	float Dtau = score1/AI1;
-  	arma::fvec tau0 = tauVec;
-  	tauVec(1) = tau0(1) + Dtau;
-
-  	for(int i=0; i<tauVec.n_elem; ++i) {
-    		if (tauVec(i) < tol){
-      			tauVec(i) = 0;
-    		}
-  	}
-
-  	float step = 1.0;
-  	while (tauVec(1) < 0.0){
-
-    		step = step*0.5;
-    		tauVec(1) = tau0(1) + step * Dtau;
-
-  	}
-
-  	for(int i=0; i<tauVec.n_elem; ++i) {
-    		if (tauVec(i) < tol){
-      			tauVec(i) = 0;
-    		}
-  	}
-        //process_mem_usage(mem1, mem2);
-   	//std::cout << "VM 3: " << mem1 << "; RSS 3: " << mem2<< std::endl;
-  	return List::create(Named("tau") = tauVec);
-}
 
 
 
 /*add for SPA by Wei 04222017*/
 // [[Rcpp::export]]
-arma::fmat getSigma_X(arma::fvec& wVec, arma::fvec& tauVec,arma::fmat& Xmat, int maxiterPCG, float tolPCG){
+arma::fmat getSigma_X_multiV(arma::fvec& wVec, arma::fvec& tauVec,arma::fmat& Xmat, int maxiterPCG, float tolPCG, bool LOCO){
 
 
   	int Nnomissing = Xmat.n_rows;
@@ -3071,307 +2567,19 @@ arma::fmat getSigma_X(arma::fvec& wVec, arma::fvec& tauVec,arma::fmat& Xmat, int
 
   	for(int i = 0; i < colNumX; i++){
     		XmatVecTemp = Xmat.col(i);
-    		Sigma_iX1.col(i) = getPCG1ofSigmaAndVector(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG);
+    		Sigma_iX1.col(i) = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG, LOCO);
   	}
   	return(Sigma_iX1);
 }
 
 
-// [[Rcpp::export]]
-arma::fmat getSigma_X_LOCO(arma::fvec& wVec, arma::fvec& tauVec,arma::fmat& Xmat, int maxiterPCG, float tolPCG){
-
-
-        int Nnomissing = Xmat.n_rows;
-        int colNumX = Xmat.n_cols;
-
-        //cout << colNumX << endl;
-        //cout << size(wVec) << endl;
-        //cout << size(tauVec) << endl;
-
-
-        arma::fmat Sigma_iX1(Nnomissing,colNumX);
-        arma::fvec XmatVecTemp;
-
-        for(int i = 0; i < colNumX; i++){
-                XmatVecTemp = Xmat.col(i);
-                Sigma_iX1.col(i) = getPCG1ofSigmaAndVector_LOCO(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG);
-        }
-        return(Sigma_iX1);
-}
-
-
 
 // [[Rcpp::export]]
-arma::fvec  getSigma_G(arma::fvec& wVec, arma::fvec& tauVec,arma::fvec& Gvec, int maxiterPCG, float tolPCG){
+arma::fvec  getSigma_G_multiV(arma::fvec& wVec, arma::fvec& tauVec,arma::fvec& Gvec, int maxiterPCG, float tolPCG, bool LOCO){
   	arma::fvec Sigma_iG;
-  	Sigma_iG = getPCG1ofSigmaAndVector(wVec, tauVec, Gvec, maxiterPCG, tolPCG);
+  	Sigma_iG = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO);
   	return(Sigma_iG);
 }
-
-// [[Rcpp::export]]
-arma::fvec  getSigma_G_LOCO(arma::fvec& wVec, arma::fvec& tauVec,arma::fvec& Gvec, int maxiterPCG, float tolPCG){
-        arma::fvec Sigma_iG;
-        Sigma_iG = getPCG1ofSigmaAndVector_LOCO(wVec, tauVec, Gvec, maxiterPCG, tolPCG);
-        return(Sigma_iG);
-}
-
-//This function needs the function getPCG1ofSigmaAndVector and function getCrossprodMatAndKin
-// [[Rcpp::export]]
-arma::fvec GetTrace_q(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::fmat& cov1,  int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff){
-  	set_seed(200);
-  	arma::fmat Sigma_iXt = Sigma_iX.t();
-  	int Nnomissing = geno.getNnomissing();
-  	arma::fvec tempVec(nrun);
-  	tempVec.zeros();
-  	arma::fvec tempVec0(nrun);
-  	tempVec0.zeros();
-
-        arma::fvec Sigma_iu;
-        arma::fcolvec Pu;
-        arma::fvec Au;
-        arma::fvec uVec;
-
-        int nrunStart = 0;
-        int nrunEnd = nrun;
-        float traceCV = traceCVcutoff + 0.1;
-        float traceCV0 = traceCVcutoff + 0.1;
-
-        while((traceCV > traceCVcutoff) | (traceCV0 > traceCVcutoff)){
-
-
-  	for(int i = nrunStart; i < nrunEnd; i++){
-
-    		Rcpp::NumericVector uVec0;
-    		uVec0 = nb(Nnomissing);
-    		uVec = as<arma::fvec>(uVec0);
-    		uVec = uVec*2 - 1;
-  //  		arma::fvec Sigma_iu;
-    		Sigma_iu = getPCG1ofSigmaAndVector(wVec, tauVec, uVec, maxiterPCG, tolPCG);
-  //  		arma::fcolvec Pu;
-    		Pu = Sigma_iu - Sigma_iX * (cov1 *  (Sigma_iXt * uVec));
-  //  		arma::fvec Au;
-    		Au = getCrossprodMatAndKin(uVec);
-    		tempVec(i) = dot(Au, Pu);
-    		tempVec0(i) = dot(uVec, Pu);
-                Au.clear();
-      		Pu.clear();
-      		Sigma_iu.clear();
-      		uVec.clear();
-  	}
-	traceCV = calCV(tempVec);
-	traceCV0 = calCV(tempVec0);
-	
-	if((traceCV > traceCVcutoff) | (traceCV0 > traceCVcutoff)){
-          nrunStart = nrunEnd;
-          nrunEnd = nrunEnd + 10;
-          tempVec.resize(nrunEnd);
-          tempVec0.resize(nrunEnd);
-
-	  //std::cout << "arma::mean(tempVec0): " << arma::mean(tempVec0) << std::endl;	
-          cout << "CV for trace random estimator using "<< nrunStart << " runs is " << traceCV <<  "(> " << traceCVcutoff << endl;
-          cout << "try " << nrunEnd << "runs" << endl;
-        }
-
-    }   
-
-  	arma::fvec traVec(2);
-  	traVec(1) = arma::mean(tempVec);
-  	traVec(0) = arma::mean(tempVec0);
-	tempVec.clear();
-	tempVec0.clear();
-  	return(traVec);
-}
-
-//Rcpp::List getAIScore_q(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff){
-
-
-//This function needs the function getPCG1ofSigmaAndVector and function getCrossprod and GetTrace
-// [[Rcpp::export]]
-Rcpp::List getAIScore_q(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec,
-arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
-int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff){
-
-
-  	arma::fmat Sigma_iXt = Sigma_iX.t();
-  	arma::fmat Xmatt = Xmat.t();
-
-  	//arma::fmat cov1 = inv_sympd(Xmatt * Sigma_iX);
-        arma::fmat cov1;
-        try {
-          cov1 = arma::inv_sympd(arma::symmatu(Xmatt * Sigma_iX));
-        } catch (const std::exception& e) {
-          cov1 = arma::pinv(arma::symmatu(Xmatt * Sigma_iX));
-          cout << "inv_sympd failed, inverted with pinv" << endl;
-        }
-
-
-  	arma::fvec PY1 = Sigma_iY - Sigma_iX * (cov1 * (Sigma_iXt * Yvec));
-  	arma::fvec APY = getCrossprodMatAndKin(PY1);
-
-  	float YPAPY = dot(PY1, APY);
-
-  	arma::fvec A0PY = PY1; ////Quantitative
-
-
-  	float YPA0PY = dot(PY1, A0PY); ////Quantitative
-
-
-  	arma::fvec Trace = GetTrace_q(Sigma_iX, Xmat, wVec, tauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff);
-
-  	arma::fmat AI(2,2);
-  	arma::fvec PA0PY_1 = getPCG1ofSigmaAndVector(wVec, tauVec, A0PY, maxiterPCG, tolPCG);
-  	arma::fvec PA0PY = PA0PY_1 - Sigma_iX * (cov1 * (Sigma_iXt * PA0PY_1));
-
-  	AI(0,0) =  dot(A0PY, PA0PY);
-
-  	//cout << "A1(0,0) " << AI(0,0)  << endl;
-  	arma::fvec PAPY_1 = getPCG1ofSigmaAndVector(wVec, tauVec, APY, maxiterPCG, tolPCG);
-  	arma::fvec PAPY = PAPY_1 - Sigma_iX * (cov1 * (Sigma_iXt * PAPY_1));
-  	AI(1,1) = dot(APY, PAPY);
-
-  	AI(0,1) = dot(A0PY, PAPY);
-
-  	AI(1,0) = AI(0,1);
-
-  	//cout << "AI " << AI << endl;
-  	//cout << "Trace " << Trace << endl;
-  	//cout << "YPAPY " << YPAPY << endl;
-  	//cout << "cov " << cov1 << endl;
-	return Rcpp::List::create(Named("YPAPY") = YPAPY, Named("YPA0PY") = YPA0PY,Named("Trace") = Trace,Named("PY") = PY1,Named("AI") = AI);
-
-}
-
-
-
-
-
-
-//This function needs the function getPCG1ofSigmaAndVector and function getCrossprod and GetTrace
-// [[Rcpp::export]]
-Rcpp::List getAIScore_q_LOCO(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff){
-
-        int Nnomissing = geno.getNnomissing();
-        arma::fvec Sigma_iY1;
-        Sigma_iY1 = getPCG1ofSigmaAndVector_LOCO(wVec, tauVec, Yvec, maxiterPCG, tolPCG);
-
-//	for(int j = 0; j < 10; j++){
-//                std::cout << "Sigma_iY1(j): " << Sigma_iY1(j) << std::endl;
-//        }
-
-
-        int colNumX = Xmat.n_cols;
-        arma::fmat Sigma_iX1(Nnomissing,colNumX);
-        arma::fvec XmatVecTemp;
-
-        for(int i = 0; i < colNumX; i++){
-                XmatVecTemp = Xmat.col(i);
-
-                Sigma_iX1.col(i) = getPCG1ofSigmaAndVector_LOCO(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG);
-
-        }
-
-
-        //rma::fmat Sigma_iX1t = Sigma_iX1.t();
-        arma::fmat Xmatt = Xmat.t();
-
-        //arma::fmat cov1 = inv_sympd(Xmatt * Sigma_iX1);
-        arma::fmat cov1;
-        try {
-          cov1 = arma::inv_sympd(arma::symmatu(Xmatt * Sigma_iX1));
-        } catch (const std::exception& e) {
-          cov1 = arma::pinv(arma::symmatu(Xmatt * Sigma_iX1));
-          cout << "inv_sympd failed, inverted with pinv" << endl;
-        }
-
-
-        //cout << "cov " << cov1 << endl;
-
-
-	return Rcpp::List::create(Named("cov") = cov1, Named("Sigma_iX") = Sigma_iX1, Named("Sigma_iY") = Sigma_iY1);
-        //return Rcpp::List::create(Named("YPAPY") = YPAPY, Named("Trace") = Trace,Named("Sigma_iY") = Sigma_iY1, Named("Sigma_iX") = Sigma_iX1, Named("PY") = PY1, Named("AI") = AI, Named("cov") = cov1);
-}
-
-
-
-//This function needs the function getPCG1ofSigmaAndVector and function getCrossprod, getAIScore_q
-// [[Rcpp::export]]
-Rcpp::List fitglmmaiRPCG_q_LOCO(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff){
-
-        arma::uvec zeroVec = (tauVec < tol); //for Quantitative, GMMAT
-        Rcpp::List re = getAIScore_q_LOCO(Yvec, Xmat, wVec, tauVec, nrun, maxiterPCG, tolPCG, traceCVcutoff);
-//return Rcpp::List::create(Named("cov") = cov1, Named("Sigma_iX") = Sigma_iX1, Named("Sigma_iY") = Sigma_iY1);
-        arma::fmat cov = re["cov"];
-        arma::fmat Sigma_iX = re["Sigma_iX"];
-        arma::fmat Sigma_iXt = Sigma_iX.t();
-
-        arma::fvec alpha1 = cov * (Sigma_iXt * Yvec);
-        arma::fvec Sigma_iY = re["Sigma_iY"];
-        arma::fvec eta1 = Yvec - tauVec(0) * (Sigma_iY - Sigma_iX * alpha1) / wVec;
-	return List::create(Named("tau") = tauVec, Named("cov") = cov, Named("alpha") = alpha1, Named("eta") = eta1);
-}
-
-
-
-//Rcpp::List fitglmmaiRPCG_q(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff){
-
-
-
-//This function needs the function getPCG1ofSigmaAndVector and function getCrossprod, getAIScore_q
-// [[Rcpp::export]]
-Rcpp::List fitglmmaiRPCG_q(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec &wVec,  arma::fvec &tauVec,
-arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
-int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff){
-
-  	arma::uvec zeroVec = (tauVec < tol); //for Quantitative, GMMAT
-	Rcpp::List re = getAIScore_q(Yvec, Xmat,wVec,  tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff);
-
-  	float YPAPY = re["YPAPY"];
-  	float YPA0PY = re["YPA0PY"]; //for Quantitative
-  	arma::fvec Trace = re["Trace"]; //for Quantitative
-
-  	float score0 = YPA0PY - Trace(0); //for Quantitative
-  	float score1 = YPAPY - Trace(1); //for Quantitative
-  	arma::fvec scoreVec(2); //for Quantitative
-  	scoreVec(0) = score0; //for Quantitative
-  	scoreVec(1) = score1; //for Quantitative
-
-    //for Quantitative
-  	arma::fmat AI = re["AI"];
-  	//cout << "0,0" << AI(0,0) << endl;
-  	//cout << "0,1" << AI(0,1) << endl;
-  	//cout << "1,0" << AI(1,0) << endl;
-  	//cout << "1,1" << AI(1,1) << endl;
-
-  	arma::fvec Dtau = solve(AI, scoreVec);
-
-
-  	arma::fvec tau0 = tauVec;
-  	tauVec = tau0 + Dtau;
-
-
-  	tauVec.elem( find(zeroVec % (tauVec < tol)) ).zeros(); //for Quantitative Copied from GMMAT  
-
-  	float step = 1.0;
-
-
-  	//cout << "tau2 " << tauVec(0) << " " << tauVec(1) << endl;
-  	while (tauVec(0) < 0.0 || tauVec(1)  < 0.0){ //for Quantitative
-     	//	cout << "tauVec Here: " << tauVec << endl;
-    		step = step*0.5;
-    		tauVec = tau0 + step * Dtau; //for Quantitative
-    	//	cout << "tau_4: " << tauVec << endl;
-    		tauVec.elem( find(zeroVec % (tauVec < tol)) ).zeros(); //for Quantitative Copied from GMMAT
-    	//	cout << "tau_5: " << tauVec << endl;
- 	}
-
-
-
-  	tauVec.elem( find(tauVec < tol) ).zeros();
-	return List::create(Named("tau") = tauVec);
-
-  	//return List::create(Named("tau") = tauVec, Named("cov") = cov, Named("alpha") = alpha1, Named("eta") = eta1);
-}
-
 
 
 //http://gallery.rcpp.org/articles/parallel-inner-product/
@@ -3465,32 +2673,6 @@ arma::fvec getCrossprodMatAndKin_usingSubMarker(arma::fcolvec& bVec){
 
         return(crossProdVec);
 }
-
-
-
-
-
-
-
-
-
-//std::vector<int> calGRMvalueUsingSubMarker_forOneInv(int sampleIndex, float relatednessCutoff){
-//        //sampleIndex starts with 0
-//        std::vector<int> relatedIndex;
-//        int Ntotal = geno.getNnomissing();
-//        arma::fcolvec bindexvec(Ntotal);
-//        bindexvec.zeros();
-//        bindexvec(sampleIndex) = 1;
-//        arma::fvec crossProdVec = getCrossprodMatAndKin_usingSubMarker(bindexvec);
-//        for(int i=sampleIndex; i< Ntotal; i++){
-//                if(crossProdVec(i) >= relatednessCutoff){
-//                        relatedIndex.push_back(i);
-//                }
-//        }
-//        return(relatedIndex);
-//}
-
-
 
 
 //The code below is from http://gallery.rcpp.org/articles/parallel-inner-product/
@@ -3664,110 +2846,6 @@ Rcpp::List createSparseKin(arma::fvec& markerIndexVec, float relatednessCutoff, 
         }
 
 
-
-
-
-
-/*
-//	(stdGenoMultiMarkersMat.row(0)).print("stdGenoMultiMarkersMat.row(0):");
-	//std::cout << stdGenoMultiMarkersMat << std::endl;
-	//std::cout << stdGenoMultiMarkersMat.row(487) << std::endl;	
-	omp_set_dynamic(0);     // Explicitly disable dynamic teams
-        omp_set_num_threads(16); // Use 16 threads for all consecutive parallel regions
-	int totalCombination = Ntotal*(Ntotal-1)/2 - 1;
-
-	#pragma omp parallel
-	{
-	std::vector<unsigned int> vec_privatei;	
-	std::vector<unsigned int> vec_privatej;	
-	#pragma omp for nowait //fill vec_private in parallel
-	for(int k = 0; k < totalCombination; k++){
-        	int i = k / Ntotal;
-        	int j = k % Ntotal;
-        	if((j <= i)){
-            		i = Ntotal - i - 2;
-            		j = Ntotal - j - 1;
-        	}
-
-//        for(i=0; i< Ntotal; i++){
-//		for(j = i; j < Ntotal; j++){
-			//kinValueTemp = arma::dot(stdGenoMultiMarkersMat.row(i), stdGenoMultiMarkersMat.row(j));
-		kinValueTemp = arma::dot(stdGenoMultiMarkersMat.col(i), stdGenoMultiMarkersMat.col(j));
-		kinValueTemp = kinValueTemp/nSubMarker;
-		if(kinValueTemp >= relatednessCutoff){
-//				if(i == 0){
-				//std::cout << "kinValueTemp: " << kinValueTemp << std::endl;
-				//std::cout << "relatednessCutoff: " << relatednessCutoff << std::endl;
-				//std::cout << "i: " << i << std::endl;
-//				std::cout << "j: " << j;
-//				}
-			vec_privatei.push_back((unsigned int)i);
-			//allIndexVec.push_back(i);
-			//iIndexVec.push_back(i);
-			//iIndexVec.push_back(i);
-			//allIndexVec.push_back(j);
-			vec_privatej.push_back((unsigned int)j);
-				
-								
-		}
-	}
-//	#pragma omp critical
-	#pragma omp for schedule(static) ordered
-    	for(int i=0; i<omp_get_num_threads(); i++) {
-        	#pragma omp ordered
-        	iIndexVec.insert(iIndexVec.end(), vec_privatei.begin(), vec_privatei.end());  
-        	jIndexVec.insert(jIndexVec.end(), vec_privatej.begin(), vec_privatej.end());  
-    	}
-//		}
-	}
-//	int nall = allIndexVec.size();
-//	 std::cout << "nall: " << nall << std::endl;
-//	int k = 0;
-//	while(k < nall){
-	//	std::cout << "allIndexVec[k]: " << k << " " << allIndexVec[k] << std::endl;
-	//	std::cout << "allIndexVec[k+1]: " << k+1 << " " << allIndexVec[k+1] << std::endl;
-//        	iIndexVec.push_back(allIndexVec[k]);
-//                jIndexVec.push_back(allIndexVec[k+1]);
-//		k = k + 2;
-//        }
-//	allIndexVec.clear();
-
-	for(int k = 0; k < Ntotal; k++){
-		iIndexVec.push_back((unsigned int)k);
-		jIndexVec.push_back((unsigned int)k);
-	}
-
-        arma::fvec * temp = &(geno.m_OneSNP_StdGeno);
-        size_t ni = iIndexVec.size();
-        //size_t ni = nall/2 + Ntotal;
-        kinValueVec.resize(ni);
-        std::fill(kinValueVec.begin(), kinValueVec.end(), 0);
-
-        int Mmarker = geno.getM();
-        for(size_t i=0; i< Mmarker; i++){
-                geno.Get_OneSNP_StdGeno(i, temp);
-                for(size_t j=0; j < ni; j++){
-//                for(size_t k=0; k < nall/2; k++){
-                        kinValueVec[j] = kinValueVec[j] + (((*temp)[iIndexVec[j]])*((*temp)[jIndexVec[j]]))/Mmarker;
-//                        kinValueVec[j] = kinValueVec[j] + (((*temp)[allIndexVec[k*2]])*((*temp)[allIndexVec[k*2+1]]))/Mmarker;
-                }
-//		for(size_t k=nall/2; k < ni; k++){
-			
-//			kinValueVec[j] = kinValueVec[j] + (((*temp)[allIndexVec[k*2]])*((*temp)[allIndexVec[k*2+1]]))/Mmarker;
-
-//		}
-        }	
-
-
-*/   // end of the openMP version 
-
-	std::cout << "ni: " << ni << std::endl;
-/*	for(size_t j=0; j < 10; j++){
-		std::cout << "iIndexVec[j]: " << iIndexVec[j] << std::endl;
-		std::cout << "jIndexVec[j]: " << jIndexVec[j] << std::endl;
-		std::cout << "kinValueVec[j]: " << kinValueVec[j] << std::endl;
-	}
-*/
 	for(size_t j=0; j < ni; j++){
 		if(kinValueVec[j] >= relatednessCutoff){
 	//	std::cout << "kinValueVec[j]: " << kinValueVec[j] << std::endl;
@@ -4626,3 +3704,280 @@ void setminMAC_VarianceRatio(float t_minMACVarRatio, float t_maxMACVarRatio, boo
 //  int a = geno.getnumberofMarkerswithMAFge_minMAFtoConstructGRM();
 //  return(a);
 //}
+// [[Rcpp::export]]
+Rcpp::List getCoefficients_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int maxiterPCG, float tolPCG, bool LOCO){
+
+        int Nnomissing = geno.getNnomissing();
+        arma::fvec Sigma_iY;
+        Sigma_iY = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, Yvec, maxiterPCG, tolPCG, LOCO);
+        std::cout << "after Sigma_iY" << std::endl;
+        int colNumX = Xmat.n_cols;
+        arma::fmat Sigma_iX(Nnomissing,colNumX);
+        arma::fvec XmatVecTemp;
+        for(int i = 0; i < colNumX; i++){
+                XmatVecTemp = Xmat.col(i);
+                Sigma_iX.col(i) = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG, LOCO);
+
+        }
+        arma::fmat Xmatt = Xmat.t();
+        //arma::fmat cov = inv_sympd(Xmatt * Sigma_iX);
+        arma::fmat cov;
+        try {
+          cov = arma::inv_sympd(arma::symmatu(Xmatt * Sigma_iX));
+        } catch (const std::exception& e) {
+          cov = arma::pinv(arma::symmatu(Xmatt * Sigma_iX));
+          cout << "inv_sympd failed, inverted with pinv" << endl;
+        }
+        arma::fmat Sigma_iXt = Sigma_iX.t();
+        arma::fvec SigmaiXtY = Sigma_iXt * Yvec;
+        arma::fvec alpha = cov * SigmaiXtY;
+
+        arma::fvec eta = Yvec - tauVec(0) * (Sigma_iY - Sigma_iX * alpha) / wVec;
+        return Rcpp::List::create(Named("Sigma_iY") = Sigma_iY, Named("Sigma_iX") = Sigma_iX, Named("cov") = cov, Named("alpha") = alpha, Named("eta") = eta);
+}
+
+
+// [[Rcpp::export]]
+arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec & fixtauVec, arma::fmat& cov1,  int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){		
+		
+  	set_seed(200);
+	
+	int q2 = arma::sum(fixtauVec==0);
+        arma::uvec idxtau = arma::find(fixtauVec==0);
+
+	idxtau.print("idxtau");
+
+  	arma::fmat Sigma_iXt = Sigma_iX.t();
+        int Nnomissing = geno.getNnomissing();
+	unsigned int k = Kmat_vec.size();
+        unsigned int k1 = k + 2;
+  	arma::fmat temp_mat(nrun, k1);
+	arma::fmat temp_mat_update(nrun, q2);
+  	arma::fvec temp_vec(nrun);
+        arma::fvec temp_vec_double(Nnomissing);
+  	temp_mat.zeros();
+	temp_mat_update.zeros();
+
+        arma::fvec Sigma_iu;
+        arma::fvec Pu;
+        arma::fmat Au_mat(Nnomissing, k1);
+        arma::fvec uVec;
+        NumericVector uVec0;
+
+        int nrun_trace_start = 0;
+        int nrun_trace_end = nrun;
+        arma::fvec traceCV(q2);
+        traceCV.fill(traceCVcutoff + 0.1);
+
+        //while((traceCV > cutoff_trace) | (traceCV0 > cutoff_trace)){
+	while( arma::any(traceCV > traceCVcutoff) ){
+    		for(int i = nrun_trace_start; i < nrun_trace_end; i++){
+
+    			uVec0 = nb(Nnomissing);
+    			uVec = as<arma::fvec>(uVec0);
+    			uVec = uVec*2 - 1;
+ 			Sigma_iu = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, uVec, maxiterPCG, tolPCG, LOCO);
+			Pu = Sigma_iu - Sigma_iX * (cov1 *  (Sigma_iXt * uVec));
+			
+			if(fixtauVec(0) == 0)	{
+        			Au_mat.col(0) = uVec;
+        			temp_mat(i,0) = dot(Au_mat.col(0), Pu);
+			}
+			//std::cout << "okkkkk" << std::endl;
+        		// conversion for ops with sp_mat
+			if(fixtauVec(1) == 0)   {
+				if(!LOCO){
+					temp_vec_double = getCrossprodMatAndKin(uVec);
+				}else{
+					temp_vec_double = getCrossprodMatAndKin_LOCO(uVec);	
+				}	
+				Au_mat.col(1) = temp_vec_double;
+        			temp_mat(i,1) = dot(temp_vec_double, Pu);
+			}
+			//std::cout << "okkkkk2" << std::endl;
+
+
+    			for(int j=2; j<k1;j++){
+				if(fixtauVec(j) == 0){
+    					Au_mat.col(j) = 0.0+Kmat_vec[j-2] * uVec;
+    					temp_mat(i,j) = dot(Au_mat.col(j), Pu);
+				}
+    			} // end for j in 2:k1
+    			uVec.clear();
+			Pu.clear();
+			Sigma_iu.clear();
+				
+  		} // end for i
+		temp_mat_update = temp_mat.cols(idxtau);
+		
+		std::cout << "dim temp_mat_update" << temp_mat_update.n_rows << " " << temp_mat_update.n_cols << std::endl;;
+  		// update trace cv vector
+  		for(int k=0; k<q2; k++){
+  			temp_vec = temp_mat_update.col(k);
+  			traceCV(k) = calCV(temp_vec);
+  		} 
+		traceCV.print("traceCV");
+		//traceCVcutoff = 1.0;
+  		// if not converge, increase nrun_trace and rerun
+		temp_mat.print("temp_mat");
+  		if( arma::any(traceCV > traceCVcutoff) ){
+  			nrun_trace_start = nrun_trace_end;
+  			nrun_trace_end = nrun_trace_end + 10;
+  			temp_mat.resize(nrun_trace_end,k1);
+			temp_mat_update.resize(nrun_trace_end,q2);
+  			//std::cout << "arma::mean(temp_mat0): " << arma::mean(temp_mat0) << std::endl;	
+  			Rcout << "CV for trace random estimator using "<< nrun_trace_start << " runs is " << traceCV <<  " > " << traceCVcutoff << std::endl;
+  			Rcout << "try " << nrun_trace_end << "runs" << std::endl;
+      		} // end if arma::any(traceCV > traceCVcutoff)
+
+    	} // end while  arma::any(traceCV > traceCVcutoff)
+    	Au_mat.clear();
+    	Pu.clear();
+    	Sigma_iu.clear();
+    	uVec.clear();
+    	temp_vec.clear();
+
+  	arma::fvec traVec(q2);
+  	for(int i=0; i<q2; i++){
+  		traVec(i) = arma::mean(temp_mat_update.col(i));
+  	}
+    	temp_mat.clear();
+    	temp_mat_update.clear();
+  	return(traVec);
+}
+
+
+
+// [[Rcpp::export]]
+Rcpp::List getAIScore_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, arma::ivec & fixtauVec, 
+arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
+int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
+
+
+	int q2 = arma::sum(fixtauVec==0);
+	arma::uvec idxtau = arma::find(fixtauVec==0);
+	//int ncol_x = X.n_cols;
+	arma::fvec tau0;
+	unsigned int k = Kmat_vec.size();
+	unsigned int k1 = k + 2;	
+	arma::fmat AI(k1,k1);
+	arma::fvec YPAPY(k1);
+	YPAPY.zeros();
+        arma::fvec Trace(k1);
+	Trace.zeros();
+	std::cout << "k1 " << k1 << std::endl;
+	arma::fmat Sigma_iXt = Sigma_iX.t();
+        arma::fmat Xmatt = Xmat.t();
+	arma::fvec PY1 = Sigma_iY - Sigma_iX * (cov * (Sigma_iXt * Yvec));
+	//arma::fvec APY = getCrossprodMatAndKin(PY1);
+	//float YPAPY = dot(PY1, APY);
+        //arma::fvec A0PY = PY1; ////Quantitative
+        //float YPA0PY = dot(PY1, A0PY); ////Quantitative
+        //arma::fvec Trace = GetTrace_q(Sigma_iX, Xmat, wVec, tauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff);
+	unsigned int n = PY1.n_elem;	
+	//arma::fvec PA0PY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, A0PY, maxiterPCG, tolPCG);
+        //arma::fvec PA0PY = PA0PY_1 - Sigma_iX * (cov1 * (Sigma_iXt * PA0PY_1));
+	arma::fvec PAPY_1, PAPY,  APY; 
+	arma::fmat APYmat(n, k1);
+
+	//if(q2>0){
+		for(int i=0; i<k1; i++){
+		    if(fixtauVec(i) == 0){	
+			if(i==0){
+				APY = PY1;
+			}else if(i==1){
+				if(!LOCO){
+					APY = getCrossprodMatAndKin(PY1);
+				}else{
+					APY = getCrossprodMatAndKin_LOCO(PY1);
+				}	
+			}else{
+				APY = Kmat_vec[i-2]*PY1;
+			}	
+			APYmat.col(i) = APY;
+			PAPY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, APY, maxiterPCG, tolPCG, LOCO);
+			PAPY = PAPY_1 - Sigma_iX * (cov * (Sigma_iXt * PAPY_1));
+			for(int j=0; j<=i; j++){
+				AI(i,j) = arma::dot(APYmat.col(j), PAPY);
+				if(j !=i){
+					AI(j,i) = AI(i,j);
+				}
+			}
+			YPAPY(i) = arma::dot(PY1, APYmat.col(i));
+		     }	
+		}
+	AI.print("AI");	
+	arma::fmat AI_update = AI.submat(idxtau, idxtau);
+	arma::fvec YPAPY_update = YPAPY.elem(idxtau);
+
+	//vector with length=q2
+	Trace = GetTrace_multiV(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO);
+	YPAPY_update.print("YPAPY_update");
+	Trace.print("Trace");	
+        //arma::fvec PAPY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, APY, maxiterPCG, tolPCG);
+        //arma::fvec PAPY = PAPY_1 - Sigma_iX * (cov1 * (Sigma_iXt * PAPY_1));
+	return Rcpp::List::create(Named("YPAPY") = YPAPY_update, Named("Trace") = Trace,Named("PY") = PY1,Named("AI") = AI_update);
+}
+
+
+// [[Rcpp::export]]
+Rcpp::List fitglmmaiRPCG_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec &wVec,  arma::fvec & tauVec, arma::ivec & fixtauVec,
+arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
+int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOCO){
+	Function warning("warning");
+
+	unsigned int k = Kmat_vec.size();
+        unsigned int k1 = k + 2;
+
+	int q2 = arma::sum(fixtauVec==0);
+	arma::uvec idxtau = arma::find(fixtauVec==0);
+	arma::fvec tau0 = tauVec;
+
+
+	//std::cout << "check 1" << std::endl;
+	Rcpp::List re = getAIScore_multiV(Yvec, Xmat,wVec,  tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO);
+
+	//std::cout << "check 2" << std::endl;
+
+	arma::fvec YPAPY = re["YPAPY"];
+	arma::fvec Trace = re["Trace"];
+	arma::fvec score1 = YPAPY - Trace;
+	YPAPY.print("YPAPY");
+	Trace.print("Trace");
+	arma::fmat AI1 = re["AI"];
+	arma::fvec Dtau(AI1.n_cols);
+	score1.print("score");
+	try{
+		Dtau = arma::solve(AI1, score1, arma::solve_opts::allow_ugly);
+	}
+	catch(std::runtime_error){
+		std::cout << "arma::solve(AI, score): AI seems singular, using less variant components matrix is suggested." << std::endl;
+		Dtau.zeros();
+	}
+	//std::cout << "check 3" << std::endl;
+	Dtau.print("Dtau");
+	score1.print("score1");
+	AI1.print("AI1");
+	// fill dtau using dtau_pre, padding 0
+	int i2 = 0;
+	arma::fvec Dtau_k1(k1);
+	Dtau_k1.zeros();
+	for(int i=0; i<k1; i++){
+		if(fixtauVec(i)==0){ // not fixed
+			Dtau_k1(i) = Dtau(i2);
+			i2++;
+		} 
+	} // end for i
+	tau0 = tauVec;
+	tauVec = tauVec + Dtau_k1;
+	tauVec.elem( arma::find(tauVec < tol) ).zeros();
+	float step = 1.0;
+	while ( arma::any(tauVec < 0.0) ){
+		step = step*0.5;
+		tauVec = tau0 + step*Dtau_k1;
+	 } // end while
+
+	 tauVec.elem( arma::find(tauVec < tol) ).zeros();
+	 return List::create(Named("tau") = tauVec);
+}	
+

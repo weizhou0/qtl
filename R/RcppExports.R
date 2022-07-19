@@ -125,6 +125,18 @@ copy_singleInGroup <- function() {
     invisible(.Call('_SAIGE_copy_singleInGroup', PACKAGE = 'SAIGE'))
 }
 
+addNewKat <- function(t_Kmat) {
+    invisible(.Call('_SAIGE_addNewKat', PACKAGE = 'SAIGE', t_Kmat))
+}
+
+getProdTauKmat <- function(tauVec) {
+    .Call('_SAIGE_getProdTauKmat', PACKAGE = 'SAIGE', tauVec)
+}
+
+get_numofV <- function() {
+    .Call('_SAIGE_get_numofV', PACKAGE = 'SAIGE')
+}
+
 closeGenoFile_plink <- function() {
     invisible(.Call('_SAIGE_closeGenoFile_plink', PACKAGE = 'SAIGE'))
 }
@@ -245,36 +257,24 @@ Get_OneSNP_StdGeno <- function(SNPIdx) {
     .Call('_SAIGE_Get_OneSNP_StdGeno', PACKAGE = 'SAIGE', SNPIdx)
 }
 
-getDiagOfSigma <- function(wVec, tauVec) {
-    .Call('_SAIGE_getDiagOfSigma', PACKAGE = 'SAIGE', wVec, tauVec)
+getDiagOfSigma_multiV <- function(wVec, tauVec, LOCO) {
+    .Call('_SAIGE_getDiagOfSigma_multiV', PACKAGE = 'SAIGE', wVec, tauVec, LOCO)
 }
 
-getDiagOfSigma_LOCO <- function(wVec, tauVec) {
-    .Call('_SAIGE_getDiagOfSigma_LOCO', PACKAGE = 'SAIGE', wVec, tauVec)
-}
-
-getCrossprod <- function(bVec, wVec, tauVec) {
-    .Call('_SAIGE_getCrossprod', PACKAGE = 'SAIGE', bVec, wVec, tauVec)
-}
-
-getCrossprod_LOCO <- function(bVec, wVec, tauVec) {
-    .Call('_SAIGE_getCrossprod_LOCO', PACKAGE = 'SAIGE', bVec, wVec, tauVec)
+getCrossprod_multiV <- function(bVec, wVec, tauVec, LOCO) {
+    .Call('_SAIGE_getCrossprod_multiV', PACKAGE = 'SAIGE', bVec, wVec, tauVec, LOCO)
 }
 
 gen_sp_GRM <- function() {
     .Call('_SAIGE_gen_sp_GRM', PACKAGE = 'SAIGE')
 }
 
-gen_sp_Sigma <- function(wVec, tauVec) {
-    .Call('_SAIGE_gen_sp_Sigma', PACKAGE = 'SAIGE', wVec, tauVec)
+gen_sp_Sigma_multiV <- function(wVec, tauVec) {
+    .Call('_SAIGE_gen_sp_Sigma_multiV', PACKAGE = 'SAIGE', wVec, tauVec)
 }
 
-gen_spsolve_v3 <- function(yvec) {
-    .Call('_SAIGE_gen_spsolve_v3', PACKAGE = 'SAIGE', yvec)
-}
-
-gen_spsolve_v4 <- function(wVec, tauVec, yvec) {
-    .Call('_SAIGE_gen_spsolve_v4', PACKAGE = 'SAIGE', wVec, tauVec, yvec)
+gen_spsolve_v4_multiV <- function(wVec, tauVec, yvec) {
+    .Call('_SAIGE_gen_spsolve_v4_multiV', PACKAGE = 'SAIGE', wVec, tauVec, yvec)
 }
 
 setisUsePrecondM <- function(isUseSparseSigmaforPCG) {
@@ -289,16 +289,8 @@ setisUseSparseSigmaforNullModelFitting <- function(isUseSparseSigmaforModelFitti
     invisible(.Call('_SAIGE_setisUseSparseSigmaforNullModelFitting', PACKAGE = 'SAIGE', isUseSparseSigmaforModelFitting0))
 }
 
-getPCG1ofSigmaAndVector <- function(wVec, tauVec, bVec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getPCG1ofSigmaAndVector', PACKAGE = 'SAIGE', wVec, tauVec, bVec, maxiterPCG, tolPCG)
-}
-
-getPCG1ofSigmaAndVector_old <- function(wVec, tauVec, bVec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getPCG1ofSigmaAndVector_old', PACKAGE = 'SAIGE', wVec, tauVec, bVec, maxiterPCG, tolPCG)
-}
-
-getPCG1ofSigmaAndVector_LOCO <- function(wVec, tauVec, bVec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getPCG1ofSigmaAndVector_LOCO', PACKAGE = 'SAIGE', wVec, tauVec, bVec, maxiterPCG, tolPCG)
+getPCG1ofSigmaAndVector_multiV <- function(wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO) {
+    .Call('_SAIGE_getPCG1ofSigmaAndVector_multiV', PACKAGE = 'SAIGE', wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO)
 }
 
 set_seed <- function(seed) {
@@ -321,64 +313,12 @@ calCV <- function(xVec) {
     .Call('_SAIGE_calCV', PACKAGE = 'SAIGE', xVec)
 }
 
-GetTrace <- function(Sigma_iX, Xmat, wVec, tauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff) {
-    .Call('_SAIGE_GetTrace', PACKAGE = 'SAIGE', Sigma_iX, Xmat, wVec, tauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff)
+getSigma_X_multiV <- function(wVec, tauVec, Xmat, maxiterPCG, tolPCG, LOCO) {
+    .Call('_SAIGE_getSigma_X_multiV', PACKAGE = 'SAIGE', wVec, tauVec, Xmat, maxiterPCG, tolPCG, LOCO)
 }
 
-getCoefficients <- function(Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getCoefficients', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG)
-}
-
-getCoefficients_LOCO <- function(Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getCoefficients_LOCO', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG)
-}
-
-getCoefficients_q_LOCO <- function(Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getCoefficients_q_LOCO', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG)
-}
-
-getAIScore <- function(Yvec, Xmat, wVec, tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff) {
-    .Call('_SAIGE_getAIScore', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff)
-}
-
-fitglmmaiRPCG <- function(Yvec, Xmat, wVec, tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff) {
-    .Call('_SAIGE_fitglmmaiRPCG', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff)
-}
-
-getSigma_X <- function(wVec, tauVec, Xmat, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getSigma_X', PACKAGE = 'SAIGE', wVec, tauVec, Xmat, maxiterPCG, tolPCG)
-}
-
-getSigma_X_LOCO <- function(wVec, tauVec, Xmat, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getSigma_X_LOCO', PACKAGE = 'SAIGE', wVec, tauVec, Xmat, maxiterPCG, tolPCG)
-}
-
-getSigma_G <- function(wVec, tauVec, Gvec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getSigma_G', PACKAGE = 'SAIGE', wVec, tauVec, Gvec, maxiterPCG, tolPCG)
-}
-
-getSigma_G_LOCO <- function(wVec, tauVec, Gvec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getSigma_G_LOCO', PACKAGE = 'SAIGE', wVec, tauVec, Gvec, maxiterPCG, tolPCG)
-}
-
-GetTrace_q <- function(Sigma_iX, Xmat, wVec, tauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff) {
-    .Call('_SAIGE_GetTrace_q', PACKAGE = 'SAIGE', Sigma_iX, Xmat, wVec, tauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff)
-}
-
-getAIScore_q <- function(Yvec, Xmat, wVec, tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff) {
-    .Call('_SAIGE_getAIScore_q', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff)
-}
-
-getAIScore_q_LOCO <- function(Yvec, Xmat, wVec, tauVec, nrun, maxiterPCG, tolPCG, traceCVcutoff) {
-    .Call('_SAIGE_getAIScore_q_LOCO', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, nrun, maxiterPCG, tolPCG, traceCVcutoff)
-}
-
-fitglmmaiRPCG_q_LOCO <- function(Yvec, Xmat, wVec, tauVec, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff) {
-    .Call('_SAIGE_fitglmmaiRPCG_q_LOCO', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff)
-}
-
-fitglmmaiRPCG_q <- function(Yvec, Xmat, wVec, tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff) {
-    .Call('_SAIGE_fitglmmaiRPCG_q', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff)
+getSigma_G_multiV <- function(wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO) {
+    .Call('_SAIGE_getSigma_G_multiV', PACKAGE = 'SAIGE', wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO)
 }
 
 parallelCrossProd_usingSubMarker <- function(bVec) {
@@ -503,6 +443,22 @@ set_Diagof_StdGeno_LOCO <- function() {
 
 setminMAC_VarianceRatio <- function(t_minMACVarRatio, t_maxMACVarRatio, t_isVarianceRatioinGeno) {
     invisible(.Call('_SAIGE_setminMAC_VarianceRatio', PACKAGE = 'SAIGE', t_minMACVarRatio, t_maxMACVarRatio, t_isVarianceRatioinGeno))
+}
+
+getCoefficients_multiV <- function(Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG, LOCO) {
+    .Call('_SAIGE_getCoefficients_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG, LOCO)
+}
+
+GetTrace_multiV <- function(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
+    .Call('_SAIGE_GetTrace_multiV', PACKAGE = 'SAIGE', Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
+}
+
+getAIScore_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
+    .Call('_SAIGE_getAIScore_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
+}
+
+fitglmmaiRPCG_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO) {
+    .Call('_SAIGE_fitglmmaiRPCG_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO)
 }
 
 SPA <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge) {

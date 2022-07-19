@@ -112,7 +112,11 @@ option_list <- list(
   make_option("--isCovariateOffset", type="logical", default=TRUE,
    help="Optional. Whether to estimate fixed effect coeffciets. [default, 'TRUE']"),
   make_option("--SampleIDIncludeFile", type="character",default="",
-    help="Path to the file that contains one column for IDs of samples who will be include for null model fitting.") 
+    help="Path to the file that contains one column for IDs of samples who will be include for null model fitting."),
+ make_option("--VmatFilelist", type="character", default="",
+    help="List of additional V (comma separated)"),		    
+ make_option("--VmatSampleFilelist", type="character", default="",
+    help="List of additional V (comma separated)")		    
 
 )
 
@@ -247,6 +251,8 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
 	    FemaleOnly=opt$FemaleOnly,
 	    MaleCode=opt$MaleCode,
 	    MaleOnly=opt$MaleOnly,
-	    SampleIDIncludeFile=opt$SampleIDIncludeFile
+	    SampleIDIncludeFile=opt$SampleIDIncludeFile,
+	    VmatFilelist=opt$VmatFilelist,
+	    VmatSampleFilelist=opt$VmatSampleFilelist
 	)
 }	

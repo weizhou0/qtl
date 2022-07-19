@@ -1,0 +1,368 @@
+Loading required package: optparse
+R version 4.2.0 (2022-04-22)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.5 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
+LAPACK: /usr/lib/x86_64-linux-gnu/libopenblasp-r0.2.20.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] optparse_1.7.1 SAIGE_1.1.4   
+
+loaded via a namespace (and not attached):
+[1] compiler_4.2.0     Matrix_1.4-1       Rcpp_1.0.7         getopt_1.20.3     
+[5] grid_4.2.0         data.table_1.14.2  RcppParallel_5.0.2 lattice_0.20-45   
+$plinkFile
+[1] "./input/nfam_100_nindep_0_step1_includeMoreRareVariants_poly_22chr"
+
+$bedFile
+[1] ""
+
+$bimFile
+[1] ""
+
+$famFile
+[1] ""
+
+$phenoFile
+[1] "./input/pheno_1000samples.txt_withdosages_withBothTraitTypes.txt"
+
+$phenoCol
+[1] "y_binary"
+
+$traitType
+[1] "binary"
+
+$invNormalize
+[1] FALSE
+
+$covarColList
+[1] "x1,x2,a9,a10"
+
+$qCovarColList
+[1] "a9,a10"
+
+$sampleIDColinphenoFile
+[1] "IID"
+
+$tol
+[1] 0.02
+
+$maxiter
+[1] 20
+
+$tolPCG
+[1] 1e-05
+
+$maxiterPCG
+[1] 500
+
+$nThreads
+[1] 1
+
+$SPAcutoff
+[1] 2
+
+$numRandomMarkerforVarianceRatio
+[1] 30
+
+$skipModelFitting
+[1] FALSE
+
+$skipVarianceRatioEstimation
+[1] FALSE
+
+$memoryChunk
+[1] 2
+
+$tauInit
+[1] "0,0"
+
+$LOCO
+[1] TRUE
+
+$isLowMemLOCO
+[1] FALSE
+
+$traceCVcutoff
+[1] 0.0025
+
+$nrun
+[1] 30
+
+$ratioCVcutoff
+[1] 0.001
+
+$outputPrefix
+[1] "./output/example_binary_sparseGRM_1.1.4"
+
+$outputPrefix_varRatio
+[1] ""
+
+$IsOverwriteVarianceRatioFile
+[1] TRUE
+
+$sparseGRMFile
+[1] "output/sparseGRM_relatednessCutoff_0.125_1000_randomMarkersUsed.sparseGRM.mtx"
+
+$sparseGRMSampleIDFile
+[1] "output/sparseGRM_relatednessCutoff_0.125_1000_randomMarkersUsed.sparseGRM.mtx.sampleIDs.txt"
+
+$isCateVarianceRatio
+[1] TRUE
+
+$relatednessCutoff
+[1] 0
+
+$cateVarRatioMinMACVecExclude
+[1] "10,20.5"
+
+$cateVarRatioMaxMACVecInclude
+[1] "20.5"
+
+$isCovariateTransform
+[1] TRUE
+
+$isDiagofKinSetAsOne
+[1] FALSE
+
+$useSparseGRMtoFitNULL
+[1] TRUE
+
+$useSparseGRMforVarRatio
+[1] FALSE
+
+$minMAFforGRM
+[1] 0.01
+
+$maxMissingRateforGRM
+[1] 0.15
+
+$minCovariateCount
+[1] -1
+
+$includeNonautoMarkersforVarRatio
+[1] FALSE
+
+$FemaleOnly
+[1] FALSE
+
+$MaleOnly
+[1] FALSE
+
+$sexCol
+[1] ""
+
+$FemaleCode
+[1] "1"
+
+$MaleCode
+[1] "0"
+
+$isCovariateOffset
+[1] TRUE
+
+$SampleIDIncludeFile
+[1] ""
+
+$help
+[1] FALSE
+
+tauInit  is  0 0 
+cateVarRatioMinMACVecExclude  is  10 20.5 
+cateVarRatioMaxMACVecInclude  is  20.5 
+The variance ratio file  ./output/example_binary_sparseGRM_1.1.4.varianceRatio.txt  already exists. IsOverwriteVarianceRatioFile=TRUE so the file will be overwritten
+sparse GRM will be used to fit the NULL model and nThreads is set to 1
+Leave-one-chromosome-out is not applied
+1000  samples have genotypes
+a9 a10 are categorical covariates
+formula is  y_binary~x1+x2+a9+a10 
+1000  samples have non-missing phenotypes
+1000  samples are in the sparse GRM
+1000  samples who have non-missing phenotypes are also in the sparse GRM
+1000  samples will be used for analysis
+    IID X.Intercept.          x1 x2 a91 a92 a101 a102 y_binary IndexPheno
+1   1a1            1  1.51178117  1   1   0    0    0        0          1
+113 1a2            1  0.38984324  1   1   0    1    0        0          2
+224 1a3            1 -0.62124058  1   0   0    1    0        0          3
+335 1a4            1 -2.21469989  1   1   0    1    0        0          4
+446 1a5            1  1.12493092  1   1   0    0    0        0          5
+557 1a6            1 -0.04493361  1   1   0    0    0        0          6
+    IndexGeno
+1           1
+113         2
+224         3
+335         4
+446         5
+557         6
+qr transformation has been performed on covariates
+colnames(data.new) is  y_binary minus1 x1 x2 a91 a92 a101 a102 
+out.transform$Param.transform$qrr:  7 7 
+[1] "isCovariateOffset=TRUE, so fixed effects coefficnets won't be estimated."
+extract sparse GRM
+[1] 6400
+set elements in the sparse GRM <=  0  to zero
+1000  samples have been used to fit the glmm null model
+Setting up sparse GRM using  output/sparseGRM_relatednessCutoff_0.125_1000_randomMarkersUsed.sparseGRM.mtx  and  output/sparseGRM_relatednessCutoff_0.125_1000_randomMarkersUsed.sparseGRM.mtx.sampleIDs.txt 
+Dimension of the sparse GRM is  1000 1000 
+2 locationMat.n_rows 
+6400 locationMat.n_cols 
+6400 valueVec.n_elem 
+Categorical variance ratios will be estimated. Please make sure there are at least 200 markers in each MAC category.
+geno.g_minMACVarRatio 10
+geno.g_maxMACVarRatio 20.5
+Markers in the Plink file with MAF <  0.01  will be removed before constructing GRM
+Markers in the Plink file with missing rate >  0.15  will be removed before constructing GRM
+y_binary  is a binary trait
+[1] "formula.new"
+y_binary ~ 1
+<environment: 0x5562caa10bb0>
+[1] "head(data.new)"
+    y_binary minus1          x1         x2        a91         a92       a101
+1          0     -1 -1.50906738 -0.9445723 -1.1423374 -0.03116058 -0.7961688
+113        0     -1 -0.40405771 -0.9708608 -1.0851127 -0.01649437  1.3399560
+224        0     -1  0.59177046 -0.9945518  0.9714451  0.84472062  1.2762094
+335        0     -1  2.16118701 -1.0318886 -0.9522675  0.01755277  1.4469364
+446        0     -1 -1.12805409 -0.9536367 -1.1226060 -0.02610359 -0.7802791
+557        0     -1  0.02415905 -0.9810482 -1.0629368 -0.01081087 -0.7322274
+           a102    covoffset
+1   -0.35899208  1.555572774
+113  0.01645743  0.741612976
+224  0.06753213  0.003928598
+335  0.05052077 -1.186262432
+446 -0.35393268  1.269227320
+557 -0.33863269  0.403296926
+glm:
+
+Call:  glm(formula = formula.new, family = binomial, data = data.new, 
+    offset = covoffset)
+
+Coefficients:
+(Intercept)  
+     -2.525  
+
+Degrees of Freedom: 999 Total (i.e. Null);  999 Residual
+Null Deviance:	    576.8 
+Residual Deviance: 576.8 	AIC: 578.8
+Start fitting the NULL GLMM
+   user  system elapsed 
+  1.328   0.108   1.445 
+   user  system elapsed 
+  1.431   0.108   1.548 
+[1] "Start reading genotype plink file here"
+nbyte: 250
+nbyte: 250
+reserve: 32474736
+
+M: 128868, N: 1000
+setgeno mark1
+setgeno mark2
+109579 markers with MAF >= 0.01 and missing rate <= 0.15
+time: 1581.48
+[1] "Genotype reading is done"
+inital tau is  1 0.1 
+use sparse kinship to fit the model 
+after Sigma_iY
+use sparse kinship to fit the model 
+Tau:
+[1] 1.0 0.1
+Fixed-effect coefficients:
+          [,1]
+[1,] -2.523386
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+Variance component estimates:
+[1] 1.00000000 0.09920758
+
+Iteration  1 1 0.09920758 :
+tau0_v1:  1 0.09920758 
+use sparse kinship to fit the model 
+after Sigma_iY
+use sparse kinship to fit the model 
+Tau:
+[1] 1.00000000 0.09920758
+Fixed-effect coefficients:
+          [,1]
+[1,] -2.523397
+t_end_Get_Coef - t_begin_Get_Coef
+   user  system elapsed 
+  0.002   0.000   0.001 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+
+warning: solve(): system is singular; attempting approx solution
+Error in fitglmmaiRPCG_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY,  : 
+  Mat::operator(): index out of bounds
+Calls: fitNULLGLMM_multiV ... system.time -> glmmkin.ai_PCG_Rcpp_multiV -> fitglmmaiRPCG_multiV
+Timing stopped at: 1.59 0.14 1.733
+Execution halted

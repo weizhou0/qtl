@@ -3,7 +3,7 @@
 options(stringsAsFactors=F)
 
 ## load R libraries
-library(SAIGE, lib.loc="/net/hunt/zhowei/project/imbalancedCaseCtrlMixedModel/Rpackage_SPAGMMAT/SAIGE_newgit/install_1.1.4")
+library(SAIGE, lib.loc="/net/hunt/zhowei/project/imbalancedCaseCtrlMixedModel/Rpackage_SPAGMMAT/SAIGE_newgit/install_1.1.3")
 require(optparse) #install.packages("optparse")
 
 print(sessionInfo())
@@ -197,7 +197,7 @@ fitNULLGLMM(plinkFile=opt$plinkFile,
 	    SampleIDIncludeFile=opt$SampleIDIncludeFile
 	)
 }else{
-fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
+fitNULLGLMM(plinkFile=opt$plinkFile,
 	    bedFile=opt$bedFile,
 	    bimFile=opt$bimFile,
 	    famFile=opt$famFile,

@@ -1,0 +1,290 @@
+[1] "check here"
+[1] "check here 2"
+[1] "check here 2a"
+[1] "check here 3a"
+Fixed-effect coefficients:
+ (Intercept)          age          sex 
+ 0.382355586 -0.006742281 -0.085931966 
+[1] "tau"
+[1] 1.00000000 0.09716181 0.10000000
+
+Iteration  1 :
+alpha
+   0.4303
+  -0.0071
+  -0.0861
+YPAPY 90.8942
+trace 86.1176
+YPAPY 81.4632
+trace 75.22
+AI
+   4.3432e+01   3.9359e+01
+   3.9359e+01   1.5509e+02
+score
+   4.7766
+   6.2432
+Variance component estimates:
+[1] 1.0000000 0.1927256 0.1161885
+Fixed-effect coefficients:
+[1]  0.430324827 -0.007082441 -0.086140286
+
+Iteration  2 :
+alpha
+   0.4576
+  -0.0072
+  -0.0872
+YPAPY 83.2251
+trace 82.6888
+YPAPY 71.5133
+trace 70.487
+AI
+   3.0177e+01   2.6383e+01
+   2.6383e+01   1.2505e+02
+score
+   0.5363
+   1.0263
+Variance component estimates:
+[1] 1.0000000 0.2057200 0.1216543
+Fixed-effect coefficients:
+[1]  0.457589804 -0.007193263 -0.087152991
+
+Iteration  3 :
+alpha
+   0.4612
+  -0.0072
+  -0.0873
+YPAPY 82.2245
+trace 81.8643
+YPAPY 69.6193
+trace 69.2619
+AI
+   2.8626e+01   2.4448e+01
+   2.4448e+01   1.1863e+02
+score
+   0.3603
+   0.3574
+Variance component estimates:
+[1] 1.0000000 0.2178703 0.1221632
+Fixed-effect coefficients:
+[1]  0.461215269 -0.007217953 -0.087291533
+
+Iteration  4 :
+alpha
+   0.4636
+  -0.0072
+  -0.0873
+YPAPY 81.5174
+trace 81.5049
+YPAPY 68.9206
+trace 68.9186
+AI
+   2.7712e+01   2.3581e+01
+   2.3581e+01   1.1669e+02
+score
+   0.0125
+   0.0021
+Variance component estimates:
+[1] 1.0000000 0.2183969 0.1220746
+Fixed-effect coefficients:
+[1]  0.463640573 -0.007222258 -0.087323439
+
+Iteration  5 :
+alpha
+   0.4637
+  -0.0072
+  -0.0873
+YPAPY 81.4927
+trace 81.4506
+YPAPY 68.9171
+trace 68.89
+AI
+   2.7658e+01   2.3518e+01
+   2.3518e+01   1.1655e+02
+score
+   0.0422
+   0.0271
+Variance component estimates:
+[1] 1.0000000 0.2199984 0.1219843
+Fixed-effect coefficients:
+[1]  0.463734841 -0.007222118 -0.087324101
+
+Iteration  6 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.4086
+trace 81.4165
+YPAPY 68.8629
+trace 68.8711
+AI
+   2.7556e+01   2.3436e+01
+   2.3436e+01   1.1644e+02
+score
+  -0.0080
+  -0.0082
+Variance component estimates:
+[1] 1.0000000 0.2197215 0.1219697
+Fixed-effect coefficients:
+[1]  0.464030698 -0.007222173 -0.087326561
+
+Iteration  7 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.4245
+trace 81.418
+YPAPY 68.8793
+trace 68.8748
+AI
+   2.7573e+01   2.3449e+01
+   2.3449e+01   1.1646e+02
+score
+   0.0065
+   0.0045
+Variance component estimates:
+[1] 1.0000000 0.2199653 0.1219597
+Fixed-effect coefficients:
+[1]  0.463976220 -0.007222064 -0.087325827
+
+Iteration  8 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.4115
+trace 81.414
+YPAPY 68.8702
+trace 68.8723
+AI
+   2.7558e+01   2.3438e+01
+   2.3438e+01   1.1645e+02
+score
+  -0.0025
+  -0.0020
+Variance component estimates:
+[1] 1.0000000 0.2198759 0.1219602
+Fixed-effect coefficients:
+[1]  0.464021628 -0.007222085 -0.087326242
+
+Iteration  9 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.4164
+trace 81.4152
+YPAPY 68.8743
+trace 68.8733
+AI
+   2.7563e+01   2.3442e+01
+   2.3442e+01   1.1645e+02
+score
+   0.0013
+   0.0010
+Variance component estimates:
+[1] 1.0000000 0.2199235 0.1219589
+Fixed-effect coefficients:
+[1]  0.464004625 -0.007222067 -0.087326057
+
+Iteration  10 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.4139
+trace 81.4145
+YPAPY 68.8724
+trace 68.8728
+AI
+   2.7560e+01   2.3440e+01
+   2.3440e+01   1.1645e+02
+score
+  -0.0006
+  -0.0005
+Variance component estimates:
+[1] 1.0000000 0.2199023 0.1219593
+Fixed-effect coefficients:
+[1]  0.464013576 -0.007222074 -0.087326145
+
+Iteration  11 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.415
+trace 81.4148
+YPAPY 68.8733
+trace 68.8731
+AI
+   2.7562e+01   2.3441e+01
+   2.3441e+01   1.1645e+02
+score
+   0.0003
+   0.0002
+Variance component estimates:
+[1] 1.0000000 0.2199125 0.1219591
+Fixed-effect coefficients:
+[1]  0.46400956 -0.00722207 -0.08732610
+
+Iteration  12 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.4145
+trace 81.4146
+YPAPY 68.8728
+trace 68.8729
+AI
+   2.7561e+01   2.3440e+01
+   2.3440e+01   1.1645e+02
+score
+  -0.0001
+  -0.0001
+Variance component estimates:
+[1] 1.0000000 0.2199077 0.1219592
+Fixed-effect coefficients:
+[1]  0.464011491 -0.007222072 -0.087326123
+
+Iteration  13 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.4147
+trace 81.4147
+YPAPY 68.8731
+trace 68.873
+AI
+   2.7561e+01   2.3441e+01
+   2.3441e+01   1.1645e+02
+score
+   6.1282e-05
+   4.7810e-05
+Variance component estimates:
+[1] 1.0000000 0.2199100 0.1219591
+Fixed-effect coefficients:
+[1]  0.464010588 -0.007222071 -0.087326114
+
+Iteration  14 :
+alpha
+   0.4640
+  -0.0072
+  -0.0873
+YPAPY 81.4146
+trace 81.4146
+YPAPY 68.873
+trace 68.873
+AI
+   2.7561e+01   2.3440e+01
+   2.3440e+01   1.1645e+02
+score
+  -2.8819e-05
+  -2.2521e-05
+Variance component estimates:
+[1] 1.0000000 0.2199089 0.1219591
+Fixed-effect coefficients:
+[1]  0.464011015 -0.007222071 -0.087326118
+[1] "check here 4"

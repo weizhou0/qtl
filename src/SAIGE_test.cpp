@@ -573,7 +573,7 @@ if(!t_isER){
     }
 }
 
-   if(m_traitType!="quantitative" & m_is_Firth_beta & t_pval <= m_pCutoffforFirth){
+   if(m_traitType == "binary" & m_is_Firth_beta & t_pval <= m_pCutoffforFirth){
 	t_isFirth = true;
 
 	if(!is_gtilde){
