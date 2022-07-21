@@ -2186,7 +2186,7 @@ arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
     if(Kmat_vec.size() > 0){	
       for(unsigned int i = 0; i < Kmat_vec.size(); i++){
         result = result + Kmat_vec[i] * tauVec(i+2);
-	std::cout << "tauVec(i+2) " << tauVec(i+2) << std::endl;
+	//std::cout << "tauVec(i+2) " << tauVec(i+2) << std::endl;
       }	      
     }
 
@@ -3816,10 +3816,10 @@ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wV
   			temp_vec = temp_mat_update.col(k);
   			traceCV(k) = calCV(temp_vec);
   		} 
-		traceCV.print("traceCV");
+		//traceCV.print("traceCV");
 		//traceCVcutoff = 1.0;
   		// if not converge, increase nrun_trace and rerun
-		temp_mat.print("temp_mat");
+		//temp_mat.print("temp_mat");
   		if( arma::any(traceCV > traceCVcutoff) ){
   			nrun_trace_start = nrun_trace_end;
   			nrun_trace_end = nrun_trace_end + 10;

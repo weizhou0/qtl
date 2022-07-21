@@ -238,15 +238,28 @@ getVmatSub <- function (sparseVFile = NULL, sparseVSampleIDFile = "",
     sampleInModel$IndexInModel = seq(1, length(sampleInModel$IID), by = 1)
     cat(nrow(sampleInModel), " samples have been used to fit the glmm null model\n")
     mergeID = merge(sampleInModel, sparseVSampleID, by.x = "IID", by.y = "sampleID")
-    if (nrow(sampleInModel) > nrow(mergeID)) {
-      stop("ERROR: ", nrow(sampleInModel) - nrow(mergeID), "samples used for model fitting are not in the matrix\n")
+    if(!any(duplicated(sampleInModel$IID))){ 	
+      if (nrow(sampleInModel) > nrow(mergeID)) {
+        stop("ERROR: ", nrow(sampleInModel) - nrow(mergeID), "samples are not in the matrix\n")
+      }else{
+        mergeID = mergeID[with(mergeID, order(IndexInModel)),]
+        indexIDofV = mergeID$IndexGRM
+        sparseV = sparseVLarge[indexIDofV, indexIDofV]
+        rm(sparseVLarge)
+        return(sparseV)
+      }
     }else{
-      mergeID = mergeID[with(mergeID, order(IndexInModel)),]
-      indexIDofV = mergeID$IndexGRM
-      sparseV = sparseVLarge[indexIDofV, indexIDofV]
-      rm(sparseVLarge)
-      return(sparseV)
-    }
+       if(length(unique(sampleInModel$IID)) > length(unique(mergeID$IID))){
+                stop("ERROR: ", length(unique(mergeID$IID)) - length(unique(sampleInModel$IID)),
+         "samples are not in the matrix\n")      
+       }else{
+	mergeID = mergeID[with(mergeID, order(IndexInModel)),]
+        indexIDofV = mergeID$IndexGRM
+        sparseV = sparseVLarge[indexIDofV, indexIDofV]
+        rm(sparseVLarge)
+        return(sparseV)
+       }	       
+    }	    
  }
 }
 
@@ -268,10 +281,34 @@ set_Vmat_vec = function(VmatFilelist, VmatSampleFilelist, modelID){
         }else{
           sparseVmat = getVmatSub(Vmatfile, VmatSamplefile, modelID)
           addNewKat(sparseVmat)
+	  #Matrix::writeMM(sparseVmat, file="kin2_SAIGE.mtx")
         }
       }
     }
-  }
+  }else{
+
+    if(any(duplicated(modelID))){
+	VmatsampleID = unique(modelID)
+        #sparseVmat0 = Matrix::Diagonal(length(unique(modelID)))
+	#sparseVmat0 = sparseVmat0 * 1
+        #sparseVmat0 = diag(length(unique(modelID)))
+	sparseVmat0 = Matrix:::sparseMatrix(i = c(1: length(VmatsampleID)), j = c(1:length(VmatsampleID)), x = as.vector(rep(1,  length(VmatsampleID))))
+	cat("length(unique(modelID)) ", length(unique(modelID)), "\n")
+  	print(dim(sparseVmat0))
+    	sparseVmat0 = as(sparseVmat0, "sparseMatrix") 
+        sampleInModel = data.frame("IID" = modelID, IndexInModel = seq(1, length(modelID)))
+	sparseVSampleID = data.frame("sampleID" = VmatsampleID, IndexInMat = seq(1, length(VmatsampleID)))
+        mergeID = merge(sampleInModel, sparseVSampleID, by.x = "IID", by.y = "sampleID") 
+        mergeID = mergeID[with(mergeID, order(IndexInModel)),]
+        indexIDofV = mergeID$IndexInMat
+	print("okkk5")
+	print(length(indexIDofV))
+        sparseVmat = sparseVmat0[indexIDofV, indexIDofV]
+	print("okkk6")
+        addNewKat(sparseVmat)
+print("okkkkkkk7")	
+    }
+  }	  
 }
 
 
@@ -305,24 +342,42 @@ getsubGRM <- function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", related
             sampleInModel = data.frame(sampleInModel)
             sampleInModel$IndexInModel = seq(1, length(sampleInModel$IID),
                 by = 1)
+	   if(!any(duplicated(sampleInModel$IID))){
             cat(nrow(sampleInModel), " samples have been used to fit the glmm null model\n")
             mergeID = merge(sampleInModel, sparseGRMSampleID,
                 by.x = "IID", by.y = "sampleID")
             if (nrow(sampleInModel) > nrow(mergeID)) {
                 stop("ERROR: ", nrow(sampleInModel) - nrow(mergeID),
                   "samples used for model fitting are not in the specified GRM\n")
-            }
-            else {
+            }else {
                 mergeID = mergeID[with(mergeID, order(IndexInModel)),
                   ]
                 indexIDofGRM = mergeID$IndexGRM
                 sparseGRM = sparseGRMLarge[indexIDofGRM, indexIDofGRM]
                 rm(sparseGRMLarge)
                 return(sparseGRM)
-            }
-        }
-    }
-}
+            }	    
+          }else{ #if(!any(duplicated(sampleInModel$IID))){
+	     cat(nrow(sampleInModel), " observations have been used to fit the glmm null model\n")	
+	      mergeID = merge(sampleInModel, sparseGRMSampleID,
+                by.x = "IID", by.y = "sampleID")
+  	    if(length(unique(sampleInModel$IID)) > length(unique(mergeID$IID))){    	  
+		stop("ERROR: ", length(unique(mergeID$IID)) - length(unique(sampleInModel$IID)), 
+			  "samples used for model fitting are not in the specified GRM\n")
+			    
+            }else{
+		mergeID = mergeID[with(mergeID, order(IndexInModel)),
+                  ]
+                indexIDofGRM = mergeID$IndexGRM
+                sparseGRM = sparseGRMLarge[indexIDofGRM, indexIDofGRM]
+                rm(sparseGRMLarge)
+		          Matrix::writeMM(sparseGRM, file="kin1_SAIGE.mtx")
+                return(sparseGRM)
+	    }			    
+	  }	  
+       }
+   }
+}	
 
 
 checkPerfectSep<-function(formula, data, minCovariateCount){

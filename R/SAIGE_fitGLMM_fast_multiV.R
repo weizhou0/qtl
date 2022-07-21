@@ -56,6 +56,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 invNormalize = FALSE,
                 covarColList = NULL,
                 qCovarCol = NULL,
+		longlCol = NULL,
                 sampleIDColinphenoFile = "",
                 tol=0.02,
                 maxiter=20,
@@ -258,11 +259,17 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table=F)
         }
         #data = data.frame(ydat)
-        for (i in c(phenoCol, covarColList, sampleIDColinphenoFile)) {
+	if(is.null(longlCol)){
+		checkColList = c(phenoCol, covarColList, sampleIDColinphenoFile)
+	}else{
+		checkColList = c(phenoCol, covarColList, sampleIDColinphenoFile, longlCol)
+	}
+
+        for (i in checkColList) {
             if (!(i %in% colnames(data))) {
                 stop("ERROR! column for ", i, " does not exist in the phenoFile \n")
             }else{
-		data = data[,which(colnames(data) %in% c(phenoCol, covarColList, sampleIDColinphenoFile)), drop=F]	
+		data = data[,which(colnames(data) %in% checkColList), drop=F]	
 		data = data[complete.cases(data),,drop=F]
 	    }		    
         }
@@ -347,10 +354,16 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	}
 
         mmat$IID = data[, which(sampleIDColinphenoFile == colnames(data))]
+	if(!is.null(longlCol)){
+		mmat$longlVar = data[, which(longlCol == colnames(data))]
+	}
+
         mmat_nomissing = mmat[complete.cases(mmat), ]
         mmat_nomissing$IndexPheno = seq(1, nrow(mmat_nomissing), 
             by = 1)
         cat(nrow(mmat_nomissing), " samples have non-missing phenotypes\n")
+
+
 
 
 	if((useSparseGRMtoFitNULL & !skipVarianceRatioEstimation) | useSparseGRMforVarRatio){
@@ -364,21 +377,36 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	}
 
 
+      if(is.null(longlCol)){	
+	if(any(duplicated(mmat_nomissing$IID))){
+		cat("Duplicated sample IDs are detected in the phenotype file. Assuming repeated measurements\n")
+	}
+      }else{
+	cat("Longitudinal variable ", longlCol, " is specified\n")      
+	if(!any(duplicated(mmat_nomissing$IID))){
+		stop("No duplicated sample IDs are detected in the phenotype file\n")
+	}	
+      }	      
+
         dataMerge = merge(mmat_nomissing, sampleListwithGeno, 
             by.x = "IID", by.y = "IIDgeno")
-        dataMerge_sort = dataMerge[with(dataMerge, order(IndexGeno)), 
-            ]
+        dataMerge_sort = dataMerge[with(dataMerge, order(IndexGeno)),]
 
         rm(mmat)
 	rm(mmat_nomissing)
 	gc()	
 	indicatorGenoSamplesWithPheno = (sampleListwithGeno$IndexGeno %in% dataMerge_sort$IndexGeno)
 
-        if (nrow(dataMerge_sort) < nrow(sampleListwithGeno)) {
-            cat(nrow(sampleListwithGeno) - nrow(dataMerge_sort), 
+        if (length(unique(dataMerge_sort$IIDgeno)) < length(unique(sampleListwithGeno$IIDgeno))) {
+            cat(length(unique(sampleListwithGeno$IIDgeno)) - length(unique(dataMerge_sort$IIDgeno)), 
                 " samples in geno file do not have phenotypes\n")
         }
-        cat(nrow(dataMerge_sort), " samples will be used for analysis\n")
+        cat(length(unique(dataMerge_sort$IIDgeno)), " samples will be used for analysis\n")
+
+	if(any(duplicated(dataMerge_sort$IID))){
+		cat(nrow(dataMerge_sort), " obsevations will be used for analysis\n")
+	}	
+
     }
 
     if (traitType == "quantitative" & invNormalize) {
@@ -471,6 +499,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         setupSparseGRM(dim(m4)[1], locationMatinR, valueVecinR)
         rm(sparseGRMtest)
     }
+
 
     #allow for multiple variance components
     set_Vmat_vec(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID)
@@ -1126,7 +1155,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   cat("tauInit")
   print(tauInit)
 
-
+  tau[1:length(tau)] = 0
   if(family$family %in% c("poisson", "binomial")) {
     tau[1] = 1
     fixtau[1] = 1
@@ -1141,7 +1170,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     }
   }else{
     if(sum(tauInit[fixtau == 0]) == 0){
-      #tau[fixtau == 0] = var(Y)/(q+1)
+      #tau[fixtau == 0] = var(Y)/(length(tau))
       tau[1] = 1
       #tau[2] = 0
       tau[2:length(tau)] = 0
@@ -1152,7 +1181,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       tau[fixtau == 0] = tauInit[fixtau == 0]
     }
   }	  
-    q = 1
+    #q = 1
     cat("inital tau is ", tau,"\n")
     #tau = c(1, 1.300489, 1.338478)
     tau0=tau
@@ -1162,7 +1191,11 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     #tau[2] = max(0, tau0[2] + tau0[2]^2 * (re$YPAPY - re$Trace)/n)
     tau_q2 = pmax(0, tau0_q2 + tau0_q2^2 * (re$YPAPY - re$Trace)/n) 		
     tau[fixtau == 0] = tau_q2	
-
+     
+    print("re$YPAPY")
+    print(re$YPAPY)
+    print("re$Trace")
+    print(re$Trace)
 
   if(verbose) {
     cat("Variance component estimates:\n")
