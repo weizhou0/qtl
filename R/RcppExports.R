@@ -133,8 +133,24 @@ getProdTauKmat <- function(tauVec) {
     .Call('_SAIGE_getProdTauKmat', PACKAGE = 'SAIGE', tauVec)
 }
 
+getMeanDiagofKmat <- function() {
+    .Call('_SAIGE_getMeanDiagofKmat', PACKAGE = 'SAIGE')
+}
+
 get_numofV <- function() {
     .Call('_SAIGE_get_numofV', PACKAGE = 'SAIGE')
+}
+
+set_longlVar_vec <- function(longlVec) {
+    invisible(.Call('_SAIGE_set_longlVar_vec', PACKAGE = 'SAIGE', longlVec))
+}
+
+set_covarianceidx_Mat <- function() {
+    .Call('_SAIGE_set_covarianceidx_Mat', PACKAGE = 'SAIGE')
+}
+
+set_Vmat_vec_longlVar <- function() {
+    invisible(.Call('_SAIGE_set_Vmat_vec_longlVar', PACKAGE = 'SAIGE'))
 }
 
 closeGenoFile_plink <- function() {
@@ -215,6 +231,10 @@ parallelCrossProd_LOCO <- function(bVec) {
 
 setupSparseGRM <- function(r, locationMatinR, valueVecinR) {
     invisible(.Call('_SAIGE_setupSparseGRM', PACKAGE = 'SAIGE', r, locationMatinR, valueVecinR))
+}
+
+setupSparseGRM_new <- function(t_spGRM) {
+    invisible(.Call('_SAIGE_setupSparseGRM_new', PACKAGE = 'SAIGE', t_spGRM))
 }
 
 getCrossprodMatAndKin <- function(bVec) {

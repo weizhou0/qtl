@@ -475,6 +475,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getMeanDiagofKmat
+arma::fvec getMeanDiagofKmat();
+RcppExport SEXP _SAIGE_getMeanDiagofKmat() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(getMeanDiagofKmat());
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_numofV
 int get_numofV();
 RcppExport SEXP _SAIGE_get_numofV() {
@@ -483,6 +493,35 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(get_numofV());
     return rcpp_result_gen;
+END_RCPP
+}
+// set_longlVar_vec
+void set_longlVar_vec(arma::vec& longlVec);
+RcppExport SEXP _SAIGE_set_longlVar_vec(SEXP longlVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type longlVec(longlVecSEXP);
+    set_longlVar_vec(longlVec);
+    return R_NilValue;
+END_RCPP
+}
+// set_covarianceidx_Mat
+arma::umat set_covarianceidx_Mat();
+RcppExport SEXP _SAIGE_set_covarianceidx_Mat() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(set_covarianceidx_Mat());
+    return rcpp_result_gen;
+END_RCPP
+}
+// set_Vmat_vec_longlVar
+void set_Vmat_vec_longlVar();
+RcppExport SEXP _SAIGE_set_Vmat_vec_longlVar() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    set_Vmat_vec_longlVar();
+    return R_NilValue;
 END_RCPP
 }
 // closeGenoFile_plink
@@ -689,6 +728,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::umat& >::type locationMatinR(locationMatinRSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type valueVecinR(valueVecinRSEXP);
     setupSparseGRM(r, locationMatinR, valueVecinR);
+    return R_NilValue;
+END_RCPP
+}
+// setupSparseGRM_new
+void setupSparseGRM_new(arma::sp_mat& t_spGRM);
+RcppExport SEXP _SAIGE_setupSparseGRM_new(SEXP t_spGRMSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type t_spGRM(t_spGRMSEXP);
+    setupSparseGRM_new(t_spGRM);
     return R_NilValue;
 END_RCPP
 }
@@ -2005,7 +2054,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_copy_singleInGroup", (DL_FUNC) &_SAIGE_copy_singleInGroup, 0},
     {"_SAIGE_addNewKat", (DL_FUNC) &_SAIGE_addNewKat, 1},
     {"_SAIGE_getProdTauKmat", (DL_FUNC) &_SAIGE_getProdTauKmat, 1},
+    {"_SAIGE_getMeanDiagofKmat", (DL_FUNC) &_SAIGE_getMeanDiagofKmat, 0},
     {"_SAIGE_get_numofV", (DL_FUNC) &_SAIGE_get_numofV, 0},
+    {"_SAIGE_set_longlVar_vec", (DL_FUNC) &_SAIGE_set_longlVar_vec, 1},
+    {"_SAIGE_set_covarianceidx_Mat", (DL_FUNC) &_SAIGE_set_covarianceidx_Mat, 0},
+    {"_SAIGE_set_Vmat_vec_longlVar", (DL_FUNC) &_SAIGE_set_Vmat_vec_longlVar, 0},
     {"_SAIGE_closeGenoFile_plink", (DL_FUNC) &_SAIGE_closeGenoFile_plink, 0},
     {"_SAIGE_gettotalMarker", (DL_FUNC) &_SAIGE_gettotalMarker, 0},
     {"_SAIGE_getAlleleFreqVec", (DL_FUNC) &_SAIGE_getAlleleFreqVec, 0},
@@ -2026,6 +2079,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_parallelCrossProd_full", (DL_FUNC) &_SAIGE_parallelCrossProd_full, 2},
     {"_SAIGE_parallelCrossProd_LOCO", (DL_FUNC) &_SAIGE_parallelCrossProd_LOCO, 1},
     {"_SAIGE_setupSparseGRM", (DL_FUNC) &_SAIGE_setupSparseGRM, 3},
+    {"_SAIGE_setupSparseGRM_new", (DL_FUNC) &_SAIGE_setupSparseGRM_new, 1},
     {"_SAIGE_getCrossprodMatAndKin", (DL_FUNC) &_SAIGE_getCrossprodMatAndKin, 1},
     {"_SAIGE_getCrossprodMatAndKin_LOCO", (DL_FUNC) &_SAIGE_getCrossprodMatAndKin_LOCO, 1},
     {"_SAIGE_printComb", (DL_FUNC) &_SAIGE_printComb, 1},

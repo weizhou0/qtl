@@ -1166,9 +1166,12 @@ genoClass geno;
 
 std::vector<arma::sp_fmat> Kmat_vec;
 
+arma::vec g_longl_vec;
+
 // [[Rcpp::export]]
 void addNewKat( arma::sp_mat & t_Kmat){
 	arma::sp_fmat t_Kmat_new = arma::conv_to< arma::sp_fmat >::from(t_Kmat);
+        //Kmat_vec.push_back(t_Kmat); 	
         Kmat_vec.push_back(t_Kmat_new); 	
         std::cout << "Kmat_vec.size() " << Kmat_vec.size() << std::endl;
 }
@@ -1181,15 +1184,130 @@ arma::sp_fmat getProdTauKmat(arma::fvec & tauVec){
 	Kmat_sigma.zeros();
 	if(Kmat_vec.size() > 0){
 		for (int i = 0; i < Kmat_vec.size(); i++){
-			Kmat_sigma = Kmat_sigma = Kmat_vec[i] * tauVec(i);
+			Kmat_sigma = Kmat_vec[i] * tauVec(i);
 		}
 	}	
 }	
+
+
+arma::sp_mat g_spGRM;
+
+// [[Rcpp::export]]
+arma::fvec getMeanDiagofKmat(){
+	arma::fvec mean_diag_kins_vec(Kmat_vec.size() + 1);
+	arma::fvec diagVecofKmat;
+	for (int i = 0; i < Kmat_vec.size(); i++){
+		diagVecofKmat = Kmat_vec[i].diag();
+		mean_diag_kins_vec(i+1) = arma::mean(diagVecofKmat);
+	}
+	//arma::vec = g_spGRM.diag();
+
+	arma::vec diagVecofKmat_0;
+       diagVecofKmat_0	= arma::diagvec(g_spGRM);
+	diagVecofKmat = arma::conv_to< arma::fvec >::from(diagVecofKmat_0);
+	mean_diag_kins_vec(0) = arma::mean(diagVecofKmat); 
+	return(mean_diag_kins_vec);
+}	
+
 
 // [[Rcpp::export]]
 int get_numofV(){
 	int k = Kmat_vec.size();
 	return(k);
+}
+
+// [[Rcpp::export]]
+void set_longlVar_vec(arma::vec & longlVec){
+	//g_longl_vec = arma::conv_to< arma::fvec >::from(longlVec);
+	g_longl_vec = longlVec;
+}
+
+arma::umat g_covarianceidxMat;
+arma::uvec g_covarianceidxMat_col1;
+arma::uvec g_covarianceidxMat_col2;
+arma::uvec g_covarianceidxMat_col3;
+arma::uvec g_covarianceidxMat_notcol1;
+
+//     [,1] [,2] [,3]
+//[1,]    4    2    6
+//[2,]    5    3    7
+//2 GRM			2	
+//3 In				5
+//4 GRM*T + GRM*t(T)	3
+//5 In*T + In*t(In)		6
+//6 t(GRM *T) *T	4
+//7 t(In * T) * T		7
+/*> model5$theta
+               dispersion       kins1.var.intercept       kins2.var.intercept
+             3.136864e+00              4.582863e+00              0.000000e+00
+kins1.cov.intercept.slope kins2.cov.intercept.slope           kins1.var.slope
+            6.916919e-323              0.000000e+00              5.120541e-01
+          kins2.var.slope
+             0.000000e+00
+
+//     [,1] [,2] [,3]
+//[1,]  3    2    4 
+//[2,]  6    5    7
+
+*/
+
+// [[Rcpp::export]]
+arma::umat set_covarianceidx_Mat(){
+	unsigned int k = Kmat_vec.size();
+	unsigned int q = (k+1)/3; 
+	g_covarianceidxMat.set_size(q, 3);
+	g_covarianceidxMat.zeros();
+	arma::uvec g_covarianceidxVec(3);
+	for(unsigned int j=0; j < q; j++){
+		g_covarianceidxVec = {j*3+3, j*3+2, j*3+4};
+		g_covarianceidxMat.row(j) = g_covarianceidxVec.t();
+	}
+	g_covarianceidxMat_col1 = g_covarianceidxMat.col(0) - 1;
+	g_covarianceidxMat_col2 = g_covarianceidxMat.col(1) - 1;
+	g_covarianceidxMat_col3 = g_covarianceidxMat.col(2) - 1;
+
+	arma::uvec indexsubvec =  { 1, 2 };
+        g_covarianceidxMat_notcol1 = arma::vectorise(g_covarianceidxMat.cols(indexsubvec));
+
+	g_covarianceidxMat_notcol1 = g_covarianceidxMat_notcol1 - 1;
+
+	return(g_covarianceidxMat);
+}
+
+// [[Rcpp::export]]
+void set_Vmat_vec_longlVar(){
+	std::cout << "here" << std::endl;
+	int k  = Kmat_vec.size(); 
+	arma::sp_mat spGRM_longl_0;
+	arma::sp_fmat spGRM_longl;
+	for(int j=0; j < 1+k; j++){
+	  if(j == 0){
+	    spGRM_longl_0 = g_spGRM;
+	  }else{
+	    //spGRM_longl = Kmat_vec[j-1];	  
+	    spGRM_longl_0 = arma::conv_to< arma::sp_mat >::from(Kmat_vec[j-1]);	
+	  }	  
+          //spGRM_longl_0 = g_longl_vec.t() % (spGRM_longl_0.each_row());
+          for(int q=0; q < spGRM_longl_0.n_rows; q++){
+          //for(int q=0; q < spGRM_longl.n_rows; q++){
+		 spGRM_longl_0.row(q) = g_longl_vec.t() % spGRM_longl_0.row(q); 
+	  }
+	  spGRM_longl = arma::conv_to< arma::sp_fmat >::from(spGRM_longl_0);
+          Kmat_vec.push_back(spGRM_longl);
+	  	
+	  //spGRM_longl_0 = spGRM_longl_0 % g_longl_vec;
+	  //spGRM_longl_0 = g_longl_vec.t() % (spGRM_longl_0.t().each_row());
+	  //spGRM_longl_0 = spGRM_longl_0.t();
+          for(int q=0; q < spGRM_longl_0.n_cols; q++){
+                 spGRM_longl_0.col(q) = spGRM_longl_0.col(q) % g_longl_vec;
+                 //spGRM_longl.col(q) = spGRM_longl.col(q) % g_longl_vec;
+          }
+	  spGRM_longl = arma::conv_to< arma::sp_fmat >::from(spGRM_longl_0);
+          Kmat_vec.push_back(spGRM_longl);
+	  std::cout << "x here" << std::endl;
+	  //spGRM_longl_0.clear();
+	  spGRM_longl.clear();
+	}
 }
 
 // [[Rcpp::export]]
@@ -1721,6 +1839,11 @@ void setupSparseGRM(int r, arma::umat & locationMatinR, arma::vec & valueVecinR)
     //return x;
 }
 
+// [[Rcpp::export]]
+void setupSparseGRM_new(arma::sp_mat & t_spGRM){
+	g_spGRM = t_spGRM;
+}
+
 bool isUsePrecondM = false;
 bool isUseSparseSigmaforInitTau = false;
 bool isUseSparseSigmaforModelFitting = false;
@@ -1733,8 +1856,9 @@ arma::fvec getCrossprodMatAndKin(arma::fcolvec& bVec){
     if(isUseSparseSigmaforInitTau | isUseSparseSigmaforModelFitting){
         arma::dcolvec bVec_new = arma::conv_to<arma::dcolvec>::from(bVec);
         //cout << "use sparse kinship to estimate initial tau and for getCrossprodMatAndKin" <<  endl;
-	arma::sp_mat result(locationMat, valueVec, dimNum, dimNum);
-	arma::vec x = result * bVec_new;
+	//arma::sp_mat result(locationMat, valueVec, dimNum, dimNum);
+	//arma::vec x = result * bVec_new;
+	arma::vec x = g_spGRM * bVec_new;
         // double wall3in = get_wall_time();
         // double cpu3in  = get_cpu_time();
         // cout << "Wall Time in gen_spsolve_v4 = " << wall3in - wall2in << endl;
@@ -2163,7 +2287,12 @@ arma::sp_mat gen_sp_GRM() {
 // [[Rcpp::export]]
 arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
    arma::fvec dtVec = (1/wVec) * (tauVec(0));
+
+
+   std::cout << "tauVec(0) " << tauVec(0) << std::endl;
+
 //   dtVec.print();
+/*
    arma::vec valueVecNew = valueVec * tauVec(1);
 
    int nnonzero = valueVec.n_elem;
@@ -2183,10 +2312,17 @@ arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
     // sparse x sparse -> sparse
     arma::sp_mat result(locationMat, valueVecNew, dimNum, dimNum);
 
+*/
+   arma::sp_mat result = g_spGRM * tauVec(1);
+   //std::cout << "tauVec(1) " << tauVec(1) << std::endl;
+   //std::cout << "g_spGRM(1775,1775) " << g_spGRM(1775,1775) << std::endl;
+   result.diag() = result.diag() + dtVec;   
     if(Kmat_vec.size() > 0){	
       for(unsigned int i = 0; i < Kmat_vec.size(); i++){
         result = result + Kmat_vec[i] * tauVec(i+2);
 	//std::cout << "tauVec(i+2) " << tauVec(i+2) << std::endl;
+	//std::cout << "i " << i << std::endl;
+	//std::cout << "Kmat_vec[i] " << Kmat_vec[i](1775,1775) << std::endl;
       }	      
     }
 
@@ -2213,6 +2349,8 @@ arma::fvec gen_spsolve_v4_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fv
 // cout << "CPU Time  in gen_spsolve_v4 = " << cpu1in - cpu0in  << endl;
 
     arma::sp_mat result = gen_sp_Sigma_multiV(wVec, tauVec);
+
+    
 
 //double wall2in = get_wall_time();
 // double cpu2in  = get_cpu_time();
@@ -3769,8 +3907,17 @@ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wV
         arma::fvec traceCV(q2);
         traceCV.fill(traceCVcutoff + 0.1);
 
+        arma::uvec covarianceidxVec;
+	arma::fvec traceCVsub;
+	arma::uvec indexsubvec =  { 1, 2 };
+	if(g_covarianceidxMat.n_cols > 0){
+             covarianceidxVec = arma::vectorise(g_covarianceidxMat.cols(indexsubvec));
+	     covarianceidxVec = covarianceidxVec - 1;
+	}
+	bool isConverge = false;
         //while((traceCV > cutoff_trace) | (traceCV0 > cutoff_trace)){
-	while( arma::any(traceCV > traceCVcutoff) ){
+	//while( arma::any(traceCV > traceCVcutoff) ){
+	while( !isConverge ){
     		for(int i = nrun_trace_start; i < nrun_trace_end; i++){
 
     			uVec0 = nb(Nnomissing);
@@ -3820,7 +3967,27 @@ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wV
 		//traceCVcutoff = 1.0;
   		// if not converge, increase nrun_trace and rerun
 		//temp_mat.print("temp_mat");
-  		if( arma::any(traceCV > traceCVcutoff) ){
+		//
+	
+		if(g_covarianceidxMat.n_cols > 0){
+			traceCVsub = traceCV.elem(covarianceidxVec);
+			//if(arma::any(traceCVsub > traceCVcutoff)){
+			if(arma::any(traceCV > traceCVcutoff)){
+				isConverge = false;
+			}else{
+				isConverge = true;
+			}	
+        	}else{
+			if( arma::any(traceCV > traceCVcutoff) ){
+				isConverge = false;
+			}else{	
+				isConverge = true;
+			}	
+		}	
+
+
+
+  		if( !isConverge){
   			nrun_trace_start = nrun_trace_end;
   			nrun_trace_end = nrun_trace_end + 10;
   			temp_mat.resize(nrun_trace_end,k1);
@@ -3920,6 +4087,48 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
 }
 
 
+arma::ivec updatefixrhoidx0(arma::fvec & t_tau0Vec, float tol){
+	arma::ivec fixrhoidx0Vec(g_covarianceidxMat.n_rows);
+	arma::uvec covarianceidxVec;
+	float tau0_x1, tau0_x2, tau0_x3, tau0_x2_x3, tau0temp;
+	for(int i=0; i<g_covarianceidxMat.n_rows; i++){
+		covarianceidxVec = (g_covarianceidxMat.row(i) - 1).t();
+		tau0_x1 = t_tau0Vec((covarianceidxVec(0)));
+		tau0_x2 = t_tau0Vec((covarianceidxVec(1)));
+		tau0_x3 = t_tau0Vec((covarianceidxVec(2)));
+		tau0_x2_x3 = std::sqrt(tau0_x2 * tau0_x3);
+		tau0temp = (1 - 1.01 * tol) * tau0_x2_x3;
+		if(std::abs(tau0_x1) > tau0temp){
+			fixrhoidx0Vec(i) = 1;
+		}else{	
+			fixrhoidx0Vec(i) = 0;
+		}
+	}
+	return(fixrhoidx0Vec);	
+}	
+
+
+arma::ivec tauUpdateValue(arma::fvec & t_tau0Vec){
+	arma::ivec fixrhoidx0Vec(g_covarianceidxMat.n_rows);
+        arma::uvec covarianceidxVec;
+        float tau0_x1, tau0_x2, tau0_x3, tau0_x2_x3, tau0temp;
+        for(int i=0; i<g_covarianceidxMat.n_rows; i++){
+                covarianceidxVec = (g_covarianceidxMat.row(i) - 1).t();
+                tau0_x1 = t_tau0Vec((covarianceidxVec(0)));
+                tau0_x2 = t_tau0Vec((covarianceidxVec(1)));
+                tau0_x3 = t_tau0Vec((covarianceidxVec(2)));
+                tau0_x2_x3 = std::sqrt(tau0_x2 * tau0_x3);
+                if(std::abs(tau0_x1) > tau0_x2_x3){
+                        fixrhoidx0Vec(i) = 0;
+                }else{
+                        fixrhoidx0Vec(i) = 1;
+                }
+        }
+	return(fixrhoidx0Vec);
+}	
+
+
+
 // [[Rcpp::export]]
 Rcpp::List fitglmmaiRPCG_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec &wVec,  arma::fvec & tauVec, arma::ivec & fixtauVec,
 arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
@@ -3959,25 +4168,70 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
 	score1.print("score1");
 	AI1.print("AI1");
 	// fill dtau using dtau_pre, padding 0
-	int i2 = 0;
+	//int i2 = 0;
+	//
+	//
 	arma::fvec Dtau_k1(k1);
 	Dtau_k1.zeros();
 	for(int i=0; i<k1; i++){
 		if(fixtauVec(i)==0){ // not fixed
-			Dtau_k1(i) = Dtau(i2);
-			i2++;
+			Dtau_k1(i) = Dtau(i);
+			//i2++;
 		} 
 	} // end for i
+	Dtau_k1.print("Dtau_k1");	
 	tau0 = tauVec;
 	tauVec = tauVec + Dtau_k1;
-	tauVec.elem( arma::find(tauVec < tol) ).zeros();
-	float step = 1.0;
-	while ( arma::any(tauVec < 0.0) ){
-		step = step*0.5;
-		tauVec = tau0 + step*Dtau_k1;
-	 } // end while
+	arma::fvec tauVecabs;
+	arma::ivec fixrhoidx0, fixrhoidx, tauupdateidx;
+	//arma::ivec fixrhoidx0, fixrhoidx, covarianceidxVec1, covarianceidxVec_sub1, covarianceidxVec2, covarianceidxVec_sub2,covarianceidxVec3, covarianceidxVec_sub3, tauupdateidx;
+	arma::uvec covarianceidxVec1, covarianceidxVec_sub1, covarianceidxVec2, covarianceidxVec_sub2,covarianceidxVec3, covarianceidxVec_sub3;	
 
-	 tauVec.elem( arma::find(tauVec < tol) ).zeros();
-	 return List::create(Named("tau") = tauVec);
+	if(g_covarianceidxMat.n_rows == 0){
+		tauVec.elem( arma::find(tauVec < tol) ).zeros();
+		float step = 1.0;
+		while ( arma::any(tauVec < 0.0) ){
+			step = step*0.5;
+			tauVec = tau0 + step*Dtau_k1;
+	 	} // end while
+
+	 	tauVec.elem( arma::find(tauVec < tol) ).zeros();
+	}else{
+		fixrhoidx0 = updatefixrhoidx0(tau0, tol);
+		tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
+		tauVec.elem(g_covarianceidxMat_col1) = tau0.elem(g_covarianceidxMat_col1);
+		fixrhoidx = updatefixrhoidx0(tauVec, tol);
+		covarianceidxVec_sub1 = g_covarianceidxMat_col1.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
+		covarianceidxVec_sub2 = g_covarianceidxMat_col2.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
+		covarianceidxVec_sub3 = g_covarianceidxMat_col3.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
+		tauVecabs = tauVec.elem(covarianceidxVec_sub1) / arma::abs(tauVec.elem(covarianceidxVec_sub1));
+		tauVec.elem(covarianceidxVec_sub1) = tauVecabs % (arma::sqrt(tauVec.elem(covarianceidxVec_sub2) % tauVec.elem(covarianceidxVec_sub3)));
+	        tauupdateidx = tauUpdateValue(tauVec);
+		float step = 1.0;
+		 while ( arma::any(tauVec.elem(g_covarianceidxMat_notcol1) < 0.0) || tauVec(0) < 0.0 || arma::any(tauupdateidx == 0)){
+		 tauVec.print("tauVec");
+		 tauupdateidx.print("tauupdateidx");
+                        step = step*0.5;
+                        tauVec = tau0 + step*Dtau_k1;
+			tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
+                	tauVec.elem(g_covarianceidxMat_col1) = tau0.elem(g_covarianceidxMat_col1);
+			fixrhoidx = updatefixrhoidx0(tauVec, tol);
+                	covarianceidxVec_sub1 = g_covarianceidxMat_col1.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
+                	covarianceidxVec_sub2 = g_covarianceidxMat_col2.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
+                	covarianceidxVec_sub3 = g_covarianceidxMat_col3.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
+                	tauVecabs = tauVec.elem(covarianceidxVec_sub1) / arma::abs(tauVec.elem(covarianceidxVec_sub1));
+                	tauVec.elem(covarianceidxVec_sub1) = tauVecabs % (arma::sqrt(tauVec.elem(covarianceidxVec_sub2) % tauVec.elem(covarianceidxVec_sub3)));
+			tauupdateidx = tauUpdateValue(tauVec);
+			Rcpp::checkUserInterrupt();
+                } // end while
+		tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
+                tauVec.elem(g_covarianceidxMat_col1) = tau0.elem(g_covarianceidxMat_col1);
+		covarianceidxVec_sub1 = g_covarianceidxMat_col1.elem(arma::find(fixrhoidx == 1));
+		covarianceidxVec_sub2 = g_covarianceidxMat_col2.elem(arma::find(fixrhoidx == 1));
+		covarianceidxVec_sub3 = g_covarianceidxMat_col3.elem(arma::find(fixrhoidx == 1));
+		tauVecabs = tauVec.elem(covarianceidxVec_sub1) / arma::abs(tauVec.elem(covarianceidxVec_sub1));
+                tauVec.elem(covarianceidxVec_sub1) = tauVecabs % (arma::sqrt(tauVec.elem(covarianceidxVec_sub2) % tauVec.elem(covarianceidxVec_sub3)));
+	}	
+	 return List::create(Named("tau") = tauVec, Named("AI") = AI1, Named("score") = score1);
 }	
 

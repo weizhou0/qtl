@@ -56,7 +56,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 invNormalize = FALSE,
                 covarColList = NULL,
                 qCovarCol = NULL,
-		longlCol = NULL,
+		longlCol = "",
                 sampleIDColinphenoFile = "",
                 tol=0.02,
                 maxiter=20,
@@ -259,7 +259,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table=F)
         }
         #data = data.frame(ydat)
-	if(is.null(longlCol)){
+	if(longlCol == ""){
 		checkColList = c(phenoCol, covarColList, sampleIDColinphenoFile)
 	}else{
 		checkColList = c(phenoCol, covarColList, sampleIDColinphenoFile, longlCol)
@@ -354,7 +354,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	}
 
         mmat$IID = data[, which(sampleIDColinphenoFile == colnames(data))]
-	if(!is.null(longlCol)){
+	if(longlCol != ""){
 		mmat$longlVar = data[, which(longlCol == colnames(data))]
 	}
 
@@ -377,7 +377,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	}
 
 
-      if(is.null(longlCol)){	
+      if(longlCol == ""){	
 	if(any(duplicated(mmat_nomissing$IID))){
 		cat("Duplicated sample IDs are detected in the phenotype file. Assuming repeated measurements\n")
 	}
@@ -390,7 +390,11 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
         dataMerge = merge(mmat_nomissing, sampleListwithGeno, 
             by.x = "IID", by.y = "IIDgeno")
-        dataMerge_sort = dataMerge[with(dataMerge, order(IndexGeno)),]
+        #dataMerge_sort = dataMerge[with(dataMerge, order(IndexGeno)),]
+        dataMerge_sort = dataMerge[with(dataMerge, order(IndexPheno)),]
+        print("Test")
+	print(head(dataMerge_sort))
+	#dataMerge_sort = dataMerge
 
         rm(mmat)
 	rm(mmat_nomissing)
@@ -404,10 +408,16 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         cat(length(unique(dataMerge_sort$IIDgeno)), " samples will be used for analysis\n")
 
 	if(any(duplicated(dataMerge_sort$IID))){
-		cat(nrow(dataMerge_sort), " obsevations will be used for analysis\n")
+		cat(nrow(dataMerge_sort), " observations will be used for analysis\n")
+		#if(longlCol != ""){
+		  #dataMerge_sort = dataMerge_sort[with(dataMerge_sort, order(IndexGeno, longlVar)),]
+		#  dataMerge_sort = dataMerge_sort[with(dataMerge_sort, order(longlVar)),]
+		#}
 	}	
 
     }
+     print("Test3")
+    print(head(dataMerge_sort))
 
     if (traitType == "quantitative" & invNormalize) {
         cat("Perform the inverse nomalization for ", phenoCol, 
@@ -417,6 +427,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
             which(colnames(dataMerge_sort) == phenoCol)])))
         dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)] = invPheno
     }
+     print("Test4")
     print(head(dataMerge_sort))
     if (traitType == "binary" & (length(covarColList) > 0)) {
         out_checksep = checkPerfectSep(formula.null, data = dataMerge_sort, 
@@ -487,22 +498,28 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     }	    
     data.new$covoffset = covoffset
 
+	    
     if (useSparseGRMtoFitNULL | useSparseGRMforVarRatio) {
-        sparseGRMtest = getsubGRM(sparseGRMFile, sparseGRMSampleIDFile,
-            relatednessCutoff, dataMerge_sort$IID)
-        m4 = gen_sp_v2(sparseGRMtest)
-        cat("Setting up sparse GRM using ", sparseGRMFile, " and ", sparseGRMSampleIDFile, "\n")
-        cat("Dimension of the sparse GRM is ", dim(m4), "\n")
-        A = summary(m4)
-        locationMatinR = rbind(A$i - 1, A$j - 1)
-        valueVecinR = A$x
-        setupSparseGRM(dim(m4)[1], locationMatinR, valueVecinR)
-        rm(sparseGRMtest)
+        #sparseGRMtest = getsubGRM(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)
+	getsubGRM(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID, dataMerge_sort$longlVar)    
+        #m4 = gen_sp_v2(sparseGRMtest)
+        #cat("Setting up sparse GRM using ", sparseGRMFile, " and ", sparseGRMSampleIDFile, "\n")
+        #cat("Dimension of the sparse GRM is ", dim(m4), "\n")
+        #A = summary(m4)
+        #locationMatinR = rbind(A$i - 1, A$j - 1)
+        #valueVecinR = A$x
+        #setupSparseGRM(dim(m4)[1], locationMatinR, valueVecinR)
+	#setupSparseGRM_new(sparseGRMtest)
+        #rm(sparseGRMtest)
+	gc()
     }
 
-
     #allow for multiple variance components
-    set_Vmat_vec(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID)
+    set_Vmat_vec(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID, dataMerge_sort$longlVar)
+
+    if(longlCol != ""){
+       covarianceIdxMat = set_covarianceidx_Mat()
+    }	    
 
     if(!skipVarianceRatioEstimation){
             isVarianceRatioinGeno = TRUE
@@ -614,7 +631,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 chromosomeEndIndexVec = chromosomeEndIndexVec, 
                 traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform, 
                 isDiagofKinSetAsOne = isDiagofKinSetAsOne, 
-		isLowMemLOCO = isLowMemLOCO))
+		isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat))
          
 	modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
             
@@ -1084,7 +1101,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
 
 #Fits the null glmm
-glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO) {
+glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL) {
   #Fits the null generalized linear mixed model for a poisson, binomial, and gaussian
   #Args:
   #  genofile: string. Plink file for the M1 markers to be used to construct the genetic relationship matrix
@@ -1160,37 +1177,69 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     tau[1] = 1
     fixtau[1] = 1
     tauInit[1] = 1
-
+    idxtau <- which(fixtau == 0)
     cat("fixtau ", fixtau, "\n")
     cat("tauInit ", tauInit, "\n")
-    if(sum(tauInit[fixtau == 0]) == 0){
-      tau[fixtau == 0] = 0.1
+    if(sum(tauInit[idxtau]) == 0){
+      tau[idxtau] = 0.1
     }else{
-      tau[fixtau == 0] = tauInit[fixtau == 0]
+      tau[idxtau] = tauInit[idxtau]
     }
-  }else{
-    if(sum(tauInit[fixtau == 0]) == 0){
-      #tau[fixtau == 0] = var(Y)/(length(tau))
-      tau[1] = 1
+  }else{#  if(family$family %in% c("poisson", "binomial")) {
+    idxtau <- which(fixtau == 0)	  
+    if(sum(tauInit[idxtau]) == 0){
+      tau[idxtau] = var(Y)/(length(tau))
+      #tau[1] = 1
       #tau[2] = 0
-      tau[2:length(tau)] = 0
+      #tau[2:length(tau)] = 0
       if (abs(var(Y)) < 0.1){
         stop("WARNING: variance of the phenotype is much smaller than 1. Please consider invNormalize=T\n")
       }
     }else{
       tau[fixtau == 0] = tauInit[fixtau == 0]
     }
-  }	  
+  }
+
+
+  if(!is.null(covarianceIdxMat)){
+	  idxtau2 <- intersect(covarianceIdxMat[, 1], idxtau)
+	  print("covarianceIdxMat")
+	  print(covarianceIdxMat)
+	  print("idxtau2")
+	  print(idxtau2)
+	  if(length(idxtau2) > 0){
+		tau[idxtau2] = 0
+          }		  
+  }
+
     #q = 1
     cat("inital tau is ", tau,"\n")
     #tau = c(1, 1.300489, 1.338478)
+    Kmatdiag = getMeanDiagofKmat()
+    print("tau")
+    print(tau)
+    print("Kmatdiag")
+    print(Kmatdiag)
+
+    tau[2:length(tau)] = tau[2:length(tau)]/Kmatdiag
+    print("tau")
+    print(tau)
+    re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)
+
+
+    re = getAIScore_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG,tolPCG = tolPCG, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
     tau0=tau
     tau0_q2 = tau[fixtau == 0]
-    re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)
-    re = getAIScore_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG,tolPCG = tolPCG, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
     #tau[2] = max(0, tau0[2] + tau0[2]^2 * (re$YPAPY - re$Trace)/n)
-    tau_q2 = pmax(0, tau0_q2 + tau0_q2^2 * (re$YPAPY - re$Trace)/n) 		
-    tau[fixtau == 0] = tau_q2	
+    print("tau0_q2 a")
+    print(tau0_q2)
+    print("idxtau")
+    print(idxtau)
+
+
+    tau_q2 = pmax(0, tau0_q2 + tau0_q2^2 * (re$YPAPY - re$Trace)/n)	    
+    tau[idxtau] = tau_q2
+    tau[idxtau[which(idxtau %in% idxtau2)]] = 0    
      
     print("re$YPAPY")
     print(re$YPAPY)
@@ -1217,6 +1266,11 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       cat("t_end_Get_Coef - t_begin_Get_Coef\n")
       print(t_end_Get_Coef - t_begin_Get_Coef)
       fit = fitglmmaiRPCG_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG, tolPCG, tol = tol, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
+
+	if(i == 1){
+		save(fit, file="/net/hunt/zhowei/project/imbalancedCaseCtrlMixedModel/Rpackage_SPAGMMAT/SAIGE_newgit/SAIGE_1.1.3/SAIGE/extdata/SAIGE_fit.rda")
+	}	
+
       t_end_fitglmmaiRPCG= proc.time()
       cat("t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG\n")
       print(t_end_fitglmmaiRPCG - t_end_Get_Coef)

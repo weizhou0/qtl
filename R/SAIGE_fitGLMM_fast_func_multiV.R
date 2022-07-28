@@ -22,6 +22,12 @@ Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG,
     mu.eta = family$mu.eta(eta)
 
     Y = eta - offset + (y - mu)/mu.eta
+
+    print("y[1]")
+    print(y[1])
+    print("y[2]")
+    print(y[2])
+
     sqrtW = mu.eta/sqrt(family$variance(mu))
     W = sqrtW^2
 
@@ -263,7 +269,42 @@ getVmatSub <- function (sparseVFile = NULL, sparseVSampleIDFile = "",
  }
 }
 
-set_Vmat_vec = function(VmatFilelist, VmatSampleFilelist, modelID){
+
+set_Vmat_vec = function(VmatFilelist, VmatSampleFilelist, modelID, longlVarVec=NULL){	
+   if(any(duplicated(modelID))){
+        VmatsampleID = unique(modelID)
+        #sparseVmat0 = Matrix::Diagonal(length(unique(modelID)))
+        #sparseVmat0 = sparseVmat0 * 1
+        #sparseVmat0 = diag(length(unique(modelID)))
+        sparseVmat0 = Matrix:::sparseMatrix(i = c(1: length(VmatsampleID)), j = c(1:length(VmatsampleID)), x = as.vector(rep(1,  length(VmatsampleID))))
+        cat("length(unique(modelID)) ", length(unique(modelID)), "\n")
+        print(dim(sparseVmat0))
+        sparseVmat0 = as(sparseVmat0, "sparseMatrix")
+        sampleInModel = data.frame("IID" = modelID, IndexInModel = seq(1, length(modelID)))
+        sparseVSampleID = data.frame("sampleID" = VmatsampleID, IndexInMat = seq(1, length(VmatsampleID)))
+        mergeID = merge(sampleInModel, sparseVSampleID, by.x = "IID", by.y = "sampleID")
+        mergeID = mergeID[with(mergeID, order(IndexInModel)),]
+        indexIDofV = mergeID$IndexInMat
+        print("okkk5")
+        print(length(indexIDofV))
+        sparseVmat = sparseVmat0[indexIDofV, indexIDofV]
+        print("okkk6")
+        addNewKat(sparseVmat)
+	print(sparseVmat[1:10,1:10])
+	print("okkkkkkk7")
+	if(!is.null(longlVarVec)){
+		sparseVmat_longl = sparseVmat * longlVarVec
+		sparseVmat_longl_b = sparseVmat_longl + t(sparseVmat_longl)
+		addNewKat(sparseVmat_longl_b)
+		print(sparseVmat_longl_b[1:10,1:10])
+		sparseVmat_longl = t(sparseVmat_longl)*longlVarVec
+		addNewKat(sparseVmat_longl)
+		print(sparseVmat_longl[1:10,1:10])
+		rm(sparseVmat_longl)
+		rm(sparseVmat_longl_b)
+	}
+    }
+      
   if(VmatFilelist != ""){
     VmatFile_vec = unlist(strsplit(VmatFilelist, split=","))
     cat(length(VmatFile_vec), " additional variance covariance matrices are specified\n")
@@ -281,39 +322,27 @@ set_Vmat_vec = function(VmatFilelist, VmatSampleFilelist, modelID){
         }else{
           sparseVmat = getVmatSub(Vmatfile, VmatSamplefile, modelID)
           addNewKat(sparseVmat)
+	  if(!is.null(longlVarVec)){
+            sparseVmat_longl = sparseVmat * longlVarVec
+	    sparseVmat_longl_b = sparseVmat_longl + t(sparseVmat_longl)
+            addNewKat(sparseVmat_longl_b)
+	    print(sparseVmat_longl_b[1:10,1:10])
+            sparseVmat_longl = t(sparseVmat_longl) * longlVarVec
+            addNewKat(sparseVmat_longl)
+	    print(sparseVmat_longl[1:10,1:10])
+	    rm(sparseVmat_longl_b)
+	    rm(sparseVmat_longl)
+          }
 	  #Matrix::writeMM(sparseVmat, file="kin2_SAIGE.mtx")
         }
       }
     }
-  }else{
-
-    if(any(duplicated(modelID))){
-	VmatsampleID = unique(modelID)
-        #sparseVmat0 = Matrix::Diagonal(length(unique(modelID)))
-	#sparseVmat0 = sparseVmat0 * 1
-        #sparseVmat0 = diag(length(unique(modelID)))
-	sparseVmat0 = Matrix:::sparseMatrix(i = c(1: length(VmatsampleID)), j = c(1:length(VmatsampleID)), x = as.vector(rep(1,  length(VmatsampleID))))
-	cat("length(unique(modelID)) ", length(unique(modelID)), "\n")
-  	print(dim(sparseVmat0))
-    	sparseVmat0 = as(sparseVmat0, "sparseMatrix") 
-        sampleInModel = data.frame("IID" = modelID, IndexInModel = seq(1, length(modelID)))
-	sparseVSampleID = data.frame("sampleID" = VmatsampleID, IndexInMat = seq(1, length(VmatsampleID)))
-        mergeID = merge(sampleInModel, sparseVSampleID, by.x = "IID", by.y = "sampleID") 
-        mergeID = mergeID[with(mergeID, order(IndexInModel)),]
-        indexIDofV = mergeID$IndexInMat
-	print("okkk5")
-	print(length(indexIDofV))
-        sparseVmat = sparseVmat0[indexIDofV, indexIDofV]
-	print("okkk6")
-        addNewKat(sparseVmat)
-print("okkkkkkk7")	
-    }
-  }	  
+  }
 }
 
 
 getsubGRM <- function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", relatednessCutoff,
-    modelID = NULL)
+    modelID = NULL, longlVarVec=NULL)
 {
     cat("extract sparse GRM\n")
     sparseGRMLarge = Matrix:::readMM(sparseGRMFile)
@@ -335,8 +364,7 @@ getsubGRM <- function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", related
             nrow(sparseGRMSampleID) != dim(sparseGRMLarge)[2]) {
             stop("ERROR! number of samples in the sparse GRM is not the same to the number of sample IDs in the specified sparseGRMSampleIDFile ",
                 sparseGRMSampleIDFile, "\n")
-        }
-        else {
+        }else {
             sampleInModel = NULL
             sampleInModel$IID = modelID
             sampleInModel = data.frame(sampleInModel)
@@ -354,8 +382,10 @@ getsubGRM <- function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", related
                   ]
                 indexIDofGRM = mergeID$IndexGRM
                 sparseGRM = sparseGRMLarge[indexIDofGRM, indexIDofGRM]
+		setupSparseGRM_new(sparseGRM)
                 rm(sparseGRMLarge)
-                return(sparseGRM)
+		rm(sparseGRM)
+                #return(sparseGRM)
             }	    
           }else{ #if(!any(duplicated(sampleInModel$IID))){
 	     cat(nrow(sampleInModel), " observations have been used to fit the glmm null model\n")	
@@ -370,9 +400,22 @@ getsubGRM <- function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", related
                   ]
                 indexIDofGRM = mergeID$IndexGRM
                 sparseGRM = sparseGRMLarge[indexIDofGRM, indexIDofGRM]
+		setupSparseGRM_new(sparseGRM)
+		print(sparseGRM[1:10,1:10])
                 rm(sparseGRMLarge)
-		          Matrix::writeMM(sparseGRM, file="kin1_SAIGE.mtx")
-                return(sparseGRM)
+		if(!is.null(longlVarVec)){
+                  sparseVmat_longl = sparseGRM * longlVarVec
+		  sparseVmat_longl_b = sparseVmat_longl + t(sparseVmat_longl)
+                  addNewKat(sparseVmat_longl_b)
+		  print(sparseVmat_longl_b[1:10,1:10])
+                  sparseVmat_longl = t(sparseVmat_longl) * longlVarVec
+                  addNewKat(sparseVmat_longl)
+		  print(sparseVmat_longl[1:10,1:10])
+		  rm(sparseVmat_longl)
+		  rm(sparseVmat_longl_b)
+          	}
+		rm(sparseGRM)
+                #return(sparseGRM)
 	    }			    
 	  }	  
        }
