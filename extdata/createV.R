@@ -35,9 +35,15 @@ GRM <- as.matrix(read.table(GRM.file, check.names = FALSE))
 GRM = as(GRM, "sparseMatrix")
 writeMM(GRM, "GMMAT_GRM.mtx")
 
+IMatrix = diag(1, nrow=400, ncol=400)
+IMatrix = as(IMatrix, "sparseMatrix")
+writeMM(IMatrix, "I.mtx")
 
 
 pheno2.file <- system.file("extdata", "pheno2.txt", package = "GMMAT")
 pheno2 <- read.table(pheno2.file, header = TRUE)
 pheno3 = pheno2[which(pheno2$time == 1),]
 write.table(pheno3, "GMMAT_pheno_quantitative.txt", col.names=T, row.names=F, quote=F)
+ write.table(pheno2, "GMMAT_pheno_quantitative_repeat.txt" , col.names=T, row.names=F, quote=F)
+
+

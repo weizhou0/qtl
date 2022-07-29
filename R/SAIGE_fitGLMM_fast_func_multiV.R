@@ -4,6 +4,7 @@ Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG,
   mu = family$linkinv(eta0)
   mu.eta = family$mu.eta(eta0)
   Y = eta0 - offset + (y - mu)/mu.eta
+
   sqrtW = mu.eta/sqrt(family$variance(mu))
   W = sqrtW^2
 

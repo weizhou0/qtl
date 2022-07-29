@@ -390,8 +390,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
         dataMerge = merge(mmat_nomissing, sampleListwithGeno, 
             by.x = "IID", by.y = "IIDgeno")
-        #dataMerge_sort = dataMerge[with(dataMerge, order(IndexGeno)),]
-        dataMerge_sort = dataMerge[with(dataMerge, order(IndexPheno)),]
+        dataMerge_sort = dataMerge[with(dataMerge, order(IndexGeno)),]
+        #dataMerge_sort = dataMerge[with(dataMerge, order(IndexPheno)),]
         print("Test")
 	print(head(dataMerge_sort))
 	#dataMerge_sort = dataMerge
@@ -519,6 +519,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
     if(longlCol != ""){
        covarianceIdxMat = set_covarianceidx_Mat()
+    }else{
+       covarianceIdxMat = NULL
     }	    
 
     if(!skipVarianceRatioEstimation){
@@ -1188,8 +1190,8 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   }else{#  if(family$family %in% c("poisson", "binomial")) {
     idxtau <- which(fixtau == 0)	  
     if(sum(tauInit[idxtau]) == 0){
-      tau[idxtau] = var(Y)/(length(tau))
-      #tau[1] = 1
+      #tau[idxtau] = var(Y)/(length(tau))
+      tau[1] = 1
       #tau[2] = 0
       #tau[2:length(tau)] = 0
       if (abs(var(Y)) < 0.1){
@@ -1200,6 +1202,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     }
   }
 
+    cat("inital tau is ", tau,"\n")
 
   if(!is.null(covarianceIdxMat)){
 	  idxtau2 <- intersect(covarianceIdxMat[, 1], idxtau)
@@ -1209,19 +1212,18 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 	  print(idxtau2)
 	  if(length(idxtau2) > 0){
 		tau[idxtau2] = 0
-          }		  
+          }
+	i_kmat = get_numofV()
+    	if(i_kmat > 0){
+        	Kmatdiag = getMeanDiagofKmat()
+    	}	  
+        tau[2:length(tau)] = tau[2:length(tau)]/Kmatdiag
   }
 
     #q = 1
-    cat("inital tau is ", tau,"\n")
     #tau = c(1, 1.300489, 1.338478)
-    Kmatdiag = getMeanDiagofKmat()
-    print("tau")
-    print(tau)
-    print("Kmatdiag")
-    print(Kmatdiag)
-
-    tau[2:length(tau)] = tau[2:length(tau)]/Kmatdiag
+    #print("Kmatdiag")
+    #print(Kmatdiag)
     print("tau")
     print(tau)
     re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)
@@ -1239,8 +1241,10 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 
     tau_q2 = pmax(0, tau0_q2 + tau0_q2^2 * (re$YPAPY - re$Trace)/n)	    
     tau[idxtau] = tau_q2
-    tau[idxtau[which(idxtau %in% idxtau2)]] = 0    
-     
+
+    if(!is.null(covarianceIdxMat)){
+    	tau[idxtau[which(idxtau %in% idxtau2)]] = 0    
+    } 
     print("re$YPAPY")
     print(re$YPAPY)
     print("re$Trace")

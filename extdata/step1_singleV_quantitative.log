@@ -100,7 +100,7 @@ $traceCVcutoff
 [1] 0.0025
 
 $nrun
-[1] 30
+[1] 100
 
 $ratioCVcutoff
 [1] 0.001
@@ -195,7 +195,8 @@ Variance ratio estimation will be skipped
 400  samples are in the sparse GRM
 formula is  y.repeated~sex 
 400  samples have non-missing phenotypes
-400  samples will be used for analysis
+400  samples in geno file do not have phenotypes
+0  samples will be used for analysis
     IID X.Intercept. sex y.repeated IndexPheno IndexGeno
 1     1            1   0       1.83        207         1
 112   2            1   1       1.43        301         2
@@ -234,21 +235,18 @@ Null Deviance:	    393
 Residual Deviance: 364.6 	AIC: 1104
 Start fitting the NULL GLMM
    user  system elapsed 
-  1.199   0.115   1.325 
+  1.171   0.146   1.321 
    user  system elapsed 
-  1.302   0.115   1.429 
+  1.273   0.147   1.423 
 [1] "Start reading genotype plink file here"
-Error! fam file not open!time: 0.047
+Error! fam file not open!time: 0.041
 [1] "Genotype reading is done"
 tauInit[1] 0 0 0
 inital tau is  1 0 0 
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 after Sigma_iY
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 Tau:
 [1] 1 0 0
 Fixed-effect coefficients:
@@ -261,11 +259,8 @@ Fixed-effect coefficients:
 [2,] 0.5332994
 k1 3
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 AI
    3.6459e+02   3.8352e+02   3.6371e+02
    3.8352e+02   1.1125e+03   1.0992e+03
@@ -275,808 +270,106 @@ idxtau
         1
         2
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update30 3
-traceCV
-   0.0003
-   0.0019
-   0.0083
-temp_mat
-   3.9910e+02   3.6939e+02   4.6790e+02
-   3.9918e+02   4.1279e+02   3.3190e+02
-   3.9918e+02   3.6766e+02   2.9990e+02
-   3.9902e+02   3.7453e+02   3.9110e+02
-   3.9662e+02   3.8471e+02   3.9110e+02
-   3.9512e+02   3.4343e+02   3.1160e+02
-   3.9606e+02   3.5410e+02   2.9910e+02
-   3.9932e+02   3.4523e+02   2.0960e+02
-   3.9942e+02   3.4091e+02   4.3110e+02
-   3.9788e+02   4.2084e+02   3.7440e+02
-   3.9756e+02   3.4910e+02   3.7760e+02
-   3.9660e+02   3.4372e+02   3.1960e+02
-   3.9974e+02   3.5639e+02   3.6950e+02
-   3.9926e+02   3.8647e+02   4.7910e+02
-   3.9456e+02   3.4947e+02   5.6000e+02
-   3.9550e+02   3.4895e+02   4.8550e+02
-   3.9532e+02   3.7749e+02   5.9960e+02
-   3.8400e+02   3.4280e+02   3.5840e+02
-   3.9948e+02   3.6974e+02   2.6040e+02
-   3.9806e+02   3.4431e+02   2.8150e+02
-   3.9870e+02   3.4618e+02   3.1190e+02
-   3.9900e+02   3.7372e+02   3.9640e+02
-   3.9830e+02   3.8469e+02   3.6790e+02
-   3.9704e+02   3.6362e+02   3.4040e+02
-   3.9984e+02   3.6971e+02   3.8400e+02
-   3.9966e+02   3.7508e+02   3.9350e+02
-   3.9950e+02   3.9942e+02   3.2390e+02
-   3.9968e+02   3.6629e+02   5.8240e+02
-   3.9854e+02   3.5785e+02   2.6550e+02
-   3.9928e+02   3.4958e+02   3.5640e+02
-CV for trace random estimator using 30 runs is    0.0003
-   0.0019
-   0.0083
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update40 3
-traceCV
-   0.0002
-   0.0014
-   0.0063
-temp_mat
-   3.9910e+02   3.6939e+02   4.6790e+02
-   3.9918e+02   4.1279e+02   3.3190e+02
-   3.9918e+02   3.6766e+02   2.9990e+02
-   3.9902e+02   3.7453e+02   3.9110e+02
-   3.9662e+02   3.8471e+02   3.9110e+02
-   3.9512e+02   3.4343e+02   3.1160e+02
-   3.9606e+02   3.5410e+02   2.9910e+02
-   3.9932e+02   3.4523e+02   2.0960e+02
-   3.9942e+02   3.4091e+02   4.3110e+02
-   3.9788e+02   4.2084e+02   3.7440e+02
-   3.9756e+02   3.4910e+02   3.7760e+02
-   3.9660e+02   3.4372e+02   3.1960e+02
-   3.9974e+02   3.5639e+02   3.6950e+02
-   3.9926e+02   3.8647e+02   4.7910e+02
-   3.9456e+02   3.4947e+02   5.6000e+02
-   3.9550e+02   3.4895e+02   4.8550e+02
-   3.9532e+02   3.7749e+02   5.9960e+02
-   3.8400e+02   3.4280e+02   3.5840e+02
-   3.9948e+02   3.6974e+02   2.6040e+02
-   3.9806e+02   3.4431e+02   2.8150e+02
-   3.9870e+02   3.4618e+02   3.1190e+02
-   3.9900e+02   3.7372e+02   3.9640e+02
-   3.9830e+02   3.8469e+02   3.6790e+02
-   3.9704e+02   3.6362e+02   3.4040e+02
-   3.9984e+02   3.6971e+02   3.8400e+02
-   3.9966e+02   3.7508e+02   3.9350e+02
-   3.9950e+02   3.9942e+02   3.2390e+02
-   3.9968e+02   3.6629e+02   5.8240e+02
-   3.9854e+02   3.5785e+02   2.6550e+02
-   3.9928e+02   3.4958e+02   3.5640e+02
-   3.9900e+02   3.7004e+02   4.4600e+02
-   3.9980e+02   3.9557e+02   5.0240e+02
-   3.9950e+02   3.4852e+02   3.1110e+02
-   3.9852e+02   3.7982e+02   4.8160e+02
-   3.9836e+02   3.6979e+02   3.0560e+02
-   3.9900e+02   3.5145e+02   3.6960e+02
-   3.9854e+02   4.0503e+02   5.2950e+02
-   3.9942e+02   3.3957e+02   2.5510e+02
-   3.9936e+02   3.9618e+02   4.5600e+02
-   3.9750e+02   3.5556e+02   2.2550e+02
-CV for trace random estimator using 40 runs is    0.0002
-   0.0014
-   0.0063
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update50 3
-traceCV
-   0.0001
-   0.0011
-   0.0048
-temp_mat
-   3.9910e+02   3.6939e+02   4.6790e+02
-   3.9918e+02   4.1279e+02   3.3190e+02
-   3.9918e+02   3.6766e+02   2.9990e+02
-   3.9902e+02   3.7453e+02   3.9110e+02
-   3.9662e+02   3.8471e+02   3.9110e+02
-   3.9512e+02   3.4343e+02   3.1160e+02
-   3.9606e+02   3.5410e+02   2.9910e+02
-   3.9932e+02   3.4523e+02   2.0960e+02
-   3.9942e+02   3.4091e+02   4.3110e+02
-   3.9788e+02   4.2084e+02   3.7440e+02
-   3.9756e+02   3.4910e+02   3.7760e+02
-   3.9660e+02   3.4372e+02   3.1960e+02
-   3.9974e+02   3.5639e+02   3.6950e+02
-   3.9926e+02   3.8647e+02   4.7910e+02
-   3.9456e+02   3.4947e+02   5.6000e+02
-   3.9550e+02   3.4895e+02   4.8550e+02
-   3.9532e+02   3.7749e+02   5.9960e+02
-   3.8400e+02   3.4280e+02   3.5840e+02
-   3.9948e+02   3.6974e+02   2.6040e+02
-   3.9806e+02   3.4431e+02   2.8150e+02
-   3.9870e+02   3.4618e+02   3.1190e+02
-   3.9900e+02   3.7372e+02   3.9640e+02
-   3.9830e+02   3.8469e+02   3.6790e+02
-   3.9704e+02   3.6362e+02   3.4040e+02
-   3.9984e+02   3.6971e+02   3.8400e+02
-   3.9966e+02   3.7508e+02   3.9350e+02
-   3.9950e+02   3.9942e+02   3.2390e+02
-   3.9968e+02   3.6629e+02   5.8240e+02
-   3.9854e+02   3.5785e+02   2.6550e+02
-   3.9928e+02   3.4958e+02   3.5640e+02
-   3.9900e+02   3.7004e+02   4.4600e+02
-   3.9980e+02   3.9557e+02   5.0240e+02
-   3.9950e+02   3.4852e+02   3.1110e+02
-   3.9852e+02   3.7982e+02   4.8160e+02
-   3.9836e+02   3.6979e+02   3.0560e+02
-   3.9900e+02   3.5145e+02   3.6960e+02
-   3.9854e+02   4.0503e+02   5.2950e+02
-   3.9942e+02   3.3957e+02   2.5510e+02
-   3.9936e+02   3.9618e+02   4.5600e+02
-   3.9750e+02   3.5556e+02   2.2550e+02
-   3.9910e+02   3.5322e+02   4.5190e+02
-   3.9920e+02   3.8897e+02   4.8960e+02
-   3.9750e+02   3.5594e+02   3.5350e+02
-   3.9800e+02   3.5825e+02   3.1800e+02
-   3.9550e+02   3.5019e+02   4.1590e+02
-   3.9980e+02   3.7207e+02   3.1840e+02
-   3.9608e+02   3.7135e+02   4.2040e+02
-   3.9830e+02   3.4571e+02   3.7190e+02
-   3.9870e+02   3.5539e+02   2.7590e+02
-   3.9964e+02   3.6013e+02   4.6040e+02
-CV for trace random estimator using 50 runs is    0.0001
-   0.0011
-   0.0048
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update60 3
-traceCV
-   9.7589e-05
-   1.0720e-03
-   3.9644e-03
-temp_mat
-   3.9910e+02   3.6939e+02   4.6790e+02
-   3.9918e+02   4.1279e+02   3.3190e+02
-   3.9918e+02   3.6766e+02   2.9990e+02
-   3.9902e+02   3.7453e+02   3.9110e+02
-   3.9662e+02   3.8471e+02   3.9110e+02
-   3.9512e+02   3.4343e+02   3.1160e+02
-   3.9606e+02   3.5410e+02   2.9910e+02
-   3.9932e+02   3.4523e+02   2.0960e+02
-   3.9942e+02   3.4091e+02   4.3110e+02
-   3.9788e+02   4.2084e+02   3.7440e+02
-   3.9756e+02   3.4910e+02   3.7760e+02
-   3.9660e+02   3.4372e+02   3.1960e+02
-   3.9974e+02   3.5639e+02   3.6950e+02
-   3.9926e+02   3.8647e+02   4.7910e+02
-   3.9456e+02   3.4947e+02   5.6000e+02
-   3.9550e+02   3.4895e+02   4.8550e+02
-   3.9532e+02   3.7749e+02   5.9960e+02
-   3.8400e+02   3.4280e+02   3.5840e+02
-   3.9948e+02   3.6974e+02   2.6040e+02
-   3.9806e+02   3.4431e+02   2.8150e+02
-   3.9870e+02   3.4618e+02   3.1190e+02
-   3.9900e+02   3.7372e+02   3.9640e+02
-   3.9830e+02   3.8469e+02   3.6790e+02
-   3.9704e+02   3.6362e+02   3.4040e+02
-   3.9984e+02   3.6971e+02   3.8400e+02
-   3.9966e+02   3.7508e+02   3.9350e+02
-   3.9950e+02   3.9942e+02   3.2390e+02
-   3.9968e+02   3.6629e+02   5.8240e+02
-   3.9854e+02   3.5785e+02   2.6550e+02
-   3.9928e+02   3.4958e+02   3.5640e+02
-   3.9900e+02   3.7004e+02   4.4600e+02
-   3.9980e+02   3.9557e+02   5.0240e+02
-   3.9950e+02   3.4852e+02   3.1110e+02
-   3.9852e+02   3.7982e+02   4.8160e+02
-   3.9836e+02   3.6979e+02   3.0560e+02
-   3.9900e+02   3.5145e+02   3.6960e+02
-   3.9854e+02   4.0503e+02   5.2950e+02
-   3.9942e+02   3.3957e+02   2.5510e+02
-   3.9936e+02   3.9618e+02   4.5600e+02
-   3.9750e+02   3.5556e+02   2.2550e+02
-   3.9910e+02   3.5322e+02   4.5190e+02
-   3.9920e+02   3.8897e+02   4.8960e+02
-   3.9750e+02   3.5594e+02   3.5350e+02
-   3.9800e+02   3.5825e+02   3.1800e+02
-   3.9550e+02   3.5019e+02   4.1590e+02
-   3.9980e+02   3.7207e+02   3.1840e+02
-   3.9608e+02   3.7135e+02   4.2040e+02
-   3.9830e+02   3.4571e+02   3.7190e+02
-   3.9870e+02   3.5539e+02   2.7590e+02
-   3.9964e+02   3.6013e+02   4.6040e+02
-   3.9960e+02   3.5176e+02   3.2760e+02
-   3.9838e+02   3.7905e+02   4.1990e+02
-   3.9950e+02   3.5983e+02   2.9510e+02
-   3.9910e+02   3.8734e+02   3.4790e+02
-   3.9806e+02   4.7412e+02   4.0310e+02
-   3.9896e+02   3.6931e+02   5.1960e+02
-   3.9926e+02   3.5111e+02   2.7110e+02
-   3.9870e+02   3.5687e+02   3.3110e+02
-   3.9926e+02   3.8262e+02   3.1350e+02
-   3.9478e+02   3.4107e+02   2.5990e+02
-CV for trace random estimator using 60 runs is    9.7589e-05
-   1.0720e-03
-   3.9644e-03
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update70 3
-traceCV
-   8.1369e-05
-   8.7892e-04
-   3.5098e-03
-temp_mat
-   3.9910e+02   3.6939e+02   4.6790e+02
-   3.9918e+02   4.1279e+02   3.3190e+02
-   3.9918e+02   3.6766e+02   2.9990e+02
-   3.9902e+02   3.7453e+02   3.9110e+02
-   3.9662e+02   3.8471e+02   3.9110e+02
-   3.9512e+02   3.4343e+02   3.1160e+02
-   3.9606e+02   3.5410e+02   2.9910e+02
-   3.9932e+02   3.4523e+02   2.0960e+02
-   3.9942e+02   3.4091e+02   4.3110e+02
-   3.9788e+02   4.2084e+02   3.7440e+02
-   3.9756e+02   3.4910e+02   3.7760e+02
-   3.9660e+02   3.4372e+02   3.1960e+02
-   3.9974e+02   3.5639e+02   3.6950e+02
-   3.9926e+02   3.8647e+02   4.7910e+02
-   3.9456e+02   3.4947e+02   5.6000e+02
-   3.9550e+02   3.4895e+02   4.8550e+02
-   3.9532e+02   3.7749e+02   5.9960e+02
-   3.8400e+02   3.4280e+02   3.5840e+02
-   3.9948e+02   3.6974e+02   2.6040e+02
-   3.9806e+02   3.4431e+02   2.8150e+02
-   3.9870e+02   3.4618e+02   3.1190e+02
-   3.9900e+02   3.7372e+02   3.9640e+02
-   3.9830e+02   3.8469e+02   3.6790e+02
-   3.9704e+02   3.6362e+02   3.4040e+02
-   3.9984e+02   3.6971e+02   3.8400e+02
-   3.9966e+02   3.7508e+02   3.9350e+02
-   3.9950e+02   3.9942e+02   3.2390e+02
-   3.9968e+02   3.6629e+02   5.8240e+02
-   3.9854e+02   3.5785e+02   2.6550e+02
-   3.9928e+02   3.4958e+02   3.5640e+02
-   3.9900e+02   3.7004e+02   4.4600e+02
-   3.9980e+02   3.9557e+02   5.0240e+02
-   3.9950e+02   3.4852e+02   3.1110e+02
-   3.9852e+02   3.7982e+02   4.8160e+02
-   3.9836e+02   3.6979e+02   3.0560e+02
-   3.9900e+02   3.5145e+02   3.6960e+02
-   3.9854e+02   4.0503e+02   5.2950e+02
-   3.9942e+02   3.3957e+02   2.5510e+02
-   3.9936e+02   3.9618e+02   4.5600e+02
-   3.9750e+02   3.5556e+02   2.2550e+02
-   3.9910e+02   3.5322e+02   4.5190e+02
-   3.9920e+02   3.8897e+02   4.8960e+02
-   3.9750e+02   3.5594e+02   3.5350e+02
-   3.9800e+02   3.5825e+02   3.1800e+02
-   3.9550e+02   3.5019e+02   4.1590e+02
-   3.9980e+02   3.7207e+02   3.1840e+02
-   3.9608e+02   3.7135e+02   4.2040e+02
-   3.9830e+02   3.4571e+02   3.7190e+02
-   3.9870e+02   3.5539e+02   2.7590e+02
-   3.9964e+02   3.6013e+02   4.6040e+02
-   3.9960e+02   3.5176e+02   3.2760e+02
-   3.9838e+02   3.7905e+02   4.1990e+02
-   3.9950e+02   3.5983e+02   2.9510e+02
-   3.9910e+02   3.8734e+02   3.4790e+02
-   3.9806e+02   4.7412e+02   4.0310e+02
-   3.9896e+02   3.6931e+02   5.1960e+02
-   3.9926e+02   3.5111e+02   2.7110e+02
-   3.9870e+02   3.5687e+02   3.3110e+02
-   3.9926e+02   3.8262e+02   3.1350e+02
-   3.9478e+02   3.4107e+02   2.5990e+02
-   3.9462e+02   3.6471e+02   3.9110e+02
-   3.9486e+02   3.5820e+02   6.7910e+02
-   3.9726e+02   4.0417e+02   3.3350e+02
-   3.9756e+02   3.7192e+02   4.9400e+02
-   3.9630e+02   3.9562e+02   3.1510e+02
-   3.9942e+02   3.7276e+02   3.9910e+02
-   3.9896e+02   3.8084e+02   2.8760e+02
-   3.9686e+02   3.6998e+02   3.7750e+02
-   3.9840e+02   3.8161e+02   4.5440e+02
-   3.9998e+02   3.7395e+02   3.0790e+02
-CV for trace random estimator using 70 runs is    8.1369e-05
-   8.7892e-04
-   3.5098e-03
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update80 3
-traceCV
-   6.8518e-05
-   7.5734e-04
-   3.0081e-03
-temp_mat
-   3.9910e+02   3.6939e+02   4.6790e+02
-   3.9918e+02   4.1279e+02   3.3190e+02
-   3.9918e+02   3.6766e+02   2.9990e+02
-   3.9902e+02   3.7453e+02   3.9110e+02
-   3.9662e+02   3.8471e+02   3.9110e+02
-   3.9512e+02   3.4343e+02   3.1160e+02
-   3.9606e+02   3.5410e+02   2.9910e+02
-   3.9932e+02   3.4523e+02   2.0960e+02
-   3.9942e+02   3.4091e+02   4.3110e+02
-   3.9788e+02   4.2084e+02   3.7440e+02
-   3.9756e+02   3.4910e+02   3.7760e+02
-   3.9660e+02   3.4372e+02   3.1960e+02
-   3.9974e+02   3.5639e+02   3.6950e+02
-   3.9926e+02   3.8647e+02   4.7910e+02
-   3.9456e+02   3.4947e+02   5.6000e+02
-   3.9550e+02   3.4895e+02   4.8550e+02
-   3.9532e+02   3.7749e+02   5.9960e+02
-   3.8400e+02   3.4280e+02   3.5840e+02
-   3.9948e+02   3.6974e+02   2.6040e+02
-   3.9806e+02   3.4431e+02   2.8150e+02
-   3.9870e+02   3.4618e+02   3.1190e+02
-   3.9900e+02   3.7372e+02   3.9640e+02
-   3.9830e+02   3.8469e+02   3.6790e+02
-   3.9704e+02   3.6362e+02   3.4040e+02
-   3.9984e+02   3.6971e+02   3.8400e+02
-   3.9966e+02   3.7508e+02   3.9350e+02
-   3.9950e+02   3.9942e+02   3.2390e+02
-   3.9968e+02   3.6629e+02   5.8240e+02
-   3.9854e+02   3.5785e+02   2.6550e+02
-   3.9928e+02   3.4958e+02   3.5640e+02
-   3.9900e+02   3.7004e+02   4.4600e+02
-   3.9980e+02   3.9557e+02   5.0240e+02
-   3.9950e+02   3.4852e+02   3.1110e+02
-   3.9852e+02   3.7982e+02   4.8160e+02
-   3.9836e+02   3.6979e+02   3.0560e+02
-   3.9900e+02   3.5145e+02   3.6960e+02
-   3.9854e+02   4.0503e+02   5.2950e+02
-   3.9942e+02   3.3957e+02   2.5510e+02
-   3.9936e+02   3.9618e+02   4.5600e+02
-   3.9750e+02   3.5556e+02   2.2550e+02
-   3.9910e+02   3.5322e+02   4.5190e+02
-   3.9920e+02   3.8897e+02   4.8960e+02
-   3.9750e+02   3.5594e+02   3.5350e+02
-   3.9800e+02   3.5825e+02   3.1800e+02
-   3.9550e+02   3.5019e+02   4.1590e+02
-   3.9980e+02   3.7207e+02   3.1840e+02
-   3.9608e+02   3.7135e+02   4.2040e+02
-   3.9830e+02   3.4571e+02   3.7190e+02
-   3.9870e+02   3.5539e+02   2.7590e+02
-   3.9964e+02   3.6013e+02   4.6040e+02
-   3.9960e+02   3.5176e+02   3.2760e+02
-   3.9838e+02   3.7905e+02   4.1990e+02
-   3.9950e+02   3.5983e+02   2.9510e+02
-   3.9910e+02   3.8734e+02   3.4790e+02
-   3.9806e+02   4.7412e+02   4.0310e+02
-   3.9896e+02   3.6931e+02   5.1960e+02
-   3.9926e+02   3.5111e+02   2.7110e+02
-   3.9870e+02   3.5687e+02   3.3110e+02
-   3.9926e+02   3.8262e+02   3.1350e+02
-   3.9478e+02   3.4107e+02   2.5990e+02
-   3.9462e+02   3.6471e+02   3.9110e+02
-   3.9486e+02   3.5820e+02   6.7910e+02
-   3.9726e+02   4.0417e+02   3.3350e+02
-   3.9756e+02   3.7192e+02   4.9400e+02
-   3.9630e+02   3.9562e+02   3.1510e+02
-   3.9942e+02   3.7276e+02   3.9910e+02
-   3.9896e+02   3.8084e+02   2.8760e+02
-   3.9686e+02   3.6998e+02   3.7750e+02
-   3.9840e+02   3.8161e+02   4.5440e+02
-   3.9998e+02   3.7395e+02   3.0790e+02
-   3.9950e+02   3.6324e+02   2.9190e+02
-   3.9948e+02   3.5494e+02   4.4640e+02
-   3.9870e+02   3.4820e+02   4.1990e+02
-   3.9918e+02   3.5765e+02   5.0790e+02
-   3.9896e+02   3.7117e+02   3.5800e+02
-   3.9600e+02   3.3771e+02   2.7360e+02
-   3.9884e+02   4.1087e+02   3.5000e+02
-   3.9660e+02   3.7792e+02   5.2960e+02
-   3.9694e+02   3.7801e+02   4.3750e+02
-   3.9548e+02   3.5603e+02   4.2240e+02
-CV for trace random estimator using 80 runs is    6.8518e-05
-   7.5734e-04
-   3.0081e-03
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update90 3
-traceCV
-   5.8995e-05
-   7.0758e-04
-   2.6046e-03
-temp_mat
-   3.9910e+02   3.6939e+02   4.6790e+02
-   3.9918e+02   4.1279e+02   3.3190e+02
-   3.9918e+02   3.6766e+02   2.9990e+02
-   3.9902e+02   3.7453e+02   3.9110e+02
-   3.9662e+02   3.8471e+02   3.9110e+02
-   3.9512e+02   3.4343e+02   3.1160e+02
-   3.9606e+02   3.5410e+02   2.9910e+02
-   3.9932e+02   3.4523e+02   2.0960e+02
-   3.9942e+02   3.4091e+02   4.3110e+02
-   3.9788e+02   4.2084e+02   3.7440e+02
-   3.9756e+02   3.4910e+02   3.7760e+02
-   3.9660e+02   3.4372e+02   3.1960e+02
-   3.9974e+02   3.5639e+02   3.6950e+02
-   3.9926e+02   3.8647e+02   4.7910e+02
-   3.9456e+02   3.4947e+02   5.6000e+02
-   3.9550e+02   3.4895e+02   4.8550e+02
-   3.9532e+02   3.7749e+02   5.9960e+02
-   3.8400e+02   3.4280e+02   3.5840e+02
-   3.9948e+02   3.6974e+02   2.6040e+02
-   3.9806e+02   3.4431e+02   2.8150e+02
-   3.9870e+02   3.4618e+02   3.1190e+02
-   3.9900e+02   3.7372e+02   3.9640e+02
-   3.9830e+02   3.8469e+02   3.6790e+02
-   3.9704e+02   3.6362e+02   3.4040e+02
-   3.9984e+02   3.6971e+02   3.8400e+02
-   3.9966e+02   3.7508e+02   3.9350e+02
-   3.9950e+02   3.9942e+02   3.2390e+02
-   3.9968e+02   3.6629e+02   5.8240e+02
-   3.9854e+02   3.5785e+02   2.6550e+02
-   3.9928e+02   3.4958e+02   3.5640e+02
-   3.9900e+02   3.7004e+02   4.4600e+02
-   3.9980e+02   3.9557e+02   5.0240e+02
-   3.9950e+02   3.4852e+02   3.1110e+02
-   3.9852e+02   3.7982e+02   4.8160e+02
-   3.9836e+02   3.6979e+02   3.0560e+02
-   3.9900e+02   3.5145e+02   3.6960e+02
-   3.9854e+02   4.0503e+02   5.2950e+02
-   3.9942e+02   3.3957e+02   2.5510e+02
-   3.9936e+02   3.9618e+02   4.5600e+02
-   3.9750e+02   3.5556e+02   2.2550e+02
-   3.9910e+02   3.5322e+02   4.5190e+02
-   3.9920e+02   3.8897e+02   4.8960e+02
-   3.9750e+02   3.5594e+02   3.5350e+02
-   3.9800e+02   3.5825e+02   3.1800e+02
-   3.9550e+02   3.5019e+02   4.1590e+02
-   3.9980e+02   3.7207e+02   3.1840e+02
-   3.9608e+02   3.7135e+02   4.2040e+02
-   3.9830e+02   3.4571e+02   3.7190e+02
-   3.9870e+02   3.5539e+02   2.7590e+02
-   3.9964e+02   3.6013e+02   4.6040e+02
-   3.9960e+02   3.5176e+02   3.2760e+02
-   3.9838e+02   3.7905e+02   4.1990e+02
-   3.9950e+02   3.5983e+02   2.9510e+02
-   3.9910e+02   3.8734e+02   3.4790e+02
-   3.9806e+02   4.7412e+02   4.0310e+02
-   3.9896e+02   3.6931e+02   5.1960e+02
-   3.9926e+02   3.5111e+02   2.7110e+02
-   3.9870e+02   3.5687e+02   3.3110e+02
-   3.9926e+02   3.8262e+02   3.1350e+02
-   3.9478e+02   3.4107e+02   2.5990e+02
-   3.9462e+02   3.6471e+02   3.9110e+02
-   3.9486e+02   3.5820e+02   6.7910e+02
-   3.9726e+02   4.0417e+02   3.3350e+02
-   3.9756e+02   3.7192e+02   4.9400e+02
-   3.9630e+02   3.9562e+02   3.1510e+02
-   3.9942e+02   3.7276e+02   3.9910e+02
-   3.9896e+02   3.8084e+02   2.8760e+02
-   3.9686e+02   3.6998e+02   3.7750e+02
-   3.9840e+02   3.8161e+02   4.5440e+02
-   3.9998e+02   3.7395e+02   3.0790e+02
-   3.9950e+02   3.6324e+02   2.9190e+02
-   3.9948e+02   3.5494e+02   4.4640e+02
-   3.9870e+02   3.4820e+02   4.1990e+02
-   3.9918e+02   3.5765e+02   5.0790e+02
-   3.9896e+02   3.7117e+02   3.5800e+02
-   3.9600e+02   3.3771e+02   2.7360e+02
-   3.9884e+02   4.1087e+02   3.5000e+02
-   3.9660e+02   3.7792e+02   5.2960e+02
-   3.9694e+02   3.7801e+02   4.3750e+02
-   3.9548e+02   3.5603e+02   4.2240e+02
-   3.9980e+02   3.9975e+02   3.0360e+02
-   3.9800e+02   3.7399e+02   3.3240e+02
-   3.9966e+02   3.6834e+02   4.8950e+02
-   3.9804e+02   4.2735e+02   4.6840e+02
-   3.9576e+02   3.8569e+02   3.8360e+02
-   3.9928e+02   3.7516e+02   2.8440e+02
-   3.9612e+02   3.3379e+02   4.5560e+02
-   3.9782e+02   3.5635e+02   4.2710e+02
-   3.9920e+02   3.8382e+02   4.7360e+02
-   3.9606e+02   4.3101e+02   3.6550e+02
-CV for trace random estimator using 90 runs is    5.8995e-05
-   7.0758e-04
-   2.6046e-03
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
 dim temp_mat_update100 3
-traceCV
-   5.2619e-05
-   6.3616e-04
-   2.3013e-03
-temp_mat
-   3.9910e+02   3.6939e+02   4.6790e+02
-   3.9918e+02   4.1279e+02   3.3190e+02
-   3.9918e+02   3.6766e+02   2.9990e+02
-   3.9902e+02   3.7453e+02   3.9110e+02
-   3.9662e+02   3.8471e+02   3.9110e+02
-   3.9512e+02   3.4343e+02   3.1160e+02
-   3.9606e+02   3.5410e+02   2.9910e+02
-   3.9932e+02   3.4523e+02   2.0960e+02
-   3.9942e+02   3.4091e+02   4.3110e+02
-   3.9788e+02   4.2084e+02   3.7440e+02
-   3.9756e+02   3.4910e+02   3.7760e+02
-   3.9660e+02   3.4372e+02   3.1960e+02
-   3.9974e+02   3.5639e+02   3.6950e+02
-   3.9926e+02   3.8647e+02   4.7910e+02
-   3.9456e+02   3.4947e+02   5.6000e+02
-   3.9550e+02   3.4895e+02   4.8550e+02
-   3.9532e+02   3.7749e+02   5.9960e+02
-   3.8400e+02   3.4280e+02   3.5840e+02
-   3.9948e+02   3.6974e+02   2.6040e+02
-   3.9806e+02   3.4431e+02   2.8150e+02
-   3.9870e+02   3.4618e+02   3.1190e+02
-   3.9900e+02   3.7372e+02   3.9640e+02
-   3.9830e+02   3.8469e+02   3.6790e+02
-   3.9704e+02   3.6362e+02   3.4040e+02
-   3.9984e+02   3.6971e+02   3.8400e+02
-   3.9966e+02   3.7508e+02   3.9350e+02
-   3.9950e+02   3.9942e+02   3.2390e+02
-   3.9968e+02   3.6629e+02   5.8240e+02
-   3.9854e+02   3.5785e+02   2.6550e+02
-   3.9928e+02   3.4958e+02   3.5640e+02
-   3.9900e+02   3.7004e+02   4.4600e+02
-   3.9980e+02   3.9557e+02   5.0240e+02
-   3.9950e+02   3.4852e+02   3.1110e+02
-   3.9852e+02   3.7982e+02   4.8160e+02
-   3.9836e+02   3.6979e+02   3.0560e+02
-   3.9900e+02   3.5145e+02   3.6960e+02
-   3.9854e+02   4.0503e+02   5.2950e+02
-   3.9942e+02   3.3957e+02   2.5510e+02
-   3.9936e+02   3.9618e+02   4.5600e+02
-   3.9750e+02   3.5556e+02   2.2550e+02
-   3.9910e+02   3.5322e+02   4.5190e+02
-   3.9920e+02   3.8897e+02   4.8960e+02
-   3.9750e+02   3.5594e+02   3.5350e+02
-   3.9800e+02   3.5825e+02   3.1800e+02
-   3.9550e+02   3.5019e+02   4.1590e+02
-   3.9980e+02   3.7207e+02   3.1840e+02
-   3.9608e+02   3.7135e+02   4.2040e+02
-   3.9830e+02   3.4571e+02   3.7190e+02
-   3.9870e+02   3.5539e+02   2.7590e+02
-   3.9964e+02   3.6013e+02   4.6040e+02
-   3.9960e+02   3.5176e+02   3.2760e+02
-   3.9838e+02   3.7905e+02   4.1990e+02
-   3.9950e+02   3.5983e+02   2.9510e+02
-   3.9910e+02   3.8734e+02   3.4790e+02
-   3.9806e+02   4.7412e+02   4.0310e+02
-   3.9896e+02   3.6931e+02   5.1960e+02
-   3.9926e+02   3.5111e+02   2.7110e+02
-   3.9870e+02   3.5687e+02   3.3110e+02
-   3.9926e+02   3.8262e+02   3.1350e+02
-   3.9478e+02   3.4107e+02   2.5990e+02
-   3.9462e+02   3.6471e+02   3.9110e+02
-   3.9486e+02   3.5820e+02   6.7910e+02
-   3.9726e+02   4.0417e+02   3.3350e+02
-   3.9756e+02   3.7192e+02   4.9400e+02
-   3.9630e+02   3.9562e+02   3.1510e+02
-   3.9942e+02   3.7276e+02   3.9910e+02
-   3.9896e+02   3.8084e+02   2.8760e+02
-   3.9686e+02   3.6998e+02   3.7750e+02
-   3.9840e+02   3.8161e+02   4.5440e+02
-   3.9998e+02   3.7395e+02   3.0790e+02
-   3.9950e+02   3.6324e+02   2.9190e+02
-   3.9948e+02   3.5494e+02   4.4640e+02
-   3.9870e+02   3.4820e+02   4.1990e+02
-   3.9918e+02   3.5765e+02   5.0790e+02
-   3.9896e+02   3.7117e+02   3.5800e+02
-   3.9600e+02   3.3771e+02   2.7360e+02
-   3.9884e+02   4.1087e+02   3.5000e+02
-   3.9660e+02   3.7792e+02   5.2960e+02
-   3.9694e+02   3.7801e+02   4.3750e+02
-   3.9548e+02   3.5603e+02   4.2240e+02
-   3.9980e+02   3.9975e+02   3.0360e+02
-   3.9800e+02   3.7399e+02   3.3240e+02
-   3.9966e+02   3.6834e+02   4.8950e+02
-   3.9804e+02   4.2735e+02   4.6840e+02
-   3.9576e+02   3.8569e+02   3.8360e+02
-   3.9928e+02   3.7516e+02   2.8440e+02
-   3.9612e+02   3.3379e+02   4.5560e+02
-   3.9782e+02   3.5635e+02   4.2710e+02
-   3.9920e+02   3.8382e+02   4.7360e+02
-   3.9606e+02   4.3101e+02   3.6550e+02
-   3.9830e+02   3.6764e+02   3.8710e+02
-   3.9984e+02   3.7461e+02   3.8400e+02
-   3.9702e+02   3.4118e+02   3.7910e+02
-   3.9992e+02   3.7774e+02   3.9160e+02
-   3.9820e+02   3.5910e+02   4.5240e+02
-   3.9600e+02   3.6996e+02   4.0960e+02
-   3.9600e+02   4.3628e+02   5.6160e+02
-   3.9360e+02   3.7189e+02   2.7360e+02
-   3.9902e+02   3.8079e+02   3.0310e+02
-   3.9750e+02   3.6361e+02   3.8790e+02
 YPAPY_update
    3.6459e+02
    3.8352e+02
@@ -1085,18 +378,25 @@ Trace
    3.9796e+02
    3.7052e+02
    3.8558e+02
+[1] "re$YPAPY"
+        [,1]
+[1,] 364.594
+[2,] 383.522
+[3,] 363.709
+[1] "re$Trace"
+         [,1]
+[1,] 397.9598
+[2,] 370.5160
+[3,] 385.5850
 Variance component estimates:
 [1] 0.9165856 0.0000000 0.0000000
 
 Iteration  1 0.9165856 0 0 :
 tau0_v1:  0.9165856 0 0 
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 after Sigma_iY
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 Tau:
 [1] 0.9165856 0.0000000 0.0000000
 Fixed-effect coefficients:
@@ -1112,11 +412,8 @@ t_end_Get_Coef - t_begin_Get_Coef
   0.002   0.000   0.002 
 k1 3
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 AI
    4.7347e+02   4.9805e+02   4.7232e+02
    4.9805e+02   1.4309e+03   1.4275e+03
@@ -1126,808 +423,106 @@ idxtau
         1
         2
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update30 3
-traceCV
-   0.0003
-   0.0019
-   0.0083
-temp_mat
-   4.3542e+02   4.0301e+02   5.1048e+02
-   4.3551e+02   4.5036e+02   3.6210e+02
-   4.3551e+02   4.0112e+02   3.2719e+02
-   4.3533e+02   4.0862e+02   4.2669e+02
-   4.3271e+02   4.1972e+02   4.2669e+02
-   4.3108e+02   3.7468e+02   3.3996e+02
-   4.3210e+02   3.8632e+02   3.2632e+02
-   4.3566e+02   3.7665e+02   2.2867e+02
-   4.3577e+02   3.7194e+02   4.7033e+02
-   4.3409e+02   4.5914e+02   4.0847e+02
-   4.3374e+02   3.8087e+02   4.1196e+02
-   4.3269e+02   3.7500e+02   3.4869e+02
-   4.3612e+02   3.8882e+02   4.0313e+02
-   4.3559e+02   4.2165e+02   5.2270e+02
-   4.3047e+02   3.8128e+02   6.1096e+02
-   4.3149e+02   3.8070e+02   5.2968e+02
-   4.3130e+02   4.1185e+02   6.5417e+02
-   4.1895e+02   3.7400e+02   3.9102e+02
-   4.3583e+02   4.0338e+02   2.8410e+02
-   4.3429e+02   3.7565e+02   3.0712e+02
-   4.3498e+02   3.7769e+02   3.4028e+02
-   4.3531e+02   4.0773e+02   4.3247e+02
-   4.3455e+02   4.1970e+02   4.0138e+02
-   4.3317e+02   3.9672e+02   3.7138e+02
-   4.3623e+02   4.0335e+02   4.1895e+02
-   4.3603e+02   4.0922e+02   4.2931e+02
-   4.3586e+02   4.3577e+02   3.5338e+02
-   4.3605e+02   3.9963e+02   6.3540e+02
-   4.3481e+02   3.9041e+02   2.8966e+02
-   4.3562e+02   3.8139e+02   3.8883e+02
-CV for trace random estimator using 30 runs is    0.0003
-   0.0019
-   0.0083
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update40 3
-traceCV
-   0.0002
-   0.0014
-   0.0063
-temp_mat
-   4.3542e+02   4.0301e+02   5.1048e+02
-   4.3551e+02   4.5036e+02   3.6210e+02
-   4.3551e+02   4.0112e+02   3.2719e+02
-   4.3533e+02   4.0862e+02   4.2669e+02
-   4.3271e+02   4.1972e+02   4.2669e+02
-   4.3108e+02   3.7468e+02   3.3996e+02
-   4.3210e+02   3.8632e+02   3.2632e+02
-   4.3566e+02   3.7665e+02   2.2867e+02
-   4.3577e+02   3.7194e+02   4.7033e+02
-   4.3409e+02   4.5914e+02   4.0847e+02
-   4.3374e+02   3.8087e+02   4.1196e+02
-   4.3269e+02   3.7500e+02   3.4869e+02
-   4.3612e+02   3.8882e+02   4.0313e+02
-   4.3559e+02   4.2165e+02   5.2270e+02
-   4.3047e+02   3.8128e+02   6.1096e+02
-   4.3149e+02   3.8070e+02   5.2968e+02
-   4.3130e+02   4.1185e+02   6.5417e+02
-   4.1895e+02   3.7400e+02   3.9102e+02
-   4.3583e+02   4.0338e+02   2.8410e+02
-   4.3429e+02   3.7565e+02   3.0712e+02
-   4.3498e+02   3.7769e+02   3.4028e+02
-   4.3531e+02   4.0773e+02   4.3247e+02
-   4.3455e+02   4.1970e+02   4.0138e+02
-   4.3317e+02   3.9672e+02   3.7138e+02
-   4.3623e+02   4.0335e+02   4.1895e+02
-   4.3603e+02   4.0922e+02   4.2931e+02
-   4.3586e+02   4.3577e+02   3.5338e+02
-   4.3605e+02   3.9963e+02   6.3540e+02
-   4.3481e+02   3.9041e+02   2.8966e+02
-   4.3562e+02   3.8139e+02   3.8883e+02
-   4.3531e+02   4.0372e+02   4.8659e+02
-   4.3618e+02   4.3157e+02   5.4812e+02
-   4.3586e+02   3.8024e+02   3.3941e+02
-   4.3479e+02   4.1439e+02   5.2543e+02
-   4.3461e+02   4.0344e+02   3.3341e+02
-   4.3531e+02   3.8343e+02   4.0324e+02
-   4.3481e+02   4.4190e+02   5.7769e+02
-   4.3577e+02   3.7047e+02   2.7832e+02
-   4.3570e+02   4.3223e+02   4.9750e+02
-   4.3367e+02   3.8792e+02   2.4602e+02
-CV for trace random estimator using 40 runs is    0.0002
-   0.0014
-   0.0063
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update50 3
-traceCV
-   0.0001
-   0.0011
-   0.0048
-temp_mat
-   4.3542e+02   4.0301e+02   5.1048e+02
-   4.3551e+02   4.5036e+02   3.6210e+02
-   4.3551e+02   4.0112e+02   3.2719e+02
-   4.3533e+02   4.0862e+02   4.2669e+02
-   4.3271e+02   4.1972e+02   4.2669e+02
-   4.3108e+02   3.7468e+02   3.3996e+02
-   4.3210e+02   3.8632e+02   3.2632e+02
-   4.3566e+02   3.7665e+02   2.2867e+02
-   4.3577e+02   3.7194e+02   4.7033e+02
-   4.3409e+02   4.5914e+02   4.0847e+02
-   4.3374e+02   3.8087e+02   4.1196e+02
-   4.3269e+02   3.7500e+02   3.4869e+02
-   4.3612e+02   3.8882e+02   4.0313e+02
-   4.3559e+02   4.2165e+02   5.2270e+02
-   4.3047e+02   3.8128e+02   6.1096e+02
-   4.3149e+02   3.8070e+02   5.2968e+02
-   4.3130e+02   4.1185e+02   6.5417e+02
-   4.1895e+02   3.7400e+02   3.9102e+02
-   4.3583e+02   4.0338e+02   2.8410e+02
-   4.3429e+02   3.7565e+02   3.0712e+02
-   4.3498e+02   3.7769e+02   3.4028e+02
-   4.3531e+02   4.0773e+02   4.3247e+02
-   4.3455e+02   4.1970e+02   4.0138e+02
-   4.3317e+02   3.9672e+02   3.7138e+02
-   4.3623e+02   4.0335e+02   4.1895e+02
-   4.3603e+02   4.0922e+02   4.2931e+02
-   4.3586e+02   4.3577e+02   3.5338e+02
-   4.3605e+02   3.9963e+02   6.3540e+02
-   4.3481e+02   3.9041e+02   2.8966e+02
-   4.3562e+02   3.8139e+02   3.8883e+02
-   4.3531e+02   4.0372e+02   4.8659e+02
-   4.3618e+02   4.3157e+02   5.4812e+02
-   4.3586e+02   3.8024e+02   3.3941e+02
-   4.3479e+02   4.1439e+02   5.2543e+02
-   4.3461e+02   4.0344e+02   3.3341e+02
-   4.3531e+02   3.8343e+02   4.0324e+02
-   4.3481e+02   4.4190e+02   5.7769e+02
-   4.3577e+02   3.7047e+02   2.7832e+02
-   4.3570e+02   4.3223e+02   4.9750e+02
-   4.3367e+02   3.8792e+02   2.4602e+02
-   4.3542e+02   3.8537e+02   4.9303e+02
-   4.3553e+02   4.2437e+02   5.3416e+02
-   4.3367e+02   3.8833e+02   3.8567e+02
-   4.3422e+02   3.9085e+02   3.4694e+02
-   4.3149e+02   3.8206e+02   4.5375e+02
-   4.3618e+02   4.0593e+02   3.4738e+02
-   4.3213e+02   4.0514e+02   4.5866e+02
-   4.3455e+02   3.7717e+02   4.0574e+02
-   4.3498e+02   3.8773e+02   3.0101e+02
-   4.3601e+02   3.9291e+02   5.0230e+02
-CV for trace random estimator using 50 runs is    0.0001
-   0.0011
-   0.0048
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update60 3
-traceCV
-   9.7589e-05
-   1.0720e-03
-   3.9644e-03
-temp_mat
-   4.3542e+02   4.0301e+02   5.1048e+02
-   4.3551e+02   4.5036e+02   3.6210e+02
-   4.3551e+02   4.0112e+02   3.2719e+02
-   4.3533e+02   4.0862e+02   4.2669e+02
-   4.3271e+02   4.1972e+02   4.2669e+02
-   4.3108e+02   3.7468e+02   3.3996e+02
-   4.3210e+02   3.8632e+02   3.2632e+02
-   4.3566e+02   3.7665e+02   2.2867e+02
-   4.3577e+02   3.7194e+02   4.7033e+02
-   4.3409e+02   4.5914e+02   4.0847e+02
-   4.3374e+02   3.8087e+02   4.1196e+02
-   4.3269e+02   3.7500e+02   3.4869e+02
-   4.3612e+02   3.8882e+02   4.0313e+02
-   4.3559e+02   4.2165e+02   5.2270e+02
-   4.3047e+02   3.8128e+02   6.1096e+02
-   4.3149e+02   3.8070e+02   5.2968e+02
-   4.3130e+02   4.1185e+02   6.5417e+02
-   4.1895e+02   3.7400e+02   3.9102e+02
-   4.3583e+02   4.0338e+02   2.8410e+02
-   4.3429e+02   3.7565e+02   3.0712e+02
-   4.3498e+02   3.7769e+02   3.4028e+02
-   4.3531e+02   4.0773e+02   4.3247e+02
-   4.3455e+02   4.1970e+02   4.0138e+02
-   4.3317e+02   3.9672e+02   3.7138e+02
-   4.3623e+02   4.0335e+02   4.1895e+02
-   4.3603e+02   4.0922e+02   4.2931e+02
-   4.3586e+02   4.3577e+02   3.5338e+02
-   4.3605e+02   3.9963e+02   6.3540e+02
-   4.3481e+02   3.9041e+02   2.8966e+02
-   4.3562e+02   3.8139e+02   3.8883e+02
-   4.3531e+02   4.0372e+02   4.8659e+02
-   4.3618e+02   4.3157e+02   5.4812e+02
-   4.3586e+02   3.8024e+02   3.3941e+02
-   4.3479e+02   4.1439e+02   5.2543e+02
-   4.3461e+02   4.0344e+02   3.3341e+02
-   4.3531e+02   3.8343e+02   4.0324e+02
-   4.3481e+02   4.4190e+02   5.7769e+02
-   4.3577e+02   3.7047e+02   2.7832e+02
-   4.3570e+02   4.3223e+02   4.9750e+02
-   4.3367e+02   3.8792e+02   2.4602e+02
-   4.3542e+02   3.8537e+02   4.9303e+02
-   4.3553e+02   4.2437e+02   5.3416e+02
-   4.3367e+02   3.8833e+02   3.8567e+02
-   4.3422e+02   3.9085e+02   3.4694e+02
-   4.3149e+02   3.8206e+02   4.5375e+02
-   4.3618e+02   4.0593e+02   3.4738e+02
-   4.3213e+02   4.0514e+02   4.5866e+02
-   4.3455e+02   3.7717e+02   4.0574e+02
-   4.3498e+02   3.8773e+02   3.0101e+02
-   4.3601e+02   3.9291e+02   5.0230e+02
-   4.3597e+02   3.8377e+02   3.5741e+02
-   4.3463e+02   4.1354e+02   4.5811e+02
-   4.3586e+02   3.9257e+02   3.2196e+02
-   4.3542e+02   4.2259e+02   3.7956e+02
-   4.3429e+02   5.1727e+02   4.3978e+02
-   4.3527e+02   4.0292e+02   5.6689e+02
-   4.3559e+02   3.8307e+02   2.9577e+02
-   4.3498e+02   3.8934e+02   3.6123e+02
-   4.3559e+02   4.1744e+02   3.4203e+02
-   4.3071e+02   3.7211e+02   2.8355e+02
-CV for trace random estimator using 60 runs is    9.7589e-05
-   1.0720e-03
-   3.9644e-03
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update70 3
-traceCV
-   8.1369e-05
-   8.7892e-04
-   3.5098e-03
-temp_mat
-   4.3542e+02   4.0301e+02   5.1048e+02
-   4.3551e+02   4.5036e+02   3.6210e+02
-   4.3551e+02   4.0112e+02   3.2719e+02
-   4.3533e+02   4.0862e+02   4.2669e+02
-   4.3271e+02   4.1972e+02   4.2669e+02
-   4.3108e+02   3.7468e+02   3.3996e+02
-   4.3210e+02   3.8632e+02   3.2632e+02
-   4.3566e+02   3.7665e+02   2.2867e+02
-   4.3577e+02   3.7194e+02   4.7033e+02
-   4.3409e+02   4.5914e+02   4.0847e+02
-   4.3374e+02   3.8087e+02   4.1196e+02
-   4.3269e+02   3.7500e+02   3.4869e+02
-   4.3612e+02   3.8882e+02   4.0313e+02
-   4.3559e+02   4.2165e+02   5.2270e+02
-   4.3047e+02   3.8128e+02   6.1096e+02
-   4.3149e+02   3.8070e+02   5.2968e+02
-   4.3130e+02   4.1185e+02   6.5417e+02
-   4.1895e+02   3.7400e+02   3.9102e+02
-   4.3583e+02   4.0338e+02   2.8410e+02
-   4.3429e+02   3.7565e+02   3.0712e+02
-   4.3498e+02   3.7769e+02   3.4028e+02
-   4.3531e+02   4.0773e+02   4.3247e+02
-   4.3455e+02   4.1970e+02   4.0138e+02
-   4.3317e+02   3.9672e+02   3.7138e+02
-   4.3623e+02   4.0335e+02   4.1895e+02
-   4.3603e+02   4.0922e+02   4.2931e+02
-   4.3586e+02   4.3577e+02   3.5338e+02
-   4.3605e+02   3.9963e+02   6.3540e+02
-   4.3481e+02   3.9041e+02   2.8966e+02
-   4.3562e+02   3.8139e+02   3.8883e+02
-   4.3531e+02   4.0372e+02   4.8659e+02
-   4.3618e+02   4.3157e+02   5.4812e+02
-   4.3586e+02   3.8024e+02   3.3941e+02
-   4.3479e+02   4.1439e+02   5.2543e+02
-   4.3461e+02   4.0344e+02   3.3341e+02
-   4.3531e+02   3.8343e+02   4.0324e+02
-   4.3481e+02   4.4190e+02   5.7769e+02
-   4.3577e+02   3.7047e+02   2.7832e+02
-   4.3570e+02   4.3223e+02   4.9750e+02
-   4.3367e+02   3.8792e+02   2.4602e+02
-   4.3542e+02   3.8537e+02   4.9303e+02
-   4.3553e+02   4.2437e+02   5.3416e+02
-   4.3367e+02   3.8833e+02   3.8567e+02
-   4.3422e+02   3.9085e+02   3.4694e+02
-   4.3149e+02   3.8206e+02   4.5375e+02
-   4.3618e+02   4.0593e+02   3.4738e+02
-   4.3213e+02   4.0514e+02   4.5866e+02
-   4.3455e+02   3.7717e+02   4.0574e+02
-   4.3498e+02   3.8773e+02   3.0101e+02
-   4.3601e+02   3.9291e+02   5.0230e+02
-   4.3597e+02   3.8377e+02   3.5741e+02
-   4.3463e+02   4.1354e+02   4.5811e+02
-   4.3586e+02   3.9257e+02   3.2196e+02
-   4.3542e+02   4.2259e+02   3.7956e+02
-   4.3429e+02   5.1727e+02   4.3978e+02
-   4.3527e+02   4.0292e+02   5.6689e+02
-   4.3559e+02   3.8307e+02   2.9577e+02
-   4.3498e+02   3.8934e+02   3.6123e+02
-   4.3559e+02   4.1744e+02   3.4203e+02
-   4.3071e+02   3.7211e+02   2.8355e+02
-   4.3053e+02   3.9790e+02   4.2669e+02
-   4.3079e+02   3.9080e+02   7.4090e+02
-   4.3341e+02   4.4095e+02   3.6385e+02
-   4.3374e+02   4.0577e+02   5.3896e+02
-   4.3237e+02   4.3163e+02   3.4378e+02
-   4.3577e+02   4.0668e+02   4.3542e+02
-   4.3527e+02   4.1550e+02   3.1377e+02
-   4.3298e+02   4.0365e+02   4.1185e+02
-   4.3466e+02   4.1634e+02   4.9575e+02
-   4.3638e+02   4.0798e+02   3.3592e+02
-CV for trace random estimator using 70 runs is    8.1369e-05
-   8.7892e-04
-   3.5098e-03
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update80 3
-traceCV
-   6.8518e-05
-   7.5734e-04
-   3.0081e-03
-temp_mat
-   4.3542e+02   4.0301e+02   5.1048e+02
-   4.3551e+02   4.5036e+02   3.6210e+02
-   4.3551e+02   4.0112e+02   3.2719e+02
-   4.3533e+02   4.0862e+02   4.2669e+02
-   4.3271e+02   4.1972e+02   4.2669e+02
-   4.3108e+02   3.7468e+02   3.3996e+02
-   4.3210e+02   3.8632e+02   3.2632e+02
-   4.3566e+02   3.7665e+02   2.2867e+02
-   4.3577e+02   3.7194e+02   4.7033e+02
-   4.3409e+02   4.5914e+02   4.0847e+02
-   4.3374e+02   3.8087e+02   4.1196e+02
-   4.3269e+02   3.7500e+02   3.4869e+02
-   4.3612e+02   3.8882e+02   4.0313e+02
-   4.3559e+02   4.2165e+02   5.2270e+02
-   4.3047e+02   3.8128e+02   6.1096e+02
-   4.3149e+02   3.8070e+02   5.2968e+02
-   4.3130e+02   4.1185e+02   6.5417e+02
-   4.1895e+02   3.7400e+02   3.9102e+02
-   4.3583e+02   4.0338e+02   2.8410e+02
-   4.3429e+02   3.7565e+02   3.0712e+02
-   4.3498e+02   3.7769e+02   3.4028e+02
-   4.3531e+02   4.0773e+02   4.3247e+02
-   4.3455e+02   4.1970e+02   4.0138e+02
-   4.3317e+02   3.9672e+02   3.7138e+02
-   4.3623e+02   4.0335e+02   4.1895e+02
-   4.3603e+02   4.0922e+02   4.2931e+02
-   4.3586e+02   4.3577e+02   3.5338e+02
-   4.3605e+02   3.9963e+02   6.3540e+02
-   4.3481e+02   3.9041e+02   2.8966e+02
-   4.3562e+02   3.8139e+02   3.8883e+02
-   4.3531e+02   4.0372e+02   4.8659e+02
-   4.3618e+02   4.3157e+02   5.4812e+02
-   4.3586e+02   3.8024e+02   3.3941e+02
-   4.3479e+02   4.1439e+02   5.2543e+02
-   4.3461e+02   4.0344e+02   3.3341e+02
-   4.3531e+02   3.8343e+02   4.0324e+02
-   4.3481e+02   4.4190e+02   5.7769e+02
-   4.3577e+02   3.7047e+02   2.7832e+02
-   4.3570e+02   4.3223e+02   4.9750e+02
-   4.3367e+02   3.8792e+02   2.4602e+02
-   4.3542e+02   3.8537e+02   4.9303e+02
-   4.3553e+02   4.2437e+02   5.3416e+02
-   4.3367e+02   3.8833e+02   3.8567e+02
-   4.3422e+02   3.9085e+02   3.4694e+02
-   4.3149e+02   3.8206e+02   4.5375e+02
-   4.3618e+02   4.0593e+02   3.4738e+02
-   4.3213e+02   4.0514e+02   4.5866e+02
-   4.3455e+02   3.7717e+02   4.0574e+02
-   4.3498e+02   3.8773e+02   3.0101e+02
-   4.3601e+02   3.9291e+02   5.0230e+02
-   4.3597e+02   3.8377e+02   3.5741e+02
-   4.3463e+02   4.1354e+02   4.5811e+02
-   4.3586e+02   3.9257e+02   3.2196e+02
-   4.3542e+02   4.2259e+02   3.7956e+02
-   4.3429e+02   5.1727e+02   4.3978e+02
-   4.3527e+02   4.0292e+02   5.6689e+02
-   4.3559e+02   3.8307e+02   2.9577e+02
-   4.3498e+02   3.8934e+02   3.6123e+02
-   4.3559e+02   4.1744e+02   3.4203e+02
-   4.3071e+02   3.7211e+02   2.8355e+02
-   4.3053e+02   3.9790e+02   4.2669e+02
-   4.3079e+02   3.9080e+02   7.4090e+02
-   4.3341e+02   4.4095e+02   3.6385e+02
-   4.3374e+02   4.0577e+02   5.3896e+02
-   4.3237e+02   4.3163e+02   3.4378e+02
-   4.3577e+02   4.0668e+02   4.3542e+02
-   4.3527e+02   4.1550e+02   3.1377e+02
-   4.3298e+02   4.0365e+02   4.1185e+02
-   4.3466e+02   4.1634e+02   4.9575e+02
-   4.3638e+02   4.0798e+02   3.3592e+02
-   4.3586e+02   3.9629e+02   3.1846e+02
-   4.3583e+02   3.8724e+02   4.8702e+02
-   4.3498e+02   3.7988e+02   4.5811e+02
-   4.3551e+02   3.9019e+02   5.5412e+02
-   4.3527e+02   4.0495e+02   3.9058e+02
-   4.3204e+02   3.6845e+02   2.9850e+02
-   4.3514e+02   4.4826e+02   3.8185e+02
-   4.3269e+02   4.1231e+02   5.7780e+02
-   4.3306e+02   4.1241e+02   4.7731e+02
-   4.3147e+02   3.8843e+02   4.6084e+02
-CV for trace random estimator using 80 runs is    6.8518e-05
-   7.5734e-04
-   3.0081e-03
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update90 3
-traceCV
-   5.8995e-05
-   7.0758e-04
-   2.6046e-03
-temp_mat
-   4.3542e+02   4.0301e+02   5.1048e+02
-   4.3551e+02   4.5036e+02   3.6210e+02
-   4.3551e+02   4.0112e+02   3.2719e+02
-   4.3533e+02   4.0862e+02   4.2669e+02
-   4.3271e+02   4.1972e+02   4.2669e+02
-   4.3108e+02   3.7468e+02   3.3996e+02
-   4.3210e+02   3.8632e+02   3.2632e+02
-   4.3566e+02   3.7665e+02   2.2867e+02
-   4.3577e+02   3.7194e+02   4.7033e+02
-   4.3409e+02   4.5914e+02   4.0847e+02
-   4.3374e+02   3.8087e+02   4.1196e+02
-   4.3269e+02   3.7500e+02   3.4869e+02
-   4.3612e+02   3.8882e+02   4.0313e+02
-   4.3559e+02   4.2165e+02   5.2270e+02
-   4.3047e+02   3.8128e+02   6.1096e+02
-   4.3149e+02   3.8070e+02   5.2968e+02
-   4.3130e+02   4.1185e+02   6.5417e+02
-   4.1895e+02   3.7400e+02   3.9102e+02
-   4.3583e+02   4.0338e+02   2.8410e+02
-   4.3429e+02   3.7565e+02   3.0712e+02
-   4.3498e+02   3.7769e+02   3.4028e+02
-   4.3531e+02   4.0773e+02   4.3247e+02
-   4.3455e+02   4.1970e+02   4.0138e+02
-   4.3317e+02   3.9672e+02   3.7138e+02
-   4.3623e+02   4.0335e+02   4.1895e+02
-   4.3603e+02   4.0922e+02   4.2931e+02
-   4.3586e+02   4.3577e+02   3.5338e+02
-   4.3605e+02   3.9963e+02   6.3540e+02
-   4.3481e+02   3.9041e+02   2.8966e+02
-   4.3562e+02   3.8139e+02   3.8883e+02
-   4.3531e+02   4.0372e+02   4.8659e+02
-   4.3618e+02   4.3157e+02   5.4812e+02
-   4.3586e+02   3.8024e+02   3.3941e+02
-   4.3479e+02   4.1439e+02   5.2543e+02
-   4.3461e+02   4.0344e+02   3.3341e+02
-   4.3531e+02   3.8343e+02   4.0324e+02
-   4.3481e+02   4.4190e+02   5.7769e+02
-   4.3577e+02   3.7047e+02   2.7832e+02
-   4.3570e+02   4.3223e+02   4.9750e+02
-   4.3367e+02   3.8792e+02   2.4602e+02
-   4.3542e+02   3.8537e+02   4.9303e+02
-   4.3553e+02   4.2437e+02   5.3416e+02
-   4.3367e+02   3.8833e+02   3.8567e+02
-   4.3422e+02   3.9085e+02   3.4694e+02
-   4.3149e+02   3.8206e+02   4.5375e+02
-   4.3618e+02   4.0593e+02   3.4738e+02
-   4.3213e+02   4.0514e+02   4.5866e+02
-   4.3455e+02   3.7717e+02   4.0574e+02
-   4.3498e+02   3.8773e+02   3.0101e+02
-   4.3601e+02   3.9291e+02   5.0230e+02
-   4.3597e+02   3.8377e+02   3.5741e+02
-   4.3463e+02   4.1354e+02   4.5811e+02
-   4.3586e+02   3.9257e+02   3.2196e+02
-   4.3542e+02   4.2259e+02   3.7956e+02
-   4.3429e+02   5.1727e+02   4.3978e+02
-   4.3527e+02   4.0292e+02   5.6689e+02
-   4.3559e+02   3.8307e+02   2.9577e+02
-   4.3498e+02   3.8934e+02   3.6123e+02
-   4.3559e+02   4.1744e+02   3.4203e+02
-   4.3071e+02   3.7211e+02   2.8355e+02
-   4.3053e+02   3.9790e+02   4.2669e+02
-   4.3079e+02   3.9080e+02   7.4090e+02
-   4.3341e+02   4.4095e+02   3.6385e+02
-   4.3374e+02   4.0577e+02   5.3896e+02
-   4.3237e+02   4.3163e+02   3.4378e+02
-   4.3577e+02   4.0668e+02   4.3542e+02
-   4.3527e+02   4.1550e+02   3.1377e+02
-   4.3298e+02   4.0365e+02   4.1185e+02
-   4.3466e+02   4.1634e+02   4.9575e+02
-   4.3638e+02   4.0798e+02   3.3592e+02
-   4.3586e+02   3.9629e+02   3.1846e+02
-   4.3583e+02   3.8724e+02   4.8702e+02
-   4.3498e+02   3.7988e+02   4.5811e+02
-   4.3551e+02   3.9019e+02   5.5412e+02
-   4.3527e+02   4.0495e+02   3.9058e+02
-   4.3204e+02   3.6845e+02   2.9850e+02
-   4.3514e+02   4.4826e+02   3.8185e+02
-   4.3269e+02   4.1231e+02   5.7780e+02
-   4.3306e+02   4.1241e+02   4.7731e+02
-   4.3147e+02   3.8843e+02   4.6084e+02
-   4.3618e+02   4.3613e+02   3.3123e+02
-   4.3422e+02   4.0803e+02   3.6265e+02
-   4.3603e+02   4.0186e+02   5.3405e+02
-   4.3426e+02   4.6624e+02   5.1103e+02
-   4.3178e+02   4.2079e+02   4.1851e+02
-   4.3562e+02   4.0930e+02   3.1028e+02
-   4.3217e+02   3.6417e+02   4.9706e+02
-   4.3402e+02   3.8878e+02   4.6597e+02
-   4.3553e+02   4.1875e+02   5.1670e+02
-   4.3210e+02   4.7023e+02   3.9876e+02
-CV for trace random estimator using 90 runs is    5.8995e-05
-   7.0758e-04
-   2.6046e-03
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
 dim temp_mat_update100 3
-traceCV
-   5.2619e-05
-   6.3616e-04
-   2.3013e-03
-temp_mat
-   4.3542e+02   4.0301e+02   5.1048e+02
-   4.3551e+02   4.5036e+02   3.6210e+02
-   4.3551e+02   4.0112e+02   3.2719e+02
-   4.3533e+02   4.0862e+02   4.2669e+02
-   4.3271e+02   4.1972e+02   4.2669e+02
-   4.3108e+02   3.7468e+02   3.3996e+02
-   4.3210e+02   3.8632e+02   3.2632e+02
-   4.3566e+02   3.7665e+02   2.2867e+02
-   4.3577e+02   3.7194e+02   4.7033e+02
-   4.3409e+02   4.5914e+02   4.0847e+02
-   4.3374e+02   3.8087e+02   4.1196e+02
-   4.3269e+02   3.7500e+02   3.4869e+02
-   4.3612e+02   3.8882e+02   4.0313e+02
-   4.3559e+02   4.2165e+02   5.2270e+02
-   4.3047e+02   3.8128e+02   6.1096e+02
-   4.3149e+02   3.8070e+02   5.2968e+02
-   4.3130e+02   4.1185e+02   6.5417e+02
-   4.1895e+02   3.7400e+02   3.9102e+02
-   4.3583e+02   4.0338e+02   2.8410e+02
-   4.3429e+02   3.7565e+02   3.0712e+02
-   4.3498e+02   3.7769e+02   3.4028e+02
-   4.3531e+02   4.0773e+02   4.3247e+02
-   4.3455e+02   4.1970e+02   4.0138e+02
-   4.3317e+02   3.9672e+02   3.7138e+02
-   4.3623e+02   4.0335e+02   4.1895e+02
-   4.3603e+02   4.0922e+02   4.2931e+02
-   4.3586e+02   4.3577e+02   3.5338e+02
-   4.3605e+02   3.9963e+02   6.3540e+02
-   4.3481e+02   3.9041e+02   2.8966e+02
-   4.3562e+02   3.8139e+02   3.8883e+02
-   4.3531e+02   4.0372e+02   4.8659e+02
-   4.3618e+02   4.3157e+02   5.4812e+02
-   4.3586e+02   3.8024e+02   3.3941e+02
-   4.3479e+02   4.1439e+02   5.2543e+02
-   4.3461e+02   4.0344e+02   3.3341e+02
-   4.3531e+02   3.8343e+02   4.0324e+02
-   4.3481e+02   4.4190e+02   5.7769e+02
-   4.3577e+02   3.7047e+02   2.7832e+02
-   4.3570e+02   4.3223e+02   4.9750e+02
-   4.3367e+02   3.8792e+02   2.4602e+02
-   4.3542e+02   3.8537e+02   4.9303e+02
-   4.3553e+02   4.2437e+02   5.3416e+02
-   4.3367e+02   3.8833e+02   3.8567e+02
-   4.3422e+02   3.9085e+02   3.4694e+02
-   4.3149e+02   3.8206e+02   4.5375e+02
-   4.3618e+02   4.0593e+02   3.4738e+02
-   4.3213e+02   4.0514e+02   4.5866e+02
-   4.3455e+02   3.7717e+02   4.0574e+02
-   4.3498e+02   3.8773e+02   3.0101e+02
-   4.3601e+02   3.9291e+02   5.0230e+02
-   4.3597e+02   3.8377e+02   3.5741e+02
-   4.3463e+02   4.1354e+02   4.5811e+02
-   4.3586e+02   3.9257e+02   3.2196e+02
-   4.3542e+02   4.2259e+02   3.7956e+02
-   4.3429e+02   5.1727e+02   4.3978e+02
-   4.3527e+02   4.0292e+02   5.6689e+02
-   4.3559e+02   3.8307e+02   2.9577e+02
-   4.3498e+02   3.8934e+02   3.6123e+02
-   4.3559e+02   4.1744e+02   3.4203e+02
-   4.3071e+02   3.7211e+02   2.8355e+02
-   4.3053e+02   3.9790e+02   4.2669e+02
-   4.3079e+02   3.9080e+02   7.4090e+02
-   4.3341e+02   4.4095e+02   3.6385e+02
-   4.3374e+02   4.0577e+02   5.3896e+02
-   4.3237e+02   4.3163e+02   3.4378e+02
-   4.3577e+02   4.0668e+02   4.3542e+02
-   4.3527e+02   4.1550e+02   3.1377e+02
-   4.3298e+02   4.0365e+02   4.1185e+02
-   4.3466e+02   4.1634e+02   4.9575e+02
-   4.3638e+02   4.0798e+02   3.3592e+02
-   4.3586e+02   3.9629e+02   3.1846e+02
-   4.3583e+02   3.8724e+02   4.8702e+02
-   4.3498e+02   3.7988e+02   4.5811e+02
-   4.3551e+02   3.9019e+02   5.5412e+02
-   4.3527e+02   4.0495e+02   3.9058e+02
-   4.3204e+02   3.6845e+02   2.9850e+02
-   4.3514e+02   4.4826e+02   3.8185e+02
-   4.3269e+02   4.1231e+02   5.7780e+02
-   4.3306e+02   4.1241e+02   4.7731e+02
-   4.3147e+02   3.8843e+02   4.6084e+02
-   4.3618e+02   4.3613e+02   3.3123e+02
-   4.3422e+02   4.0803e+02   3.6265e+02
-   4.3603e+02   4.0186e+02   5.3405e+02
-   4.3426e+02   4.6624e+02   5.1103e+02
-   4.3178e+02   4.2079e+02   4.1851e+02
-   4.3562e+02   4.0930e+02   3.1028e+02
-   4.3217e+02   3.6417e+02   4.9706e+02
-   4.3402e+02   3.8878e+02   4.6597e+02
-   4.3553e+02   4.1875e+02   5.1670e+02
-   4.3210e+02   4.7023e+02   3.9876e+02
-   4.3455e+02   4.0110e+02   4.2233e+02
-   4.3623e+02   4.0871e+02   4.1895e+02
-   4.3315e+02   3.7223e+02   4.1360e+02
-   4.3631e+02   4.1212e+02   4.2724e+02
-   4.3444e+02   3.9178e+02   4.9357e+02
-   4.3204e+02   4.0363e+02   4.4688e+02
-   4.3204e+02   4.7599e+02   6.1271e+02
-   4.2942e+02   4.0574e+02   2.9850e+02
-   4.3533e+02   4.1545e+02   3.3068e+02
-   4.3367e+02   3.9670e+02   4.2320e+02
 YPAPY_update
    4.3397e+02
    4.5650e+02
@@ -1962,7 +557,7 @@ AI1
    4.7232e+02   1.4275e+03   4.7232e+03
 t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
    user  system elapsed 
-  0.171   0.004   0.175 
+  0.162   0.000   0.163 
 [1] 0.0348005 0.7796112 0.0000000
 tau:  0.8542632 0.07074869 0 
 tau0:  0.9165856 0 0 
@@ -1970,12 +565,9 @@ tau0:  0.9165856 0 0
 Iteration  2 0.8542632 0.07074869 0 :
 tau0_v1:  0.8542632 0.07074869 0 
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 after Sigma_iY
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 Tau:
 [1] 0.85426319 0.07074869 0.00000000
 Fixed-effect coefficients:
@@ -1988,14 +580,11 @@ Fixed-effect coefficients:
 [2,] 0.5332274
 t_end_Get_Coef - t_begin_Get_Coef
    user  system elapsed 
-  0.023   0.004   0.026 
+  0.026   0.000   0.026 
 k1 3
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 AI
    4.6849e+02   4.1727e+02   3.7487e+02
    4.1727e+02   5.5124e+02   5.8587e+02
@@ -2005,808 +594,106 @@ idxtau
         1
         2
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update30 3
-traceCV
-   0.0003
-   0.0011
-   0.0086
-temp_mat
-   4.3440e+02   3.9535e+02   4.8557e+02
-   4.3312e+02   4.0563e+02   3.2311e+02
-   4.3508e+02   3.9055e+02   3.0750e+02
-   4.3465e+02   3.9142e+02   4.0400e+02
-   4.3134e+02   4.0232e+02   3.9819e+02
-   4.3176e+02   3.7147e+02   3.3181e+02
-   4.3168e+02   3.8099e+02   3.0721e+02
-   4.3636e+02   3.7447e+02   2.2046e+02
-   4.3695e+02   3.6986e+02   4.6711e+02
-   4.3117e+02   4.1771e+02   3.6413e+02
-   4.3419e+02   3.7698e+02   4.0089e+02
-   4.3331e+02   3.7198e+02   3.4033e+02
-   4.3661e+02   3.7972e+02   3.9232e+02
-   4.3413e+02   4.0291e+02   4.9428e+02
-   4.3009e+02   3.7834e+02   5.9321e+02
-   4.3165e+02   3.7519e+02   5.1664e+02
-   4.3056e+02   3.9525e+02   6.3398e+02
-   4.1881e+02   3.6650e+02   3.7473e+02
-   4.3551e+02   3.8562e+02   2.6540e+02
-   4.3518e+02   3.7319e+02   3.0131e+02
-   4.3586e+02   3.7399e+02   3.3340e+02
-   4.3472e+02   3.9322e+02   4.1122e+02
-   4.3313e+02   3.9313e+02   3.7281e+02
-   4.3230e+02   3.8872e+02   3.4824e+02
-   4.3540e+02   3.9431e+02   3.9476e+02
-   4.3557e+02   3.8908e+02   4.1112e+02
-   4.3417e+02   4.0395e+02   3.2098e+02
-   4.3560e+02   3.8854e+02   6.1633e+02
-   4.3502e+02   3.8069e+02   2.7641e+02
-   4.3595e+02   3.7764e+02   3.7668e+02
-CV for trace random estimator using 30 runs is    0.0003
-   0.0011
-   0.0086
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update40 3
-traceCV
-   0.0002
-   0.0008
-   0.0064
-temp_mat
-   4.3440e+02   3.9535e+02   4.8557e+02
-   4.3312e+02   4.0563e+02   3.2311e+02
-   4.3508e+02   3.9055e+02   3.0750e+02
-   4.3465e+02   3.9142e+02   4.0400e+02
-   4.3134e+02   4.0232e+02   3.9819e+02
-   4.3176e+02   3.7147e+02   3.3181e+02
-   4.3168e+02   3.8099e+02   3.0721e+02
-   4.3636e+02   3.7447e+02   2.2046e+02
-   4.3695e+02   3.6986e+02   4.6711e+02
-   4.3117e+02   4.1771e+02   3.6413e+02
-   4.3419e+02   3.7698e+02   4.0089e+02
-   4.3331e+02   3.7198e+02   3.4033e+02
-   4.3661e+02   3.7972e+02   3.9232e+02
-   4.3413e+02   4.0291e+02   4.9428e+02
-   4.3009e+02   3.7834e+02   5.9321e+02
-   4.3165e+02   3.7519e+02   5.1664e+02
-   4.3056e+02   3.9525e+02   6.3398e+02
-   4.1881e+02   3.6650e+02   3.7473e+02
-   4.3551e+02   3.8562e+02   2.6540e+02
-   4.3518e+02   3.7319e+02   3.0131e+02
-   4.3586e+02   3.7399e+02   3.3340e+02
-   4.3472e+02   3.9322e+02   4.1122e+02
-   4.3313e+02   3.9313e+02   3.7281e+02
-   4.3230e+02   3.8872e+02   3.4824e+02
-   4.3540e+02   3.9431e+02   3.9476e+02
-   4.3557e+02   3.8908e+02   4.1112e+02
-   4.3417e+02   4.0395e+02   3.2098e+02
-   4.3560e+02   3.8854e+02   6.1633e+02
-   4.3502e+02   3.8069e+02   2.7641e+02
-   4.3595e+02   3.7764e+02   3.7668e+02
-   4.3528e+02   3.8692e+02   4.7177e+02
-   4.3469e+02   4.0107e+02   5.2009e+02
-   4.3629e+02   3.7578e+02   3.2960e+02
-   4.3313e+02   3.9783e+02   4.9492e+02
-   4.3447e+02   3.8261e+02   3.1759e+02
-   4.3559e+02   3.8000e+02   3.9103e+02
-   4.3255e+02   4.0752e+02   5.4123e+02
-   4.3687e+02   3.7048e+02   2.7519e+02
-   4.3336e+02   4.1215e+02   4.5917e+02
-   4.3404e+02   3.7589e+02   2.3499e+02
-CV for trace random estimator using 40 runs is    0.0002
-   0.0008
-   0.0064
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update50 3
-traceCV
-   0.0001
-   0.0006
-   0.0048
-temp_mat
-   4.3440e+02   3.9535e+02   4.8557e+02
-   4.3312e+02   4.0563e+02   3.2311e+02
-   4.3508e+02   3.9055e+02   3.0750e+02
-   4.3465e+02   3.9142e+02   4.0400e+02
-   4.3134e+02   4.0232e+02   3.9819e+02
-   4.3176e+02   3.7147e+02   3.3181e+02
-   4.3168e+02   3.8099e+02   3.0721e+02
-   4.3636e+02   3.7447e+02   2.2046e+02
-   4.3695e+02   3.6986e+02   4.6711e+02
-   4.3117e+02   4.1771e+02   3.6413e+02
-   4.3419e+02   3.7698e+02   4.0089e+02
-   4.3331e+02   3.7198e+02   3.4033e+02
-   4.3661e+02   3.7972e+02   3.9232e+02
-   4.3413e+02   4.0291e+02   4.9428e+02
-   4.3009e+02   3.7834e+02   5.9321e+02
-   4.3165e+02   3.7519e+02   5.1664e+02
-   4.3056e+02   3.9525e+02   6.3398e+02
-   4.1881e+02   3.6650e+02   3.7473e+02
-   4.3551e+02   3.8562e+02   2.6540e+02
-   4.3518e+02   3.7319e+02   3.0131e+02
-   4.3586e+02   3.7399e+02   3.3340e+02
-   4.3472e+02   3.9322e+02   4.1122e+02
-   4.3313e+02   3.9313e+02   3.7281e+02
-   4.3230e+02   3.8872e+02   3.4824e+02
-   4.3540e+02   3.9431e+02   3.9476e+02
-   4.3557e+02   3.8908e+02   4.1112e+02
-   4.3417e+02   4.0395e+02   3.2098e+02
-   4.3560e+02   3.8854e+02   6.1633e+02
-   4.3502e+02   3.8069e+02   2.7641e+02
-   4.3595e+02   3.7764e+02   3.7668e+02
-   4.3528e+02   3.8692e+02   4.7177e+02
-   4.3469e+02   4.0107e+02   5.2009e+02
-   4.3629e+02   3.7578e+02   3.2960e+02
-   4.3313e+02   3.9783e+02   4.9492e+02
-   4.3447e+02   3.8261e+02   3.1759e+02
-   4.3559e+02   3.8000e+02   3.9103e+02
-   4.3255e+02   4.0752e+02   5.4123e+02
-   4.3687e+02   3.7048e+02   2.7519e+02
-   4.3336e+02   4.1215e+02   4.5917e+02
-   4.3404e+02   3.7589e+02   2.3499e+02
-   4.3563e+02   3.8016e+02   4.8079e+02
-   4.3378e+02   4.0384e+02   5.0229e+02
-   4.3375e+02   3.8061e+02   3.7076e+02
-   4.3408e+02   3.8221e+02   3.2961e+02
-   4.3155e+02   3.7839e+02   4.3962e+02
-   4.3601e+02   3.8444e+02   3.2912e+02
-   4.3144e+02   3.9389e+02   4.3765e+02
-   4.3536e+02   3.7308e+02   3.9848e+02
-   4.3569e+02   3.7833e+02   2.9233e+02
-   4.3613e+02   3.8392e+02   4.8863e+02
-CV for trace random estimator using 50 runs is    0.0001
-   0.0006
-   0.0048
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update60 3
-traceCV
-   0.0001
-   0.0006
-   0.0040
-temp_mat
-   4.3440e+02   3.9535e+02   4.8557e+02
-   4.3312e+02   4.0563e+02   3.2311e+02
-   4.3508e+02   3.9055e+02   3.0750e+02
-   4.3465e+02   3.9142e+02   4.0400e+02
-   4.3134e+02   4.0232e+02   3.9819e+02
-   4.3176e+02   3.7147e+02   3.3181e+02
-   4.3168e+02   3.8099e+02   3.0721e+02
-   4.3636e+02   3.7447e+02   2.2046e+02
-   4.3695e+02   3.6986e+02   4.6711e+02
-   4.3117e+02   4.1771e+02   3.6413e+02
-   4.3419e+02   3.7698e+02   4.0089e+02
-   4.3331e+02   3.7198e+02   3.4033e+02
-   4.3661e+02   3.7972e+02   3.9232e+02
-   4.3413e+02   4.0291e+02   4.9428e+02
-   4.3009e+02   3.7834e+02   5.9321e+02
-   4.3165e+02   3.7519e+02   5.1664e+02
-   4.3056e+02   3.9525e+02   6.3398e+02
-   4.1881e+02   3.6650e+02   3.7473e+02
-   4.3551e+02   3.8562e+02   2.6540e+02
-   4.3518e+02   3.7319e+02   3.0131e+02
-   4.3586e+02   3.7399e+02   3.3340e+02
-   4.3472e+02   3.9322e+02   4.1122e+02
-   4.3313e+02   3.9313e+02   3.7281e+02
-   4.3230e+02   3.8872e+02   3.4824e+02
-   4.3540e+02   3.9431e+02   3.9476e+02
-   4.3557e+02   3.8908e+02   4.1112e+02
-   4.3417e+02   4.0395e+02   3.2098e+02
-   4.3560e+02   3.8854e+02   6.1633e+02
-   4.3502e+02   3.8069e+02   2.7641e+02
-   4.3595e+02   3.7764e+02   3.7668e+02
-   4.3528e+02   3.8692e+02   4.7177e+02
-   4.3469e+02   4.0107e+02   5.2009e+02
-   4.3629e+02   3.7578e+02   3.2960e+02
-   4.3313e+02   3.9783e+02   4.9492e+02
-   4.3447e+02   3.8261e+02   3.1759e+02
-   4.3559e+02   3.8000e+02   3.9103e+02
-   4.3255e+02   4.0752e+02   5.4123e+02
-   4.3687e+02   3.7048e+02   2.7519e+02
-   4.3336e+02   4.1215e+02   4.5917e+02
-   4.3404e+02   3.7589e+02   2.3499e+02
-   4.3563e+02   3.8016e+02   4.8079e+02
-   4.3378e+02   4.0384e+02   5.0229e+02
-   4.3375e+02   3.8061e+02   3.7076e+02
-   4.3408e+02   3.8221e+02   3.2961e+02
-   4.3155e+02   3.7839e+02   4.3962e+02
-   4.3601e+02   3.8444e+02   3.2912e+02
-   4.3144e+02   3.9389e+02   4.3765e+02
-   4.3536e+02   3.7308e+02   3.9848e+02
-   4.3569e+02   3.7833e+02   2.9233e+02
-   4.3613e+02   3.8392e+02   4.8863e+02
-   4.3630e+02   3.7966e+02   3.4617e+02
-   4.3430e+02   3.8834e+02   4.4093e+02
-   4.3611e+02   3.7862e+02   3.0921e+02
-   4.3416e+02   3.9708e+02   3.5314e+02
-   4.2915e+02   4.4050e+02   3.7364e+02
-   4.3458e+02   3.9169e+02   5.4535e+02
-   4.3642e+02   3.7604e+02   2.8937e+02
-   4.3490e+02   3.8451e+02   3.4662e+02
-   4.3434e+02   3.9946e+02   3.1354e+02
-   4.3140e+02   3.7035e+02   2.7540e+02
-CV for trace random estimator using 60 runs is    0.0001
-   0.0006
-   0.0040
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update70 3
-traceCV
-   8.6911e-05
-   4.9231e-04
-   3.5945e-03
-temp_mat
-   4.3440e+02   3.9535e+02   4.8557e+02
-   4.3312e+02   4.0563e+02   3.2311e+02
-   4.3508e+02   3.9055e+02   3.0750e+02
-   4.3465e+02   3.9142e+02   4.0400e+02
-   4.3134e+02   4.0232e+02   3.9819e+02
-   4.3176e+02   3.7147e+02   3.3181e+02
-   4.3168e+02   3.8099e+02   3.0721e+02
-   4.3636e+02   3.7447e+02   2.2046e+02
-   4.3695e+02   3.6986e+02   4.6711e+02
-   4.3117e+02   4.1771e+02   3.6413e+02
-   4.3419e+02   3.7698e+02   4.0089e+02
-   4.3331e+02   3.7198e+02   3.4033e+02
-   4.3661e+02   3.7972e+02   3.9232e+02
-   4.3413e+02   4.0291e+02   4.9428e+02
-   4.3009e+02   3.7834e+02   5.9321e+02
-   4.3165e+02   3.7519e+02   5.1664e+02
-   4.3056e+02   3.9525e+02   6.3398e+02
-   4.1881e+02   3.6650e+02   3.7473e+02
-   4.3551e+02   3.8562e+02   2.6540e+02
-   4.3518e+02   3.7319e+02   3.0131e+02
-   4.3586e+02   3.7399e+02   3.3340e+02
-   4.3472e+02   3.9322e+02   4.1122e+02
-   4.3313e+02   3.9313e+02   3.7281e+02
-   4.3230e+02   3.8872e+02   3.4824e+02
-   4.3540e+02   3.9431e+02   3.9476e+02
-   4.3557e+02   3.8908e+02   4.1112e+02
-   4.3417e+02   4.0395e+02   3.2098e+02
-   4.3560e+02   3.8854e+02   6.1633e+02
-   4.3502e+02   3.8069e+02   2.7641e+02
-   4.3595e+02   3.7764e+02   3.7668e+02
-   4.3528e+02   3.8692e+02   4.7177e+02
-   4.3469e+02   4.0107e+02   5.2009e+02
-   4.3629e+02   3.7578e+02   3.2960e+02
-   4.3313e+02   3.9783e+02   4.9492e+02
-   4.3447e+02   3.8261e+02   3.1759e+02
-   4.3559e+02   3.8000e+02   3.9103e+02
-   4.3255e+02   4.0752e+02   5.4123e+02
-   4.3687e+02   3.7048e+02   2.7519e+02
-   4.3336e+02   4.1215e+02   4.5917e+02
-   4.3404e+02   3.7589e+02   2.3499e+02
-   4.3563e+02   3.8016e+02   4.8079e+02
-   4.3378e+02   4.0384e+02   5.0229e+02
-   4.3375e+02   3.8061e+02   3.7076e+02
-   4.3408e+02   3.8221e+02   3.2961e+02
-   4.3155e+02   3.7839e+02   4.3962e+02
-   4.3601e+02   3.8444e+02   3.2912e+02
-   4.3144e+02   3.9389e+02   4.3765e+02
-   4.3536e+02   3.7308e+02   3.9848e+02
-   4.3569e+02   3.7833e+02   2.9233e+02
-   4.3613e+02   3.8392e+02   4.8863e+02
-   4.3630e+02   3.7966e+02   3.4617e+02
-   4.3430e+02   3.8834e+02   4.4093e+02
-   4.3611e+02   3.7862e+02   3.0921e+02
-   4.3416e+02   3.9708e+02   3.5314e+02
-   4.2915e+02   4.4050e+02   3.7364e+02
-   4.3458e+02   3.9169e+02   5.4535e+02
-   4.3642e+02   3.7604e+02   2.8937e+02
-   4.3490e+02   3.8451e+02   3.4662e+02
-   4.3434e+02   3.9946e+02   3.1354e+02
-   4.3140e+02   3.7035e+02   2.7540e+02
-   4.3020e+02   3.8631e+02   4.0973e+02
-   4.3038e+02   3.8001e+02   7.2314e+02
-   4.3189e+02   4.0800e+02   3.3370e+02
-   4.3287e+02   3.9595e+02   5.1571e+02
-   4.3035e+02   4.0695e+02   3.0904e+02
-   4.3467e+02   3.9382e+02   4.0977e+02
-   4.3459e+02   3.9124e+02   2.9222e+02
-   4.3275e+02   3.8594e+02   3.9485e+02
-   4.3283e+02   4.0273e+02   4.6333e+02
-   4.3522e+02   3.9841e+02   3.0990e+02
-CV for trace random estimator using 70 runs is    8.6911e-05
-   4.9231e-04
-   3.5945e-03
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update80 3
-traceCV
-   7.3521e-05
-   4.2180e-04
-   3.0846e-03
-temp_mat
-   4.3440e+02   3.9535e+02   4.8557e+02
-   4.3312e+02   4.0563e+02   3.2311e+02
-   4.3508e+02   3.9055e+02   3.0750e+02
-   4.3465e+02   3.9142e+02   4.0400e+02
-   4.3134e+02   4.0232e+02   3.9819e+02
-   4.3176e+02   3.7147e+02   3.3181e+02
-   4.3168e+02   3.8099e+02   3.0721e+02
-   4.3636e+02   3.7447e+02   2.2046e+02
-   4.3695e+02   3.6986e+02   4.6711e+02
-   4.3117e+02   4.1771e+02   3.6413e+02
-   4.3419e+02   3.7698e+02   4.0089e+02
-   4.3331e+02   3.7198e+02   3.4033e+02
-   4.3661e+02   3.7972e+02   3.9232e+02
-   4.3413e+02   4.0291e+02   4.9428e+02
-   4.3009e+02   3.7834e+02   5.9321e+02
-   4.3165e+02   3.7519e+02   5.1664e+02
-   4.3056e+02   3.9525e+02   6.3398e+02
-   4.1881e+02   3.6650e+02   3.7473e+02
-   4.3551e+02   3.8562e+02   2.6540e+02
-   4.3518e+02   3.7319e+02   3.0131e+02
-   4.3586e+02   3.7399e+02   3.3340e+02
-   4.3472e+02   3.9322e+02   4.1122e+02
-   4.3313e+02   3.9313e+02   3.7281e+02
-   4.3230e+02   3.8872e+02   3.4824e+02
-   4.3540e+02   3.9431e+02   3.9476e+02
-   4.3557e+02   3.8908e+02   4.1112e+02
-   4.3417e+02   4.0395e+02   3.2098e+02
-   4.3560e+02   3.8854e+02   6.1633e+02
-   4.3502e+02   3.8069e+02   2.7641e+02
-   4.3595e+02   3.7764e+02   3.7668e+02
-   4.3528e+02   3.8692e+02   4.7177e+02
-   4.3469e+02   4.0107e+02   5.2009e+02
-   4.3629e+02   3.7578e+02   3.2960e+02
-   4.3313e+02   3.9783e+02   4.9492e+02
-   4.3447e+02   3.8261e+02   3.1759e+02
-   4.3559e+02   3.8000e+02   3.9103e+02
-   4.3255e+02   4.0752e+02   5.4123e+02
-   4.3687e+02   3.7048e+02   2.7519e+02
-   4.3336e+02   4.1215e+02   4.5917e+02
-   4.3404e+02   3.7589e+02   2.3499e+02
-   4.3563e+02   3.8016e+02   4.8079e+02
-   4.3378e+02   4.0384e+02   5.0229e+02
-   4.3375e+02   3.8061e+02   3.7076e+02
-   4.3408e+02   3.8221e+02   3.2961e+02
-   4.3155e+02   3.7839e+02   4.3962e+02
-   4.3601e+02   3.8444e+02   3.2912e+02
-   4.3144e+02   3.9389e+02   4.3765e+02
-   4.3536e+02   3.7308e+02   3.9848e+02
-   4.3569e+02   3.7833e+02   2.9233e+02
-   4.3613e+02   3.8392e+02   4.8863e+02
-   4.3630e+02   3.7966e+02   3.4617e+02
-   4.3430e+02   3.8834e+02   4.4093e+02
-   4.3611e+02   3.7862e+02   3.0921e+02
-   4.3416e+02   3.9708e+02   3.5314e+02
-   4.2915e+02   4.4050e+02   3.7364e+02
-   4.3458e+02   3.9169e+02   5.4535e+02
-   4.3642e+02   3.7604e+02   2.8937e+02
-   4.3490e+02   3.8451e+02   3.4662e+02
-   4.3434e+02   3.9946e+02   3.1354e+02
-   4.3140e+02   3.7035e+02   2.7540e+02
-   4.3020e+02   3.8631e+02   4.0973e+02
-   4.3038e+02   3.8001e+02   7.2314e+02
-   4.3189e+02   4.0800e+02   3.3370e+02
-   4.3287e+02   3.9595e+02   5.1571e+02
-   4.3035e+02   4.0695e+02   3.0904e+02
-   4.3467e+02   3.9382e+02   4.0977e+02
-   4.3459e+02   3.9124e+02   2.9222e+02
-   4.3275e+02   3.8594e+02   3.9485e+02
-   4.3283e+02   4.0273e+02   4.6333e+02
-   4.3522e+02   3.9841e+02   3.0990e+02
-   4.3587e+02   3.8373e+02   3.0228e+02
-   4.3588e+02   3.8235e+02   4.7234e+02
-   4.3579e+02   3.7459e+02   4.5200e+02
-   4.3556e+02   3.8383e+02   5.3984e+02
-   4.3520e+02   3.8843e+02   3.7491e+02
-   4.3295e+02   3.6559e+02   2.9136e+02
-   4.3303e+02   4.0396e+02   3.4609e+02
-   4.3186e+02   3.9654e+02   5.5442e+02
-   4.3162e+02   3.9162e+02   4.4812e+02
-   4.3132e+02   3.7856e+02   4.4566e+02
-CV for trace random estimator using 80 runs is    7.3521e-05
-   4.2180e-04
-   3.0846e-03
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update90 3
-traceCV
-   6.4335e-05
-   3.8812e-04
-   2.6773e-03
-temp_mat
-   4.3440e+02   3.9535e+02   4.8557e+02
-   4.3312e+02   4.0563e+02   3.2311e+02
-   4.3508e+02   3.9055e+02   3.0750e+02
-   4.3465e+02   3.9142e+02   4.0400e+02
-   4.3134e+02   4.0232e+02   3.9819e+02
-   4.3176e+02   3.7147e+02   3.3181e+02
-   4.3168e+02   3.8099e+02   3.0721e+02
-   4.3636e+02   3.7447e+02   2.2046e+02
-   4.3695e+02   3.6986e+02   4.6711e+02
-   4.3117e+02   4.1771e+02   3.6413e+02
-   4.3419e+02   3.7698e+02   4.0089e+02
-   4.3331e+02   3.7198e+02   3.4033e+02
-   4.3661e+02   3.7972e+02   3.9232e+02
-   4.3413e+02   4.0291e+02   4.9428e+02
-   4.3009e+02   3.7834e+02   5.9321e+02
-   4.3165e+02   3.7519e+02   5.1664e+02
-   4.3056e+02   3.9525e+02   6.3398e+02
-   4.1881e+02   3.6650e+02   3.7473e+02
-   4.3551e+02   3.8562e+02   2.6540e+02
-   4.3518e+02   3.7319e+02   3.0131e+02
-   4.3586e+02   3.7399e+02   3.3340e+02
-   4.3472e+02   3.9322e+02   4.1122e+02
-   4.3313e+02   3.9313e+02   3.7281e+02
-   4.3230e+02   3.8872e+02   3.4824e+02
-   4.3540e+02   3.9431e+02   3.9476e+02
-   4.3557e+02   3.8908e+02   4.1112e+02
-   4.3417e+02   4.0395e+02   3.2098e+02
-   4.3560e+02   3.8854e+02   6.1633e+02
-   4.3502e+02   3.8069e+02   2.7641e+02
-   4.3595e+02   3.7764e+02   3.7668e+02
-   4.3528e+02   3.8692e+02   4.7177e+02
-   4.3469e+02   4.0107e+02   5.2009e+02
-   4.3629e+02   3.7578e+02   3.2960e+02
-   4.3313e+02   3.9783e+02   4.9492e+02
-   4.3447e+02   3.8261e+02   3.1759e+02
-   4.3559e+02   3.8000e+02   3.9103e+02
-   4.3255e+02   4.0752e+02   5.4123e+02
-   4.3687e+02   3.7048e+02   2.7519e+02
-   4.3336e+02   4.1215e+02   4.5917e+02
-   4.3404e+02   3.7589e+02   2.3499e+02
-   4.3563e+02   3.8016e+02   4.8079e+02
-   4.3378e+02   4.0384e+02   5.0229e+02
-   4.3375e+02   3.8061e+02   3.7076e+02
-   4.3408e+02   3.8221e+02   3.2961e+02
-   4.3155e+02   3.7839e+02   4.3962e+02
-   4.3601e+02   3.8444e+02   3.2912e+02
-   4.3144e+02   3.9389e+02   4.3765e+02
-   4.3536e+02   3.7308e+02   3.9848e+02
-   4.3569e+02   3.7833e+02   2.9233e+02
-   4.3613e+02   3.8392e+02   4.8863e+02
-   4.3630e+02   3.7966e+02   3.4617e+02
-   4.3430e+02   3.8834e+02   4.4093e+02
-   4.3611e+02   3.7862e+02   3.0921e+02
-   4.3416e+02   3.9708e+02   3.5314e+02
-   4.2915e+02   4.4050e+02   3.7364e+02
-   4.3458e+02   3.9169e+02   5.4535e+02
-   4.3642e+02   3.7604e+02   2.8937e+02
-   4.3490e+02   3.8451e+02   3.4662e+02
-   4.3434e+02   3.9946e+02   3.1354e+02
-   4.3140e+02   3.7035e+02   2.7540e+02
-   4.3020e+02   3.8631e+02   4.0973e+02
-   4.3038e+02   3.8001e+02   7.2314e+02
-   4.3189e+02   4.0800e+02   3.3370e+02
-   4.3287e+02   3.9595e+02   5.1571e+02
-   4.3035e+02   4.0695e+02   3.0904e+02
-   4.3467e+02   3.9382e+02   4.0977e+02
-   4.3459e+02   3.9124e+02   2.9222e+02
-   4.3275e+02   3.8594e+02   3.9485e+02
-   4.3283e+02   4.0273e+02   4.6333e+02
-   4.3522e+02   3.9841e+02   3.0990e+02
-   4.3587e+02   3.8373e+02   3.0228e+02
-   4.3588e+02   3.8235e+02   4.7234e+02
-   4.3579e+02   3.7459e+02   4.5200e+02
-   4.3556e+02   3.8383e+02   5.3984e+02
-   4.3520e+02   3.8843e+02   3.7491e+02
-   4.3295e+02   3.6559e+02   2.9136e+02
-   4.3303e+02   4.0396e+02   3.4609e+02
-   4.3186e+02   3.9654e+02   5.5442e+02
-   4.3162e+02   3.9162e+02   4.4812e+02
-   4.3132e+02   3.7856e+02   4.4566e+02
-   4.3515e+02   3.9805e+02   3.0636e+02
-   4.3411e+02   3.8847e+02   3.4597e+02
-   4.3591e+02   3.8456e+02   5.1819e+02
-   4.3095e+02   4.2507e+02   4.6314e+02
-   4.2972e+02   3.9952e+02   3.8207e+02
-   4.3534e+02   3.8932e+02   2.9200e+02
-   4.3327e+02   3.6499e+02   4.9325e+02
-   4.3394e+02   3.8352e+02   4.5140e+02
-   4.3400e+02   4.0132e+02   4.8710e+02
-   4.3006e+02   4.1124e+02   3.6369e+02
-CV for trace random estimator using 90 runs is    6.4335e-05
-   3.8812e-04
-   2.6773e-03
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
 dim temp_mat_update100 3
-traceCV
-   5.8705e-05
-   3.5230e-04
-   2.3550e-03
-temp_mat
-   4.3440e+02   3.9535e+02   4.8557e+02
-   4.3312e+02   4.0563e+02   3.2311e+02
-   4.3508e+02   3.9055e+02   3.0750e+02
-   4.3465e+02   3.9142e+02   4.0400e+02
-   4.3134e+02   4.0232e+02   3.9819e+02
-   4.3176e+02   3.7147e+02   3.3181e+02
-   4.3168e+02   3.8099e+02   3.0721e+02
-   4.3636e+02   3.7447e+02   2.2046e+02
-   4.3695e+02   3.6986e+02   4.6711e+02
-   4.3117e+02   4.1771e+02   3.6413e+02
-   4.3419e+02   3.7698e+02   4.0089e+02
-   4.3331e+02   3.7198e+02   3.4033e+02
-   4.3661e+02   3.7972e+02   3.9232e+02
-   4.3413e+02   4.0291e+02   4.9428e+02
-   4.3009e+02   3.7834e+02   5.9321e+02
-   4.3165e+02   3.7519e+02   5.1664e+02
-   4.3056e+02   3.9525e+02   6.3398e+02
-   4.1881e+02   3.6650e+02   3.7473e+02
-   4.3551e+02   3.8562e+02   2.6540e+02
-   4.3518e+02   3.7319e+02   3.0131e+02
-   4.3586e+02   3.7399e+02   3.3340e+02
-   4.3472e+02   3.9322e+02   4.1122e+02
-   4.3313e+02   3.9313e+02   3.7281e+02
-   4.3230e+02   3.8872e+02   3.4824e+02
-   4.3540e+02   3.9431e+02   3.9476e+02
-   4.3557e+02   3.8908e+02   4.1112e+02
-   4.3417e+02   4.0395e+02   3.2098e+02
-   4.3560e+02   3.8854e+02   6.1633e+02
-   4.3502e+02   3.8069e+02   2.7641e+02
-   4.3595e+02   3.7764e+02   3.7668e+02
-   4.3528e+02   3.8692e+02   4.7177e+02
-   4.3469e+02   4.0107e+02   5.2009e+02
-   4.3629e+02   3.7578e+02   3.2960e+02
-   4.3313e+02   3.9783e+02   4.9492e+02
-   4.3447e+02   3.8261e+02   3.1759e+02
-   4.3559e+02   3.8000e+02   3.9103e+02
-   4.3255e+02   4.0752e+02   5.4123e+02
-   4.3687e+02   3.7048e+02   2.7519e+02
-   4.3336e+02   4.1215e+02   4.5917e+02
-   4.3404e+02   3.7589e+02   2.3499e+02
-   4.3563e+02   3.8016e+02   4.8079e+02
-   4.3378e+02   4.0384e+02   5.0229e+02
-   4.3375e+02   3.8061e+02   3.7076e+02
-   4.3408e+02   3.8221e+02   3.2961e+02
-   4.3155e+02   3.7839e+02   4.3962e+02
-   4.3601e+02   3.8444e+02   3.2912e+02
-   4.3144e+02   3.9389e+02   4.3765e+02
-   4.3536e+02   3.7308e+02   3.9848e+02
-   4.3569e+02   3.7833e+02   2.9233e+02
-   4.3613e+02   3.8392e+02   4.8863e+02
-   4.3630e+02   3.7966e+02   3.4617e+02
-   4.3430e+02   3.8834e+02   4.4093e+02
-   4.3611e+02   3.7862e+02   3.0921e+02
-   4.3416e+02   3.9708e+02   3.5314e+02
-   4.2915e+02   4.4050e+02   3.7364e+02
-   4.3458e+02   3.9169e+02   5.4535e+02
-   4.3642e+02   3.7604e+02   2.8937e+02
-   4.3490e+02   3.8451e+02   3.4662e+02
-   4.3434e+02   3.9946e+02   3.1354e+02
-   4.3140e+02   3.7035e+02   2.7540e+02
-   4.3020e+02   3.8631e+02   4.0973e+02
-   4.3038e+02   3.8001e+02   7.2314e+02
-   4.3189e+02   4.0800e+02   3.3370e+02
-   4.3287e+02   3.9595e+02   5.1571e+02
-   4.3035e+02   4.0695e+02   3.0904e+02
-   4.3467e+02   3.9382e+02   4.0977e+02
-   4.3459e+02   3.9124e+02   2.9222e+02
-   4.3275e+02   3.8594e+02   3.9485e+02
-   4.3283e+02   4.0273e+02   4.6333e+02
-   4.3522e+02   3.9841e+02   3.0990e+02
-   4.3587e+02   3.8373e+02   3.0228e+02
-   4.3588e+02   3.8235e+02   4.7234e+02
-   4.3579e+02   3.7459e+02   4.5200e+02
-   4.3556e+02   3.8383e+02   5.3984e+02
-   4.3520e+02   3.8843e+02   3.7491e+02
-   4.3295e+02   3.6559e+02   2.9136e+02
-   4.3303e+02   4.0396e+02   3.4609e+02
-   4.3186e+02   3.9654e+02   5.5442e+02
-   4.3162e+02   3.9162e+02   4.4812e+02
-   4.3132e+02   3.7856e+02   4.4566e+02
-   4.3515e+02   3.9805e+02   3.0636e+02
-   4.3411e+02   3.8847e+02   3.4597e+02
-   4.3591e+02   3.8456e+02   5.1819e+02
-   4.3095e+02   4.2507e+02   4.6314e+02
-   4.2972e+02   3.9952e+02   3.8207e+02
-   4.3534e+02   3.8932e+02   2.9200e+02
-   4.3327e+02   3.6499e+02   4.9325e+02
-   4.3394e+02   3.8352e+02   4.5140e+02
-   4.3400e+02   4.0132e+02   4.8710e+02
-   4.3006e+02   4.1124e+02   3.6369e+02
-   4.3381e+02   3.9309e+02   3.9977e+02
-   4.3544e+02   3.9379e+02   3.9683e+02
-   4.3408e+02   3.7019e+02   4.0815e+02
-   4.3555e+02   3.9443e+02   4.0456e+02
-   4.3439e+02   3.8506e+02   4.7892e+02
-   4.3095e+02   3.8649e+02   4.2105e+02
-   4.2718e+02   4.2973e+02   5.4985e+02
-   4.2884e+02   3.8250e+02   2.7658e+02
-   4.3423e+02   3.9339e+02   3.0358e+02
-   4.3336e+02   3.8740e+02   4.0652e+02
 YPAPY_update
    4.2975e+02
    3.9546e+02
@@ -2841,7 +728,7 @@ AI1
    3.7487e+02   5.8587e+02   3.7505e+03
 t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
    user  system elapsed 
-  0.951   0.032   0.984 
+  0.917   0.055   0.973 
 [1] 0.03920156 0.32663355 0.00000000
 tau:  0.7890584 0.1490871 0 
 tau0:  0.8542632 0.07074869 0 
@@ -2849,12 +736,9 @@ tau0:  0.8542632 0.07074869 0
 Iteration  3 0.7890584 0.1490871 0 :
 tau0_v1:  0.7890584 0.1490871 0 
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 after Sigma_iY
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 Tau:
 [1] 0.7890584 0.1490871 0.0000000
 Fixed-effect coefficients:
@@ -2867,14 +751,11 @@ Fixed-effect coefficients:
 [2,] 0.5331376
 t_end_Get_Coef - t_begin_Get_Coef
    user  system elapsed 
-  0.025   0.000   0.025 
+  0.021   0.004   0.026 
 k1 3
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 AI
    4.6550e+02   3.9960e+02   3.4481e+02
    3.9960e+02   4.0807e+02   4.0918e+02
@@ -2884,808 +765,106 @@ idxtau
         1
         2
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update30 3
-traceCV
-   0.0003
-   0.0008
-   0.0088
-temp_mat
-   4.3233e+02   3.8859e+02   4.6457e+02
-   4.3144e+02   3.8966e+02   3.0612e+02
-   4.3365e+02   3.8350e+02   2.9297e+02
-   4.3321e+02   3.8313e+02   3.8854e+02
-   4.2939e+02   3.9102e+02   3.7851e+02
-   4.3107e+02   3.6868e+02   3.2489e+02
-   4.3021e+02   3.7608e+02   2.9263e+02
-   4.3567e+02   3.7193e+02   2.1391e+02
-   4.3663e+02   3.6830e+02   4.6332e+02
-   4.2856e+02   4.0033e+02   3.3757e+02
-   4.3328e+02   3.7373e+02   3.9086e+02
-   4.3252e+02   3.6953e+02   3.3288e+02
-   4.3597e+02   3.7483e+02   3.8493e+02
-   4.3222e+02   3.9146e+02   4.7581e+02
-   4.2859e+02   3.7477e+02   5.7805e+02
-   4.3076e+02   3.7106e+02   5.0732e+02
-   4.2881e+02   3.8644e+02   6.1757e+02
-   4.1780e+02   3.6155e+02   3.6386e+02
-   4.3450e+02   3.7850e+02   2.5507e+02
-   4.3465e+02   3.7066e+02   2.9640e+02
-   4.3533e+02   3.7114e+02   3.2738e+02
-   4.3336e+02   3.8457e+02   3.9698e+02
-   4.3171e+02   3.8245e+02   3.5896e+02
-   4.3046e+02   3.8280e+02   3.3030e+02
-   4.3362e+02   3.8696e+02   3.7577e+02
-   4.3451e+02   3.8072e+02   4.0176e+02
-   4.3240e+02   3.9096e+02   3.0264e+02
-   4.3428e+02   3.8171e+02   6.0254e+02
-   4.3410e+02   3.7566e+02   2.6718e+02
-   4.3503e+02   3.7420e+02   3.6681e+02
-CV for trace random estimator using 30 runs is    0.0003
-   0.0008
-   0.0088
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update40 3
-traceCV
-   0.0002
-   0.0006
-   0.0065
-temp_mat
-   4.3233e+02   3.8859e+02   4.6457e+02
-   4.3144e+02   3.8966e+02   3.0612e+02
-   4.3365e+02   3.8350e+02   2.9297e+02
-   4.3321e+02   3.8313e+02   3.8854e+02
-   4.2939e+02   3.9102e+02   3.7851e+02
-   4.3107e+02   3.6868e+02   3.2489e+02
-   4.3021e+02   3.7608e+02   2.9263e+02
-   4.3567e+02   3.7193e+02   2.1391e+02
-   4.3663e+02   3.6830e+02   4.6332e+02
-   4.2856e+02   4.0033e+02   3.3757e+02
-   4.3328e+02   3.7373e+02   3.9086e+02
-   4.3252e+02   3.6953e+02   3.3288e+02
-   4.3597e+02   3.7483e+02   3.8493e+02
-   4.3222e+02   3.9146e+02   4.7581e+02
-   4.2859e+02   3.7477e+02   5.7805e+02
-   4.3076e+02   3.7106e+02   5.0732e+02
-   4.2881e+02   3.8644e+02   6.1757e+02
-   4.1780e+02   3.6155e+02   3.6386e+02
-   4.3450e+02   3.7850e+02   2.5507e+02
-   4.3465e+02   3.7066e+02   2.9640e+02
-   4.3533e+02   3.7114e+02   3.2738e+02
-   4.3336e+02   3.8457e+02   3.9698e+02
-   4.3171e+02   3.8245e+02   3.5896e+02
-   4.3046e+02   3.8280e+02   3.3030e+02
-   4.3362e+02   3.8696e+02   3.7577e+02
-   4.3451e+02   3.8072e+02   4.0176e+02
-   4.3240e+02   3.9096e+02   3.0264e+02
-   4.3428e+02   3.8171e+02   6.0254e+02
-   4.3410e+02   3.7566e+02   2.6718e+02
-   4.3503e+02   3.7420e+02   3.6681e+02
-   4.3432e+02   3.7971e+02   4.6209e+02
-   4.3302e+02   3.8927e+02   5.0469e+02
-   4.3549e+02   3.7265e+02   3.2268e+02
-   4.3095e+02   3.8871e+02   4.7374e+02
-   4.3376e+02   3.7522e+02   3.1118e+02
-   4.3457e+02   3.7639e+02   3.8064e+02
-   4.3043e+02   3.9321e+02   5.2034e+02
-   4.3640e+02   3.6935e+02   2.7181e+02
-   4.3067e+02   3.9937e+02   4.3182e+02
-   4.3344e+02   3.7117e+02   2.2966e+02
-CV for trace random estimator using 40 runs is    0.0002
-   0.0006
-   0.0065
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update50 3
-traceCV
-   0.0001
-   0.0005
-   0.0049
-temp_mat
-   4.3233e+02   3.8859e+02   4.6457e+02
-   4.3144e+02   3.8966e+02   3.0612e+02
-   4.3365e+02   3.8350e+02   2.9297e+02
-   4.3321e+02   3.8313e+02   3.8854e+02
-   4.2939e+02   3.9102e+02   3.7851e+02
-   4.3107e+02   3.6868e+02   3.2489e+02
-   4.3021e+02   3.7608e+02   2.9263e+02
-   4.3567e+02   3.7193e+02   2.1391e+02
-   4.3663e+02   3.6830e+02   4.6332e+02
-   4.2856e+02   4.0033e+02   3.3757e+02
-   4.3328e+02   3.7373e+02   3.9086e+02
-   4.3252e+02   3.6953e+02   3.3288e+02
-   4.3597e+02   3.7483e+02   3.8493e+02
-   4.3222e+02   3.9146e+02   4.7581e+02
-   4.2859e+02   3.7477e+02   5.7805e+02
-   4.3076e+02   3.7106e+02   5.0732e+02
-   4.2881e+02   3.8644e+02   6.1757e+02
-   4.1780e+02   3.6155e+02   3.6386e+02
-   4.3450e+02   3.7850e+02   2.5507e+02
-   4.3465e+02   3.7066e+02   2.9640e+02
-   4.3533e+02   3.7114e+02   3.2738e+02
-   4.3336e+02   3.8457e+02   3.9698e+02
-   4.3171e+02   3.8245e+02   3.5896e+02
-   4.3046e+02   3.8280e+02   3.3030e+02
-   4.3362e+02   3.8696e+02   3.7577e+02
-   4.3451e+02   3.8072e+02   4.0176e+02
-   4.3240e+02   3.9096e+02   3.0264e+02
-   4.3428e+02   3.8171e+02   6.0254e+02
-   4.3410e+02   3.7566e+02   2.6718e+02
-   4.3503e+02   3.7420e+02   3.6681e+02
-   4.3432e+02   3.7971e+02   4.6209e+02
-   4.3302e+02   3.8927e+02   5.0469e+02
-   4.3549e+02   3.7265e+02   3.2268e+02
-   4.3095e+02   3.8871e+02   4.7374e+02
-   4.3376e+02   3.7522e+02   3.1118e+02
-   4.3457e+02   3.7639e+02   3.8064e+02
-   4.3043e+02   3.9321e+02   5.2034e+02
-   4.3640e+02   3.6935e+02   2.7181e+02
-   4.3067e+02   3.9937e+02   4.3182e+02
-   4.3344e+02   3.7117e+02   2.2966e+02
-   4.3466e+02   3.7590e+02   4.7145e+02
-   4.3170e+02   3.9224e+02   4.8143e+02
-   4.3268e+02   3.7572e+02   3.5912e+02
-   4.3294e+02   3.7690e+02   3.1720e+02
-   4.3035e+02   3.7447e+02   4.2735e+02
-   4.3531e+02   3.7654e+02   3.2054e+02
-   4.2974e+02   3.8612e+02   4.2095e+02
-   4.3482e+02   3.7029e+02   3.9238e+02
-   4.3515e+02   3.7385e+02   2.8642e+02
-   4.3508e+02   3.7874e+02   4.7772e+02
-CV for trace random estimator using 50 runs is    0.0001
-   0.0005
-   0.0049
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update60 3
-traceCV
-   0.0001
-   0.0004
-   0.0040
-temp_mat
-   4.3233e+02   3.8859e+02   4.6457e+02
-   4.3144e+02   3.8966e+02   3.0612e+02
-   4.3365e+02   3.8350e+02   2.9297e+02
-   4.3321e+02   3.8313e+02   3.8854e+02
-   4.2939e+02   3.9102e+02   3.7851e+02
-   4.3107e+02   3.6868e+02   3.2489e+02
-   4.3021e+02   3.7608e+02   2.9263e+02
-   4.3567e+02   3.7193e+02   2.1391e+02
-   4.3663e+02   3.6830e+02   4.6332e+02
-   4.2856e+02   4.0033e+02   3.3757e+02
-   4.3328e+02   3.7373e+02   3.9086e+02
-   4.3252e+02   3.6953e+02   3.3288e+02
-   4.3597e+02   3.7483e+02   3.8493e+02
-   4.3222e+02   3.9146e+02   4.7581e+02
-   4.2859e+02   3.7477e+02   5.7805e+02
-   4.3076e+02   3.7106e+02   5.0732e+02
-   4.2881e+02   3.8644e+02   6.1757e+02
-   4.1780e+02   3.6155e+02   3.6386e+02
-   4.3450e+02   3.7850e+02   2.5507e+02
-   4.3465e+02   3.7066e+02   2.9640e+02
-   4.3533e+02   3.7114e+02   3.2738e+02
-   4.3336e+02   3.8457e+02   3.9698e+02
-   4.3171e+02   3.8245e+02   3.5896e+02
-   4.3046e+02   3.8280e+02   3.3030e+02
-   4.3362e+02   3.8696e+02   3.7577e+02
-   4.3451e+02   3.8072e+02   4.0176e+02
-   4.3240e+02   3.9096e+02   3.0264e+02
-   4.3428e+02   3.8171e+02   6.0254e+02
-   4.3410e+02   3.7566e+02   2.6718e+02
-   4.3503e+02   3.7420e+02   3.6681e+02
-   4.3432e+02   3.7971e+02   4.6209e+02
-   4.3302e+02   3.8927e+02   5.0469e+02
-   4.3549e+02   3.7265e+02   3.2268e+02
-   4.3095e+02   3.8871e+02   4.7374e+02
-   4.3376e+02   3.7522e+02   3.1118e+02
-   4.3457e+02   3.7639e+02   3.8064e+02
-   4.3043e+02   3.9321e+02   5.2034e+02
-   4.3640e+02   3.6935e+02   2.7181e+02
-   4.3067e+02   3.9937e+02   4.3182e+02
-   4.3344e+02   3.7117e+02   2.2966e+02
-   4.3466e+02   3.7590e+02   4.7145e+02
-   4.3170e+02   3.9224e+02   4.8143e+02
-   4.3268e+02   3.7572e+02   3.5912e+02
-   4.3294e+02   3.7690e+02   3.1720e+02
-   4.3035e+02   3.7447e+02   4.2735e+02
-   4.3531e+02   3.7654e+02   3.2054e+02
-   4.2974e+02   3.8612e+02   4.2095e+02
-   4.3482e+02   3.7029e+02   3.9238e+02
-   4.3515e+02   3.7385e+02   2.8642e+02
-   4.3508e+02   3.7874e+02   4.7772e+02
-   4.3533e+02   3.7603e+02   3.3695e+02
-   4.3336e+02   3.7921e+02   4.3233e+02
-   4.3552e+02   3.7319e+02   3.0308e+02
-   4.3262e+02   3.8651e+02   3.3876e+02
-   4.2629e+02   4.1165e+02   3.4484e+02
-   4.3303e+02   3.8414e+02   5.2915e+02
-   4.3592e+02   3.7247e+02   2.8504e+02
-   4.3354e+02   3.7993e+02   3.3441e+02
-   4.3253e+02   3.8934e+02   2.9454e+02
-   4.3069e+02   3.6816e+02   2.6834e+02
-CV for trace random estimator using 60 runs is    0.0001
-   0.0004
-   0.0040
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update70 3
-traceCV
-   9.6041e-05
-   3.4476e-04
-   3.6518e-03
-temp_mat
-   4.3233e+02   3.8859e+02   4.6457e+02
-   4.3144e+02   3.8966e+02   3.0612e+02
-   4.3365e+02   3.8350e+02   2.9297e+02
-   4.3321e+02   3.8313e+02   3.8854e+02
-   4.2939e+02   3.9102e+02   3.7851e+02
-   4.3107e+02   3.6868e+02   3.2489e+02
-   4.3021e+02   3.7608e+02   2.9263e+02
-   4.3567e+02   3.7193e+02   2.1391e+02
-   4.3663e+02   3.6830e+02   4.6332e+02
-   4.2856e+02   4.0033e+02   3.3757e+02
-   4.3328e+02   3.7373e+02   3.9086e+02
-   4.3252e+02   3.6953e+02   3.3288e+02
-   4.3597e+02   3.7483e+02   3.8493e+02
-   4.3222e+02   3.9146e+02   4.7581e+02
-   4.2859e+02   3.7477e+02   5.7805e+02
-   4.3076e+02   3.7106e+02   5.0732e+02
-   4.2881e+02   3.8644e+02   6.1757e+02
-   4.1780e+02   3.6155e+02   3.6386e+02
-   4.3450e+02   3.7850e+02   2.5507e+02
-   4.3465e+02   3.7066e+02   2.9640e+02
-   4.3533e+02   3.7114e+02   3.2738e+02
-   4.3336e+02   3.8457e+02   3.9698e+02
-   4.3171e+02   3.8245e+02   3.5896e+02
-   4.3046e+02   3.8280e+02   3.3030e+02
-   4.3362e+02   3.8696e+02   3.7577e+02
-   4.3451e+02   3.8072e+02   4.0176e+02
-   4.3240e+02   3.9096e+02   3.0264e+02
-   4.3428e+02   3.8171e+02   6.0254e+02
-   4.3410e+02   3.7566e+02   2.6718e+02
-   4.3503e+02   3.7420e+02   3.6681e+02
-   4.3432e+02   3.7971e+02   4.6209e+02
-   4.3302e+02   3.8927e+02   5.0469e+02
-   4.3549e+02   3.7265e+02   3.2268e+02
-   4.3095e+02   3.8871e+02   4.7374e+02
-   4.3376e+02   3.7522e+02   3.1118e+02
-   4.3457e+02   3.7639e+02   3.8064e+02
-   4.3043e+02   3.9321e+02   5.2034e+02
-   4.3640e+02   3.6935e+02   2.7181e+02
-   4.3067e+02   3.9937e+02   4.3182e+02
-   4.3344e+02   3.7117e+02   2.2966e+02
-   4.3466e+02   3.7590e+02   4.7145e+02
-   4.3170e+02   3.9224e+02   4.8143e+02
-   4.3268e+02   3.7572e+02   3.5912e+02
-   4.3294e+02   3.7690e+02   3.1720e+02
-   4.3035e+02   3.7447e+02   4.2735e+02
-   4.3531e+02   3.7654e+02   3.2054e+02
-   4.2974e+02   3.8612e+02   4.2095e+02
-   4.3482e+02   3.7029e+02   3.9238e+02
-   4.3515e+02   3.7385e+02   2.8642e+02
-   4.3508e+02   3.7874e+02   4.7772e+02
-   4.3533e+02   3.7603e+02   3.3695e+02
-   4.3336e+02   3.7921e+02   4.3233e+02
-   4.3552e+02   3.7319e+02   3.0308e+02
-   4.3262e+02   3.8651e+02   3.3876e+02
-   4.2629e+02   4.1165e+02   3.4484e+02
-   4.3303e+02   3.8414e+02   5.2915e+02
-   4.3592e+02   3.7247e+02   2.8504e+02
-   4.3354e+02   3.7993e+02   3.3441e+02
-   4.3253e+02   3.8934e+02   2.9454e+02
-   4.3069e+02   3.6816e+02   2.6834e+02
-   4.2874e+02   3.7956e+02   3.9622e+02
-   4.2915e+02   3.7449e+02   7.1050e+02
-   4.3008e+02   3.9353e+02   3.1555e+02
-   4.3103e+02   3.8801e+02   4.9691e+02
-   4.2815e+02   3.9344e+02   2.8735e+02
-   4.3285e+02   3.8580e+02   3.9184e+02
-   4.3345e+02   3.8175e+02   2.8130e+02
-   4.3182e+02   3.7765e+02   3.8553e+02
-   4.3038e+02   3.9277e+02   4.3922e+02
-   4.3312e+02   3.9059e+02   2.8954e+02
-CV for trace random estimator using 70 runs is    9.6041e-05
-   3.4476e-04
-   3.6518e-03
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update80 3
-traceCV
-   8.1346e-05
-   2.9541e-04
-   3.1315e-03
-temp_mat
-   4.3233e+02   3.8859e+02   4.6457e+02
-   4.3144e+02   3.8966e+02   3.0612e+02
-   4.3365e+02   3.8350e+02   2.9297e+02
-   4.3321e+02   3.8313e+02   3.8854e+02
-   4.2939e+02   3.9102e+02   3.7851e+02
-   4.3107e+02   3.6868e+02   3.2489e+02
-   4.3021e+02   3.7608e+02   2.9263e+02
-   4.3567e+02   3.7193e+02   2.1391e+02
-   4.3663e+02   3.6830e+02   4.6332e+02
-   4.2856e+02   4.0033e+02   3.3757e+02
-   4.3328e+02   3.7373e+02   3.9086e+02
-   4.3252e+02   3.6953e+02   3.3288e+02
-   4.3597e+02   3.7483e+02   3.8493e+02
-   4.3222e+02   3.9146e+02   4.7581e+02
-   4.2859e+02   3.7477e+02   5.7805e+02
-   4.3076e+02   3.7106e+02   5.0732e+02
-   4.2881e+02   3.8644e+02   6.1757e+02
-   4.1780e+02   3.6155e+02   3.6386e+02
-   4.3450e+02   3.7850e+02   2.5507e+02
-   4.3465e+02   3.7066e+02   2.9640e+02
-   4.3533e+02   3.7114e+02   3.2738e+02
-   4.3336e+02   3.8457e+02   3.9698e+02
-   4.3171e+02   3.8245e+02   3.5896e+02
-   4.3046e+02   3.8280e+02   3.3030e+02
-   4.3362e+02   3.8696e+02   3.7577e+02
-   4.3451e+02   3.8072e+02   4.0176e+02
-   4.3240e+02   3.9096e+02   3.0264e+02
-   4.3428e+02   3.8171e+02   6.0254e+02
-   4.3410e+02   3.7566e+02   2.6718e+02
-   4.3503e+02   3.7420e+02   3.6681e+02
-   4.3432e+02   3.7971e+02   4.6209e+02
-   4.3302e+02   3.8927e+02   5.0469e+02
-   4.3549e+02   3.7265e+02   3.2268e+02
-   4.3095e+02   3.8871e+02   4.7374e+02
-   4.3376e+02   3.7522e+02   3.1118e+02
-   4.3457e+02   3.7639e+02   3.8064e+02
-   4.3043e+02   3.9321e+02   5.2034e+02
-   4.3640e+02   3.6935e+02   2.7181e+02
-   4.3067e+02   3.9937e+02   4.3182e+02
-   4.3344e+02   3.7117e+02   2.2966e+02
-   4.3466e+02   3.7590e+02   4.7145e+02
-   4.3170e+02   3.9224e+02   4.8143e+02
-   4.3268e+02   3.7572e+02   3.5912e+02
-   4.3294e+02   3.7690e+02   3.1720e+02
-   4.3035e+02   3.7447e+02   4.2735e+02
-   4.3531e+02   3.7654e+02   3.2054e+02
-   4.2974e+02   3.8612e+02   4.2095e+02
-   4.3482e+02   3.7029e+02   3.9238e+02
-   4.3515e+02   3.7385e+02   2.8642e+02
-   4.3508e+02   3.7874e+02   4.7772e+02
-   4.3533e+02   3.7603e+02   3.3695e+02
-   4.3336e+02   3.7921e+02   4.3233e+02
-   4.3552e+02   3.7319e+02   3.0308e+02
-   4.3262e+02   3.8651e+02   3.3876e+02
-   4.2629e+02   4.1165e+02   3.4484e+02
-   4.3303e+02   3.8414e+02   5.2915e+02
-   4.3592e+02   3.7247e+02   2.8504e+02
-   4.3354e+02   3.7993e+02   3.3441e+02
-   4.3253e+02   3.8934e+02   2.9454e+02
-   4.3069e+02   3.6816e+02   2.6834e+02
-   4.2874e+02   3.7956e+02   3.9622e+02
-   4.2915e+02   3.7449e+02   7.1050e+02
-   4.3008e+02   3.9353e+02   3.1555e+02
-   4.3103e+02   3.8801e+02   4.9691e+02
-   4.2815e+02   3.9344e+02   2.8735e+02
-   4.3285e+02   3.8580e+02   3.9184e+02
-   4.3345e+02   3.8175e+02   2.8130e+02
-   4.3182e+02   3.7765e+02   3.8553e+02
-   4.3038e+02   3.9277e+02   4.3922e+02
-   4.3312e+02   3.9059e+02   2.8954e+02
-   4.3498e+02   3.7744e+02   2.9206e+02
-   4.3470e+02   3.7815e+02   4.5977e+02
-   4.3524e+02   3.7147e+02   4.4699e+02
-   4.3429e+02   3.7943e+02   5.2657e+02
-   4.3415e+02   3.8118e+02   3.6435e+02
-   4.3266e+02   3.6354e+02   2.8730e+02
-   4.3150e+02   3.8873e+02   3.3103e+02
-   4.3020e+02   3.8708e+02   5.3667e+02
-   4.2993e+02   3.8238e+02   4.3081e+02
-   4.3029e+02   3.7332e+02   4.3632e+02
-CV for trace random estimator using 80 runs is    8.1346e-05
-   2.9541e-04
-   3.1315e-03
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update90 3
-traceCV
-   7.1724e-05
-   2.6807e-04
-   2.7213e-03
-temp_mat
-   4.3233e+02   3.8859e+02   4.6457e+02
-   4.3144e+02   3.8966e+02   3.0612e+02
-   4.3365e+02   3.8350e+02   2.9297e+02
-   4.3321e+02   3.8313e+02   3.8854e+02
-   4.2939e+02   3.9102e+02   3.7851e+02
-   4.3107e+02   3.6868e+02   3.2489e+02
-   4.3021e+02   3.7608e+02   2.9263e+02
-   4.3567e+02   3.7193e+02   2.1391e+02
-   4.3663e+02   3.6830e+02   4.6332e+02
-   4.2856e+02   4.0033e+02   3.3757e+02
-   4.3328e+02   3.7373e+02   3.9086e+02
-   4.3252e+02   3.6953e+02   3.3288e+02
-   4.3597e+02   3.7483e+02   3.8493e+02
-   4.3222e+02   3.9146e+02   4.7581e+02
-   4.2859e+02   3.7477e+02   5.7805e+02
-   4.3076e+02   3.7106e+02   5.0732e+02
-   4.2881e+02   3.8644e+02   6.1757e+02
-   4.1780e+02   3.6155e+02   3.6386e+02
-   4.3450e+02   3.7850e+02   2.5507e+02
-   4.3465e+02   3.7066e+02   2.9640e+02
-   4.3533e+02   3.7114e+02   3.2738e+02
-   4.3336e+02   3.8457e+02   3.9698e+02
-   4.3171e+02   3.8245e+02   3.5896e+02
-   4.3046e+02   3.8280e+02   3.3030e+02
-   4.3362e+02   3.8696e+02   3.7577e+02
-   4.3451e+02   3.8072e+02   4.0176e+02
-   4.3240e+02   3.9096e+02   3.0264e+02
-   4.3428e+02   3.8171e+02   6.0254e+02
-   4.3410e+02   3.7566e+02   2.6718e+02
-   4.3503e+02   3.7420e+02   3.6681e+02
-   4.3432e+02   3.7971e+02   4.6209e+02
-   4.3302e+02   3.8927e+02   5.0469e+02
-   4.3549e+02   3.7265e+02   3.2268e+02
-   4.3095e+02   3.8871e+02   4.7374e+02
-   4.3376e+02   3.7522e+02   3.1118e+02
-   4.3457e+02   3.7639e+02   3.8064e+02
-   4.3043e+02   3.9321e+02   5.2034e+02
-   4.3640e+02   3.6935e+02   2.7181e+02
-   4.3067e+02   3.9937e+02   4.3182e+02
-   4.3344e+02   3.7117e+02   2.2966e+02
-   4.3466e+02   3.7590e+02   4.7145e+02
-   4.3170e+02   3.9224e+02   4.8143e+02
-   4.3268e+02   3.7572e+02   3.5912e+02
-   4.3294e+02   3.7690e+02   3.1720e+02
-   4.3035e+02   3.7447e+02   4.2735e+02
-   4.3531e+02   3.7654e+02   3.2054e+02
-   4.2974e+02   3.8612e+02   4.2095e+02
-   4.3482e+02   3.7029e+02   3.9238e+02
-   4.3515e+02   3.7385e+02   2.8642e+02
-   4.3508e+02   3.7874e+02   4.7772e+02
-   4.3533e+02   3.7603e+02   3.3695e+02
-   4.3336e+02   3.7921e+02   4.3233e+02
-   4.3552e+02   3.7319e+02   3.0308e+02
-   4.3262e+02   3.8651e+02   3.3876e+02
-   4.2629e+02   4.1165e+02   3.4484e+02
-   4.3303e+02   3.8414e+02   5.2915e+02
-   4.3592e+02   3.7247e+02   2.8504e+02
-   4.3354e+02   3.7993e+02   3.3441e+02
-   4.3253e+02   3.8934e+02   2.9454e+02
-   4.3069e+02   3.6816e+02   2.6834e+02
-   4.2874e+02   3.7956e+02   3.9622e+02
-   4.2915e+02   3.7449e+02   7.1050e+02
-   4.3008e+02   3.9353e+02   3.1555e+02
-   4.3103e+02   3.8801e+02   4.9691e+02
-   4.2815e+02   3.9344e+02   2.8735e+02
-   4.3285e+02   3.8580e+02   3.9184e+02
-   4.3345e+02   3.8175e+02   2.8130e+02
-   4.3182e+02   3.7765e+02   3.8553e+02
-   4.3038e+02   3.9277e+02   4.3922e+02
-   4.3312e+02   3.9059e+02   2.8954e+02
-   4.3498e+02   3.7744e+02   2.9206e+02
-   4.3470e+02   3.7815e+02   4.5977e+02
-   4.3524e+02   3.7147e+02   4.4699e+02
-   4.3429e+02   3.7943e+02   5.2657e+02
-   4.3415e+02   3.8118e+02   3.6435e+02
-   4.3266e+02   3.6354e+02   2.8730e+02
-   4.3150e+02   3.8873e+02   3.3103e+02
-   4.3020e+02   3.8708e+02   5.3667e+02
-   4.2993e+02   3.8238e+02   4.3081e+02
-   4.3029e+02   3.7332e+02   4.3632e+02
-   4.3405e+02   3.8525e+02   2.9610e+02
-   4.3309e+02   3.8044e+02   3.3515e+02
-   4.3505e+02   3.7762e+02   5.0941e+02
-   4.2846e+02   4.0394e+02   4.3790e+02
-   4.2762e+02   3.8803e+02   3.5981e+02
-   4.3428e+02   3.8118e+02   2.8111e+02
-   4.3291e+02   3.6416e+02   4.8905e+02
-   4.3263e+02   3.7890e+02   4.3927e+02
-   4.3188e+02   3.9130e+02   4.6599e+02
-   4.2858e+02   3.9156e+02   3.4895e+02
-CV for trace random estimator using 90 runs is    7.1724e-05
-   2.6807e-04
-   2.7213e-03
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
 dim temp_mat_update100 3
-traceCV
-   6.6085e-05
-   2.4436e-04
-   2.3885e-03
-temp_mat
-   4.3233e+02   3.8859e+02   4.6457e+02
-   4.3144e+02   3.8966e+02   3.0612e+02
-   4.3365e+02   3.8350e+02   2.9297e+02
-   4.3321e+02   3.8313e+02   3.8854e+02
-   4.2939e+02   3.9102e+02   3.7851e+02
-   4.3107e+02   3.6868e+02   3.2489e+02
-   4.3021e+02   3.7608e+02   2.9263e+02
-   4.3567e+02   3.7193e+02   2.1391e+02
-   4.3663e+02   3.6830e+02   4.6332e+02
-   4.2856e+02   4.0033e+02   3.3757e+02
-   4.3328e+02   3.7373e+02   3.9086e+02
-   4.3252e+02   3.6953e+02   3.3288e+02
-   4.3597e+02   3.7483e+02   3.8493e+02
-   4.3222e+02   3.9146e+02   4.7581e+02
-   4.2859e+02   3.7477e+02   5.7805e+02
-   4.3076e+02   3.7106e+02   5.0732e+02
-   4.2881e+02   3.8644e+02   6.1757e+02
-   4.1780e+02   3.6155e+02   3.6386e+02
-   4.3450e+02   3.7850e+02   2.5507e+02
-   4.3465e+02   3.7066e+02   2.9640e+02
-   4.3533e+02   3.7114e+02   3.2738e+02
-   4.3336e+02   3.8457e+02   3.9698e+02
-   4.3171e+02   3.8245e+02   3.5896e+02
-   4.3046e+02   3.8280e+02   3.3030e+02
-   4.3362e+02   3.8696e+02   3.7577e+02
-   4.3451e+02   3.8072e+02   4.0176e+02
-   4.3240e+02   3.9096e+02   3.0264e+02
-   4.3428e+02   3.8171e+02   6.0254e+02
-   4.3410e+02   3.7566e+02   2.6718e+02
-   4.3503e+02   3.7420e+02   3.6681e+02
-   4.3432e+02   3.7971e+02   4.6209e+02
-   4.3302e+02   3.8927e+02   5.0469e+02
-   4.3549e+02   3.7265e+02   3.2268e+02
-   4.3095e+02   3.8871e+02   4.7374e+02
-   4.3376e+02   3.7522e+02   3.1118e+02
-   4.3457e+02   3.7639e+02   3.8064e+02
-   4.3043e+02   3.9321e+02   5.2034e+02
-   4.3640e+02   3.6935e+02   2.7181e+02
-   4.3067e+02   3.9937e+02   4.3182e+02
-   4.3344e+02   3.7117e+02   2.2966e+02
-   4.3466e+02   3.7590e+02   4.7145e+02
-   4.3170e+02   3.9224e+02   4.8143e+02
-   4.3268e+02   3.7572e+02   3.5912e+02
-   4.3294e+02   3.7690e+02   3.1720e+02
-   4.3035e+02   3.7447e+02   4.2735e+02
-   4.3531e+02   3.7654e+02   3.2054e+02
-   4.2974e+02   3.8612e+02   4.2095e+02
-   4.3482e+02   3.7029e+02   3.9238e+02
-   4.3515e+02   3.7385e+02   2.8642e+02
-   4.3508e+02   3.7874e+02   4.7772e+02
-   4.3533e+02   3.7603e+02   3.3695e+02
-   4.3336e+02   3.7921e+02   4.3233e+02
-   4.3552e+02   3.7319e+02   3.0308e+02
-   4.3262e+02   3.8651e+02   3.3876e+02
-   4.2629e+02   4.1165e+02   3.4484e+02
-   4.3303e+02   3.8414e+02   5.2915e+02
-   4.3592e+02   3.7247e+02   2.8504e+02
-   4.3354e+02   3.7993e+02   3.3441e+02
-   4.3253e+02   3.8934e+02   2.9454e+02
-   4.3069e+02   3.6816e+02   2.6834e+02
-   4.2874e+02   3.7956e+02   3.9622e+02
-   4.2915e+02   3.7449e+02   7.1050e+02
-   4.3008e+02   3.9353e+02   3.1555e+02
-   4.3103e+02   3.8801e+02   4.9691e+02
-   4.2815e+02   3.9344e+02   2.8735e+02
-   4.3285e+02   3.8580e+02   3.9184e+02
-   4.3345e+02   3.8175e+02   2.8130e+02
-   4.3182e+02   3.7765e+02   3.8553e+02
-   4.3038e+02   3.9277e+02   4.3922e+02
-   4.3312e+02   3.9059e+02   2.8954e+02
-   4.3498e+02   3.7744e+02   2.9206e+02
-   4.3470e+02   3.7815e+02   4.5977e+02
-   4.3524e+02   3.7147e+02   4.4699e+02
-   4.3429e+02   3.7943e+02   5.2657e+02
-   4.3415e+02   3.8118e+02   3.6435e+02
-   4.3266e+02   3.6354e+02   2.8730e+02
-   4.3150e+02   3.8873e+02   3.3103e+02
-   4.3020e+02   3.8708e+02   5.3667e+02
-   4.2993e+02   3.8238e+02   4.3081e+02
-   4.3029e+02   3.7332e+02   4.3632e+02
-   4.3405e+02   3.8525e+02   2.9610e+02
-   4.3309e+02   3.8044e+02   3.3515e+02
-   4.3505e+02   3.7762e+02   5.0941e+02
-   4.2846e+02   4.0394e+02   4.3790e+02
-   4.2762e+02   3.8803e+02   3.5981e+02
-   4.3428e+02   3.8118e+02   2.8111e+02
-   4.3291e+02   3.6416e+02   4.8905e+02
-   4.3263e+02   3.7890e+02   4.3927e+02
-   4.3188e+02   3.9130e+02   4.6599e+02
-   4.2858e+02   3.9156e+02   3.4895e+02
-   4.3208e+02   3.8609e+02   3.8191e+02
-   4.3394e+02   3.8524e+02   3.8242e+02
-   4.3357e+02   3.6816e+02   4.0302e+02
-   4.3402e+02   3.8588e+02   3.8910e+02
-   4.3309e+02   3.8009e+02   4.6614e+02
-   4.2951e+02   3.7810e+02   4.0617e+02
-   4.2346e+02   4.0874e+02   5.1216e+02
-   4.2788e+02   3.7377e+02   2.6578e+02
-   4.3277e+02   3.8384e+02   2.8774e+02
-   4.3203e+02   3.8105e+02   3.9436e+02
 YPAPY_update
    4.2689e+02
    3.7615e+02
@@ -3720,7 +899,7 @@ AI1
    3.4481e+02   4.0918e+02   3.4505e+03
 t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
    user  system elapsed 
-  0.948   0.028   0.977 
+  0.940   0.040   0.979 
 [1] 0.01204613 0.06685552 0.00000000
 tau:  0.7700364 0.1718828 0 
 tau0:  0.7890584 0.1490871 0 
@@ -3728,12 +907,9 @@ tau0:  0.7890584 0.1490871 0
 Iteration  4 0.7700364 0.1718828 0 :
 tau0_v1:  0.7700364 0.1718828 0 
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 after Sigma_iY
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 Tau:
 [1] 0.7700364 0.1718828 0.0000000
 Fixed-effect coefficients:
@@ -3746,14 +922,11 @@ Fixed-effect coefficients:
 [2,] 0.5331112
 t_end_Get_Coef - t_begin_Get_Coef
    user  system elapsed 
-  0.022   0.004   0.025 
+  0.026   0.001   0.026 
 k1 3
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 AI
    4.6510e+02   3.9723e+02   3.4002e+02
    3.9723e+02   3.9117e+02   3.8504e+02
@@ -3763,808 +936,106 @@ idxtau
         1
         2
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update30 3
-traceCV
-   0.0003
-   0.0007
-   0.0088
-temp_mat
-   4.3186e+02   3.8702e+02   4.5957e+02
-   4.3114e+02   3.8690e+02   3.0285e+02
-   4.3335e+02   3.8204e+02   2.8966e+02
-   4.3292e+02   3.8152e+02   3.8506e+02
-   4.2899e+02   3.8866e+02   3.7426e+02
-   4.3093e+02   3.6808e+02   3.2329e+02
-   4.2990e+02   3.7499e+02   2.8930e+02
-   4.3553e+02   3.7137e+02   2.1242e+02
-   4.3657e+02   3.6800e+02   4.6242e+02
-   4.2802e+02   3.9703e+02   3.3178e+02
-   4.3308e+02   3.7302e+02   3.8846e+02
-   4.3235e+02   3.6900e+02   3.3111e+02
-   4.3586e+02   3.7390e+02   3.8334e+02
-   4.3184e+02   3.8914e+02   4.7192e+02
-   4.2825e+02   3.7392e+02   5.7441e+02
-   4.3060e+02   3.7021e+02   5.0531e+02
-   4.2842e+02   3.8463e+02   6.1373e+02
-   4.1761e+02   3.6054e+02   3.6146e+02
-   4.3431e+02   3.7720e+02   2.5285e+02
-   4.3455e+02   3.7012e+02   2.9531e+02
-   4.3524e+02   3.7056e+02   3.2599e+02
-   4.3309e+02   3.8284e+02   3.9389e+02
-   4.3144e+02   3.8054e+02   3.5623e+02
-   4.3005e+02   3.8148e+02   3.2604e+02
-   4.3324e+02   3.8532e+02   3.7142e+02
-   4.3431e+02   3.7921e+02   3.9990e+02
-   4.3204e+02   3.8854e+02   2.9872e+02
-   4.3402e+02   3.8031e+02   5.9950e+02
-   4.3392e+02   3.7468e+02   2.6511e+02
-   4.3484e+02   3.7346e+02   3.6454e+02
-CV for trace random estimator using 30 runs is    0.0003
-   0.0007
-   0.0088
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update40 3
-traceCV
-   0.0002
-   0.0006
-   0.0065
-temp_mat
-   4.3186e+02   3.8702e+02   4.5957e+02
-   4.3114e+02   3.8690e+02   3.0285e+02
-   4.3335e+02   3.8204e+02   2.8966e+02
-   4.3292e+02   3.8152e+02   3.8506e+02
-   4.2899e+02   3.8866e+02   3.7426e+02
-   4.3093e+02   3.6808e+02   3.2329e+02
-   4.2990e+02   3.7499e+02   2.8930e+02
-   4.3553e+02   3.7137e+02   2.1242e+02
-   4.3657e+02   3.6800e+02   4.6242e+02
-   4.2802e+02   3.9703e+02   3.3178e+02
-   4.3308e+02   3.7302e+02   3.8846e+02
-   4.3235e+02   3.6900e+02   3.3111e+02
-   4.3586e+02   3.7390e+02   3.8334e+02
-   4.3184e+02   3.8914e+02   4.7192e+02
-   4.2825e+02   3.7392e+02   5.7441e+02
-   4.3060e+02   3.7021e+02   5.0531e+02
-   4.2842e+02   3.8463e+02   6.1373e+02
-   4.1761e+02   3.6054e+02   3.6146e+02
-   4.3431e+02   3.7720e+02   2.5285e+02
-   4.3455e+02   3.7012e+02   2.9531e+02
-   4.3524e+02   3.7056e+02   3.2599e+02
-   4.3309e+02   3.8284e+02   3.9389e+02
-   4.3144e+02   3.8054e+02   3.5623e+02
-   4.3005e+02   3.8148e+02   3.2604e+02
-   4.3324e+02   3.8532e+02   3.7142e+02
-   4.3431e+02   3.7921e+02   3.9990e+02
-   4.3204e+02   3.8854e+02   2.9872e+02
-   4.3402e+02   3.8031e+02   5.9950e+02
-   4.3392e+02   3.7468e+02   2.6511e+02
-   4.3484e+02   3.7346e+02   3.6454e+02
-   4.3414e+02   3.7836e+02   4.5998e+02
-   4.3267e+02   3.8712e+02   5.0144e+02
-   4.3533e+02   3.7202e+02   3.2116e+02
-   4.3047e+02   3.8682e+02   4.6893e+02
-   4.3364e+02   3.7397e+02   3.1000e+02
-   4.3435e+02   3.7557e+02   3.7822e+02
-   4.2999e+02   3.9054e+02   5.1589e+02
-   4.3631e+02   3.6910e+02   2.7100e+02
-   4.3009e+02   3.9667e+02   4.2568e+02
-   4.3334e+02   3.7035e+02   2.2859e+02
-CV for trace random estimator using 40 runs is    0.0002
-   0.0006
-   0.0065
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update50 3
-traceCV
-   0.0001
-   0.0004
-   0.0049
-temp_mat
-   4.3186e+02   3.8702e+02   4.5957e+02
-   4.3114e+02   3.8690e+02   3.0285e+02
-   4.3335e+02   3.8204e+02   2.8966e+02
-   4.3292e+02   3.8152e+02   3.8506e+02
-   4.2899e+02   3.8866e+02   3.7426e+02
-   4.3093e+02   3.6808e+02   3.2329e+02
-   4.2990e+02   3.7499e+02   2.8930e+02
-   4.3553e+02   3.7137e+02   2.1242e+02
-   4.3657e+02   3.6800e+02   4.6242e+02
-   4.2802e+02   3.9703e+02   3.3178e+02
-   4.3308e+02   3.7302e+02   3.8846e+02
-   4.3235e+02   3.6900e+02   3.3111e+02
-   4.3586e+02   3.7390e+02   3.8334e+02
-   4.3184e+02   3.8914e+02   4.7192e+02
-   4.2825e+02   3.7392e+02   5.7441e+02
-   4.3060e+02   3.7021e+02   5.0531e+02
-   4.2842e+02   3.8463e+02   6.1373e+02
-   4.1761e+02   3.6054e+02   3.6146e+02
-   4.3431e+02   3.7720e+02   2.5285e+02
-   4.3455e+02   3.7012e+02   2.9531e+02
-   4.3524e+02   3.7056e+02   3.2599e+02
-   4.3309e+02   3.8284e+02   3.9389e+02
-   4.3144e+02   3.8054e+02   3.5623e+02
-   4.3005e+02   3.8148e+02   3.2604e+02
-   4.3324e+02   3.8532e+02   3.7142e+02
-   4.3431e+02   3.7921e+02   3.9990e+02
-   4.3204e+02   3.8854e+02   2.9872e+02
-   4.3402e+02   3.8031e+02   5.9950e+02
-   4.3392e+02   3.7468e+02   2.6511e+02
-   4.3484e+02   3.7346e+02   3.6454e+02
-   4.3414e+02   3.7836e+02   4.5998e+02
-   4.3267e+02   3.8712e+02   5.0144e+02
-   4.3533e+02   3.7202e+02   3.2116e+02
-   4.3047e+02   3.8682e+02   4.6893e+02
-   4.3364e+02   3.7397e+02   3.1000e+02
-   4.3435e+02   3.7557e+02   3.7822e+02
-   4.2999e+02   3.9054e+02   5.1589e+02
-   4.3631e+02   3.6910e+02   2.7100e+02
-   4.3009e+02   3.9667e+02   4.2568e+02
-   4.3334e+02   3.7035e+02   2.2859e+02
-   4.3447e+02   3.7499e+02   4.6941e+02
-   4.3127e+02   3.8991e+02   4.7690e+02
-   4.3246e+02   3.7469e+02   3.5645e+02
-   4.3270e+02   3.7581e+02   3.1436e+02
-   4.3009e+02   3.7357e+02   4.2449e+02
-   4.3521e+02   3.7518e+02   3.1885e+02
-   4.2936e+02   3.8444e+02   4.1708e+02
-   4.3473e+02   3.6973e+02   3.9098e+02
-   4.3506e+02   3.7301e+02   2.8513e+02
-   4.3486e+02   3.7768e+02   4.7522e+02
-CV for trace random estimator using 50 runs is    0.0001
-   0.0004
-   0.0049
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update60 3
-traceCV
-   0.0001
-   0.0004
-   0.0041
-temp_mat
-   4.3186e+02   3.8702e+02   4.5957e+02
-   4.3114e+02   3.8690e+02   3.0285e+02
-   4.3335e+02   3.8204e+02   2.8966e+02
-   4.3292e+02   3.8152e+02   3.8506e+02
-   4.2899e+02   3.8866e+02   3.7426e+02
-   4.3093e+02   3.6808e+02   3.2329e+02
-   4.2990e+02   3.7499e+02   2.8930e+02
-   4.3553e+02   3.7137e+02   2.1242e+02
-   4.3657e+02   3.6800e+02   4.6242e+02
-   4.2802e+02   3.9703e+02   3.3178e+02
-   4.3308e+02   3.7302e+02   3.8846e+02
-   4.3235e+02   3.6900e+02   3.3111e+02
-   4.3586e+02   3.7390e+02   3.8334e+02
-   4.3184e+02   3.8914e+02   4.7192e+02
-   4.2825e+02   3.7392e+02   5.7441e+02
-   4.3060e+02   3.7021e+02   5.0531e+02
-   4.2842e+02   3.8463e+02   6.1373e+02
-   4.1761e+02   3.6054e+02   3.6146e+02
-   4.3431e+02   3.7720e+02   2.5285e+02
-   4.3455e+02   3.7012e+02   2.9531e+02
-   4.3524e+02   3.7056e+02   3.2599e+02
-   4.3309e+02   3.8284e+02   3.9389e+02
-   4.3144e+02   3.8054e+02   3.5623e+02
-   4.3005e+02   3.8148e+02   3.2604e+02
-   4.3324e+02   3.8532e+02   3.7142e+02
-   4.3431e+02   3.7921e+02   3.9990e+02
-   4.3204e+02   3.8854e+02   2.9872e+02
-   4.3402e+02   3.8031e+02   5.9950e+02
-   4.3392e+02   3.7468e+02   2.6511e+02
-   4.3484e+02   3.7346e+02   3.6454e+02
-   4.3414e+02   3.7836e+02   4.5998e+02
-   4.3267e+02   3.8712e+02   5.0144e+02
-   4.3533e+02   3.7202e+02   3.2116e+02
-   4.3047e+02   3.8682e+02   4.6893e+02
-   4.3364e+02   3.7397e+02   3.1000e+02
-   4.3435e+02   3.7557e+02   3.7822e+02
-   4.2999e+02   3.9054e+02   5.1589e+02
-   4.3631e+02   3.6910e+02   2.7100e+02
-   4.3009e+02   3.9667e+02   4.2568e+02
-   4.3334e+02   3.7035e+02   2.2859e+02
-   4.3447e+02   3.7499e+02   4.6941e+02
-   4.3127e+02   3.8991e+02   4.7690e+02
-   4.3246e+02   3.7469e+02   3.5645e+02
-   4.3270e+02   3.7581e+02   3.1436e+02
-   4.3009e+02   3.7357e+02   4.2449e+02
-   4.3521e+02   3.7518e+02   3.1885e+02
-   4.2936e+02   3.8444e+02   4.1708e+02
-   4.3473e+02   3.6973e+02   3.9098e+02
-   4.3506e+02   3.7301e+02   2.8513e+02
-   4.3486e+02   3.7768e+02   4.7522e+02
-   4.3512e+02   3.7525e+02   3.3481e+02
-   4.3319e+02   3.7763e+02   4.3062e+02
-   4.3543e+02   3.7225e+02   3.0188e+02
-   4.3231e+02   3.8454e+02   3.3573e+02
-   4.2578e+02   4.0654e+02   3.3937e+02
-   4.3270e+02   3.8255e+02   5.2553e+02
-   4.3583e+02   3.7180e+02   2.8410e+02
-   4.3324e+02   3.7890e+02   3.3155e+02
-   4.3215e+02   3.8730e+02   2.9031e+02
-   4.3055e+02   3.6767e+02   2.6666e+02
-CV for trace random estimator using 60 runs is    0.0001
-   0.0004
-   0.0041
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update70 3
-traceCV
-   9.8455e-05
-   3.1723e-04
-   3.6654e-03
-temp_mat
-   4.3186e+02   3.8702e+02   4.5957e+02
-   4.3114e+02   3.8690e+02   3.0285e+02
-   4.3335e+02   3.8204e+02   2.8966e+02
-   4.3292e+02   3.8152e+02   3.8506e+02
-   4.2899e+02   3.8866e+02   3.7426e+02
-   4.3093e+02   3.6808e+02   3.2329e+02
-   4.2990e+02   3.7499e+02   2.8930e+02
-   4.3553e+02   3.7137e+02   2.1242e+02
-   4.3657e+02   3.6800e+02   4.6242e+02
-   4.2802e+02   3.9703e+02   3.3178e+02
-   4.3308e+02   3.7302e+02   3.8846e+02
-   4.3235e+02   3.6900e+02   3.3111e+02
-   4.3586e+02   3.7390e+02   3.8334e+02
-   4.3184e+02   3.8914e+02   4.7192e+02
-   4.2825e+02   3.7392e+02   5.7441e+02
-   4.3060e+02   3.7021e+02   5.0531e+02
-   4.2842e+02   3.8463e+02   6.1373e+02
-   4.1761e+02   3.6054e+02   3.6146e+02
-   4.3431e+02   3.7720e+02   2.5285e+02
-   4.3455e+02   3.7012e+02   2.9531e+02
-   4.3524e+02   3.7056e+02   3.2599e+02
-   4.3309e+02   3.8284e+02   3.9389e+02
-   4.3144e+02   3.8054e+02   3.5623e+02
-   4.3005e+02   3.8148e+02   3.2604e+02
-   4.3324e+02   3.8532e+02   3.7142e+02
-   4.3431e+02   3.7921e+02   3.9990e+02
-   4.3204e+02   3.8854e+02   2.9872e+02
-   4.3402e+02   3.8031e+02   5.9950e+02
-   4.3392e+02   3.7468e+02   2.6511e+02
-   4.3484e+02   3.7346e+02   3.6454e+02
-   4.3414e+02   3.7836e+02   4.5998e+02
-   4.3267e+02   3.8712e+02   5.0144e+02
-   4.3533e+02   3.7202e+02   3.2116e+02
-   4.3047e+02   3.8682e+02   4.6893e+02
-   4.3364e+02   3.7397e+02   3.1000e+02
-   4.3435e+02   3.7557e+02   3.7822e+02
-   4.2999e+02   3.9054e+02   5.1589e+02
-   4.3631e+02   3.6910e+02   2.7100e+02
-   4.3009e+02   3.9667e+02   4.2568e+02
-   4.3334e+02   3.7035e+02   2.2859e+02
-   4.3447e+02   3.7499e+02   4.6941e+02
-   4.3127e+02   3.8991e+02   4.7690e+02
-   4.3246e+02   3.7469e+02   3.5645e+02
-   4.3270e+02   3.7581e+02   3.1436e+02
-   4.3009e+02   3.7357e+02   4.2449e+02
-   4.3521e+02   3.7518e+02   3.1885e+02
-   4.2936e+02   3.8444e+02   4.1708e+02
-   4.3473e+02   3.6973e+02   3.9098e+02
-   4.3506e+02   3.7301e+02   2.8513e+02
-   4.3486e+02   3.7768e+02   4.7522e+02
-   4.3512e+02   3.7525e+02   3.3481e+02
-   4.3319e+02   3.7763e+02   4.3062e+02
-   4.3543e+02   3.7225e+02   3.0188e+02
-   4.3231e+02   3.8454e+02   3.3573e+02
-   4.2578e+02   4.0654e+02   3.3937e+02
-   4.3270e+02   3.8255e+02   5.2553e+02
-   4.3583e+02   3.7180e+02   2.8410e+02
-   4.3324e+02   3.7890e+02   3.3155e+02
-   4.3215e+02   3.8730e+02   2.9031e+02
-   4.3055e+02   3.6767e+02   2.6666e+02
-   4.2842e+02   3.7815e+02   3.9309e+02
-   4.2889e+02   3.7338e+02   7.0764e+02
-   4.2971e+02   3.9080e+02   3.1167e+02
-   4.3063e+02   3.8624e+02   4.9258e+02
-   4.2769e+02   3.9075e+02   2.8270e+02
-   4.3247e+02   3.8411e+02   3.8788e+02
-   4.3324e+02   3.8006e+02   2.7906e+02
-   4.3166e+02   3.7613e+02   3.8370e+02
-   4.2985e+02   3.9059e+02   4.3381e+02
-   4.3265e+02   3.8883e+02   2.8483e+02
-CV for trace random estimator using 70 runs is    9.8455e-05
-   3.1723e-04
-   3.6654e-03
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update80 3
-traceCV
-   8.3406e-05
-   2.7190e-04
-   3.1422e-03
-temp_mat
-   4.3186e+02   3.8702e+02   4.5957e+02
-   4.3114e+02   3.8690e+02   3.0285e+02
-   4.3335e+02   3.8204e+02   2.8966e+02
-   4.3292e+02   3.8152e+02   3.8506e+02
-   4.2899e+02   3.8866e+02   3.7426e+02
-   4.3093e+02   3.6808e+02   3.2329e+02
-   4.2990e+02   3.7499e+02   2.8930e+02
-   4.3553e+02   3.7137e+02   2.1242e+02
-   4.3657e+02   3.6800e+02   4.6242e+02
-   4.2802e+02   3.9703e+02   3.3178e+02
-   4.3308e+02   3.7302e+02   3.8846e+02
-   4.3235e+02   3.6900e+02   3.3111e+02
-   4.3586e+02   3.7390e+02   3.8334e+02
-   4.3184e+02   3.8914e+02   4.7192e+02
-   4.2825e+02   3.7392e+02   5.7441e+02
-   4.3060e+02   3.7021e+02   5.0531e+02
-   4.2842e+02   3.8463e+02   6.1373e+02
-   4.1761e+02   3.6054e+02   3.6146e+02
-   4.3431e+02   3.7720e+02   2.5285e+02
-   4.3455e+02   3.7012e+02   2.9531e+02
-   4.3524e+02   3.7056e+02   3.2599e+02
-   4.3309e+02   3.8284e+02   3.9389e+02
-   4.3144e+02   3.8054e+02   3.5623e+02
-   4.3005e+02   3.8148e+02   3.2604e+02
-   4.3324e+02   3.8532e+02   3.7142e+02
-   4.3431e+02   3.7921e+02   3.9990e+02
-   4.3204e+02   3.8854e+02   2.9872e+02
-   4.3402e+02   3.8031e+02   5.9950e+02
-   4.3392e+02   3.7468e+02   2.6511e+02
-   4.3484e+02   3.7346e+02   3.6454e+02
-   4.3414e+02   3.7836e+02   4.5998e+02
-   4.3267e+02   3.8712e+02   5.0144e+02
-   4.3533e+02   3.7202e+02   3.2116e+02
-   4.3047e+02   3.8682e+02   4.6893e+02
-   4.3364e+02   3.7397e+02   3.1000e+02
-   4.3435e+02   3.7557e+02   3.7822e+02
-   4.2999e+02   3.9054e+02   5.1589e+02
-   4.3631e+02   3.6910e+02   2.7100e+02
-   4.3009e+02   3.9667e+02   4.2568e+02
-   4.3334e+02   3.7035e+02   2.2859e+02
-   4.3447e+02   3.7499e+02   4.6941e+02
-   4.3127e+02   3.8991e+02   4.7690e+02
-   4.3246e+02   3.7469e+02   3.5645e+02
-   4.3270e+02   3.7581e+02   3.1436e+02
-   4.3009e+02   3.7357e+02   4.2449e+02
-   4.3521e+02   3.7518e+02   3.1885e+02
-   4.2936e+02   3.8444e+02   4.1708e+02
-   4.3473e+02   3.6973e+02   3.9098e+02
-   4.3506e+02   3.7301e+02   2.8513e+02
-   4.3486e+02   3.7768e+02   4.7522e+02
-   4.3512e+02   3.7525e+02   3.3481e+02
-   4.3319e+02   3.7763e+02   4.3062e+02
-   4.3543e+02   3.7225e+02   3.0188e+02
-   4.3231e+02   3.8454e+02   3.3573e+02
-   4.2578e+02   4.0654e+02   3.3937e+02
-   4.3270e+02   3.8255e+02   5.2553e+02
-   4.3583e+02   3.7180e+02   2.8410e+02
-   4.3324e+02   3.7890e+02   3.3155e+02
-   4.3215e+02   3.8730e+02   2.9031e+02
-   4.3055e+02   3.6767e+02   2.6666e+02
-   4.2842e+02   3.7815e+02   3.9309e+02
-   4.2889e+02   3.7338e+02   7.0764e+02
-   4.2971e+02   3.9080e+02   3.1167e+02
-   4.3063e+02   3.8624e+02   4.9258e+02
-   4.2769e+02   3.9075e+02   2.8270e+02
-   4.3247e+02   3.8411e+02   3.8788e+02
-   4.3324e+02   3.8006e+02   2.7906e+02
-   4.3166e+02   3.7613e+02   3.8370e+02
-   4.2985e+02   3.9059e+02   4.3381e+02
-   4.3265e+02   3.8883e+02   2.8483e+02
-   4.3482e+02   3.7623e+02   2.8986e+02
-   4.3444e+02   3.7723e+02   4.5679e+02
-   4.3514e+02   3.7086e+02   4.4590e+02
-   4.3400e+02   3.7846e+02   5.2333e+02
-   4.3394e+02   3.7980e+02   3.6198e+02
-   4.3264e+02   3.6317e+02   2.8652e+02
-   4.3122e+02   3.8612e+02   3.2815e+02
-   4.2985e+02   3.8514e+02   5.3262e+02
-   4.2959e+02   3.8061e+02   4.2705e+02
-   4.3009e+02   3.7230e+02   4.3433e+02
-CV for trace random estimator using 80 runs is    8.3406e-05
-   2.7190e-04
-   3.1422e-03
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-dim temp_mat_update90 3
-traceCV
-   7.3608e-05
-   2.4595e-04
-   2.7313e-03
-temp_mat
-   4.3186e+02   3.8702e+02   4.5957e+02
-   4.3114e+02   3.8690e+02   3.0285e+02
-   4.3335e+02   3.8204e+02   2.8966e+02
-   4.3292e+02   3.8152e+02   3.8506e+02
-   4.2899e+02   3.8866e+02   3.7426e+02
-   4.3093e+02   3.6808e+02   3.2329e+02
-   4.2990e+02   3.7499e+02   2.8930e+02
-   4.3553e+02   3.7137e+02   2.1242e+02
-   4.3657e+02   3.6800e+02   4.6242e+02
-   4.2802e+02   3.9703e+02   3.3178e+02
-   4.3308e+02   3.7302e+02   3.8846e+02
-   4.3235e+02   3.6900e+02   3.3111e+02
-   4.3586e+02   3.7390e+02   3.8334e+02
-   4.3184e+02   3.8914e+02   4.7192e+02
-   4.2825e+02   3.7392e+02   5.7441e+02
-   4.3060e+02   3.7021e+02   5.0531e+02
-   4.2842e+02   3.8463e+02   6.1373e+02
-   4.1761e+02   3.6054e+02   3.6146e+02
-   4.3431e+02   3.7720e+02   2.5285e+02
-   4.3455e+02   3.7012e+02   2.9531e+02
-   4.3524e+02   3.7056e+02   3.2599e+02
-   4.3309e+02   3.8284e+02   3.9389e+02
-   4.3144e+02   3.8054e+02   3.5623e+02
-   4.3005e+02   3.8148e+02   3.2604e+02
-   4.3324e+02   3.8532e+02   3.7142e+02
-   4.3431e+02   3.7921e+02   3.9990e+02
-   4.3204e+02   3.8854e+02   2.9872e+02
-   4.3402e+02   3.8031e+02   5.9950e+02
-   4.3392e+02   3.7468e+02   2.6511e+02
-   4.3484e+02   3.7346e+02   3.6454e+02
-   4.3414e+02   3.7836e+02   4.5998e+02
-   4.3267e+02   3.8712e+02   5.0144e+02
-   4.3533e+02   3.7202e+02   3.2116e+02
-   4.3047e+02   3.8682e+02   4.6893e+02
-   4.3364e+02   3.7397e+02   3.1000e+02
-   4.3435e+02   3.7557e+02   3.7822e+02
-   4.2999e+02   3.9054e+02   5.1589e+02
-   4.3631e+02   3.6910e+02   2.7100e+02
-   4.3009e+02   3.9667e+02   4.2568e+02
-   4.3334e+02   3.7035e+02   2.2859e+02
-   4.3447e+02   3.7499e+02   4.6941e+02
-   4.3127e+02   3.8991e+02   4.7690e+02
-   4.3246e+02   3.7469e+02   3.5645e+02
-   4.3270e+02   3.7581e+02   3.1436e+02
-   4.3009e+02   3.7357e+02   4.2449e+02
-   4.3521e+02   3.7518e+02   3.1885e+02
-   4.2936e+02   3.8444e+02   4.1708e+02
-   4.3473e+02   3.6973e+02   3.9098e+02
-   4.3506e+02   3.7301e+02   2.8513e+02
-   4.3486e+02   3.7768e+02   4.7522e+02
-   4.3512e+02   3.7525e+02   3.3481e+02
-   4.3319e+02   3.7763e+02   4.3062e+02
-   4.3543e+02   3.7225e+02   3.0188e+02
-   4.3231e+02   3.8454e+02   3.3573e+02
-   4.2578e+02   4.0654e+02   3.3937e+02
-   4.3270e+02   3.8255e+02   5.2553e+02
-   4.3583e+02   3.7180e+02   2.8410e+02
-   4.3324e+02   3.7890e+02   3.3155e+02
-   4.3215e+02   3.8730e+02   2.9031e+02
-   4.3055e+02   3.6767e+02   2.6666e+02
-   4.2842e+02   3.7815e+02   3.9309e+02
-   4.2889e+02   3.7338e+02   7.0764e+02
-   4.2971e+02   3.9080e+02   3.1167e+02
-   4.3063e+02   3.8624e+02   4.9258e+02
-   4.2769e+02   3.9075e+02   2.8270e+02
-   4.3247e+02   3.8411e+02   3.8788e+02
-   4.3324e+02   3.8006e+02   2.7906e+02
-   4.3166e+02   3.7613e+02   3.8370e+02
-   4.2985e+02   3.9059e+02   4.3381e+02
-   4.3265e+02   3.8883e+02   2.8483e+02
-   4.3482e+02   3.7623e+02   2.8986e+02
-   4.3444e+02   3.7723e+02   4.5679e+02
-   4.3514e+02   3.7086e+02   4.4590e+02
-   4.3400e+02   3.7846e+02   5.2333e+02
-   4.3394e+02   3.7980e+02   3.6198e+02
-   4.3264e+02   3.6317e+02   2.8652e+02
-   4.3122e+02   3.8612e+02   3.2815e+02
-   4.2985e+02   3.8514e+02   5.3262e+02
-   4.2959e+02   3.8061e+02   4.2705e+02
-   4.3009e+02   3.7230e+02   4.3433e+02
-   4.3386e+02   3.8310e+02   2.9415e+02
-   4.3289e+02   3.7897e+02   3.3273e+02
-   4.3490e+02   3.7637e+02   5.0761e+02
-   4.2800e+02   3.9992e+02   4.3300e+02
-   4.2720e+02   3.8571e+02   3.5501e+02
-   4.3408e+02   3.7969e+02   2.7874e+02
-   4.3285e+02   3.6397e+02   4.8807e+02
-   4.3234e+02   3.7787e+02   4.3641e+02
-   4.3142e+02   3.8924e+02   4.6122e+02
-   4.2833e+02   3.8825e+02   3.4619e+02
-CV for trace random estimator using 90 runs is    7.3608e-05
-   2.4595e-04
-   2.7313e-03
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
-use sparse kinship to fit the model 
-tauVec(i+2) 0
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
+use sparse kinship to fit the model 
 dim temp_mat_update100 3
-traceCV
-   6.7939e-05
-   2.2433e-04
-   2.3963e-03
-temp_mat
-   4.3186e+02   3.8702e+02   4.5957e+02
-   4.3114e+02   3.8690e+02   3.0285e+02
-   4.3335e+02   3.8204e+02   2.8966e+02
-   4.3292e+02   3.8152e+02   3.8506e+02
-   4.2899e+02   3.8866e+02   3.7426e+02
-   4.3093e+02   3.6808e+02   3.2329e+02
-   4.2990e+02   3.7499e+02   2.8930e+02
-   4.3553e+02   3.7137e+02   2.1242e+02
-   4.3657e+02   3.6800e+02   4.6242e+02
-   4.2802e+02   3.9703e+02   3.3178e+02
-   4.3308e+02   3.7302e+02   3.8846e+02
-   4.3235e+02   3.6900e+02   3.3111e+02
-   4.3586e+02   3.7390e+02   3.8334e+02
-   4.3184e+02   3.8914e+02   4.7192e+02
-   4.2825e+02   3.7392e+02   5.7441e+02
-   4.3060e+02   3.7021e+02   5.0531e+02
-   4.2842e+02   3.8463e+02   6.1373e+02
-   4.1761e+02   3.6054e+02   3.6146e+02
-   4.3431e+02   3.7720e+02   2.5285e+02
-   4.3455e+02   3.7012e+02   2.9531e+02
-   4.3524e+02   3.7056e+02   3.2599e+02
-   4.3309e+02   3.8284e+02   3.9389e+02
-   4.3144e+02   3.8054e+02   3.5623e+02
-   4.3005e+02   3.8148e+02   3.2604e+02
-   4.3324e+02   3.8532e+02   3.7142e+02
-   4.3431e+02   3.7921e+02   3.9990e+02
-   4.3204e+02   3.8854e+02   2.9872e+02
-   4.3402e+02   3.8031e+02   5.9950e+02
-   4.3392e+02   3.7468e+02   2.6511e+02
-   4.3484e+02   3.7346e+02   3.6454e+02
-   4.3414e+02   3.7836e+02   4.5998e+02
-   4.3267e+02   3.8712e+02   5.0144e+02
-   4.3533e+02   3.7202e+02   3.2116e+02
-   4.3047e+02   3.8682e+02   4.6893e+02
-   4.3364e+02   3.7397e+02   3.1000e+02
-   4.3435e+02   3.7557e+02   3.7822e+02
-   4.2999e+02   3.9054e+02   5.1589e+02
-   4.3631e+02   3.6910e+02   2.7100e+02
-   4.3009e+02   3.9667e+02   4.2568e+02
-   4.3334e+02   3.7035e+02   2.2859e+02
-   4.3447e+02   3.7499e+02   4.6941e+02
-   4.3127e+02   3.8991e+02   4.7690e+02
-   4.3246e+02   3.7469e+02   3.5645e+02
-   4.3270e+02   3.7581e+02   3.1436e+02
-   4.3009e+02   3.7357e+02   4.2449e+02
-   4.3521e+02   3.7518e+02   3.1885e+02
-   4.2936e+02   3.8444e+02   4.1708e+02
-   4.3473e+02   3.6973e+02   3.9098e+02
-   4.3506e+02   3.7301e+02   2.8513e+02
-   4.3486e+02   3.7768e+02   4.7522e+02
-   4.3512e+02   3.7525e+02   3.3481e+02
-   4.3319e+02   3.7763e+02   4.3062e+02
-   4.3543e+02   3.7225e+02   3.0188e+02
-   4.3231e+02   3.8454e+02   3.3573e+02
-   4.2578e+02   4.0654e+02   3.3937e+02
-   4.3270e+02   3.8255e+02   5.2553e+02
-   4.3583e+02   3.7180e+02   2.8410e+02
-   4.3324e+02   3.7890e+02   3.3155e+02
-   4.3215e+02   3.8730e+02   2.9031e+02
-   4.3055e+02   3.6767e+02   2.6666e+02
-   4.2842e+02   3.7815e+02   3.9309e+02
-   4.2889e+02   3.7338e+02   7.0764e+02
-   4.2971e+02   3.9080e+02   3.1167e+02
-   4.3063e+02   3.8624e+02   4.9258e+02
-   4.2769e+02   3.9075e+02   2.8270e+02
-   4.3247e+02   3.8411e+02   3.8788e+02
-   4.3324e+02   3.8006e+02   2.7906e+02
-   4.3166e+02   3.7613e+02   3.8370e+02
-   4.2985e+02   3.9059e+02   4.3381e+02
-   4.3265e+02   3.8883e+02   2.8483e+02
-   4.3482e+02   3.7623e+02   2.8986e+02
-   4.3444e+02   3.7723e+02   4.5679e+02
-   4.3514e+02   3.7086e+02   4.4590e+02
-   4.3400e+02   3.7846e+02   5.2333e+02
-   4.3394e+02   3.7980e+02   3.6198e+02
-   4.3264e+02   3.6317e+02   2.8652e+02
-   4.3122e+02   3.8612e+02   3.2815e+02
-   4.2985e+02   3.8514e+02   5.3262e+02
-   4.2959e+02   3.8061e+02   4.2705e+02
-   4.3009e+02   3.7230e+02   4.3433e+02
-   4.3386e+02   3.8310e+02   2.9415e+02
-   4.3289e+02   3.7897e+02   3.3273e+02
-   4.3490e+02   3.7637e+02   5.0761e+02
-   4.2800e+02   3.9992e+02   4.3300e+02
-   4.2720e+02   3.8571e+02   3.5501e+02
-   4.3408e+02   3.7969e+02   2.7874e+02
-   4.3285e+02   3.6397e+02   4.8807e+02
-   4.3234e+02   3.7787e+02   4.3641e+02
-   4.3142e+02   3.8924e+02   4.6122e+02
-   4.2833e+02   3.8825e+02   3.4619e+02
-   4.3170e+02   3.8451e+02   3.7779e+02
-   4.3364e+02   3.8353e+02   3.7933e+02
-   4.3348e+02   3.6774e+02   4.0183e+02
-   4.3370e+02   3.8419e+02   3.8563e+02
-   4.3280e+02   3.7900e+02   4.6310e+02
-   4.2924e+02   3.7649e+02   4.0308e+02
-   4.2266e+02   4.0467e+02   5.0393e+02
-   4.2772e+02   3.7224e+02   2.6356e+02
-   4.3249e+02   3.8204e+02   2.8431e+02
-   4.3175e+02   3.7971e+02   3.9165e+02
 YPAPY_update
    4.2642e+02
    3.7311e+02
@@ -4599,19 +1070,16 @@ AI1
    3.4002e+02   3.8504e+02   3.4028e+03
 t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
    user  system elapsed 
-  0.958   0.024   0.983 
+  0.921   0.055   0.978 
 [1] 0.002180788 0.011413038 0.000000000
 tau:  0.773446 0.167778 0 
 tau0:  0.7700364 0.1718828 0 
 
 Final  0.773446 0.167778 0 :
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 after Sigma_iY
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 Tau:
 [1] 0.773446 0.167778 0.000000
 Fixed-effect coefficients:
@@ -4624,7 +1092,7 @@ Fixed-effect coefficients:
 [2,] 0.5331157
 t_end_null - t_begin, fitting the NULL model without LOCO took
    user  system elapsed 
-  3.386   0.104   3.490 
+  3.297   0.155   3.453 
     IID X.Intercept. sex y.repeated IndexPheno IndexGeno covoffset
 1     1            1   0       1.83        207         1         0
 112   2            1   1       1.43        301         2         0
@@ -4641,13 +1109,11 @@ t_end_null - t_begin, fitting the NULL model without LOCO took
 357   1
 [1] 0.5331157
 use sparse kinship to fit the model 
-tauVec(i+2) 0
 use sparse kinship to fit the model 
-tauVec(i+2) 0
    user  system elapsed 
-  4.705   0.223   4.941 
+  4.588   0.306   4.899 
 t_end - t_begin, fitting the NULL model took
    user  system elapsed 
-  3.506   0.108   3.616 
+  3.417   0.160   3.578 
 Skip estimating variance ratios
 closed the plinkFile!

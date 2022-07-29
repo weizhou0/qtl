@@ -27,6 +27,8 @@ option_list <- list(
     help="Optional. Only for quantitative. Whether to perform the inverse normalization for the phenotype [default='FALSE']"),
   make_option("--covarColList", type="character", default="",
     help="List of covariates (comma separated)"),
+  make_option("--longlCol", type="character", default="",
+    help=""),	      
   make_option("--qCovarColList", type="character", default="",
     help="List of categorical covariates (comma separated). All categorical covariates must also be in covarColList"),
   make_option("--sampleIDColinphenoFile", type="character", default="IID",
@@ -147,7 +149,7 @@ cateVarRatioMaxMACVecInclude <- convertoNumeric(x=strsplit(opt$cateVarRatioMaxMA
 
 #set seed
 set.seed(1)
-if(packageVersion("SAIGE")<"1.1.3"){
+if(packageVersion("SAIGE")<"1.1.4"){
 
 fitNULLGLMM(plinkFile=opt$plinkFile,
 	    bedFile=opt$bedFile,
@@ -253,6 +255,7 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
 	    MaleOnly=opt$MaleOnly,
 	    SampleIDIncludeFile=opt$SampleIDIncludeFile,
 	    VmatFilelist=opt$VmatFilelist,
-	    VmatSampleFilelist=opt$VmatSampleFilelist
+	    VmatSampleFilelist=opt$VmatSampleFilelist,
+	    longlCol=opt$longlCol
 	)
 }	

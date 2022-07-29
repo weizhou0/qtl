@@ -4035,7 +4035,16 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
 	std::cout << "k1 " << k1 << std::endl;
 	arma::fmat Sigma_iXt = Sigma_iX.t();
         arma::fmat Xmatt = Xmat.t();
+	
+	//Sigma_iY.print("Sigma_iY");
+	//Sigma_iX.print("Sigma_iX");
+	//cov.print("cov");
+	//Sigma_iXt.print("Sigma_iXt");
+	//Yvec.print("Yvec");
+
 	arma::fvec PY1 = Sigma_iY - Sigma_iX * (cov * (Sigma_iXt * Yvec));
+
+	//PY1.print("PY1");
 	//arma::fvec APY = getCrossprodMatAndKin(PY1);
 	//float YPAPY = dot(PY1, APY);
         //arma::fvec A0PY = PY1; ////Quantitative
@@ -4167,16 +4176,21 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
 	Dtau.print("Dtau");
 	score1.print("score1");
 	AI1.print("AI1");
-	// fill dtau using dtau_pre, padding 0
-	//int i2 = 0;
 	//
 	//
 	arma::fvec Dtau_k1(k1);
 	Dtau_k1.zeros();
+
+	std::cout << "k1 " << k1 << std::endl;
+	fixtauVec.print("fixtauVec");
+
+	// fill dtau using dtau_pre, padding 0
+	int i2 = 0;
 	for(int i=0; i<k1; i++){
+		std::cout << "i " << i << std::endl;
 		if(fixtauVec(i)==0){ // not fixed
-			Dtau_k1(i) = Dtau(i);
-			//i2++;
+			Dtau_k1(i) = Dtau(i2);
+			i2++;
 		} 
 	} // end for i
 	Dtau_k1.print("Dtau_k1");	

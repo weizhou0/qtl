@@ -67,6 +67,21 @@
 
 
 
+	 Rscript step1_fitNULLGLMM_1.1.3.R     \
+ --sparseGRMFile=./GMMAT_GRM.mtx \
+                --sparseGRMSampleIDFile=./GMMAT_sampleID.txt    \
+        --useSparseGRMtoFitNULL=TRUE    \
+        --phenoFile=./GMMAT_pheno.txt   \
+        --phenoCol=disease      \
+        --covarColList=age,sex  \
+        --sampleIDColinphenoFile=id     \
+        --traitType=binary      \
+        --outputPrefix=GMMAT_binary_multiV_1.1.4        \
+        --skipVarianceRatioEstimation=TRUE      \
+       --isCovariateOffset=FALSE       \
+        --isCovariateTransform=FALSE
+
+
         Rscript step1_fitNULLGLMM_1.1.4.R     \
                 --sparseGRMFile=./GMMAT_GRM.mtx \
                 --sparseGRMSampleIDFile=./GMMAT_sampleID.txt    \
@@ -98,10 +113,34 @@
         --isCovariateTransform=FALSE    &> step1_singleV_quantitative.log
 
 
-
-        Rscript step1_fitNULLGLMM_1.1.4.R     \
+	        Rscript step1_fitNULLGLMM_1.1.4.R     \
                 --sparseGRMFile=./GMMAT_GRM.mtx \
                 --sparseGRMSampleIDFile=./GMMAT_sampleID.txt    \
+        --useSparseGRMtoFitNULL=TRUE    \
+        --phenoFile=./GMMAT_pheno_quantitative_repeat.txt   \
+        --phenoCol=y.trend      \
+	--longlCol=time	\
+        --covarColList=sex  \
+        --sampleIDColinphenoFile=id     \
+        --traitType=quantitative      \
+        --invNormalize=FALSE    \
+        --outputPrefix=GMMAT_quantitative_1.1.4        \
+        --skipVarianceRatioEstimation=TRUE      \
+       --isCovariateOffset=FALSE       \
+        --isCovariateTransform=FALSE
+
+
+
+
+ Rscript step1_fitNULLGLMM_1.1.4.R                     --sparseGRMFile=./GMMAT_GRM.mtx                 --sparseGRMSampleIDFile=./GMMAT_sampleID.txt            --useSparseGRMtoFitNULL=TRUE            --phenoFile=./GMMAT_pheno_quantitative.txt           --phenoCol=y.repeated              --covarColList=sex          --sampleIDColinphenoFile=id             --traitType=quantitative              --invNormalize=FALSE            --outputPrefix=GMMAT_quantitative_1.1.4                --skipVarianceRatioEstimation=TRUE             --isCovariateOffset=FALSE               --isCovariateTransform=FALSE --nrun=100 &> step1_fitNULLGLMM_1.1.4.log
+
+
+
+
+
+        Rscript step1_fitNULLGLMM_1.1.4.R     \
+        --sparseGRMFile=./GMMAT_GRM.mtx \
+        --sparseGRMSampleIDFile=./GMMAT_sampleID.txt    \
         --useSparseGRMtoFitNULL=TRUE    \
         --phenoFile=./GMMAT_pheno_quantitative.txt   \
         --phenoCol=y.repeated      \
@@ -117,6 +156,39 @@
         --isCovariateTransform=FALSE    &> step1_singleV_quantitative.log
 
 
+
+ Rscript step1_fitNULLGLMM_1.1.4.R     \
+                --sparseGRMFile=./GMMAT_GRM.mtx \
+                --sparseGRMSampleIDFile=./GMMAT_sampleID.txt    \
+        --useSparseGRMtoFitNULL=TRUE    \
+        --phenoFile=./GMMAT_pheno_quantitative_repeat.txt   \
+        --phenoCol=y.repeated      \
+        --covarColList=sex  \
+        --sampleIDColinphenoFile=id     \
+        --traitType=quantitative      \
+        --invNormalize=FALSE    \
+        --outputPrefix=GMMAT_quantitative_multiV_1.1.4        \
+        --skipVarianceRatioEstimation=TRUE      \
+        --VmatFilelist="I.mtx"  \
+        --VmatSampleFilelist="./GMMAT_sampleID.txt"     \
+       --isCovariateOffset=FALSE       \
+        --isCovariateTransform=FALSE    &> step1_repeat_quantitative.log
+
+
+  Rscript step1_fitNULLGLMM_1.1.4.R     \
+                --sparseGRMFile=./GMMAT_GRM.mtx \
+                --sparseGRMSampleIDFile=./GMMAT_sampleID.txt    \
+        --useSparseGRMtoFitNULL=TRUE    \
+        --phenoFile=./GMMAT_pheno_quantitative_repeat.txt   \
+        --phenoCol=y.repeated      \
+        --covarColList=sex  \
+        --sampleIDColinphenoFile=id     \
+        --traitType=quantitative      \
+        --invNormalize=FALSE    \
+        --outputPrefix=GMMAT_quantitative_multiV_1.1.4        \
+        --skipVarianceRatioEstimation=TRUE      \
+       --isCovariateOffset=FALSE       \
+        --isCovariateTransform=FALSE
 
 
 
