@@ -749,6 +749,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
                                 modglmm$LOCOResult[[j]] = list(isLOCO = TRUE, coefficients=coef.alpha, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, obj.noK = obj.noK)
                                 if(!isCovariateOffset & hasCovariate){
+					 data.new.X = model.matrix(fit0)[,-1,drop=F]
                                          modglmm$LOCOResult[[j]]$offset = data.new.X %*%(as.vector(modglmm$LOCOResult[[j]]$coefficients[-1]))
                                 }
                                 modelOutbychr = paste(c(outputPrefix,"_chr",j,".rda"), collapse="")
@@ -1190,8 +1191,9 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   }else{#  if(family$family %in% c("poisson", "binomial")) {
     idxtau <- which(fixtau == 0)	  
     if(sum(tauInit[idxtau]) == 0){
-      #tau[idxtau] = var(Y)/(length(tau))
       tau[1] = 1
+      #tauInit[1] = 1    
+      tau[idxtau] = var(Y)/(length(tau))
       #tau[2] = 0
       #tau[2:length(tau)] = 0
       if (abs(var(Y)) < 0.1){
@@ -1202,7 +1204,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     }
   }
 
-    cat("inital tau is ", tau,"\n")
+  cat("inital tau is ", tau,"\n")
 
   if(!is.null(covarianceIdxMat)){
 	  idxtau2 <- intersect(covarianceIdxMat[, 1], idxtau)
@@ -1220,10 +1222,6 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
         tau[2:length(tau)] = tau[2:length(tau)]/Kmatdiag
   }
 
-    #q = 1
-    #tau = c(1, 1.300489, 1.338478)
-    #print("Kmatdiag")
-    #print(Kmatdiag)
     print("tau")
     print(tau)
     re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)

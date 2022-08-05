@@ -4202,18 +4202,18 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
 	arma::uvec covarianceidxVec1, covarianceidxVec_sub1, covarianceidxVec2, covarianceidxVec_sub2,covarianceidxVec3, covarianceidxVec_sub3;	
 
 	if(g_covarianceidxMat.n_rows == 0){
-		tauVec.elem( arma::find(tauVec < tol) ).zeros();
+		tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
 		float step = 1.0;
 		while ( arma::any(tauVec < 0.0) ){
 			step = step*0.5;
 			tauVec = tau0 + step*Dtau_k1;
+	 		tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
 	 	} // end while
-
-	 	tauVec.elem( arma::find(tauVec < tol) ).zeros();
+		tauVec.elem( arma::find(tauVec < tol) ).zeros();
 	}else{
 		fixrhoidx0 = updatefixrhoidx0(tau0, tol);
 		tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
-		tauVec.elem(g_covarianceidxMat_col1) = tau0.elem(g_covarianceidxMat_col1);
+		tauVec.elem(g_covarianceidxMat_col1) = tauVec.elem(g_covarianceidxMat_col1);
 		fixrhoidx = updatefixrhoidx0(tauVec, tol);
 		covarianceidxVec_sub1 = g_covarianceidxMat_col1.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
 		covarianceidxVec_sub2 = g_covarianceidxMat_col2.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
@@ -4228,7 +4228,7 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
                         step = step*0.5;
                         tauVec = tau0 + step*Dtau_k1;
 			tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
-                	tauVec.elem(g_covarianceidxMat_col1) = tau0.elem(g_covarianceidxMat_col1);
+                	tauVec.elem(g_covarianceidxMat_col1) = tauVec.elem(g_covarianceidxMat_col1);
 			fixrhoidx = updatefixrhoidx0(tauVec, tol);
                 	covarianceidxVec_sub1 = g_covarianceidxMat_col1.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
                 	covarianceidxVec_sub2 = g_covarianceidxMat_col2.elem(arma::find(fixrhoidx0 == 1 && fixrhoidx == 1));
@@ -4238,11 +4238,11 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
 			tauupdateidx = tauUpdateValue(tauVec);
 			Rcpp::checkUserInterrupt();
                 } // end while
-		tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
-                tauVec.elem(g_covarianceidxMat_col1) = tau0.elem(g_covarianceidxMat_col1);
-		covarianceidxVec_sub1 = g_covarianceidxMat_col1.elem(arma::find(fixrhoidx == 1));
-		covarianceidxVec_sub2 = g_covarianceidxMat_col2.elem(arma::find(fixrhoidx == 1));
-		covarianceidxVec_sub3 = g_covarianceidxMat_col3.elem(arma::find(fixrhoidx == 1));
+		tauVec.elem( arma::find(tauVec < tol) ).zeros();
+                tauVec.elem(g_covarianceidxMat_col1) = tauVec.elem(g_covarianceidxMat_col1);
+		//covarianceidxVec_sub1 = g_covarianceidxMat_col1.elem(arma::find(fixrhoidx == 1));
+		//covarianceidxVec_sub2 = g_covarianceidxMat_col2.elem(arma::find(fixrhoidx == 1));
+		//covarianceidxVec_sub3 = g_covarianceidxMat_col3.elem(arma::find(fixrhoidx == 1));
 		tauVecabs = tauVec.elem(covarianceidxVec_sub1) / arma::abs(tauVec.elem(covarianceidxVec_sub1));
                 tauVec.elem(covarianceidxVec_sub1) = tauVecabs % (arma::sqrt(tauVec.elem(covarianceidxVec_sub2) % tauVec.elem(covarianceidxVec_sub3)));
 	}	
