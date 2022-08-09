@@ -454,6 +454,28 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// set_I_longl_mat
+void set_I_longl_mat(arma::sp_mat& t_Ilongmat, arma::vec& t_I_longl_vec);
+RcppExport SEXP _SAIGE_set_I_longl_mat(SEXP t_IlongmatSEXP, SEXP t_I_longl_vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Ilongmat(t_IlongmatSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type t_I_longl_vec(t_I_longl_vecSEXP);
+    set_I_longl_mat(t_Ilongmat, t_I_longl_vec);
+    return R_NilValue;
+END_RCPP
+}
+// set_T_longl_mat
+void set_T_longl_mat(arma::sp_mat& t_Tlongmat, arma::vec& t_T_longl_vec);
+RcppExport SEXP _SAIGE_set_T_longl_mat(SEXP t_TlongmatSEXP, SEXP t_T_longl_vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Tlongmat(t_TlongmatSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type t_T_longl_vec(t_T_longl_vecSEXP);
+    set_T_longl_mat(t_Tlongmat, t_T_longl_vec);
+    return R_NilValue;
+END_RCPP
+}
 // addNewKat
 void addNewKat(arma::sp_mat& t_Kmat);
 RcppExport SEXP _SAIGE_addNewKat(SEXP t_KmatSEXP) {
@@ -475,13 +497,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// getMeanDiagofKmat
-arma::fvec getMeanDiagofKmat();
-RcppExport SEXP _SAIGE_getMeanDiagofKmat() {
+// set_num_Kmat
+void set_num_Kmat(int t_num_Kmat);
+RcppExport SEXP _SAIGE_set_num_Kmat(SEXP t_num_KmatSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type t_num_Kmat(t_num_KmatSEXP);
+    set_num_Kmat(t_num_Kmat);
+    return R_NilValue;
+END_RCPP
+}
+// getMeanDiagofKmat_largeMem
+arma::fvec getMeanDiagofKmat_largeMem();
+RcppExport SEXP _SAIGE_getMeanDiagofKmat_largeMem() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(getMeanDiagofKmat());
+    rcpp_result_gen = Rcpp::wrap(getMeanDiagofKmat_largeMem());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -851,6 +883,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getDiagOfSigma_largeMem__multiV
+arma::fvec getDiagOfSigma_largeMem__multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+RcppExport SEXP _SAIGE_getDiagOfSigma_largeMem__multiV(SEXP wVecSEXP, SEXP tauVecSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getDiagOfSigma_largeMem__multiV(wVec, tauVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getDiagOfSigma_multiV
 arma::fvec getDiagOfSigma_multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
 RcppExport SEXP _SAIGE_getDiagOfSigma_multiV(SEXP wVecSEXP, SEXP tauVecSEXP, SEXP LOCOSEXP) {
@@ -861,6 +906,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
     Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
     rcpp_result_gen = Rcpp::wrap(getDiagOfSigma_multiV(wVec, tauVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getCrossprod_largeMem_multiV
+arma::fcolvec getCrossprod_largeMem_multiV(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+RcppExport SEXP _SAIGE_getCrossprod_largeMem_multiV(SEXP bVecSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fcolvec& >::type bVec(bVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getCrossprod_largeMem_multiV(bVec, wVec, tauVec, LOCO));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1413,6 +1472,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// GetTrace_largeMem_multiV
+arma::fvec GetTrace_largeMem_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec& fixtauVec, arma::fmat& cov1, int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO);
+RcppExport SEXP _SAIGE_GetTrace_largeMem_multiV(SEXP Sigma_iXSEXP, SEXP XmatSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP fixtauVecSEXP, SEXP cov1SEXP, SEXP nrunSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP traceCVcutoffSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fmat >::type Sigma_iX(Sigma_iXSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Xmat(XmatSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< arma::ivec& >::type fixtauVec(fixtauVecSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type cov1(cov1SEXP);
+    Rcpp::traits::input_parameter< int >::type nrun(nrunSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type traceCVcutoff(traceCVcutoffSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(GetTrace_largeMem_multiV(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
 // GetTrace_multiV
 arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec& fixtauVec, arma::fmat& cov1, int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO);
 RcppExport SEXP _SAIGE_GetTrace_multiV(SEXP Sigma_iXSEXP, SEXP XmatSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP fixtauVecSEXP, SEXP cov1SEXP, SEXP nrunSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP traceCVcutoffSEXP, SEXP LOCOSEXP) {
@@ -1431,6 +1511,29 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type traceCVcutoff(traceCVcutoffSEXP);
     Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
     rcpp_result_gen = Rcpp::wrap(GetTrace_multiV(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getAIScore_largeMem_multiV
+Rcpp::List getAIScore_largeMem_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec& fixtauVec, arma::fvec& Sigma_iY, arma::fmat& Sigma_iX, arma::fmat& cov, int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO);
+RcppExport SEXP _SAIGE_getAIScore_largeMem_multiV(SEXP YvecSEXP, SEXP XmatSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP fixtauVecSEXP, SEXP Sigma_iYSEXP, SEXP Sigma_iXSEXP, SEXP covSEXP, SEXP nrunSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP traceCVcutoffSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type Yvec(YvecSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Xmat(XmatSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< arma::ivec& >::type fixtauVec(fixtauVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type Sigma_iY(Sigma_iYSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Sigma_iX(Sigma_iXSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type cov(covSEXP);
+    Rcpp::traits::input_parameter< int >::type nrun(nrunSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type traceCVcutoff(traceCVcutoffSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getAIScore_largeMem_multiV(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1478,6 +1581,41 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type traceCVcutoff(traceCVcutoffSEXP);
     Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
     rcpp_result_gen = Rcpp::wrap(fitglmmaiRPCG_multiV(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fitglmmaiRPCG_largeMem_multiV
+Rcpp::List fitglmmaiRPCG_largeMem_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec& fixtauVec, arma::fvec& Sigma_iY, arma::fmat& Sigma_iX, arma::fmat& cov, int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOCO);
+RcppExport SEXP _SAIGE_fitglmmaiRPCG_largeMem_multiV(SEXP YvecSEXP, SEXP XmatSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP fixtauVecSEXP, SEXP Sigma_iYSEXP, SEXP Sigma_iXSEXP, SEXP covSEXP, SEXP nrunSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP tolSEXP, SEXP traceCVcutoffSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type Yvec(YvecSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Xmat(XmatSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< arma::ivec& >::type fixtauVec(fixtauVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type Sigma_iY(Sigma_iYSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Sigma_iX(Sigma_iXSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type cov(covSEXP);
+    Rcpp::traits::input_parameter< int >::type nrun(nrunSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tol(tolSEXP);
+    Rcpp::traits::input_parameter< float >::type traceCVcutoff(traceCVcutoffSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(fitglmmaiRPCG_largeMem_multiV(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getMeanDiagofKmat
+arma::fvec getMeanDiagofKmat(bool LOCO);
+RcppExport SEXP _SAIGE_getMeanDiagofKmat(SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getMeanDiagofKmat(LOCO));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2052,9 +2190,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_set_flagSparseGRM_cur_SAIGE", (DL_FUNC) &_SAIGE_set_flagSparseGRM_cur_SAIGE, 1},
     {"_SAIGE_set_flagSparseGRM_cur_SAIGE_org", (DL_FUNC) &_SAIGE_set_flagSparseGRM_cur_SAIGE_org, 0},
     {"_SAIGE_copy_singleInGroup", (DL_FUNC) &_SAIGE_copy_singleInGroup, 0},
+    {"_SAIGE_set_I_longl_mat", (DL_FUNC) &_SAIGE_set_I_longl_mat, 2},
+    {"_SAIGE_set_T_longl_mat", (DL_FUNC) &_SAIGE_set_T_longl_mat, 2},
     {"_SAIGE_addNewKat", (DL_FUNC) &_SAIGE_addNewKat, 1},
     {"_SAIGE_getProdTauKmat", (DL_FUNC) &_SAIGE_getProdTauKmat, 1},
-    {"_SAIGE_getMeanDiagofKmat", (DL_FUNC) &_SAIGE_getMeanDiagofKmat, 0},
+    {"_SAIGE_set_num_Kmat", (DL_FUNC) &_SAIGE_set_num_Kmat, 1},
+    {"_SAIGE_getMeanDiagofKmat_largeMem", (DL_FUNC) &_SAIGE_getMeanDiagofKmat_largeMem, 0},
     {"_SAIGE_get_numofV", (DL_FUNC) &_SAIGE_get_numofV, 0},
     {"_SAIGE_set_longlVar_vec", (DL_FUNC) &_SAIGE_set_longlVar_vec, 1},
     {"_SAIGE_set_covarianceidx_Mat", (DL_FUNC) &_SAIGE_set_covarianceidx_Mat, 0},
@@ -2090,7 +2231,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_Get_OneSNP_Geno", (DL_FUNC) &_SAIGE_Get_OneSNP_Geno, 1},
     {"_SAIGE_Get_OneSNP_Geno_forVarRatio", (DL_FUNC) &_SAIGE_Get_OneSNP_Geno_forVarRatio, 1},
     {"_SAIGE_Get_OneSNP_StdGeno", (DL_FUNC) &_SAIGE_Get_OneSNP_StdGeno, 1},
+    {"_SAIGE_getDiagOfSigma_largeMem__multiV", (DL_FUNC) &_SAIGE_getDiagOfSigma_largeMem__multiV, 3},
     {"_SAIGE_getDiagOfSigma_multiV", (DL_FUNC) &_SAIGE_getDiagOfSigma_multiV, 3},
+    {"_SAIGE_getCrossprod_largeMem_multiV", (DL_FUNC) &_SAIGE_getCrossprod_largeMem_multiV, 4},
     {"_SAIGE_getCrossprod_multiV", (DL_FUNC) &_SAIGE_getCrossprod_multiV, 4},
     {"_SAIGE_gen_sp_GRM", (DL_FUNC) &_SAIGE_gen_sp_GRM, 0},
     {"_SAIGE_gen_sp_Sigma_multiV", (DL_FUNC) &_SAIGE_gen_sp_Sigma_multiV, 2},
@@ -2138,9 +2281,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_set_Diagof_StdGeno_LOCO", (DL_FUNC) &_SAIGE_set_Diagof_StdGeno_LOCO, 0},
     {"_SAIGE_setminMAC_VarianceRatio", (DL_FUNC) &_SAIGE_setminMAC_VarianceRatio, 3},
     {"_SAIGE_getCoefficients_multiV", (DL_FUNC) &_SAIGE_getCoefficients_multiV, 7},
+    {"_SAIGE_GetTrace_largeMem_multiV", (DL_FUNC) &_SAIGE_GetTrace_largeMem_multiV, 11},
     {"_SAIGE_GetTrace_multiV", (DL_FUNC) &_SAIGE_GetTrace_multiV, 11},
+    {"_SAIGE_getAIScore_largeMem_multiV", (DL_FUNC) &_SAIGE_getAIScore_largeMem_multiV, 13},
     {"_SAIGE_getAIScore_multiV", (DL_FUNC) &_SAIGE_getAIScore_multiV, 13},
     {"_SAIGE_fitglmmaiRPCG_multiV", (DL_FUNC) &_SAIGE_fitglmmaiRPCG_multiV, 14},
+    {"_SAIGE_fitglmmaiRPCG_largeMem_multiV", (DL_FUNC) &_SAIGE_fitglmmaiRPCG_largeMem_multiV, 14},
+    {"_SAIGE_getMeanDiagofKmat", (DL_FUNC) &_SAIGE_getMeanDiagofKmat, 1},
     {"_SAIGE_SPA", (DL_FUNC) &_SAIGE_SPA, 10},
     {"_SAIGE_SPA_fast", (DL_FUNC) &_SAIGE_SPA_fast, 16},
     {"_SAIGE_Korg_Binom", (DL_FUNC) &_SAIGE_Korg_Binom, 3},

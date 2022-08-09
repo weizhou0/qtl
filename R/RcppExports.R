@@ -125,6 +125,14 @@ copy_singleInGroup <- function() {
     invisible(.Call('_SAIGE_copy_singleInGroup', PACKAGE = 'SAIGE'))
 }
 
+set_I_longl_mat <- function(t_Ilongmat, t_I_longl_vec) {
+    invisible(.Call('_SAIGE_set_I_longl_mat', PACKAGE = 'SAIGE', t_Ilongmat, t_I_longl_vec))
+}
+
+set_T_longl_mat <- function(t_Tlongmat, t_T_longl_vec) {
+    invisible(.Call('_SAIGE_set_T_longl_mat', PACKAGE = 'SAIGE', t_Tlongmat, t_T_longl_vec))
+}
+
 addNewKat <- function(t_Kmat) {
     invisible(.Call('_SAIGE_addNewKat', PACKAGE = 'SAIGE', t_Kmat))
 }
@@ -133,8 +141,12 @@ getProdTauKmat <- function(tauVec) {
     .Call('_SAIGE_getProdTauKmat', PACKAGE = 'SAIGE', tauVec)
 }
 
-getMeanDiagofKmat <- function() {
-    .Call('_SAIGE_getMeanDiagofKmat', PACKAGE = 'SAIGE')
+set_num_Kmat <- function(t_num_Kmat) {
+    invisible(.Call('_SAIGE_set_num_Kmat', PACKAGE = 'SAIGE', t_num_Kmat))
+}
+
+getMeanDiagofKmat_largeMem <- function() {
+    .Call('_SAIGE_getMeanDiagofKmat_largeMem', PACKAGE = 'SAIGE')
 }
 
 get_numofV <- function() {
@@ -277,8 +289,16 @@ Get_OneSNP_StdGeno <- function(SNPIdx) {
     .Call('_SAIGE_Get_OneSNP_StdGeno', PACKAGE = 'SAIGE', SNPIdx)
 }
 
+getDiagOfSigma_largeMem__multiV <- function(wVec, tauVec, LOCO) {
+    .Call('_SAIGE_getDiagOfSigma_largeMem__multiV', PACKAGE = 'SAIGE', wVec, tauVec, LOCO)
+}
+
 getDiagOfSigma_multiV <- function(wVec, tauVec, LOCO) {
     .Call('_SAIGE_getDiagOfSigma_multiV', PACKAGE = 'SAIGE', wVec, tauVec, LOCO)
+}
+
+getCrossprod_largeMem_multiV <- function(bVec, wVec, tauVec, LOCO) {
+    .Call('_SAIGE_getCrossprod_largeMem_multiV', PACKAGE = 'SAIGE', bVec, wVec, tauVec, LOCO)
 }
 
 getCrossprod_multiV <- function(bVec, wVec, tauVec, LOCO) {
@@ -469,8 +489,16 @@ getCoefficients_multiV <- function(Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG,
     .Call('_SAIGE_getCoefficients_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG, LOCO)
 }
 
+GetTrace_largeMem_multiV <- function(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
+    .Call('_SAIGE_GetTrace_largeMem_multiV', PACKAGE = 'SAIGE', Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
+}
+
 GetTrace_multiV <- function(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
     .Call('_SAIGE_GetTrace_multiV', PACKAGE = 'SAIGE', Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
+}
+
+getAIScore_largeMem_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
+    .Call('_SAIGE_getAIScore_largeMem_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
 }
 
 getAIScore_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
@@ -479,6 +507,14 @@ getAIScore_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sig
 
 fitglmmaiRPCG_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO) {
     .Call('_SAIGE_fitglmmaiRPCG_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO)
+}
+
+fitglmmaiRPCG_largeMem_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO) {
+    .Call('_SAIGE_fitglmmaiRPCG_largeMem_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO)
+}
+
+getMeanDiagofKmat <- function(LOCO) {
+    .Call('_SAIGE_getMeanDiagofKmat', PACKAGE = 'SAIGE', LOCO)
 }
 
 SPA <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge) {

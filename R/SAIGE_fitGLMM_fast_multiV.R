@@ -413,10 +413,16 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		  #dataMerge_sort = dataMerge_sort[with(dataMerge_sort, order(IndexGeno, longlVar)),]
 		#  dataMerge_sort = dataMerge_sort[with(dataMerge_sort, order(longlVar)),]
 		#}
+		set_I_mat_inR(dataMerge_sort$IID)
+		if(longlCol != ""){
+			set_T_mat_inR(dataMerge_sort$IID, dataMerge_sort$longlVar)
+		}	
 	}	
 
     }
-     print("Test3")
+
+
+    print("Test3")
     print(head(dataMerge_sort))
 
     if (traitType == "quantitative" & invNormalize) {
@@ -500,8 +506,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
 	    
     if (useSparseGRMtoFitNULL | useSparseGRMforVarRatio) {
-        #sparseGRMtest = getsubGRM(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)
-	getsubGRM(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID, dataMerge_sort$longlVar)    
+	getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)
+   	#getsubGRM(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID, dataMerge_sort$longlVar)    
         #m4 = gen_sp_v2(sparseGRMtest)
         #cat("Setting up sparse GRM using ", sparseGRMFile, " and ", sparseGRMSampleIDFile, "\n")
         #cat("Dimension of the sparse GRM is ", dim(m4), "\n")
@@ -515,7 +521,26 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     }
 
     #allow for multiple variance components
-    set_Vmat_vec(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID, dataMerge_sort$longlVar)
+    #set_Vmat_vec(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID, dataMerge_sort$longlVar)
+    set_Vmat_vec_orig(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID)
+
+    numofV = get_numofV()
+    if(any(duplicated(dataMerge_sort$IID))){
+        if(longlCol == ""){
+	       num_Kmat = numofV + 3	
+               #k = num_Kmat + 3
+        }else{
+	       num_Kmat = 7 + numofV*3
+	       #k = num_Kmat + 2		
+        }
+    }else{
+	num_Kmat = numofV + 2   
+        #k = 2
+    }
+    k = num_Kmat
+    set_num_Kmat(num_Kmat)
+    cat("num_Kmat ", num_Kmat, "\n")
+
 
     if(longlCol != ""){
        covarianceIdxMat = set_covarianceidx_Mat()
@@ -617,9 +642,9 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         t_begin = proc.time()
         print(t_begin)
 
-  	k =  get_numofV()
-        tau = rep(0, k+2) 
-	fixtau = rep(0, k+2)
+
+        tau = rep(0, k) 
+	fixtau = rep(0, k)
 	tauInit = tau
 
 
@@ -1215,10 +1240,11 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 	  if(length(idxtau2) > 0){
 		tau[idxtau2] = 0
           }
-	i_kmat = get_numofV()
-    	if(i_kmat > 0){
-        	Kmatdiag = getMeanDiagofKmat()
-    	}	  
+	#i_kmat = get_numofV()
+    	#if(i_kmat > 0){
+        Kmatdiag = getMeanDiagofKmat(LOCO)
+	print(Kmatdiag)
+    	#}	  
         tau[2:length(tau)] = tau[2:length(tau)]/Kmatdiag
   }
 

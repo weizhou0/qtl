@@ -342,6 +342,113 @@ set_Vmat_vec = function(VmatFilelist, VmatSampleFilelist, modelID, longlVarVec=N
 }
 
 
+
+set_Vmat_vec_orig = function(VmatFilelist, VmatSampleFilelist, modelID){
+
+  if(VmatFilelist != ""){
+    VmatFile_vec = unlist(strsplit(VmatFilelist, split=","))
+    cat(length(VmatFile_vec), " additional variance covariance matrices are specified\n")
+    VmatSampleFile_vec = unlist(strsplit(VmatSampleFilelist, split=","))
+    if(length(VmatSampleFile_vec) != length(VmatFile_vec)){
+      stop("Number of sample files in ", VmatSampleFilelist, " does not equal to number of matrix files in ", VmatFilelist, "\n")
+    }else{
+      modelID = unique(modelID)	    
+      for(i in 1:length(VmatFile_vec)){
+        Vmatfile = VmatFile_vec[i]
+        VmatSamplefile = VmatSampleFile_vec[i]
+        if(!file.exists(Vmatfile)){
+          stop(Vmatfile, " does not exist\n")
+        }else if(!file.exists(VmatSamplefile)){
+          stop(VmatSamplefile, " does not exist\n")
+        }else{          		
+          sparseVmat = getVmatSub(Vmatfile, VmatSamplefile, modelID)
+          addNewKat(sparseVmat)
+          #Matrix::writeMM(sparseVmat, file="kin2_SAIGE.mtx")
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+getsubGRM_orig = function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", relatednessCutoff,
+    modelID = NULL){
+
+    cat("extract sparse GRM\n")
+    sparseGRMLarge = Matrix:::readMM(sparseGRMFile)
+    print(nnzero(sparseGRMLarge))
+    cat("set elements in the sparse GRM <= ", relatednessCutoff,
+        " to zero\n")
+    sparseGRMLarge = Matrix:::drop0(sparseGRMLarge, tol = relatednessCutoff)
+    sparseGRMLarge = sparseGRMLarge * 1
+    if (!file.exists(sparseGRMSampleIDFile)) {
+        stop("ERROR! sparseSigmaSampleIDFile ", sparseGRMSampleIDFile,
+            " does not exist\n")
+    }else{
+        sparseGRMSampleID = data.frame(data.table:::fread(sparseGRMSampleIDFile,
+            header = F, stringsAsFactors = FALSE, colClasses = c("character")))
+        colnames(sparseGRMSampleID) = c("sampleID")
+        sparseGRMSampleID$IndexGRM = seq(1, nrow(sparseGRMSampleID),
+            by = 1)
+        if (nrow(sparseGRMSampleID) != dim(sparseGRMLarge)[1] |
+            nrow(sparseGRMSampleID) != dim(sparseGRMLarge)[2]) {
+            stop("ERROR! number of samples in the sparse GRM is not the same to the number of sample IDs in the specified sparseGRMSampleIDFile ",
+                sparseGRMSampleIDFile, "\n")
+        }else {
+            sampleInModel = NULL
+	    modelID = unique(modelID) #model ID not duplicated
+            sampleInModel$IID = modelID
+            sampleInModel = data.frame(sampleInModel)
+            sampleInModel$IndexInModel = seq(1, length(sampleInModel$IID),
+                by = 1)
+            cat(nrow(sampleInModel), " samples have been used to fit the glmm null model\n")
+            mergeID = merge(sampleInModel, sparseGRMSampleID,
+                by.x = "IID", by.y = "sampleID")
+            if (nrow(sampleInModel) > nrow(mergeID)) {
+                stop("ERROR: ", nrow(sampleInModel) - nrow(mergeID),
+                  "samples used for model fitting are not in the specified GRM\n")
+            }else {
+                mergeID = mergeID[with(mergeID, order(IndexInModel)),
+                  ]
+                indexIDofGRM = mergeID$IndexGRM
+                sparseGRM = sparseGRMLarge[indexIDofGRM, indexIDofGRM]
+                setupSparseGRM_new(sparseGRM)
+                rm(sparseGRMLarge)
+                rm(sparseGRM)
+                #return(sparseGRM)
+            }
+       }
+   }
+	
+}
+
+
+
+set_I_mat_inR = function(modelID){
+	b = as.numeric(factor(modelID, levels =  unique(modelID)))
+	I_mat = Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
+	I_mat = 1.0 * I_mat
+	set_I_longl_mat(I_mat, b-1)
+}
+
+
+
+set_T_mat_inR = function(modelID, longlVarVec=NULL){
+    if(is.null(longlVarVec)){
+	stop("longlVarVec is not specified\n")
+    }else{	
+        b = as.numeric(factor(modelID, levels =  unique(modelID)))
+        I_mat = Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
+        T_mat = I_mat * longlVarVec
+        set_T_longl_mat(T_mat, longlVarVec)
+    }	
+}
+
+
+
 getsubGRM <- function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", relatednessCutoff,
     modelID = NULL, longlVarVec=NULL)
 {
