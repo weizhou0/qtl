@@ -80,6 +80,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// set_dup_sample_index
+void set_dup_sample_index(arma::uvec& t_dup_sample_Index);
+RcppExport SEXP _SAIGE_set_dup_sample_index(SEXP t_dup_sample_IndexSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::uvec& >::type t_dup_sample_Index(t_dup_sample_IndexSEXP);
+    set_dup_sample_index(t_dup_sample_Index);
+    return R_NilValue;
+END_RCPP
+}
 // setAssocTest_GlobalVarsInCPP
 void setAssocTest_GlobalVarsInCPP(std::string t_impute_method, double t_missing_cutoff, double t_min_maf_marker, double t_min_mac_marker, double t_min_info_marker, double t_dosage_zerod_cutoff, double t_dosage_zerod_MAC_cutoff, arma::vec& t_weights_beta, std::string t_outputFilePrefix, double t_MACCutoffforER);
 RcppExport SEXP _SAIGE_setAssocTest_GlobalVarsInCPP(SEXP t_impute_methodSEXP, SEXP t_missing_cutoffSEXP, SEXP t_min_maf_markerSEXP, SEXP t_min_mac_markerSEXP, SEXP t_min_info_markerSEXP, SEXP t_dosage_zerod_cutoffSEXP, SEXP t_dosage_zerod_MAC_cutoffSEXP, SEXP t_weights_betaSEXP, SEXP t_outputFilePrefixSEXP, SEXP t_MACCutoffforERSEXP) {
@@ -495,6 +505,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
     rcpp_result_gen = Rcpp::wrap(getProdTauKmat(tauVec));
     return rcpp_result_gen;
+END_RCPP
+}
+// set_store_sigma
+void set_store_sigma(bool isstoreSigma);
+RcppExport SEXP _SAIGE_set_store_sigma(SEXP isstoreSigmaSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< bool >::type isstoreSigma(isstoreSigmaSEXP);
+    set_store_sigma(isstoreSigma);
+    return R_NilValue;
 END_RCPP
 }
 // set_num_Kmat
@@ -947,29 +967,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gen_sp_Sigma_multiV
-arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec, arma::fvec& tauVec);
-RcppExport SEXP _SAIGE_gen_sp_Sigma_multiV(SEXP wVecSEXP, SEXP tauVecSEXP) {
+// gen_sp_Sigma_largeMem_multiV
+arma::sp_mat gen_sp_Sigma_largeMem_multiV(arma::fvec& wVec, arma::fvec& tauVec);
+RcppExport SEXP _SAIGE_gen_sp_Sigma_largeMem_multiV(SEXP wVecSEXP, SEXP tauVecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
     Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
-    rcpp_result_gen = Rcpp::wrap(gen_sp_Sigma_multiV(wVec, tauVec));
+    rcpp_result_gen = Rcpp::wrap(gen_sp_Sigma_largeMem_multiV(wVec, tauVec));
     return rcpp_result_gen;
 END_RCPP
 }
-// gen_spsolve_v4_multiV
-arma::fvec gen_spsolve_v4_multiV(arma::fvec& wVec, arma::fvec& tauVec, arma::fvec& yvec);
-RcppExport SEXP _SAIGE_gen_spsolve_v4_multiV(SEXP wVecSEXP, SEXP tauVecSEXP, SEXP yvecSEXP) {
+// gen_sp_Sigma_multiV
+void gen_sp_Sigma_multiV(arma::fvec& wVec, arma::fvec& tauVec);
+RcppExport SEXP _SAIGE_gen_sp_Sigma_multiV(SEXP wVecSEXP, SEXP tauVecSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
     Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
-    Rcpp::traits::input_parameter< arma::fvec& >::type yvec(yvecSEXP);
-    rcpp_result_gen = Rcpp::wrap(gen_spsolve_v4_multiV(wVec, tauVec, yvec));
-    return rcpp_result_gen;
+    gen_sp_Sigma_multiV(wVec, tauVec);
+    return R_NilValue;
 END_RCPP
 }
 // setisUsePrecondM
@@ -2164,6 +2182,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_LDmatRegionInCPP", (DL_FUNC) &_SAIGE_LDmatRegionInCPP, 9},
     {"_SAIGE_openOutfile_single_LDmat", (DL_FUNC) &_SAIGE_openOutfile_single_LDmat, 1},
     {"_SAIGE_closeOutfile_single_LDmat", (DL_FUNC) &_SAIGE_closeOutfile_single_LDmat, 0},
+    {"_SAIGE_set_dup_sample_index", (DL_FUNC) &_SAIGE_set_dup_sample_index, 1},
     {"_SAIGE_setAssocTest_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setAssocTest_GlobalVarsInCPP, 10},
     {"_SAIGE_setMarker_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setMarker_GlobalVarsInCPP, 2},
     {"_SAIGE_setRegion_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setRegion_GlobalVarsInCPP, 4},
@@ -2194,6 +2213,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_set_T_longl_mat", (DL_FUNC) &_SAIGE_set_T_longl_mat, 2},
     {"_SAIGE_addNewKat", (DL_FUNC) &_SAIGE_addNewKat, 1},
     {"_SAIGE_getProdTauKmat", (DL_FUNC) &_SAIGE_getProdTauKmat, 1},
+    {"_SAIGE_set_store_sigma", (DL_FUNC) &_SAIGE_set_store_sigma, 1},
     {"_SAIGE_set_num_Kmat", (DL_FUNC) &_SAIGE_set_num_Kmat, 1},
     {"_SAIGE_getMeanDiagofKmat_largeMem", (DL_FUNC) &_SAIGE_getMeanDiagofKmat_largeMem, 0},
     {"_SAIGE_get_numofV", (DL_FUNC) &_SAIGE_get_numofV, 0},
@@ -2236,8 +2256,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_getCrossprod_largeMem_multiV", (DL_FUNC) &_SAIGE_getCrossprod_largeMem_multiV, 4},
     {"_SAIGE_getCrossprod_multiV", (DL_FUNC) &_SAIGE_getCrossprod_multiV, 4},
     {"_SAIGE_gen_sp_GRM", (DL_FUNC) &_SAIGE_gen_sp_GRM, 0},
+    {"_SAIGE_gen_sp_Sigma_largeMem_multiV", (DL_FUNC) &_SAIGE_gen_sp_Sigma_largeMem_multiV, 2},
     {"_SAIGE_gen_sp_Sigma_multiV", (DL_FUNC) &_SAIGE_gen_sp_Sigma_multiV, 2},
-    {"_SAIGE_gen_spsolve_v4_multiV", (DL_FUNC) &_SAIGE_gen_spsolve_v4_multiV, 3},
     {"_SAIGE_setisUsePrecondM", (DL_FUNC) &_SAIGE_setisUsePrecondM, 1},
     {"_SAIGE_setisUseSparseSigmaforInitTau", (DL_FUNC) &_SAIGE_setisUseSparseSigmaforInitTau, 1},
     {"_SAIGE_setisUseSparseSigmaforNullModelFitting", (DL_FUNC) &_SAIGE_setisUseSparseSigmaforNullModelFitting, 1},

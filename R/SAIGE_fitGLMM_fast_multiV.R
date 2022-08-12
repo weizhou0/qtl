@@ -158,7 +158,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
 
     if (useSparseGRMtoFitNULL){
-        useSparseGRMforVarRatio = FALSE
+        #useSparseGRMforVarRatio = FALSE
         LOCO = FALSE
 	nThreads = 1
 	if(bedFile != ""){
@@ -422,6 +422,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     }
 
 
+
     print("Test3")
     print(head(dataMerge_sort))
 
@@ -504,9 +505,10 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     }	    
     data.new$covoffset = covoffset
 
-	    
+
     if (useSparseGRMtoFitNULL | useSparseGRMforVarRatio) {
 	getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)
+        isPCGforSigmaInv = TRUE	    
    	#getsubGRM(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID, dataMerge_sort$longlVar)    
         #m4 = gen_sp_v2(sparseGRMtest)
         #cat("Setting up sparse GRM using ", sparseGRMFile, " and ", sparseGRMSampleIDFile, "\n")
@@ -636,6 +638,17 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     cat("glm:\n")
     print(fit0)
     obj.noK = NULL
+
+
+    #if(length(fit0$y) > 2000){
+    isStoreSigma = FALSE
+    #}else{
+    #  isStoreSigma = TRUE
+    #}
+    print("isStoreSigma")
+    print(isStoreSigma)
+    set_store_sigma(isStoreSigma)    
+
     if (!skipModelFitting) {
         setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
         cat("Start fitting the NULL GLMM\n")
@@ -658,7 +671,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 chromosomeEndIndexVec = chromosomeEndIndexVec, 
                 traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform, 
                 isDiagofKinSetAsOne = isDiagofKinSetAsOne, 
-		isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat))
+		isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma))
          
 	modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
             
@@ -845,7 +858,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 nThreads = nThreads, cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
                 cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
                 minMAFforGRM = minMAFforGRM, isDiagofKinSetAsOne = isDiagofKinSetAsOne,
-                includeNonautoMarkersforVarRatio = includeNonautoMarkersforVarRatio)
+                includeNonautoMarkersforVarRatio = includeNonautoMarkersforVarRatio, isStoreSigma = isStoreSigma)
     }else{
         cat("Skip estimating variance ratios\n")
     }
@@ -881,7 +894,8 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
                                                     cateVarRatioMaxMACVecInclude,
                                                     minMAFforGRM,
                                                     isDiagofKinSetAsOne,
-                                                    includeNonautoMarkersforVarRatio){
+                                                    includeNonautoMarkersforVarRatio,
+						    isStoreSigma = FALSE){
 
   obj.noK = obj.glmm.null$obj.noK
   if(file.exists(testOut)){file.remove(testOut)}
@@ -898,10 +912,22 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   sqrtW = mu.eta/sqrt(obj.glm.null$family$variance(mu))
   W = sqrtW^2   ##(mu*(1-mu) for binary)
   tauVecNew = obj.glmm.null$theta
+  if(isStoreSigma){
+         gen_sp_Sigma_multiV(W, tauVecNew)
+  }
   X = obj.glmm.null$X
   Sigma_iX_noLOCO = getSigma_X_multiV(W, tauVecNew, X, maxiterPCG, tolPCG, LOCO=FALSE)
+
+
   y = obj.glm.null$y
+
+  if(any(duplicated(obj.glmm.null$sampleID))){
+    dupSampleIndex = as.numeric(factor(obj.glmm.null$sampleID, levels =  unique(obj.glmm.null$sampleID)))
+  }
+
+
   ##randomize the marker orders to be tested
+ if(FALSE){
   if(useSparseGRMtoFitNULL | useSparseGRMforVarRatio){
     sparseSigma = getSparseSigma(bedFile = bedFile, bimFile = bimFile, famFile = famFile,
                 outputPrefix=varRatioOutFile,
@@ -919,6 +945,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
     }
 
   }
+ }
   mMarkers = gettotalMarker()
   listOfMarkersForVarRatio = list()
   MACvector = getMACVec()
@@ -1015,12 +1042,19 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
                 G0 = Get_OneSNP_Geno_forVarRatio(i-1)
           }
 
+
           cat("G0", G0[1:10], "\n")
           CHR = bimPlink[Indexvector_forVarRatio[i]+1,1]
 	  cat("CHR ", CHR, "\n")
-          if(sum(G0)/(2*Nnomissing) > 0.5){
+          #if(sum(G0)/(2*Nnomissing) > 0.5){
+          if(sum(G0)/(2*length(G0)) > 0.5){
             G0 = 2-G0
           }
+
+
+          #if(any(duplicated(obj.glmm.null$sampleID))){
+	  #	G0 = G0[dupSampleIndex]		
+          #}		   
           NAset = which(G0==0)
           AC = sum(G0)
 
@@ -1041,13 +1075,20 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
           mu.eta = family$mu.eta(eta)
           sqrtW = mu.eta/sqrt(obj.glm.null$family$variance(mu))
           W = sqrtW^2
+          print("W[1:10]")
+          print(W[1:10])
+         print("mu[1:10]")
+          print(mu[1:10])
+
           Sigma_iG = getSigma_G_multiV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
           Sigma_iX = Sigma_iX_noLOCO
 
           var1a = t(G)%*%Sigma_iG - t(G)%*%Sigma_iX%*%(solve(t(X)%*%Sigma_iX))%*%t(X)%*%Sigma_iG
           var1 = var1a/AC
+	  cat("AC ", AC, "\n")	
           m1 = innerProduct(mu,g)
-
+	  S = q-m1
+if(FALSE){
    if(!useSparseGRMtoFitNULL){
         if(useSparseGRMforVarRatio){
            pcginvSigma = solve(sparseSigma, g, sparse=T)
@@ -1064,15 +1105,42 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	  #cat(" x ", x, " var2 ", var2sparseGRM , "\n")
 	  varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
     }
+}
+
+
+if(useSparseGRMforVarRatio){
+	var2_a = t(g) %*% Sigma_iG/(sqrt(AC))
+	var2sparseGRM = var2_a[1,1]
+	varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
+
+}else{
+        varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec,1)
+}	
+
+   p_exact = pchisq(S^2/var1, df=1, lower.tail=F)
+
+
 
     if(obj.glmm.null$traitType == "binary"){
          var2null = innerProduct(mu*(1-mu), g*g)
+    varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
     }else if(obj.glmm.null$traitType == "quantitative"){
          var2null = innerProduct(g, g)
+    varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
     }else if(obj.glmm.null$traitType == "count"){
          var2null = innerProduct(mu, g*g)
+    varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
     }
+         p_approx = pchisq(S^2/(var2null), df=1, lower.tail=F)
+         p_approx_true = pchisq(S^2/(var2null*0.0009604056), df=1, lower.tail=F)
 
+    cat("AC ", AC, "\n")
+    cat("S ", S, "\n")
+    cat("var1 ", var1, "\n")
+    cat("var2null ", var2null, "\n")
+    cat("p_exact ", p_exact, "\n")
+    cat("p_approx ", p_approx, "\n")
+    cat("p_approx_true ", p_approx_true, "\n")
     varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
 
     #indexInMarkerList = indexInMarkerList + 1
@@ -1086,6 +1154,10 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
         numTestedMarker = numMarkers0
       }
     }#end of while(numTestedMarker < numMarkers)
+
+
+    print("varRatio_NULL_vec")
+    print(varRatio_NULL_vec)
 
     ratioCV = calCV(varRatio_NULL_vec)
 
@@ -1129,7 +1201,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
 
 #Fits the null glmm
-glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL) {
+glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE) {
   #Fits the null generalized linear mixed model for a poisson, binomial, and gaussian
   #Args:
   #  genofile: string. Plink file for the M1 markers to be used to construct the genetic relationship matrix
@@ -1161,6 +1233,8 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     print("Start reading genotype plink file here")
   }
 
+  print("subSampleInGeno")
+  print(subSampleInGeno)
 
   re1 = system.time({setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)})
   if(verbose){
@@ -1250,8 +1324,16 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 
     print("tau")
     print(tau)
+	
+    if(isStoreSigma){
+      gen_sp_Sigma_multiV(W, tau)
+    }
+    
     re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)
 
+    if(isStoreSigma){
+      gen_sp_Sigma_multiV(re.coef$W, tau)
+    }
 
     re = getAIScore_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG,tolPCG = tolPCG, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
     tau0=tau
@@ -1289,10 +1371,17 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       eta0 = eta
       # use Get_Coef before getAIScore
       t_begin_Get_Coef = proc.time()
+      if(isStoreSigma){
+        gen_sp_Sigma_multiV(W, tau)
+      }
+
       re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset, verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)
       t_end_Get_Coef =  proc.time()
       cat("t_end_Get_Coef - t_begin_Get_Coef\n")
       print(t_end_Get_Coef - t_begin_Get_Coef)
+      if(isStoreSigma){
+        gen_sp_Sigma_multiV(re.coef$W, tau)
+      }
       fit = fitglmmaiRPCG_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG, tolPCG, tol = tol, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
 
 	if(i == 1){
@@ -1309,6 +1398,12 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       eta = re.coef$eta
       Y = re.coef$Y
       mu = re.coef$mu
+
+     mu.eta = family$mu.eta(eta)
+     sqrtW = mu.eta/sqrt(fit0$family$variance(mu))
+     W = sqrtW^2
+
+
 
      
       print(abs(tau - tau0)/(abs(tau) + abs(tau0) + tol))
@@ -1334,6 +1429,11 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   }
 
   if(verbose) cat("\nFinal " ,tau, ":\n")
+
+
+     if(isStoreSigma){
+        gen_sp_Sigma_multiV(W, tau)
+     }
 
     #added these steps after tau is estimated 04-14-2018
   re.coef = Get_Coef_multiV(y, X, tau, family, alpha, eta,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=FALSE)
@@ -1382,6 +1482,9 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   cat("t_end_null - t_begin, fitting the NULL model without LOCO took\n")
   print(t_end_null - t_begin)
   if(!isLowMemLOCO & LOCO){
+     if(isStoreSigma){
+        gen_sp_Sigma_multiV(re.coef$W, tau)
+     }	  
     set_Diagof_StdGeno_LOCO()
     glmmResult$LOCOResult = list()
     for (j in 1:22){

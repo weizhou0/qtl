@@ -21,6 +21,10 @@ closeOutfile_single_LDmat <- function() {
     invisible(.Call('_SAIGE_closeOutfile_single_LDmat', PACKAGE = 'SAIGE'))
 }
 
+set_dup_sample_index <- function(t_dup_sample_Index) {
+    invisible(.Call('_SAIGE_set_dup_sample_index', PACKAGE = 'SAIGE', t_dup_sample_Index))
+}
+
 setAssocTest_GlobalVarsInCPP <- function(t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_weights_beta, t_outputFilePrefix, t_MACCutoffforER) {
     invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP', PACKAGE = 'SAIGE', t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_weights_beta, t_outputFilePrefix, t_MACCutoffforER))
 }
@@ -139,6 +143,10 @@ addNewKat <- function(t_Kmat) {
 
 getProdTauKmat <- function(tauVec) {
     .Call('_SAIGE_getProdTauKmat', PACKAGE = 'SAIGE', tauVec)
+}
+
+set_store_sigma <- function(isstoreSigma) {
+    invisible(.Call('_SAIGE_set_store_sigma', PACKAGE = 'SAIGE', isstoreSigma))
 }
 
 set_num_Kmat <- function(t_num_Kmat) {
@@ -309,12 +317,12 @@ gen_sp_GRM <- function() {
     .Call('_SAIGE_gen_sp_GRM', PACKAGE = 'SAIGE')
 }
 
-gen_sp_Sigma_multiV <- function(wVec, tauVec) {
-    .Call('_SAIGE_gen_sp_Sigma_multiV', PACKAGE = 'SAIGE', wVec, tauVec)
+gen_sp_Sigma_largeMem_multiV <- function(wVec, tauVec) {
+    .Call('_SAIGE_gen_sp_Sigma_largeMem_multiV', PACKAGE = 'SAIGE', wVec, tauVec)
 }
 
-gen_spsolve_v4_multiV <- function(wVec, tauVec, yvec) {
-    .Call('_SAIGE_gen_spsolve_v4_multiV', PACKAGE = 'SAIGE', wVec, tauVec, yvec)
+gen_sp_Sigma_multiV <- function(wVec, tauVec) {
+    invisible(.Call('_SAIGE_gen_sp_Sigma_multiV', PACKAGE = 'SAIGE', wVec, tauVec))
 }
 
 setisUsePrecondM <- function(isUseSparseSigmaforPCG) {

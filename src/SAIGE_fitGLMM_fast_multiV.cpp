@@ -1165,8 +1165,7 @@ public:
 genoClass geno;
 
 std::vector<arma::sp_fmat> Kmat_vec;
-
-arma::vec g_longl_vec;
+arma::fvec g_longl_vec;
 
 arma::sp_fmat g_I_longl_mat;
 arma::sp_fmat g_T_longl_mat;
@@ -1214,8 +1213,18 @@ arma::sp_fmat getProdTauKmat(arma::fvec & tauVec){
 }	
 
 
-arma::sp_mat g_spGRM;
+arma::sp_fmat g_spGRM;
+arma::sp_fmat g_spSigma;
+bool g_isStoreSigma;
 int g_num_Kmat;
+
+
+// [[Rcpp::export]]
+void set_store_sigma(bool isstoreSigma){
+        //g_longl_vec = arma::conv_to< arma::fvec >::from(longlVec);
+        g_isStoreSigma = isstoreSigma;
+}
+
 
 // [[Rcpp::export]]
 void set_num_Kmat(int t_num_Kmat){
@@ -1234,9 +1243,11 @@ arma::fvec getMeanDiagofKmat_largeMem(){
 	}
 	//arma::vec = g_spGRM.diag();
 
-	arma::vec diagVecofKmat_0;
-        diagVecofKmat_0	= arma::diagvec(g_spGRM);
-	diagVecofKmat = arma::conv_to< arma::fvec >::from(diagVecofKmat_0);
+	//arma::fvec diagVecofKmat;
+	diagVecofKmat = arma::diagvec(g_spGRM);
+	//arma::vec diagVecofKmat_0;
+        //diagVecofKmat_0	= arma::diagvec(g_spGRM);
+	//diagVecofKmat = arma::conv_to< arma::fvec >::from(diagVecofKmat_0);
 	mean_diag_kins_vec(0) = arma::mean(diagVecofKmat); 
 	return(mean_diag_kins_vec);
 }	
@@ -1251,8 +1262,8 @@ int get_numofV(){
 
 // [[Rcpp::export]]
 void set_longlVar_vec(arma::vec & longlVec){
-	//g_longl_vec = arma::conv_to< arma::fvec >::from(longlVec);
-	g_longl_vec = longlVec;
+	g_longl_vec = arma::conv_to< arma::fvec >::from(longlVec);
+	//g_longl_vec = longlVec;
 }
 
 arma::umat g_covarianceidxMat;
@@ -1313,22 +1324,24 @@ arma::umat set_covarianceidx_Mat(){
 void set_Vmat_vec_longlVar(){
 	std::cout << "here" << std::endl;
 	int k  = Kmat_vec.size(); 
-	arma::sp_mat spGRM_longl_0;
+	arma::sp_fmat spGRM_longl_0;
 	arma::sp_fmat spGRM_longl;
 	for(int j=0; j < 1+k; j++){
 	  if(j == 0){
 	    spGRM_longl_0 = g_spGRM;
 	  }else{
 	    //spGRM_longl = Kmat_vec[j-1];	  
-	    spGRM_longl_0 = arma::conv_to< arma::sp_mat >::from(Kmat_vec[j-1]);	
+	    //spGRM_longl_0 = arma::conv_to< arma::sp_mat >::from(Kmat_vec[j-1]);	
+	    spGRM_longl_0 = Kmat_vec[j-1];
 	  }	  
           //spGRM_longl_0 = g_longl_vec.t() % (spGRM_longl_0.each_row());
           for(int q=0; q < spGRM_longl_0.n_rows; q++){
           //for(int q=0; q < spGRM_longl.n_rows; q++){
 		 spGRM_longl_0.row(q) = g_longl_vec.t() % spGRM_longl_0.row(q); 
 	  }
-	  spGRM_longl = arma::conv_to< arma::sp_fmat >::from(spGRM_longl_0);
-          Kmat_vec.push_back(spGRM_longl);
+	  //spGRM_longl = arma::conv_to< arma::sp_fmat >::from(spGRM_longl_0);
+          //Kmat_vec.push_back(spGRM_longl);
+          Kmat_vec.push_back(spGRM_longl_0);
 	  	
 	  //spGRM_longl_0 = spGRM_longl_0 % g_longl_vec;
 	  //spGRM_longl_0 = g_longl_vec.t() % (spGRM_longl_0.t().each_row());
@@ -1337,8 +1350,9 @@ void set_Vmat_vec_longlVar(){
                  spGRM_longl_0.col(q) = spGRM_longl_0.col(q) % g_longl_vec;
                  //spGRM_longl.col(q) = spGRM_longl.col(q) % g_longl_vec;
           }
-	  spGRM_longl = arma::conv_to< arma::sp_fmat >::from(spGRM_longl_0);
-          Kmat_vec.push_back(spGRM_longl);
+	  //spGRM_longl = arma::conv_to< arma::sp_fmat >::from(spGRM_longl_0);
+          //Kmat_vec.push_back(spGRM_longl);
+          Kmat_vec.push_back(spGRM_longl_0);
 	  std::cout << "x here" << std::endl;
 	  //spGRM_longl_0.clear();
 	  spGRM_longl.clear();
@@ -1876,8 +1890,11 @@ void setupSparseGRM(int r, arma::umat & locationMatinR, arma::vec & valueVecinR)
 
 // [[Rcpp::export]]
 void setupSparseGRM_new(arma::sp_mat & t_spGRM){
-	g_spGRM = t_spGRM;
+	arma::sp_mat t_spGRM_1 = t_spGRM;
+	arma::sp_fmat g_spGRM_f = arma::conv_to<arma::sp_fmat>::from(t_spGRM_1);
+	g_spGRM = g_spGRM_f;
 }
+
 
 bool isUsePrecondM = false;
 bool isUseSparseSigmaforInitTau = false;
@@ -1889,17 +1906,17 @@ bool isUseSparseSigmaforModelFitting = false;
 arma::fvec getCrossprodMatAndKin(arma::fcolvec& bVec){
     arma::fvec crossProdVec;
     if(isUseSparseSigmaforInitTau | isUseSparseSigmaforModelFitting){
-        arma::dcolvec bVec_new = arma::conv_to<arma::dcolvec>::from(bVec);
+        //arma::dcolvec bVec_new = arma::conv_to<arma::dcolvec>::from(bVec);
         //cout << "use sparse kinship to estimate initial tau and for getCrossprodMatAndKin" <<  endl;
 	//arma::sp_mat result(locationMat, valueVec, dimNum, dimNum);
 	//arma::vec x = result * bVec_new;
-	arma::vec x = g_spGRM * bVec_new;
+	//arma::vec x = g_spGRM * bVec_new;
         // double wall3in = get_wall_time();
         // double cpu3in  = get_cpu_time();
         // cout << "Wall Time in gen_spsolve_v4 = " << wall3in - wall2in << endl;
         // cout << "CPU Time  in gen_spsolve_v4 = " << cpu3in - cpu2in  << endl;
-        crossProdVec = arma::conv_to<arma::fvec>::from(x);
-
+        //crossProdVec = arma::conv_to<arma::fvec>::from(x);
+	crossProdVec = g_spGRM * bVec;
 
     }else{ 
   	crossProdVec = parallelCrossProd(bVec) ;
@@ -2288,9 +2305,10 @@ arma::fvec getDiagOfSigma_multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO
 	}else{ //if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
 		diagVec = tauVec(0)/wVec;
 		tauind = tauind + 1;
-		diagVecG0 = g_spGRM.diag();
-		arma::vec diagVecGtemp(diagVecG0);
-		diagVecG = arma::conv_to< arma::fvec >::from(diagVecGtemp);
+		//diagVecG0 = g_spGRM.diag();
+		//arma::vec diagVecGtemp(diagVecG0);
+		//diagVecG = arma::conv_to< arma::fvec >::from(diagVecGtemp);
+		diagVecG = g_spGRM.diag();
 		diagVecG_I = diagVecG.elem(g_I_longl_vec);
 		diagVec = diagVec + tauVec(tauind) * diagVecG_I;
 		tauind = tauind + 1;
@@ -2553,10 +2571,8 @@ arma::sp_mat gen_sp_GRM() {
 
 
 // [[Rcpp::export]]
-arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
+arma::sp_fmat gen_sp_Sigma_largeMem_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
    arma::fvec dtVec = (1/wVec) * (tauVec(0));
-
-
    std::cout << "tauVec(0) " << tauVec(0) << std::endl;
 
 //   dtVec.print();
@@ -2581,7 +2597,7 @@ arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
     arma::sp_mat result(locationMat, valueVecNew, dimNum, dimNum);
 
 */
-   arma::sp_mat result = g_spGRM * tauVec(1);
+   arma::sp_fmat result = g_spGRM * tauVec(1);
    //std::cout << "tauVec(1) " << tauVec(1) << std::endl;
    //std::cout << "g_spGRM(1775,1775) " << g_spGRM(1775,1775) << std::endl;
    result.diag() = result.diag() + dtVec;   
@@ -2593,8 +2609,6 @@ arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
 	//std::cout << "Kmat_vec[i] " << Kmat_vec[i](1775,1775) << std::endl;
       }	      
     }
-
-
 //    std::cout << "result.n_rows " << result.n_rows << std::endl;
 //    std::cout << "result.n_cols " << result.n_cols << std::endl;
     //result.print();
@@ -2604,6 +2618,86 @@ arma::sp_mat gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
 }
 
 
+
+// [[Rcpp::export]]
+void gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
+   arma::fvec dtVec = (1/wVec) * (tauVec(0));
+   std::cout << "tauVec(0) " << tauVec(0) << std::endl;
+   arma::sp_fmat GRM_Imat, GRM_Tmat;
+
+   arma::fvec crossProd1, GRM_I_bvec, Ibvec, Tbvec, GRM_T_bvec, crossProdGRM_TGIb, crossProdGRM_IGTb, V_I_bvec, V_T_bvec, crossProdV_TGIb, crossProdV_IGTb, crossProdGRM_TIb, crossProdGRM_ITb;
+   unsigned int tau_ind = 0;
+   //arma::sp_fmat g_spGRM_f = arma::conv_to< arma::sp_fmat >::from(g_spGRM); 
+
+   if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
+       g_spSigma = g_spGRM * tauVec(1);
+       g_spSigma.diag() = g_spSigma.diag() + dtVec;
+       tau_ind = tau_ind + 2;
+
+
+   }else{
+       GRM_Imat = g_spGRM * (g_I_longl_mat.t());
+       g_spSigma = g_I_longl_mat * GRM_Imat;
+       g_spSigma = g_spSigma * tauVec(1);
+       g_spSigma.diag() = g_spSigma.diag() + dtVec;
+       tau_ind = tau_ind + 2;
+
+
+       if(g_T_longl_mat.n_rows > 0){
+           GRM_Tmat = g_spGRM * (g_T_longl_mat.t());
+           g_spSigma = g_spSigma + tauVec(tau_ind) * (g_T_longl_mat * GRM_Imat + g_I_longl_mat * GRM_Tmat);
+           tau_ind = tau_ind + 1;
+           g_spSigma = g_spSigma + tauVec(tau_ind) * (g_T_longl_mat * GRM_Tmat);
+           tau_ind = tau_ind + 1;
+
+       }
+
+   }
+
+
+   if(g_T_longl_mat.n_rows == 0 && g_I_longl_mat.n_rows == 0){
+        if(Kmat_vec.size() > 0){
+             for(unsigned int i = 0; i < Kmat_vec.size(); i++){
+                     g_spSigma = g_spSigma + tauVec(tau_ind)*(Kmat_vec[i]);
+                     tau_ind = tau_ind + 1;
+             }
+         }
+   }else{
+       g_spSigma = g_spSigma + tauVec(tau_ind) * g_I_longl_mat * (g_I_longl_mat.t());
+       tau_ind = tau_ind + 1;
+
+       if(g_T_longl_mat.n_rows > 0){
+
+           g_spSigma = g_spSigma + tauVec(tau_ind) * (g_T_longl_mat * (g_I_longl_mat.t()) + g_I_longl_mat * (g_T_longl_mat.t()));
+           tau_ind = tau_ind + 1;
+           g_spSigma = g_spSigma + tauVec(tau_ind) * (g_T_longl_mat * (g_T_longl_mat.t()));
+           tau_ind = tau_ind + 1;
+                        //crossProdGRM_TGIb = g_T_longl_mat * GRM_I_bvec;
+                        //crossProdGRM_IGTb = g_I_longl_mat * GRM_T_bvec;
+       }
+
+       if(Kmat_vec.size() > 0){
+           for(unsigned int i = 0; i < Kmat_vec.size(); i++){
+                GRM_Imat = Kmat_vec[i] * (g_I_longl_mat.t());
+                g_spSigma = g_spSigma + tauVec(tau_ind) * (g_I_longl_mat * GRM_Imat);
+                tau_ind = tau_ind + 1;
+                if(g_T_longl_mat.n_rows > 0){
+                        GRM_Tmat = Kmat_vec[i] * (g_T_longl_mat.t());
+                        g_spSigma = g_spSigma + tauVec(tau_ind) * ((g_T_longl_mat * GRM_Imat) + (g_I_longl_mat * GRM_Tmat));
+                        tau_ind = tau_ind + 1;
+                        g_spSigma = g_spSigma + tauVec(tau_ind) * (g_T_longl_mat * GRM_Tmat);
+                        tau_ind = tau_ind + 1;
+                }
+           }
+        }
+
+   }
+
+    //return g_spSigma;
+}
+
+
+/*
 // [[Rcpp::export]]
 arma::fvec gen_spsolve_v4_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec & yvec){
 
@@ -2648,10 +2742,10 @@ arma::fvec gen_spsolve_v4_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fv
     return z;
 }
 
+*/
 
 //bool isUsePrecondM = false;
 //bool isUseSparseSigmaforInitTau = false;
-
 
 
 // [[Rcpp::export]]
@@ -2684,13 +2778,22 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
     arma::fvec xVec(Nnomissing);
     xVec.zeros();
     
-    if(isUseSparseSigmaforInitTau){
-	cout << "use sparse kinship to estimate initial tau " <<  endl;
-	xVec = gen_spsolve_v4_multiV(wVec, tauVec, bVec);
+    //if(isUseSparseSigmaforInitTau){
+    //	cout << "use sparse kinship to estimate initial tau " <<  endl;
+    //	xVec = gen_spsolve_v4_multiV(wVec, tauVec, bVec);
     //}else if(isUseSparseSigmaforModelFitting){
-    }else if(!isUseSparseSigmaforModelFitting){
-	cout << "use sparse kinship to fit the model " << endl;
-        xVec = gen_spsolve_v4_multiV(wVec, tauVec, bVec);
+    //}else if(!isUseSparseSigmaforModelFitting){
+    //	cout << "use sparse kinship to fit the model " << endl;
+    //    xVec = gen_spsolve_v4_multiV(wVec, tauVec, bVec);
+    if(g_isStoreSigma){
+      //arma::vec bVec0 = arma::conv_to<arma::vec>::from(bVec);
+      //arma::vec x = arma::spsolve(g_spSigma, bVec0);
+      //xVec = arma::conv_to<arma::fvec>::from(x);
+      //
+      //
+	    std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
+      xVec = arma::spsolve(g_spSigma, bVec);
+	    std::cout << " arma::spsolve(g_spSigma, bVec) 1" << std::endl;
     }else{
         arma::fvec rVec = bVec;
         arma::fvec r1Vec;
@@ -2728,7 +2831,11 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
         }else{
 //      std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
 //        std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() <<std::endl;
-	     zVec = gen_spsolve_v4_multiV(wVec, tauVec, rVec);
+	     //zVec = gen_spsolve_v4_multiV(wVec, tauVec, rVec);
+	     //arma::vec rVec0 = arma::conv_to<arma::vec>::from(rVec);	
+	      //arma::vec zVec0 = arma::spsolve(g_spSigma, rVec0);
+      	      //zVec = arma::conv_to<arma::fvec>::from(zVec0);
+	      zVec = arma::spsolve(g_spSigma, rVec);
                 //sparseGRMinC = (sparseGRMinC) * (tauVec(1));
                 //arma::fvec dtVec = (1/wVec) * (tauVec(0));
                 //(sparseGRMinC).diag() = (sparseGRMinC).diag() + dtVec;
@@ -2831,8 +2938,12 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
         if (!isUsePrecondM){
                 z1Vec = minvVec % r1Vec;
         }else{
-		z1Vec = gen_spsolve_v4_multiV(wVec, tauVec, r1Vec);
+	      //arma::vec r1Vec0 = arma::conv_to<arma::vec>::from(r1Vec);
+              //arma::vec z1Vec0 = arma::spsolve(g_spSigma, r1Vec0);
+              //z1Vec = arma::conv_to<arma::fvec>::from(z1Vec0);
+		//z1Vec = gen_spsolve_v4_multiV(wVec, tauVec, r1Vec);
                 //z1Vec = arma::spsolve(sparseGRMinC, r1Vec) ;
+		z1Vec = arma::spsolve(g_spSigma, r1Vec);
         }
 
 //       double wall3b = get_wall_time();
@@ -5115,9 +5226,10 @@ arma::fvec getMeanDiagofKmat(bool LOCO){
 		        int MminMAF = geno.getnumberofMarkerswithMAFge_minMAFtoConstructGRM();      
                 diagVec = (*geno.Get_Diagof_StdGeno()) /MminMAF;
               }else{
-                arma::vec diagVecofKmat_0;
-                diagVecofKmat_0 = arma::diagvec(g_spGRM);
-                diagVec = arma::conv_to< arma::fvec >::from(diagVecofKmat_0);
+                //arma::vec diagVecofKmat_0;
+                //diagVecofKmat_0 = arma::diagvec(g_spGRM);
+                //diagVec = arma::conv_to< arma::fvec >::from(diagVecofKmat_0);
+		diagVec = arma::diagvec(g_spGRM);
               }
             }else{
               diagVec = (*geno.Get_Diagof_StdGeno_LOCO());
@@ -5135,9 +5247,10 @@ arma::fvec getMeanDiagofKmat(bool LOCO){
           }
 
         }else{
-                diagVecG0 = g_spGRM.diag();
-                arma::vec diagVecGtemp(diagVecG0);
-                diagVecG = arma::conv_to< arma::fvec >::from(diagVecGtemp);
+                //diagVecG0 = g_spGRM.diag();
+                //arma::vec diagVecGtemp(diagVecG0);
+                //diagVecG = arma::conv_to< arma::fvec >::from(diagVecGtemp);
+		diagVec = arma::diagvec(g_spGRM);
                 diagVecG_I = diagVecG.elem(g_I_longl_vec);
 		diagVec = diagVecG_I;
                 mean_diag_kins_vec(0) = arma::mean(diagVec);

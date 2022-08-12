@@ -425,6 +425,12 @@ getsubGRM_orig = function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", rel
 	
 }
 
+set_dup_sample_index_inR = function(modelID){
+        b = as.numeric(factor(modelID, levels =  unique(modelID)))
+        set_dup_sample_index(b-1)
+}
+
+
 
 
 set_I_mat_inR = function(modelID){

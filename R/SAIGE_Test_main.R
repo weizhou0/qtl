@@ -235,9 +235,19 @@ SPAGMMATtest = function(bgenFile = "",
     isSparseGRM = TRUE
     if(sparseGRMFile != ""){ 
       #sparseSigmaRList = setSparseSigma(sparseSigmaFile)
-      sparseSigmaRList = setSparseSigma_new(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID, obj.model$theta, obj.model$mu2,  obj.model$traitType)
-      isSparseGRM = TRUE
+      if(!any(duplicated(obj.model$sampleID))){	    
+        sparseSigmaRList = setSparseSigma_new(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID, obj.model$theta, obj.model$mu2,  obj.model$traitType)
+      }else{
+        cat(length(obj.model$sampleID), " observations are used for analysis\n")
+        set_I_mat_inR(obj.model$sampleID)
+        if(!is.null(obj.model$longlVar)){
+          set_T_mat_inR(obj.model$sampleID, obj.model$longlVar)
+        }
+        getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)
+	set_Vmat_vec_orig(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID
 
+       }
+      isSparseGRM = TRUE
     }else{
       #if(!is.null(obj.model$useSparseGRMforVarRatio)){
       #	if(obj.model$useSparseGRMforVarRatio == TRUE){
@@ -246,7 +256,17 @@ SPAGMMATtest = function(bgenFile = "",
       #}		      
       sparseSigmaRList = list(nSubj = 0, locations = matrix(0,nrow=2,ncol=2), values = rep(0,2))  
       isSparseGRM = FALSE 
-    }	    
+    }
+
+
+
+
+
+
+
+
+
+
     ratioVecList = Get_Variance_Ratio(varianceRatioFile, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM) #readInGLMM.R
 
     if(is_fastTest){
@@ -273,7 +293,8 @@ SPAGMMATtest = function(bgenFile = "",
 
     nsample = length(obj.model$y)
     cateVarRatioMaxMACVecInclude = c(cateVarRatioMaxMACVecInclude, nsample)	
-    
+   
+
     #in Geno.R
     objGeno = setGenoInput(bgenFile = bgenFile,
                  bgenFileIndex = bgenFileIndex,

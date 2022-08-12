@@ -126,8 +126,8 @@ ReadModel = function(GMMATmodelFile = "", chrom="", LOCO=TRUE, is_Firth_beta=FAL
     modglmm$obj_cc$pi_1 = modglmm$mu2
   }else if(modglmm$traitType == "quantitative"){
     modglmm$mu2 = (1/tau[1])*rep(1,N)
-  }else if(obj.glmm.null$traitType == "count"){
-    modglmm$mu2 = modglmml$mu
+  }else if(modglmm$traitType == "count"){
+    modglmm$mu2 = modglmm$mu
   }
  #if(FALSE){
 

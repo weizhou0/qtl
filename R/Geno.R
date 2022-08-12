@@ -107,6 +107,9 @@ setGenoInput = function(bgenFile = "",
 		 AlleleOrder = NULL,
 		 sampleInModel = NULL)
 {
+  set_dup_sample_index_inR(sampleInModel)
+  sampleInModel = unique(sampleInModel)
+  
 
   dosageFileType = checkGenoInput(bgenFile = bgenFile,
                  bgenFileIndex = bgenFileIndex,
