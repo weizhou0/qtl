@@ -1243,7 +1243,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
 
 #Fits the null glmm
-glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE, useSparseGRMtoFitNULL = TRUE, useGRMtoFitNULL = TRUE) {
+glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE, useSparseGRMtoFitNULL = TRUE, useGRMtoFitNULL = TRUE, var_weights = NULL) {
   #Fits the null generalized linear mixed model for a poisson, binomial, and gaussian
   #Args:
   #  genofile: string. Plink file for the M1 markers to be used to construct the genetic relationship matrix
@@ -1372,7 +1372,14 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 
     print("tau")
     print(tau)
-	
+
+
+####set up weights for variance
+#if(!is.null(var_weights)){
+#	set_var_weights(var_weights)
+#}
+
+
     if(isStoreSigma){
       gen_sp_Sigma_multiV(W, tau)
     }
@@ -1430,6 +1437,11 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       if(isStoreSigma){
         gen_sp_Sigma_multiV(re.coef$W, tau)
       }
+      if(!is.null(var_weights)){
+	re.coef$W = re.coef$W * var_weights
+      }	      
+
+
       fit = fitglmmaiRPCG_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG, tolPCG, tol = tol, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
 
 	if(i == 1){
@@ -1450,7 +1462,9 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
      mu.eta = family$mu.eta(eta)
      sqrtW = mu.eta/sqrt(fit0$family$variance(mu))
      W = sqrtW^2
-
+     if(!is.null(var_weights)){
+        W = W * var_weights
+     }
 
 
      
@@ -1514,6 +1528,11 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 
   #mu2 = mu * (1-mu)
 
+   if(!is.null(var_weights)){
+        mu2 = mu2 * var_weights
+   }
+
+
   if(!isCovariateOffset){
     obj.noK = ScoreTest_NULL_Model(mu, mu2, y, X)
     glmmResult = list(theta=tau, coefficients=alpha, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, converged=converged,sampleID = subPheno$IID, obj.noK=obj.noK, y = y, X = X, traitType=traitType, isCovariateOffset = isCovariateOffset)
@@ -1562,6 +1581,10 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
         }else if(family$family == "gaussian"){
           mu2 = rep((1/(tau[1])),length(res))
         }
+
+	if(!is.null(var_weights)){
+          mu2 = mu2 * var_weights
+   	}
 
         if(!is.null(out.transform) & is.null(fit0$offset)){
           coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
