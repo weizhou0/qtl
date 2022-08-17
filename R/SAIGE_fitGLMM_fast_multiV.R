@@ -101,7 +101,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		skipVarianceRatioEstimation = FALSE, 
 		nrun = 30,
 		VmatFilelist = "",
-		VmatSampleFilelist = "")
+		VmatSampleFilelist = "", 
+		useGRMtoFitNULL=TRUE)
 {
 
     ##set up output files
@@ -122,6 +123,15 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	bimFile = paste0(plinkFile, ".bim")
 	bedFile = paste0(plinkFile, ".bed")
 	famFile = paste0(plinkFile, ".fam")
+    }
+    setgenoNULL()
+
+    if(!useGRMtoFitNULL){
+        useSparseGRMtoFitNULL = FALSE
+        useSparseGRMforVarRatio = FALSE
+        LOCO = FALSE
+        nThreads = 1
+        cat("No GRM will be used to fit the NULL model and nThreads is set to 1\n")
     }
 
 
@@ -168,6 +178,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     }
 
 
+
     if (useSparseGRMtoFitNULL | useSparseGRMforVarRatio) {
         if (!file.exists(sparseGRMFile)) {
             stop("sparseGRMFile ", sparseGRMFile, " does not exist!")
@@ -198,7 +209,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
             MaleCode, " in the column ", sexCol, " in the phenotype file will be included\n")
     }
 
-    if (!useSparseGRMtoFitNULL  | !skipVarianceRatioEstimation){
+    if ((!useSparseGRMtoFitNULL & useGRMtoFitNULL)  | !skipVarianceRatioEstimation){
         if (!file.exists(bedFile)) {
             stop("ERROR! bed file does not exsit\n")
         }
@@ -234,6 +245,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
             cat(nrow(sampleListwithGeno), " samples have genotypes\n")
         }
     }else{
+
+      if(useSparseGRMtoFitNULL | useSparseGRMforVarRatio){    
         sampleListwithGenov0 = data.table:::fread(sparseGRMSampleIDFile, 
         header = F, , colClasses = c("character"), data.table = F)
         colnames(sampleListwithGenov0) = c("IIDgeno")
@@ -242,7 +255,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         sampleListwithGeno = data.frame(sampleListwithGeno)
         sampleListwithGeno$IndexGeno = seq(1, nrow(sampleListwithGeno), 
             by = 1)
-        cat(nrow(sampleListwithGeno), " samples are in the sparse GRM\n")	
+        cat(nrow(sampleListwithGeno), " samples are in the sparse GRM\n")
+      }	
     }	    
 
 
@@ -331,8 +345,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
             formula = paste0(phenoCol, "~", paste0(covarColList, 
                 collapse = "+"))
             hasCovariate = TRUE
-        }
-        else {
+        }else {
             formula = paste0(phenoCol, "~ 1")
             hasCovariate = FALSE
         }
@@ -365,15 +378,14 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
 
 
-
-	if((useSparseGRMtoFitNULL & !skipVarianceRatioEstimation) | useSparseGRMforVarRatio){
+        if(sparseGRMSampleIDFile != ""){
+	#if((useSparseGRMtoFitNULL & !skipVarianceRatioEstimation) | useSparseGRMforVarRatio){
 		sampleListwithGenov0 = data.table:::fread(sparseGRMSampleIDFile,
                 header = F, , colClasses = c("character"), data.table = F)
                 colnames(sampleListwithGenov0) = c("IIDgeno")
 		cat(length(sampleListwithGenov0$IIDgeno), " samples are in the sparse GRM\n")
 		mmat_nomissing = mmat_nomissing[which(mmat_nomissing$IID %in% sampleListwithGenov0$IIDgeno), ]
 		cat(nrow(mmat_nomissing), " samples who have non-missing phenotypes are also in the sparse GRM\n")
-
 	}
 
 
@@ -387,25 +399,36 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		stop("No duplicated sample IDs are detected in the phenotype file\n")
 	}	
       }	      
-
-        dataMerge = merge(mmat_nomissing, sampleListwithGeno, 
+	if(useGRMtoFitNULL){
+        	dataMerge = merge(mmat_nomissing, sampleListwithGeno, 
             by.x = "IID", by.y = "IIDgeno")
-        dataMerge_sort = dataMerge[with(dataMerge, order(IndexGeno)),]
+        	dataMerge_sort = dataMerge[with(dataMerge, order(IndexGeno)),]
         #dataMerge_sort = dataMerge[with(dataMerge, order(IndexPheno)),]
-        print("Test")
+	}else{
+		dataMerge_sort = mmat_nomissing
+		dataMerge_sort$IIDgeno = dataMerge_sort$IID
+
+	}	
+
+	print("Test")
 	print(head(dataMerge_sort))
 	#dataMerge_sort = dataMerge
 
         rm(mmat)
 	rm(mmat_nomissing)
-	gc()	
-	indicatorGenoSamplesWithPheno = (sampleListwithGeno$IndexGeno %in% dataMerge_sort$IndexGeno)
+	gc()
+	if(useGRMtoFitNULL){	
+		indicatorGenoSamplesWithPheno = (sampleListwithGeno$IndexGeno %in% dataMerge_sort$IndexGeno)
 
-        if (length(unique(dataMerge_sort$IIDgeno)) < length(unique(sampleListwithGeno$IIDgeno))) {
-            cat(length(unique(sampleListwithGeno$IIDgeno)) - length(unique(dataMerge_sort$IIDgeno)), 
+        	if (length(unique(dataMerge_sort$IIDgeno)) < length(unique(sampleListwithGeno$IIDgeno))) {
+            	cat(length(unique(sampleListwithGeno$IIDgeno)) - length(unique(dataMerge_sort$IIDgeno)), 
                 " samples in geno file do not have phenotypes\n")
-        }
-        cat(length(unique(dataMerge_sort$IIDgeno)), " samples will be used for analysis\n")
+        	}
+        	cat(length(unique(dataMerge_sort$IIDgeno)), " samples will be used for analysis\n")
+	}else{
+		indicatorGenoSamplesWithPheno = rep(TRUE, nrow(dataMerge_sort))
+
+	}	
 
 	if(any(duplicated(dataMerge_sort$IID))){
 		cat(nrow(dataMerge_sort), " observations will be used for analysis\n")
@@ -416,9 +439,14 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		set_I_mat_inR(dataMerge_sort$IID)
 		if(longlCol != ""){
 			set_T_mat_inR(dataMerge_sort$IID, dataMerge_sort$longlVar)
-		}	
-	}	
-
+		}
+	
+	}else{
+		if(!useGRMtoFitNULL){
+			stop("No duplicated IDs are observed in the phenotype file, so GRM must be used to fit the null model. Please set useGRMtoFitNULL=TRUE\n")
+		}
+	}
+	set_useGRMtoFitNULL(useGRMtoFitNULL)	
     }
 
 
@@ -508,7 +536,6 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
     if (useSparseGRMtoFitNULL | useSparseGRMforVarRatio) {
 	getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)
-        isPCGforSigmaInv = TRUE	    
    	#getsubGRM(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID, dataMerge_sort$longlVar)    
         #m4 = gen_sp_v2(sparseGRMtest)
         #cat("Setting up sparse GRM using ", sparseGRMFile, " and ", sparseGRMSampleIDFile, "\n")
@@ -527,19 +554,35 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     set_Vmat_vec_orig(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID)
 
     numofV = get_numofV()
+    cat("numofV ", numofV, "\n")
     if(any(duplicated(dataMerge_sort$IID))){
         if(longlCol == ""){
-	       num_Kmat = numofV + 3	
+	    if(useGRMtoFitNULL){	
+	       num_Kmat = numofV + 3
+            }else{
+	       num_Kmat = numofV + 2	
+	    }	    
                #k = num_Kmat + 3
         }else{
+	    if(useGRMtoFitNULL){	
 	       num_Kmat = 7 + numofV*3
+	    }else{
+	       num_Kmat = 4 + numofV*3
+	    }	    
 	       #k = num_Kmat + 2		
         }
     }else{
-	num_Kmat = numofV + 2   
+	if(useGRMtoFitNULL){    
+	    num_Kmat = numofV + 2
+        }else{
+	    num_Kmat = numofV + 1	
+	}	
         #k = 2
     }
     k = num_Kmat
+
+
+
     set_num_Kmat(num_Kmat)
     cat("num_Kmat ", num_Kmat, "\n")
 
@@ -555,7 +598,6 @@ fitNULLGLMM_multiV = function(plinkFile = "",
             if(isCateVarianceRatio){
                 minMAC_varRatio = min(cateVarRatioMinMACVecExclude)
                 maxMAC_varRatio = max(cateVarRatioMaxMACVecInclude)
-                #maxMAC_varRatio = max(max(cateVarRatioMaxMACVecInclude), minMACforGRM - 1)
                 cat("Categorical variance ratios will be estimated. Please make sure there are at least 200 markers in each MAC category.\n")
             }else{
                 minMAC_varRatio = 20
@@ -640,7 +682,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     obj.noK = NULL
 
 
-    #if(length(fit0$y) > 2000){
+    #if(length(fit0$y) > 20000){
     isStoreSigma = FALSE
     #}else{
     #  isStoreSigma = TRUE
@@ -650,7 +692,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     set_store_sigma(isStoreSigma)    
 
     if (!skipModelFitting) {
-        setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
+        #setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
         cat("Start fitting the NULL GLMM\n")
         t_begin = proc.time()
         print(t_begin)
@@ -660,6 +702,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	fixtau = rep(0, k)
 	tauInit = tau
 
+	set_isSparseGRM(useSparseGRMtoFitNULL)
+        set_useGRMtoFitNULL(useGRMtoFitNULL)
 
         system.time(modglmm <- glmmkin.ai_PCG_Rcpp_multiV(bedFile, bimFile, famFile, Xorig, isCovariateOffset, 
                 fit0, tau = tau, fixtau = fixtau, maxiter = maxiter, 
@@ -671,7 +715,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 chromosomeEndIndexVec = chromosomeEndIndexVec, 
                 traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform, 
                 isDiagofKinSetAsOne = isDiagofKinSetAsOne, 
-		isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma))
+		isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL))
          
 	modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
             
@@ -858,7 +902,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 nThreads = nThreads, cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
                 cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
                 minMAFforGRM = minMAFforGRM, isDiagofKinSetAsOne = isDiagofKinSetAsOne,
-                includeNonautoMarkersforVarRatio = includeNonautoMarkersforVarRatio, isStoreSigma = isStoreSigma)
+                includeNonautoMarkersforVarRatio = includeNonautoMarkersforVarRatio, isStoreSigma = isStoreSigma, useGRMtoFitNULL = useGRMtoFitNULL)
     }else{
         cat("Skip estimating variance ratios\n")
     }
@@ -895,7 +939,8 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
                                                     minMAFforGRM,
                                                     isDiagofKinSetAsOne,
                                                     includeNonautoMarkersforVarRatio,
-						    isStoreSigma = FALSE){
+						    isStoreSigma = FALSE, 
+						    useGRMtoFitNULL = TRUE){
 
   obj.noK = obj.glmm.null$obj.noK
   if(file.exists(testOut)){file.remove(testOut)}
@@ -916,6 +961,13 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
          gen_sp_Sigma_multiV(W, tauVecNew)
   }
   X = obj.glmm.null$X
+
+
+  set_isSparseGRM(useSparseGRMtoFitNULL)
+  set_useGRMtoFitNULL(useGRMtoFitNULL)
+  if(!useGRMtoFitNULL){
+    useSparseGRMforVarRatio = FALSE
+  }	  
   Sigma_iX_noLOCO = getSigma_X_multiV(W, tauVecNew, X, maxiterPCG, tolPCG, LOCO=FALSE)
 
 
@@ -946,6 +998,8 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
   }
  }
+
+
   mMarkers = gettotalMarker()
   listOfMarkersForVarRatio = list()
   MACvector = getMACVec()
@@ -1077,8 +1131,12 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
           W = sqrtW^2
           print("W[1:10]")
           print(W[1:10])
-         print("mu[1:10]")
+          print("mu[1:10]")
           print(mu[1:10])
+
+
+	  set_isSparseGRM(useSparseGRMtoFitNULL)
+  	  set_useGRMtoFitNULL(useGRMtoFitNULL)
 
           Sigma_iG = getSigma_G_multiV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
           Sigma_iX = Sigma_iX_noLOCO
@@ -1088,34 +1146,18 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	  cat("AC ", AC, "\n")	
           m1 = innerProduct(mu,g)
 	  S = q-m1
-if(FALSE){
-   if(!useSparseGRMtoFitNULL){
-        if(useSparseGRMforVarRatio){
-           pcginvSigma = solve(sparseSigma, g, sparse=T)
-           var2_a = t(g) %*% pcginvSigma
-           var2sparseGRM = var2_a[1,1]
-           varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
-        }
-    }else{
-	  #varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, 1)
-	  pcginvSigma = solve(sparseSigma, g, sparse=T)
-	  var2_a = t(g) %*% pcginvSigma
-	  var2sparseGRM = var2_a[1,1]
-	  x=t(G)%*%Sigma_iG/AC
-	  #cat(" x ", x, " var2 ", var2sparseGRM , "\n")
-	  varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
-    }
-}
 
-
-if(useSparseGRMforVarRatio){
+   if(useSparseGRMforVarRatio){
+	set_isSparseGRM(useSparseGRMforVarRatio)
+	Sigma_iG = getSigma_G_noV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
 	var2_a = t(g) %*% Sigma_iG/(sqrt(AC))
 	var2sparseGRM = var2_a[1,1]
+	cat("var2sparseGRM ", var2sparseGRM*AC, "\n")
 	varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
 
-}else{
+  }else{
         varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec,1)
-}	
+  }	
 
    p_exact = pchisq(S^2/var1, df=1, lower.tail=F)
 
@@ -1136,8 +1178,8 @@ if(useSparseGRMforVarRatio){
 
     cat("AC ", AC, "\n")
     cat("S ", S, "\n")
-    cat("var1 ", var1, "\n")
-    cat("var2null ", var2null, "\n")
+    cat("var1 ", var1*AC, "\n")
+    cat("var2null ", var2null*AC, "\n")
     cat("p_exact ", p_exact, "\n")
     cat("p_approx ", p_approx, "\n")
     cat("p_approx_true ", p_approx_true, "\n")
@@ -1201,7 +1243,7 @@ if(useSparseGRMforVarRatio){
 
 
 #Fits the null glmm
-glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE) {
+glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE, useSparseGRMtoFitNULL = TRUE, useGRMtoFitNULL = TRUE) {
   #Fits the null generalized linear mixed model for a poisson, binomial, and gaussian
   #Args:
   #  genofile: string. Plink file for the M1 markers to be used to construct the genetic relationship matrix
@@ -1233,10 +1275,16 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     print("Start reading genotype plink file here")
   }
 
-  print("subSampleInGeno")
-  print(subSampleInGeno)
+  #print("subSampleInGeno")
+  #print(subSampleInGeno)
 
+  print(head(subPheno))
+  set_dup_sample_index(as.numeric(factor(subPheno$IID, levels =  unique(subPheno$IID))))
+
+  #if((!useSparseGRMtoFitNULL & useGRMtoFitNULL) | (skipVarianceRatioEstimation)){
+  if(bedFile != ""){
   re1 = system.time({setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)})
+  }
   if(verbose){
     print("Genotype reading is done")
   }
@@ -1371,10 +1419,10 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       eta0 = eta
       # use Get_Coef before getAIScore
       t_begin_Get_Coef = proc.time()
-      if(isStoreSigma){
-        gen_sp_Sigma_multiV(W, tau)
-      }
-
+      #if(isStoreSigma){
+      #  gen_sp_Sigma_multiV(W, tau)
+      #}
+#cat("eta0 ", eta0, "\n")
       re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset, verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)
       t_end_Get_Coef =  proc.time()
       cat("t_end_Get_Coef - t_begin_Get_Coef\n")

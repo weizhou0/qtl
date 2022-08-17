@@ -65,15 +65,15 @@ setSparseSigma_new = function(sparseGRMFile, sparseGRMSampleIDFile, relatednessC
 	sumSpGRM[which(sumSpGRM[,1] == sumSpGRM[,2]), 3] = sumSpGRM[which(sumSpGRM[,1] == sumSpGRM[,2]), 3] + tauVec[1]
 
   }
-   #diag(sparseSigma) = tauVec[1] + diag(sparseSigma)
-  nSubj = dim(sparseGRM)[1]
+  #nSubj = dim(sparseGRM)[1]
 
-  locations = t(sumSpGRM[,c(1,2)])
-  print(dim(locations))
-  sigmaMatListR = list(locations = t(sumSpGRM[,c(1,2)]),
-                     values = sumSpGRM[,3],
-                     nSubj = nSubj)
-  return(sigmaMatListR)
+  #locations = t(sumSpGRM[,c(1,2)])
+  #print(dim(locations))
+  #sigmaMatListR = list(locations = t(sumSpGRM[,c(1,2)]),
+  #                   values = sumSpGRM[,3],
+  #                   nSubj = nSubj)
+  #return(sigmaMatListR)
+  return(sumSpGRM)
 }
 
 

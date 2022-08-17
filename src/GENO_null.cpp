@@ -22,6 +22,21 @@ using namespace RcppParallel;
 
 namespace NullGENO {
 
+/*
+NullGenoClass::NullGenoClass(std::string bedfile, std::string bimfile, std::string famfile, std::vector<int> & subSampleInGeno, std::vector<bool> & indicatorGenoSamplesWithPheno, float memoryChunk, bool  isDiagofKinSetAsOne)
+{
+	
+	setGenoObj(bedfile, bimfile, famfile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne);
+
+}
+*/
+
+
+NullGenoClass::NullGenoClass(){
+	
+}	
+
+
 void NullGenoClass::setStdGenoLookUpArr(float mafVal, float invsdVal, arma::fvec & stdGenoLookUpArr){
                 float mafVal2 = 2*mafVal;
                 stdGenoLookUpArr(0) = (0-mafVal2)*invsdVal;
@@ -991,6 +1006,11 @@ void NullGenoClass::Get_Samples_StdGeno(arma::ivec SampleIdsVec){
         //return(stdGenoVec);
 }
 
+void NullGenoClass::setstartendIndexVec(arma::ivec & t_startIndexVec, arma::ivec & t_endIndexVec){
 
+	startIndexVec = t_startIndexVec;
+	endIndexVec = t_endIndexVec;
+
+}
 
 }	

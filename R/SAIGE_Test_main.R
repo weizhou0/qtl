@@ -93,6 +93,8 @@ SPAGMMATtest = function(bgenFile = "",
                  condition="",
 		 sparseGRMFile="",
                  sparseGRMSampleIDFile="",
+		 VmatFilelist = "",
+                 VmatSampleFilelist = "",
 		 relatednessCutoff = 0, 
                  groupFile="",
                  weights.beta=c(1,25),
@@ -231,22 +233,30 @@ SPAGMMATtest = function(bgenFile = "",
         print("LOCO = FASLE and leave-one-chromosome-out is not applied")
     }	    
 
-    sparseSigmaRList = list()
+    #sparseSigmaRList = list()
     isSparseGRM = TRUE
-    if(sparseGRMFile != ""){ 
+    if(sparseGRMFile != ""){
+
+	       set_isSparseGRM(TRUE)
+        set_useGRMtoFitNULL(TRUE)	    
+	  #g_spGRM  
+      getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)	    
       #sparseSigmaRList = setSparseSigma(sparseSigmaFile)
-      if(!any(duplicated(obj.model$sampleID))){	    
-        sparseSigmaRList = setSparseSigma_new(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID, obj.model$theta, obj.model$mu2,  obj.model$traitType)
-      }else{
+      if(any(duplicated(obj.model$sampleID))){
+      #          getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)	      
+      #  sparseSigmaRList = setSparseSigma_new(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID, obj.model$theta, obj.model$mu2,  obj.model$traitType)
+      #}else{
         cat(length(obj.model$sampleID), " observations are used for analysis\n")
         set_I_mat_inR(obj.model$sampleID)
         if(!is.null(obj.model$longlVar)){
           set_T_mat_inR(obj.model$sampleID, obj.model$longlVar)
         }
-        getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)
-	set_Vmat_vec_orig(VmatFilelist, VmatSampleFilelist, dataMerge_sort$IID
+        #getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)
+	SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0))) 
+      }else{
+	  SigmaMat_sp = setSparseSigma_new(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID, obj.model$theta, obj.model$mu2,  obj.model$traitType)     
 
-       }
+       }	       
       isSparseGRM = TRUE
     }else{
       #if(!is.null(obj.model$useSparseGRMforVarRatio)){
@@ -254,18 +264,11 @@ SPAGMMATtest = function(bgenFile = "",
       # 		stop("sparse GRM is not specified but it was used in Step 1.\n")
       #	}	
       #}		      
-      sparseSigmaRList = list(nSubj = 0, locations = matrix(0,nrow=2,ncol=2), values = rep(0,2))  
+      #sparseSigmaRList = list(nSubj = 0, locations = matrix(0,nrow=2,ncol=2), values = rep(0,2))
+      SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))	    
       isSparseGRM = FALSE 
     }
-
-
-
-
-
-
-
-
-
+    set_Vmat_vec_orig(VmatFilelist, VmatSampleFilelist, obj.model$sampleID)
 
     ratioVecList = Get_Variance_Ratio(varianceRatioFile, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM) #readInGLMM.R
 
@@ -320,7 +323,7 @@ SPAGMMATtest = function(bgenFile = "",
 		is_fastTest = FALSE
 		cat("is_fastTest is not working for conditional analysis.\n")
 	}
-   }else {
+   }else{
         isCondition = FALSE
    }
     
@@ -329,6 +332,10 @@ SPAGMMATtest = function(bgenFile = "",
         cat("Conducting conditional analysis. Please specify the conditioning markers in the order as they are store in the genotype/dosage file.\n")
     }	   
     #set up the SAIGE object based on the null model results
+	print("SigmaMat_sp")
+    print(SigmaMat_sp)
+
+
     setSAIGEobjInCPP(t_XVX=obj.model$obj.noK$XVX,
 		     t_XXVX_inv=obj.model$obj.noK$XXVX_inv,
 		     t_XV=obj.model$obj.noK$XV,
@@ -351,16 +358,14 @@ SPAGMMATtest = function(bgenFile = "",
 		     t_flagSparseGRM = isSparseGRM,
 		     t_isFastTest = is_fastTest,
 		     t_pval_cutoff_for_fastTest = pval_cutoff_for_fastTest,
-        	     t_locationMat = as.matrix(sparseSigmaRList$locations),
-        	     t_valueVec = sparseSigmaRList$values,
-        	     t_dimNum = sparseSigmaRList$nSubj, 
 		     t_isCondition = isCondition,
 		     t_condition_genoIndex = condition_genoIndex,
 		     t_is_Firth_beta = is_Firth_beta,
 		     t_pCutoffforFirth = pCutoffforFirth,
 		     t_offset = obj.model$offset, 
-		     t_resout = as.integer(obj.model$obj_cc$res.out))
-  rm(sparseSigmaRList)
+		     t_resout = as.integer(obj.model$obj_cc$res.out),
+		     t_SigmaMat_sp = SigmaMat_sp)
+  #rm(sparseSigmaRList)
   gc()
    #process condition
     if (isCondition) {

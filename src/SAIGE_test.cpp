@@ -24,7 +24,7 @@ namespace SAIGE {
 
 SAIGEClass::SAIGEClass(
 	arma::mat & t_XVX,
-	arma::mat  t_XXVX_inv,
+	arma::mat t_XXVX_inv,
 	arma::mat & t_XV,
 	arma::mat & t_XVX_inv_XV,
 	arma::mat & t_Sigma_iXXSigma_iX,
@@ -45,15 +45,13 @@ SAIGEClass::SAIGEClass(
 	bool t_flagSparseGRM,
 	bool t_isFastTest,
 	double t_pval_cutoff_for_fastTest,
-	arma::umat & t_locationMat,
-	arma::vec & t_valueVec,
-        int t_dimNum,
 	bool t_isCondition,
         std::vector<uint32_t> & t_condition_genoIndex,
 	bool t_is_Firth_beta,
         double t_pCutoffforFirth,
         arma::vec & t_offset,
-	arma::vec & t_resout){
+	arma::vec & t_resout, 
+	arma::sp_mat & t_SigmaMat_sp){
 
 
     m_XVX = t_XVX;
@@ -108,15 +106,19 @@ SAIGEClass::SAIGEClass(
 	m_offset = t_offset;
       //}
     }
-    m_dimNum = t_dimNum;
+    //m_dimNum = t_dimNum;
     m_flagSparseGRM = t_flagSparseGRM;
     m_isFastTest = t_isFastTest;
     m_pval_cutoff_for_fastTest = t_pval_cutoff_for_fastTest;
-    if(m_dimNum != 0){
-	m_locationMat = t_locationMat;
-    	m_valueVec = t_valueVec;
-    }
-
+    //if(m_dimNum != 0){
+    //	m_locationMat = t_locationMat;
+    //	m_valueVec = t_valueVec;
+    //}
+    //
+    //if(t_SigmaMat_sp.n_rows > 2){
+	std::cout << "here m_SigmaMat_sp" << std::endl;
+	m_SigmaMat_sp = t_SigmaMat_sp;
+    //}	    
 }    
 
 
@@ -158,15 +160,23 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
       t_P2Vec = t_gtilde % m_mu2 *m_tauvec[0];  
       var2m = dot(t_P2Vec , t_gtilde);
     }else{
-      arma::sp_mat m_SigmaMat_sp = gen_sp_SigmaMat();
+      if(m_SigmaMat_sp.n_rows > 2){	
       t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
-      var2m = dot(t_P2Vec , t_gtilde);
+      var2m = dot(t_P2Vec, t_gtilde);
       if(m_isVarPsadj){
 	var2m = var2m - t_gtilde.t() * m_Sigma_iXXSigma_iX * m_X.t() * t_P2Vec;	
       }
+     }else{	
+	t_P2Vec = m_sigmainvG_noV;
+	var2m = dot(t_P2Vec , t_gtilde);
+     }
+
     }	      
     var2 = var2m(0,0);
+        std::cout << "var2 " << var2 << std::endl;
+    std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
     double var1 = var2 * m_varRatioVal;
+        std::cout << "var1 " << var1 << std::endl;
     double stat = S*S/var1;
     double t_pval;
     
@@ -441,7 +451,8 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 if(!t_isER){
 
 
-  if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
+  //if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
+  if(StdStat > m_SPA_Cutoff && m_traitType == "binary"){
 
        if(!is_gtilde){
           t_gtilde.resize(m_n);
@@ -523,10 +534,10 @@ if(!t_isER){
 	double tol0 = std::numeric_limits<double>::epsilon();
 	tol1 = std::pow(tol0, 0.25);
 	if(p_iIndexComVecSize >= 0.5){
-		//std::cout << "SPA_fast" << std::endl;
+		std::cout << "SPA_fast" << std::endl;
         	SPA_fast(m_mu, t_gtilde, q, qinv, pval_noadj, false, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, t_SPApval, t_isSPAConverge);
 	}else{
-		//std::cout << "SPA" << std::endl;
+		std::cout << "SPA" << std::endl;
 		SPA(m_mu, t_gtilde, q, qinv, pval_noadj, tol1, logp, m_traitType, t_SPApval, t_isSPAConverge);	
 	}
 
@@ -544,10 +555,11 @@ if(!t_isER){
         } 
   }
    t_pval_noSPA = pval_noadj; 
-   if(m_traitType!="quantitative"){
+   //if(m_traitType!="quantitative"){
+   if(m_traitType=="binary"){
         if(t_isSPAConverge){
-                //t_pval = t_SPApval;
-                t_pval = pval_noadj;
+                t_pval = t_SPApval;
+                //t_pval = pval_noadj;
         }else{
                 t_pval = pval_noadj;
         }
@@ -671,7 +683,8 @@ if(!t_isER){
   t_pval_noSPA_c = pval_noSPA_c; 
 
 
-    if(m_traitType != "quantitative" && stat_c > std::pow(m_SPA_Cutoff,2)){
+    //if(m_traitType != "quantitative" && stat_c > std::pow(m_SPA_Cutoff,2)){
+    if(m_traitType == "binary" && stat_c > std::pow(m_SPA_Cutoff,2)){
 	bool t_isSPAConverge_c;
 	double q_c, qinv_c, pval_noadj_c, SPApval_c;    
 	if(m_traitType == "binary"){
@@ -735,8 +748,24 @@ if(!t_isER){
       if(!m_flagSparseGRM_cur){
         t_P2Vec = t_gtilde % m_mu2 *m_tauvec[0];
       }else{
-        arma::sp_mat m_SigmaMat_sp = gen_sp_SigmaMat();
-        t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
+
+	 if(m_SigmaMat_sp.n_rows > 2){
+
+
+      t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
+      //var2m = dot(t_P2Vec , t_gtilde);
+      //if(m_isVarPsadj){
+      //  var2m = var2m - t_gtilde.t() * m_Sigma_iXXSigma_iX * m_X.t() * t_P2Vec;
+      //}
+     }else{
+        t_P2Vec = m_sigmainvG_noV;
+        //var2m = dot(t_P2Vec , t_GVec);
+     }
+
+
+
+        //arma::sp_mat m_SigmaMat_sp = gen_sp_SigmaMat();
+        //t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
       }
     }
 }
