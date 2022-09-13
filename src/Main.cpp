@@ -62,7 +62,7 @@ arma::uvec g_covarianceidxMat_col1;
 arma::uvec g_covarianceidxMat_col2;
 arma::uvec g_covarianceidxMat_col3;
 arma::uvec g_covarianceidxMat_notcol1;
-
+//arma::fvec g_var_weights;
 
 
 
@@ -5732,3 +5732,10 @@ arma::fvec Get_OneSNP_StdGeno(int SNPIdx)
 
 }
 
+/*
+// [[Rcpp::export]]
+void set_var_weights(arma::vec & t_var_weights){
+	arma::fvec t_var_weights_f = arma::conv_to< arma::fvec >::from(t_var_weights); 
+	g_var_weights = t_var_weights_f;
+}
+*/

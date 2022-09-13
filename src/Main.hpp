@@ -1,9 +1,12 @@
 #ifndef MAIN_HPP
 #define MAIN_HPP
 
+#define ARMA_USE_SUPERLU 1
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
+
+void set_dup_sample_index(arma::uvec & t_dup_sample_Index);
 
 void setAssocTest_GlobalVarsInCPP(std::string t_impute_method,
                 double t_missing_cutoff,
@@ -154,9 +157,6 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         bool t_flagSparseGRM,
 	bool t_isFastTest,
 	double t_pval_cutoff_for_fastTest,
-        arma::umat & t_locationMat,
-        arma::vec & t_valueVec,
-        int t_dimNum,
         bool t_isCondition,
         std::vector<uint32_t> & t_condition_genoIndex,
 	bool t_is_Firth_beta,
@@ -358,5 +358,180 @@ int writeOutfile_singleInGroup(bool t_isMoreOutput,
 
 uint32_t Unified_getSampleSizeinGeno(std::string & t_genoType);
 uint32_t Unified_getSampleSizeinAnalysis(std::string & t_genoType);
+
+
+void setupSparseGRM_new(arma::sp_mat & t_spGRM);
+
+void set_I_longl_mat(arma::sp_mat & t_Ilongmat, arma::vec & t_I_longl_vec);
+
+void set_T_longl_mat(arma::sp_mat & t_Tlongmat, arma::vec & t_T_longl_vec);
+
+arma::fvec getCrossprodMatAndKin(arma::fcolvec& bVec, bool LOCO);
+
+arma::fcolvec getCrossprod_multiV(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+
+arma::fvec getDiagOfSigma_multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+
+void gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec);
+
+arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG, bool LOCO);
+
+
+void set_seed(unsigned int seed);
+
+Rcpp::NumericVector nb(int n);
+
+void setStartEndIndex(int startIndex, int endIndex, int chromIndex);
+
+void setStartEndIndexVec( arma::ivec & startIndex_vec,  arma::ivec & endIndex_vec);
+
+float calCV(arma::fvec& xVec);
+
+arma::fmat getSigma_X_multiV(arma::fvec& wVec, arma::fvec& tauVec,arma::fmat& Xmat, int maxiterPCG, float tolPCG, bool LOCO);
+
+arma::fvec  getSigma_G_multiV(arma::fvec& wVec, arma::fvec& tauVec,arma::fvec& Gvec, int maxiterPCG, float tolPCG, bool LOCO);
+
+Rcpp::List fitglmmaiRPCG_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec &wVec,  arma::fvec & tauVec, arma::ivec & fixtauVec, arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
+int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOCO);
+
+arma::fvec getMeanDiagofKmat(bool LOCO);
+
+arma::ivec updatefixrhoidx0(arma::fvec & t_tau0Vec, float tol);
+
+arma::ivec tauUpdateValue(arma::fvec & t_tau0Vec);
+
+Rcpp::List getAIScore_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, arma::ivec & fixtauVec,
+arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
+int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO);
+
+
+arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec & fixtauVec, arma::fmat& cov1,  int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO);
+
+
+Rcpp::List getCoefficients_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, int maxiterPCG, float tolPCG, bool LOCO);
+
+
+void setminMAC_VarianceRatio(float t_minMACVarRatio, float t_maxMACVarRatio, bool t_isVarianceRatioinGeno);
+
+
+arma::fvec get_GRMdiagVec();
+
+
+void setminMAFforGRM(float minMAFforGRM);
+
+
+void setmaxMissingRateforGRM(float maxMissingforGRM);
+
+
+void set_Diagof_StdGeno_LOCO();
+
+
+arma::fvec get_DiagofKin();
+
+arma::fvec parallelCrossProd_usingSubMarker(arma::fcolvec & bVec);
+
+arma::fvec getCrossprodMatAndKin_usingSubMarker(arma::fcolvec& bVec);
+
+float parallelInnerProduct(std::vector<float> &x, std::vector<float> &y);
+
+Rcpp::List createSparseKin(arma::fvec& markerIndexVec, float relatednessCutoff, arma::fvec& wVec,  arma::fvec& tauVec);
+
+
+Rcpp::List refineKin(float relatednessCutoff);
+
+arma::fmat getColfromStdGenoMultiMarkersMat(arma::uvec & a);
+
+int getNColStdGenoMultiMarkersMat();
+
+int getNRowStdGenoMultiMarkersMat();
+
+void setSubMarkerIndex(arma::ivec &subMarkerIndexRandom);
+
+void setRelatednessCutoff(float a);
+
+double innerProduct(Rcpp::NumericVector x, Rcpp::NumericVector y) ;
+
+arma::fvec getDiagOfSigma_noV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+
+arma::fcolvec getCrossprod_noV(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+
+arma::fvec getPCG1ofSigmaAndVector_noV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG, bool LOCO);
+
+arma::fvec  getSigma_G_noV(arma::fvec& wVec, arma::fvec& tauVec,arma::fvec& Gvec, int maxiterPCG, float tolPCG, bool LOCO);
+
+
+void set_useGRMtoFitNULL(bool useGRMtoFitNULL);
+
+void set_isSparseGRM(bool t_isSparseGRM);
+
+void set_store_sigma(bool isstoreSigma);
+
+void set_num_Kmat(int t_num_Kmat);
+
+int get_numofV();
+
+arma::umat set_covarianceidx_Mat();
+
+//void set_Vmat_vec_longlVar();
+
+void closeGenoFile_plink();
+
+int gettotalMarker();
+
+arma::fvec getAlleleFreqVec();
+
+arma::ivec getMACVec();
+
+arma::ivec getMACVec_forVarRatio();
+
+arma::ivec getIndexVec_forVarRatio();
+
+bool getIsVarRatioGeno();
+
+arma::ivec getSubMarkerIndex();
+
+std::vector<bool> getQCdMarkerIndex();
+
+int getSubMarkerNum();
+
+void initKinValueVecFinal(int ni);
+
+int getNnomissingOut();
+
+int getMsub_MAFge_minMAFtoConstructGRM();
+
+int getMsub_MAFge_minMAFtoConstructGRM_singleChr();
+
+void Get_MultiMarkersBySample_StdGeno_Mat();
+
+void Get_MultiMarkersBySample_StdGeno(arma::fvec& markerIndexVec, std::vector<float> &stdGenoMultiMarkers);
+
+
+arma::fvec parallelCrossProd(arma::fcolvec & bVec);
+
+float innerProductFun(std::vector<float> &x, std::vector<float> & y);
+
+arma::fvec parallelCrossProd_full(arma::fcolvec & bVec, int & markerNum);
+
+arma::fvec parallelCrossProd_LOCO(arma::fcolvec & bVec);
+
+void printComb(int N);
+
+void findIndiceRelatedSample();
+
+void parallelcalsparseGRM(arma::fvec &GRMvec);
+
+void  parallelsumTwoVec(arma::fvec &x);
+
+void setgenoNULL();
+
+void setgeno(std::string bedfile, std::string bimfile, std::string famfile, std::vector<int> & subSampleInGeno, std::vector<bool> & indicatorGenoSamplesWithPheno, float memoryChunk, bool isDiagofKinSetAsOne);
+
+arma::ivec Get_OneSNP_Geno(int SNPIdx);
+
+arma::ivec Get_OneSNP_Geno_forVarRatio(int SNPIdx);
+
+arma::fvec Get_OneSNP_StdGeno(int SNPIdx);
+
 
 #endif

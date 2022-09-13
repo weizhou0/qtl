@@ -18,8 +18,6 @@ class SAIGEClass
       arma::vec m_res;
       arma::vec m_resout;
       arma::vec m_mu;
-      arma::vec m_mu2;
-      arma::vec m_tauvec;
       arma::vec  m_S_a;
       std::string m_traitType; 
       std::string m_impute_method;
@@ -27,6 +25,8 @@ class SAIGEClass
       	
 
     public:
+      arma::vec m_mu2;
+      arma::vec m_tauvec;
       arma::mat m_XXVX_inv;
       arma::mat m_XV;
       int m_n, m_p; //MAIN Dimensions: sample size, number of covariates
@@ -46,7 +46,7 @@ class SAIGEClass
       arma::uvec m_ctrl_het_indices;
       int m_n_case;
       int m_n_ctrl;
-      arma::sp_mat m_SigmaMat_sp;
+      //arma::sp_mat m_SigmaMat_sp;
       bool m_flagSparseGRM;
       bool m_flagSparseGRM_cur;
       bool m_isFastTest;
@@ -75,6 +75,10 @@ class SAIGEClass
       double m_pCutoffforFirth;
      arma::vec  m_offset;	
       bool m_isVarPsadj;
+
+      arma::vec m_sigmainvG_noV;	
+      arma::sp_mat m_SigmaMat_sp;
+      //arma::m_var2m;
   ////////////////////// -------------------- functions ---------------------------------- //////////////////////
   
 
@@ -101,15 +105,13 @@ class SAIGEClass
         bool t_flagSparseGRM,
 	bool t_isFastTest,
 	double t_pval_cutoff_for_fastTest,
-        arma::umat & t_locationMat,
-        arma::vec & t_valueVec,
-        int t_dimNum,
         bool t_isCondition,
         std::vector<uint32_t> & t_condition_genoIndex,
 	bool t_is_Firth_beta,
         double t_pCutoffforFirth,
 	arma::vec & t_offset,
-	arma::vec & t_resout);
+	arma::vec & t_resout, 
+	arma::sp_mat & t_SigmaMat_sp);
 
    void set_seed(unsigned int seed);
 

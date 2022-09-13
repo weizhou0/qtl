@@ -56,6 +56,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 invNormalize = FALSE,
                 covarColList = NULL,
                 qCovarCol = NULL,
+		offsetCol = NULL,
+		varWeightsCol = NULL,
 		longlCol = "",
                 sampleIDColinphenoFile = "",
                 tol=0.02,
@@ -279,6 +281,19 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		checkColList = c(phenoCol, covarColList, sampleIDColinphenoFile, longlCol)
 	}
 
+
+	if(length(offsetCol) > 0){
+            cat(offsetCol, "is the offset term\n")
+	    checkColList = c(checkColList, offsetCol)	
+        }
+
+	if(length(varWeightsCol) > 0){
+	    cat(varWeightsCol, " is the weights for variance\n")	
+	                checkColList = c(checkColList, varWeightsCol)
+	}	
+
+
+
         for (i in checkColList) {
             if (!(i %in% colnames(data))) {
                 stop("ERROR! column for ", i, " does not exist in the phenoFile \n")
@@ -356,11 +371,26 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	mmat = data.frame(mmat)
         mmat = cbind(mmat,  data[, which(colnames(data) == phenoCol), drop=F])
 	colnames(mmat)[ncol(mmat)] = phenoCol
+	
+	coln=1
+	if(length(offsetCol) > 0){
+		mmat = cbind(mmat,  data[, which(colnames(data) == offsetCol), drop=F])
+		colnames(mmat)[ncol(mmat)] = offsetCol
+		coln = coln + 1
+	}	
+
+	  if(length(varWeightsCol) > 0){
+		mmat = cbind(mmat,  data[, which(colnames(data) == varWeightsCol), drop=F])
+		colnames(mmat)[ncol(mmat)] = varWeightsCol
+
+		coln = coln + 1
+        }
+
 
 
 	if (length(covarColList) > 0) {
 	    if(length(qCovarCol) > 0){
-		covarColList = colnames(mmat)[2:(ncol(mmat)-1)]
+		covarColList = colnames(mmat)[2:(ncol(mmat)-coln)]
 		formula = paste0(phenoCol, "~", paste0(covarColList, collapse = "+")) 
 		formula.null = as.formula(formula)
             }
@@ -377,7 +407,11 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         cat(nrow(mmat_nomissing), " samples have non-missing phenotypes\n")
 
 
-
+	if(length(varWeightsCol) > 0){
+		varWeights = mmat_nomissing[,which(colnames(mmat_nomissing)  == varWeightsCol)]
+	}else{
+		varWeights = NULL
+	}	
         if(sparseGRMSampleIDFile != ""){
 	#if((useSparseGRMtoFitNULL & !skipVarianceRatioEstimation) | useSparseGRMforVarRatio){
 		sampleListwithGenov0 = data.table:::fread(sparseGRMSampleIDFile,
@@ -502,24 +536,58 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         cat("colnames(data.new) is ", colnames(data.new), "\n")
         cat("out.transform$Param.transform$qrr: ", dim(out.transform$Param.transform$qrr), 
             "\n")
+	
+	if(length(offsetCol) > 0){
+		data.new = cbind(data.new, dataMerge_sort[which(colnames(dataMerge_sort) == offsetCol),])
+		colnames(data.new)[ncol(data.new)] == offsetCol	
+	}
+
     }else{
         formula.new = formula.null
         data.new = dataMerge_sort
         out.transform = NULL
     }
 
-    mmat = model.matrix(formula.new, data=data.new, na.action = NULL)
     if (traitType == "binary") {
-            modwitcov = glm(formula.new, data = data.new, 
-                family = binomial)
+	if(length(offsetCol) == 0){
+	    modwitcov = glm(formula.new, data = data.new, 
+                family = binomial, weights = varWeights)
+    	}else{
+		offsetColVal = data.new[,which(colnames(data.new) == offsetCol)]	 
+	    modwitcov = glm(formula.new, offset=offsetColVal, data = data.new,
+                family = binomial, weights = varWeights)	
+	}	
     }else if(traitType == "quantitative"){
+	if(length(offsetCol) == 0){    
 	    modwitcov = glm(formula.new, data = data.new,
-                family = gaussian(link = "identity"))	
+                family = gaussian(link = "identity"), weights = varWeights)	
+        }else{
+		offsetColVal = data.new[,which(colnames(data.new) == offsetCol)]	 
+	    modwitcov = glm(formula.new, offset=offsetColVal, data = data.new, 
+                family = gaussian(link = "identity"), weights = varWeights)	
+	}	
     }else if(traitType == "count"){
+	 if(length(offsetCol) == 0){    
 	     modwitcov = glm(formula.new, data = data.new,
-	                     family = "poisson")
-    }
+	                     family = "poisson", weights = varWeights)
+         }else{
+		offsetColVal = data.new[,which(colnames(data.new) == offsetCol)]	 
+	     modwitcov = glm(formula.new, offset=offsetColVal, data = data.new,
+		     		family = "poisson", weights = varWeights)	     
+	 }		 
+    }else if(traitType == "count_nb"){
 
+	 if(length(offsetCol) == 0){
+             modwitcov = glm(formula.new, data = data.new,
+                             family = NegBin(), weights = varWeights)
+         }else{
+		print(head(data.new))
+		offsetColVal = data.new[,which(colnames(data.new) == offsetCol)]	 
+	      modwitcov = glm(formula.new, offset=offsetColVal, data = data.new,
+                                family = NegBin(), weights = varWeights)			
+	 } 
+    }
+    mmat = model.matrix(formula.new, data=data.new, na.action = NULL)
 
     if (isCovariateOffset) {
     	covoffset = mmat[,-1, drop=F] %*%  modwitcov$coefficients[-1]  
@@ -530,7 +598,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         hasCovariate = FALSE
     }else{
 	covoffset = rep(0,nrow(data.new))
-    }	    
+    }
+
     data.new$covoffset = covoffset
 
 
@@ -631,30 +700,49 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	print("head(data.new)")
 	print(head(data.new))
         if (!isCovariateOffset) {
-            fit0 = glm(formula.new, data = data.new, family = binomial)
+	  if(length(offsetCol) == 0){		
+            fit0 = glm(formula.new, data = data.new, family = binomial, weights = varWeights)
+	  }else{
+	offsetColVal = data.new[,which(colnames(data.new) == offsetCol)]	  
+	    fit0 = glm(formula.new, data = data.new, offset = offsetColVal, family = binomial, weights = varWeights)	
+          }
 	    Xorig = NULL
-	    
-	    }else{
-	    fit0orig = glm(formula.new.withCov, data = data.new, family = binomial)
+	 }else{	 
+	    fit0orig = glm(formula.new.withCov, data = data.new, family = binomial, weights = varWeights)
 	    Xorig = model.matrix(fit0orig)
 	    rm(fit0orig)
 	    gc()
+          if(length(offsetCol) == 0){
             fit0 = glm(formula.new, data = data.new, offset = covoffset, 
-                family = binomial)
+                family = binomial, weights = varWeights)
+	  }else{
+	    offsetTotal = covoffset + data.new[,which(colnames(data.new) == offsetCol)]
+	    fit0 = glm(formula.new, data = data.new, offset = offsetTotal, family = binomial, weights = varWeights) 
+	  }	  
         }
 
     }else if(traitType == "quantitative"){
         cat(phenoCol, " is a quantitative trait\n")
-        if (!isCovariateOffset) {
-            fit0 = glm(formula.new, data = data.new, family = gaussian(link = "identity"))
-            Xorig = NULL
+        if (!isCovariateOffset){
+	 if(length(offsetCol) == 0){	
+            fit0 = glm(formula.new, data = data.new, family = gaussian(link = "identity"), weights = varWeights)
+	 }else{ 
+		offsetColVal = data.new[,which(colnames(data.new) == offsetCol)] 
+	    fit0 = glm(formula.new, data = data.new, offset = offsetColVal, family = gaussian(link = "identity"), weights = varWeights)	
+	 }	 
+         Xorig = NULL
         }else{
-            fit0orig = glm(formula.new.withCov, data = data.new, family = gaussian(link = "identity"))
+	  fit0orig = glm(formula.new.withCov, data = data.new, family = gaussian(link = "identity"), weights = varWeights)
             Xorig = model.matrix(fit0orig)
             rm(fit0orig)
             gc()
+          if(length(offsetCol) == 0){
             fit0 = glm(formula.new, data = data.new, offset = covoffset,
-            family = gaussian(link = "identity"))
+                family = gaussian(link = "identity"), weights = varWeights)
+          }else{
+            offsetTotal = covoffset + data.new[,which(colnames(data.new) == offsetCol)]
+            fit0 = glm(formula.new, data = data.new, offset = offsetTotal, family = gaussian(link = "identity"), weights = varWeights)
+          }
         }	
     }else if(traitType == "count"){
         cat(phenoCol, " is a count trait\n")
@@ -664,17 +752,58 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         }
 
         if (!isCovariateOffset) {
-            fit0 = glm(formula.new, data = data.new, family = "poisson")
-            Xorig = NULL
+	  if(length(offsetCol) == 0){
+            fit0 = glm(formula.new, data = data.new, family = "poisson", weights = varWeights)
+          }else{
+		  offsetColVal = data.new[,which(colnames(data.new) == offsetCol)]
+            fit0 = glm(formula.new, data = data.new, offset = offsetColVal, family = "poisson", weights = varWeights)
+          }	
+          Xorig = NULL
         }else{
-            fit0orig = glm(formula.new.withCov, data = data.new, family = "poisson")
+          fit0orig = glm(formula.new.withCov, data = data.new, family =  "poisson", weights = varWeights)
             Xorig = model.matrix(fit0orig)
             rm(fit0orig)
             gc()
+          if(length(offsetCol) == 0){
             fit0 = glm(formula.new, data = data.new, offset = covoffset,
-            family = "poisson")
+                family = "poisson", weights = varWeights)
+          }else{
+            offsetTotal = covoffset + data.new[,which(colnames(data.new) == offsetCol)]
+            fit0 = glm(formula.new, data = data.new, offset = offsetTotal, family = "poisson", weights = varWeights)
+          } 
+	
         }
-    }
+    }else if(traitType == "count_nb"){
+	cat(phenoCol, " is a count_nb trait\n")
+	miny = min(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)])
+        if (miny < 0 ) {
+            stop("ERROR! phenotype value needs to be non-negative \n")
+        }
+	if (!isCovariateOffset){
+	  if(length(offsetCol) == 0){
+            fit0 = glm(formula.new, data = data.new, family = NegBin(), weights = varWeights)
+          }else{
+	offsetColVal = data.new[,which(colnames(data.new) == offsetCol)]	  
+            fit0 = glm(formula.new, data = data.new, offset = offsetColVal, family = NegBin(), weights = varWeights)
+          }
+
+            Xorig = NULL
+        }else{
+	  fit0orig = glm(formula.new.withCov, data = data.new, family = NegBin(), weights = varWeights)
+            Xorig = model.matrix(fit0orig)
+            rm(fit0orig)
+            gc()
+          if(length(offsetCol) == 0){
+            fit0 = glm(formula.new, data = data.new, offset = covoffset,
+                family = NegBin())
+          }else{
+            offsetTotal = covoffset + data.new[,which(colnames(data.new) == offsetCol)]
+            fit0 = glm(formula.new, data = data.new, offset = offsetTotal, family = NegBin(), weights = varWeights)
+          }
+
+        }
+
+    }	    
     
 
     cat("glm:\n")
@@ -705,6 +834,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	set_isSparseGRM(useSparseGRMtoFitNULL)
         set_useGRMtoFitNULL(useGRMtoFitNULL)
 
+      if(traitType != "count_nb"){
         system.time(modglmm <- glmmkin.ai_PCG_Rcpp_multiV(bedFile, bimFile, famFile, Xorig, isCovariateOffset, 
                 fit0, tau = tau, fixtau = fixtau, maxiter = maxiter, 
                 tol = tol, verbose = TRUE, nrun = nrun, tolPCG = tolPCG, 
@@ -716,8 +846,47 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform, 
                 isDiagofKinSetAsOne = isDiagofKinSetAsOne, 
 		isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL))
-         
 	modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
+      }else{
+	      
+	system.time(modglmm <- glmmkin.ai_PCG_Rcpp_multiV_NB(bedFile, bimFile, famFile, Xorig, isCovariateOffset,
+                fit0, tau = tau, fixtau = fixtau, maxiter = maxiter,
+                tol = tol, verbose = TRUE, nrun = nrun, tolPCG = tolPCG,
+                maxiterPCG = maxiterPCG, subPheno = dataMerge_sort, indicatorGenoSamplesWithPheno = indicatorGenoSamplesWithPheno,
+                obj.noK = obj.noK, out.transform = out.transform,
+                tauInit = tauInit, memoryChunk = memoryChunk,
+                LOCO = LOCO, chromosomeStartIndexVec = chromosomeStartIndexVec,
+                chromosomeEndIndexVec = chromosomeEndIndexVec,
+                traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform,
+                isDiagofKinSetAsOne = isDiagofKinSetAsOne,
+                isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL))	
+
+        if (!isCovariateOffset){
+          if(length(offsetCol) == 0){
+
+            fit0 = glm(formula.new, data = data.new, family = NegBin(theta = modglmm$theta_overdispersion), weights = varWeights)
+          }else{
+            offsetColVal = data.new[,which(colnames(data.new) == offsetCol)]
+            fit0 = glm(formula.new, data = data.new, offset = offsetColVal, family = NegBin(theta = modglmm$theta_overdispersion), weights = varWeights)
+          }
+            Xorig = NULL
+        }else{
+            fit0orig = glm(formula.new.withCov, data = data.new, family = NegBin(theta = modglmm$theta_overdispersion), weights = varWeights)
+            Xorig = model.matrix(fit0orig)
+            rm(fit0orig)
+            gc()
+          if(length(offsetCol) == 0){
+            fit0 = glm(formula.new, data = data.new, offset = covoffset,
+            family = NegBin(theta = modglmm$theta_overdispersion))
+          }else{
+            offsetTotal = covoffset + data.new[,which(colnames(data.new) == offsetCol)]
+            fit0 = glm(formula.new, data = data.new, offset = offsetTotal, family = NegBin(theta = modglmm$theta_overdispersion), weights = varWeights)
+          }
+
+        }
+	modglmm$obj.glm.null = fit0
+
+      }	      
             
 	for (x in names(modglmm$obj.glm.null)) {
             attr(modglmm$obj.glm.null[[x]], ".Environment") <- c()
@@ -747,6 +916,9 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	}
        
 
+	print("CHECK HERE")
+
+
         if(skipVarianceRatioEstimation & useSparseGRMtoFitNULL){
                 family = fit0$family
                 eta = modglmm$linear.predictors
@@ -765,10 +937,19 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         tau = modglmm$theta
         alpha0 = modglmm$coefficients
 
+
         if(!is.null(out.transform) & is.null(fit0$offset)){
                 coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
                 modglmm$coefficients = coef.alpha
         }
+
+	print("alpha0")
+	print(alpha0)
+
+	print("modglmm$coefficients")
+	print(modglmm$coefficients)
+
+
 
 
         if(LOCO & isLowMemLOCO){
@@ -803,7 +984,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                                 cat("leave chromosome ", j, " out\n")
                                 setStartEndIndex(startIndex, endIndex, j-1)
 
-                                re.coef_LOCO = Get_Coef_multiV(y, X=model.matrix(fit0), tau, family = fit0$family, alpha = alpha0, eta = eta0,  offset =  offset0, verbose=TRUE, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=TRUE)
+                                re.coef_LOCO = Get_Coef_multiV(y, X=model.matrix(fit0), tau, family = fit0$family, alpha = alpha0, eta = eta0,  offset =  offset0, verbose=TRUE, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=TRUE, var_weights = var_weights)
                                 cov = re.coef_LOCO$cov
                                 alpha = re.coef_LOCO$alpha
                                 eta = re.coef_LOCO$eta
@@ -815,7 +996,9 @@ fitNULLGLMM_multiV = function(plinkFile = "",
           				mu2 = mu
         			}else if(family$family == "gaussian"){
           				mu2 = rep((1/(tau[1])),length(res))
-        			}
+        			}else if(traitType == "count_nb"){
+          				mu2 = fit0$family$variance(mu)
+				}	
                                 res = y - mu
 
                                 if(!is.null(out.transform) & is.null(fit0$offset)){
@@ -859,6 +1042,21 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         print(t_end)
         cat("t_end - t_begin, fitting the NULL model took\n")
         print(t_end - t_begin)
+
+
+	if(bedFile != "" & !useGRMtoFitNULL){
+		subSampleInGeno = dataMerge_sort$IndexGeno
+  		if(is.null(dataMerge_sort$IndexGeno)){
+        		subSampleInGeno = dataMerge_sort$IndexPheno
+  		}
+
+
+  		print("HEREHRE")
+  		setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+  	}	
+
+
+
     }else{
 	cat("Skip fitting the NULL GLMM\n")
 	if(!file.exists(modelOut)){
@@ -868,6 +1066,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         if(is.null(modglmm$LOCO)) {
            modglmm$LOCO = FALSE
         }
+
         setgeno(bedFile, bimFile, famFile, dataMerge_sort$IndexGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
         tau = modglmm$theta	    
         setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
@@ -957,6 +1156,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   sqrtW = mu.eta/sqrt(obj.glm.null$family$variance(mu))
   W = sqrtW^2   ##(mu*(1-mu) for binary)
   tauVecNew = obj.glmm.null$theta
+
   if(isStoreSigma){
          gen_sp_Sigma_multiV(W, tauVecNew)
   }
@@ -1131,8 +1331,16 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
           W = sqrtW^2
           print("W[1:10]")
           print(W[1:10])
-          print("mu[1:10]")
-          print(mu[1:10])
+	  print("mu.eta[1:10]")
+	  print(mu.eta[1:10])
+	  print("obj.glm.null$family$variance(mu)[1:10]")
+	  print(obj.glm.null$family$variance(mu)[1:10])
+          print("mu[1:100]")
+          print(mu[1:100])
+	  print("mu*(1-mu)[1:10]")
+	  print((mu*(1-mu))[1:10])
+	  print("y[1:100]")
+	  print(y[1:100])
 
 
 	  set_isSparseGRM(useSparseGRMtoFitNULL)
@@ -1146,6 +1354,11 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	  cat("AC ", AC, "\n")	
           m1 = innerProduct(mu,g)
 	  S = q-m1
+
+	if(obj.glmm.null$traitType == "count_nb"){
+		gs = g * (mu.eta/obj.glm.null$family$variance(mu))	
+		S = innerProduct(gs,y) - innerProduct(mu,gs) 
+	}	
 
    if(useSparseGRMforVarRatio){
 	set_isSparseGRM(useSparseGRMforVarRatio)
@@ -1172,9 +1385,12 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
     }else if(obj.glmm.null$traitType == "count"){
          var2null = innerProduct(mu, g*g)
     varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
-    }
+    }else if(obj.glmm.null$traitType == "count_nb"){
+	var2null = innerProduct(W, g*g) ##To update
+    }	    
          p_approx = pchisq(S^2/(var2null), df=1, lower.tail=F)
-         p_approx_true = pchisq(S^2/(var2null*0.0009604056), df=1, lower.tail=F)
+         #p_approx_true = pchisq(S^2/(var2null*0.0009604056), df=1, lower.tail=F)
+	p_approx_true = pchisq(S^2/(var2null*4.742222e-06), df=1, lower.tail=F)
 
     cat("AC ", AC, "\n")
     cat("S ", S, "\n")
@@ -1243,7 +1459,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
 
 #Fits the null glmm
-glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE, useSparseGRMtoFitNULL = TRUE, useGRMtoFitNULL = TRUE, var_weights = NULL) {
+glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE, useSparseGRMtoFitNULL = TRUE, useGRMtoFitNULL = TRUE) {
   #Fits the null generalized linear mixed model for a poisson, binomial, and gaussian
   #Args:
   #  genofile: string. Plink file for the M1 markers to be used to construct the genetic relationship matrix
@@ -1271,6 +1487,9 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   t_begin = proc.time()
   print(t_begin)
   subSampleInGeno = subPheno$IndexGeno
+  if(is.null(subPheno$IndexGeno)){
+        subSampleInGeno = subPheno$IndexPheno
+  }
   if(verbose){
     print("Start reading genotype plink file here")
   }
@@ -1282,8 +1501,10 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   set_dup_sample_index(as.numeric(factor(subPheno$IID, levels =  unique(subPheno$IID))))
 
   #if((!useSparseGRMtoFitNULL & useGRMtoFitNULL) | (skipVarianceRatioEstimation)){
-  if(bedFile != ""){
-  re1 = system.time({setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)})
+  if(bedFile != "" & useGRMtoFitNULL){
+	print("HEREHRE")
+
+        re1 = system.time({setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)})
   }
   if(verbose){
     print("Genotype reading is done")
@@ -1307,12 +1528,21 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     offset = rep(0, n)
   }
 
+  var_weights = weights(fit0)
+
+
   family = fit0$family
   eta = fit0$linear.predictors
   mu = fit0$fitted.values
   mu.eta = family$mu.eta(eta)
   Y = eta - offset + (y - mu)/mu.eta
-  sqrtW = mu.eta/sqrt(fit0$family$variance(mu))
+
+  if(is.null(var_weights)){
+        sqrtW = mu.eta/sqrt(family$variance(mu))
+  }else{
+        sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+  }
+
   W = sqrtW^2
 
   alpha0 = fit0$coef
@@ -1384,11 +1614,12 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       gen_sp_Sigma_multiV(W, tau)
     }
     
-    re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)
+    re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE, var_weights = var_weights)
 
     if(isStoreSigma){
       gen_sp_Sigma_multiV(re.coef$W, tau)
     }
+
 
     re = getAIScore_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG,tolPCG = tolPCG, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
     tau0=tau
@@ -1430,16 +1661,13 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       #  gen_sp_Sigma_multiV(W, tau)
       #}
 #cat("eta0 ", eta0, "\n")
-      re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset, verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE)
+      re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset, verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE, var_weights = var_weights)
       t_end_Get_Coef =  proc.time()
       cat("t_end_Get_Coef - t_begin_Get_Coef\n")
       print(t_end_Get_Coef - t_begin_Get_Coef)
       if(isStoreSigma){
         gen_sp_Sigma_multiV(re.coef$W, tau)
       }
-      if(!is.null(var_weights)){
-	re.coef$W = re.coef$W * var_weights
-      }	      
 
 
       fit = fitglmmaiRPCG_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG, tolPCG, tol = tol, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
@@ -1459,24 +1687,26 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       Y = re.coef$Y
       mu = re.coef$mu
 
-     mu.eta = family$mu.eta(eta)
-     sqrtW = mu.eta/sqrt(fit0$family$variance(mu))
-     W = sqrtW^2
-     if(!is.null(var_weights)){
-        W = W * var_weights
-     }
-
+  mu.eta = family$mu.eta(eta)
+ 
+#  if(is.null(var_weights)){
+#        sqrtW = mu.eta/sqrt(family$variance(mu))
+#  }else{
+#        sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+#  }
+#  W = sqrtW^2
 
      
       print(abs(tau - tau0)/(abs(tau) + abs(tau0) + tol))
       cat("tau: ", tau, "\n")
       cat("tau0: ", tau0, "\n")
 
-      if(family$family == "gaussian"){
-        if(tau[1]<=0){
-          stop("ERROR! The first variance component parameter estimate is 0\n")
-        }
-      }
+      #if(family$family == "gaussian"){
+        #if(tau[1]<=0){
+	#  tau[1] = tau[1] + 0.1	
+        #  #stop("ERROR! The first variance component parameter estimate is 0\n")
+        #}
+      #}
 
       if(sum(tau[2:length(tau)]) == 0) break
       
@@ -1498,7 +1728,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
      }
 
     #added these steps after tau is estimated 04-14-2018
-  re.coef = Get_Coef_multiV(y, X, tau, family, alpha, eta,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=FALSE)
+  re.coef = Get_Coef_multiV(y, X, tau, family, alpha, eta,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=FALSE, var_weights = var_weights)
   cov = re.coef$cov
   alpha = re.coef$alpha
   eta = re.coef$eta
@@ -1508,6 +1738,27 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   converged = ifelse(i < maxiter, TRUE, FALSE)
   res = y - mu
 
+
+  print("y[1:20]")
+  print(y[1:20])
+
+
+  print("mu[1:20]")
+  print(mu[1:20])
+
+  print("res")
+  print(res[1:20])
+
+  res_scaled = res*as.vector(weights(fit0))
+  print("res_scaled")
+  print(res_scaled[1:20])
+  
+  
+  res_scaled2 = res*as.vector(weights(fit0))/tau[1]
+  print("res_scaled2")
+  print(res_scaled2[1:20])
+
+
   if(family$family == "binomial"){
     mu2 = mu * (1-mu)
     traitType = "binary"
@@ -1516,6 +1767,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     traitType = "count"
   }else if(family$family == "gaussian"){
     mu2 = rep((1/(tau[1])),length(res))
+    #mu2 = rep(1,length(res))	  
     traitType = "quantitative"
   }
 
@@ -1561,7 +1813,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
         cat("leave chromosome ", j, " out\n")
         setStartEndIndex(startIndex, endIndex, j-1)
         t_begin_Get_Coef_LOCO = proc.time()
-        re.coef_LOCO = Get_Coef_multiV(y, X, tau, family, alpha, eta,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=TRUE)
+        re.coef_LOCO = Get_Coef_multiV(y, X, tau, family, alpha, eta,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=TRUE, var_weights = var_weights)
         t_end_Get_Coef_LOCO = proc.time()
         cat("t_end_Get_Coef_LOCO - t_begin_Get_Coef_LOCO\n")
         print(t_end_Get_Coef_LOCO - t_begin_Get_Coef_LOCO)

@@ -1,11 +1,16 @@
 # Run iterations to get converged alpha and eta
-Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG, tolPCG,maxiter, verbose=FALSE, LOCO = FALSE){
+Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG, tolPCG,maxiter, verbose=FALSE, LOCO = FALSE,var_weights = NULL){
   tol.coef = 0.1
   mu = family$linkinv(eta0)
   mu.eta = family$mu.eta(eta0)
   Y = eta0 - offset + (y - mu)/mu.eta
-  sqrtW = mu.eta/sqrt(family$variance(mu))
+  if(is.null(var_weights)){
+  	sqrtW = mu.eta/sqrt(family$variance(mu))
+  }else{
+	sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+  }	  
   W = sqrtW^2
+
 
   for(i in 1:maxiter){
     re.coef = getCoefficients_multiV(Y, X, W, tau, maxiter=maxiterPCG, tol=tolPCG, LOCO)
@@ -35,8 +40,15 @@ Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG,
     print("y[2]")
     print(y[2])
 
-    sqrtW = mu.eta/sqrt(family$variance(mu))
-    W = sqrtW^2
+    #if(is.null(var_weights)){
+        sqrtW = mu.eta/sqrt(family$variance(mu))
+    #}else{
+    #    sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+    #}
+   W = sqrtW^2
+
+    #sqrtW = mu.eta/sqrt(family$variance(mu))
+    #W = sqrtW^2
 
     if( max(abs(alpha - alpha0)/(abs(alpha) + abs(alpha0) + tol.coef))< tol.coef){
         break
