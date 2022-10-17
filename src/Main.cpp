@@ -53,6 +53,7 @@ arma::fvec g_T_longl_vec;
 arma::sp_fmat g_spGRM;
 arma::sp_fmat g_spSigma;
 arma::sp_fmat g_spSigma_noV;
+arma::sp_fmat g_spSigma_V;
 bool g_isSparseGRM;
 bool g_isStoreSigma;
 int g_num_Kmat;
@@ -183,6 +184,11 @@ void mainMarkerInCPP(
 			   bool & t_isFirth) 
 {
 
+      std::cout << "Here1 mainMarkerInCPP" << std::endl;
+  std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
+  std::cout << "ptr_gSAIGEobj->m_flagSparseGRM " << ptr_gSAIGEobj->m_flagSparseGRM << std::endl;
+
+
   int q = t_genoIndex.size();  // number of markers
   // set up output
   std::vector<std::string> markerVec(q);  // marker IDs
@@ -231,9 +237,7 @@ void mainMarkerInCPP(
 
   //int n = ptr_gSAIGEobj->m_n;
   int n = ptr_gSAIGEobj->m_n;
-  std::cout << "g_n_unique " << g_n_unique << std::endl;	  
 	  
-	  ;
   if(g_n_unique > 0){
     n = g_n_unique;
   }	  
@@ -413,7 +417,8 @@ void mainMarkerInCPP(
     std::cout << "MAC " << MAC << std::endl; 
     std::cout << "altCounts " << altCounts << std::endl; 
    //std::cout << "altFreq after flip " << altFreq << std::endl; 
-   //std::cout << "info " << info << std::endl; 
+   //std::cout << "info " << info << std::endl;
+   std::cout << "flip " << flip << std::endl; 
     // analysis results for single-marker
     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
@@ -424,6 +429,8 @@ void mainMarkerInCPP(
     arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
 
     arma::vec t_GVec0;
+
+    std::cout << "g_n_unique " << g_n_unique << std::endl;
     if(g_n_unique == 0){
       indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
       indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
@@ -432,8 +439,16 @@ void mainMarkerInCPP(
       t_GVec0 = t_GVec.elem(g_dup_sample_Index);
       //t_GVec.set_size(t_GVec0.n_elem);
       //t_GVec = t_GVec0;
-      indexZeroVec_arma = arma::find(t_GVec0 == 0);
-      indexNonZeroVec_arma = arma::find(t_GVec0 != 0);
+      indexZeroVec_arma = arma::find(t_GVec0 == 0.0);
+      indexNonZeroVec_arma = arma::find(t_GVec0 > 0.0);
+      double altCounts_new = arma::sum(t_GVec0);
+      std::cout << "altCounts_new " << altCounts_new << std::endl;
+      //
+      //
+      //get_indexinAnotherVector(indexNonZeroVec, g_dup_sample_Index,indexNonZeroVec_arma);
+      //get_indexinAnotherVector(indexZeroVec, g_dup_sample_Index,indexZeroVec_arma);
+      std::cout << "indexNonZeroVec_arma.n_elem " << indexNonZeroVec_arma.n_elem << std::endl;
+      std::cout << "indexZeroVec_arma.n_elem " << indexZeroVec_arma.n_elem << std::endl;
       gtildeVec.set_size(t_GVec0.n_elem);
     }
 
@@ -445,6 +460,7 @@ void mainMarkerInCPP(
     //arma::vec timeoutput5 = getTime(); 
 
 
+      std::cout << "Here1a" << std::endl;
     //set_varianceRatio(MAC, isSingleVarianceRatio);
 
     if(ptr_gSAIGEobj->m_isFastTest){
@@ -456,6 +472,7 @@ void mainMarkerInCPP(
         hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur);
       }
     }else{
+
       if(!isSingleVarianceRatio){
         hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur);
       }
@@ -465,22 +482,25 @@ void mainMarkerInCPP(
 
 
 
+      std::cout << "Here1" << std::endl;
+  std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
 
+  /*
     if(ptr_gSAIGEobj->m_flagSparseGRM_cur && ptr_gSAIGEobj->m_SigmaMat_sp.n_rows == 2){
 	ptr_gSAIGEobj->getadjGFast(t_GVec0, gtildeVec, indexNonZeroVec_arma);    
 	arma::fvec tauvec_f = arma::conv_to< arma::fvec >::from(ptr_gSAIGEobj->m_tauvec);
 	arma::fvec m_mu2_f = arma::conv_to< arma::fvec >::from(ptr_gSAIGEobj->m_mu2);
 	arma::fvec t_GVec_f = arma::conv_to< arma::fvec >::from(gtildeVec);
 	arma::fvec sigmainvG_noV_vec = getSigma_G_noV(m_mu2_f, tauvec_f, t_GVec_f, 500, 1e-5, false);
-
-
 	ptr_gSAIGEobj->m_sigmainvG_noV = arma::conv_to< arma::vec >::from(sigmainvG_noV_vec);
     }
+*/
 
 if(g_n_unique == 0){
 
 
     if(MAC > g_MACCutoffforER){
+      std::cout << "Here" << std::endl;
       Unified_getMarkerPval( 
 		    t_GVec, 
                           false, // bool t_isOnlyOutputNonZero, 
@@ -554,13 +574,13 @@ if(g_n_unique == 0){
 
     if(ptr_gSAIGEobj->m_isFastTest && pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
       ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
-              ptr_gSAIGEobj->getadjGFast(t_GVec0, gtildeVec, indexNonZeroVec_arma);
+       ptr_gSAIGEobj->getadjGFast(t_GVec0, gtildeVec, indexNonZeroVec_arma);
        arma::fvec tauvec_f = arma::conv_to< arma::fvec >::from(ptr_gSAIGEobj->m_tauvec);
         arma::fvec m_mu2_f = arma::conv_to< arma::fvec >::from(ptr_gSAIGEobj->m_mu2);
         //arma::fvec t_GVec_f = arma::conv_to< arma::fvec >::from(t_GVec0);
 	arma::fvec t_GVec_f = arma::conv_to< arma::fvec >::from(gtildeVec);
-        arma::fvec sigmainvG_noV_vec = getSigma_G_noV(m_mu2_f, tauvec_f, t_GVec_f, 500, 1e-5, false);
-        ptr_gSAIGEobj->m_sigmainvG_noV = arma::conv_to< arma::vec >::from(sigmainvG_noV_vec);
+        //arma::fvec sigmainvG_noV_vec = getSigma_G_noV(m_mu2_f, tauvec_f, t_GVec_f, 500, 1e-5, false);
+        //ptr_gSAIGEobj->m_sigmainvG_noV = arma::conv_to< arma::vec >::from(sigmainvG_noV_vec);
 
       if(!isSingleVarianceRatio){
         hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur);
@@ -570,6 +590,8 @@ if(g_n_unique == 0){
 
 
      if(MAC > g_MACCutoffforER){
+
+	     std::cout << "Here using sparse GRM" << std::endl;
       Unified_getMarkerPval(
                     t_GVec0,
                           false, // bool t_isOnlyOutputNonZero,
@@ -916,6 +938,7 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,
         arma::vec & t_tauvec,
+	arma::vec & t_varWeightsvec,
         std::string t_traitType,
         arma::vec & t_y,
 	std::string t_impute_method,
@@ -928,9 +951,15 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
 	double t_pCutoffforFirth,
 	arma::vec & t_offset,
 	arma::vec & t_resout, 
-	arma::sp_mat & t_SigmaMat_sp)
+	arma::sp_mat & t_SigmaMat_sp,
+	float t_tauVal_sp,
+	arma::sp_mat & t_Ilongmat,
+	arma::vec & t_I_longl_vec,
+	arma::sp_mat & t_Tlongmat, 
+	arma::vec & t_T_longl_vec
+	)
 {
-	t_SigmaMat_sp.print("t_SigmaMat_sp");
+//	t_SigmaMat_sp.print("t_SigmaMat_sp");
   // check SAIGE.cpp
   ptr_gSAIGEobj = new SAIGE::SAIGEClass(
 	t_XVX,
@@ -949,6 +978,7 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
 	t_cateVarRatioMaxMACVecInclude,
         t_SPA_Cutoff,
         t_tauvec,
+	t_varWeightsvec,
         t_traitType,
         t_y,
 	t_impute_method,
@@ -961,7 +991,12 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         t_pCutoffforFirth,
 	t_offset, 
 	t_resout, 
-	t_SigmaMat_sp);
+	t_SigmaMat_sp,
+	t_tauVal_sp,
+	t_Ilongmat,
+        t_I_longl_vec,
+        t_Tlongmat,
+        t_T_longl_vec);
   //ptr_gSAIGEobj->m_flagSparseGRM = false;
 }
 
@@ -2522,7 +2557,7 @@ bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isapp
 			}
 			OutFile_single << "\n";
 
-                }else if(t_traitType == "quantitative" || t_traitType == "count"){
+                }else if(t_traitType == "quantitative" || t_traitType == "count" || t_traitType == "count_nb"){
                         OutFile_single << "N\n";
 
                 }
@@ -2657,7 +2692,7 @@ void writeOutfile_single(bool t_isMoreOutput,
                                 OutFile_single << N_ctrl_hetVec.at(k);
                         }
                         OutFile_single << "\n";
-                }else if(t_traitType == "quantitative" || t_traitType == "count"){
+                }else if(t_traitType == "quantitative" || t_traitType == "count" || t_traitType == "count_nb"){
                         OutFile_single << N_Vec.at(k);
                         OutFile_single << "\n";
 
@@ -2954,6 +2989,14 @@ void setupSparseGRM_new(arma::sp_mat & t_spGRM){
         g_spGRM = g_spGRM_f;
 }
 
+
+// [[Rcpp::export]]
+arma::sp_mat getSparseSigma_new(){
+	arma::sp_mat g_spGRM_double = arma::conv_to<arma::sp_mat>::from(g_spGRM);
+	return(g_spGRM_double);
+}	
+
+
 // [[Rcpp::export]]
 void set_I_longl_mat(arma::sp_mat & t_Ilongmat, arma::vec & t_I_longl_vec){
         arma::sp_fmat t_Kmat_new = arma::conv_to< arma::sp_fmat >::from(t_Ilongmat);
@@ -2964,12 +3007,37 @@ void set_I_longl_mat(arma::sp_mat & t_Ilongmat, arma::vec & t_I_longl_vec){
 }
 
 // [[Rcpp::export]]
+void set_I_longl_mat_SAIGEtest(arma::sp_mat & t_Ilongmat, arma::vec & t_I_longl_vec){
+        //arma::sp_fmat t_Kmat_new = arma::conv_to< arma::sp_fmat >::from(t_Ilongmat);
+	std::cout << "ok1 " << std::endl;
+	int n = (ptr_gSAIGEobj->g_I_longl_mat).n_rows;
+	std::cout << "n " << n << std::endl;
+	ptr_gSAIGEobj->g_I_longl_mat = t_Ilongmat;
+	std::cout << "ok2 " << std::endl;
+        arma::uvec t_I_longl_vec_new = arma::conv_to< arma::uvec >::from(t_I_longl_vec);
+        ptr_gSAIGEobj->g_I_longl_vec = t_I_longl_vec_new;
+	std::cout << "ok3 " << std::endl;
+
+}
+
+
+// [[Rcpp::export]]
 void set_T_longl_mat(arma::sp_mat & t_Tlongmat, arma::vec & t_T_longl_vec){
         arma::sp_fmat t_Kmat_new = arma::conv_to< arma::sp_fmat >::from(t_Tlongmat);
         g_T_longl_mat = t_Kmat_new;
         arma::fvec t_T_longl_vec_new = arma::conv_to< arma::fvec >::from(t_T_longl_vec);
         g_T_longl_vec = t_T_longl_vec_new;
 }
+
+
+// [[Rcpp::export]]
+void set_T_longl_mat_SAIGEtest(arma::sp_mat & t_Tlongmat, arma::vec & t_T_longl_vec){
+        //arma::sp_fmat t_Kmat_new = arma::conv_to< arma::sp_fmat >::from(t_Tlongmat);
+        ptr_gSAIGEobj->g_T_longl_mat = t_Tlongmat;
+        //arma::fvec t_T_longl_vec_new = arma::conv_to< arma::fvec >::from(t_T_longl_vec);
+        ptr_gSAIGEobj->g_T_longl_vec = t_T_longl_vec;
+}
+
 
 
 // [[Rcpp::export]]
@@ -3086,7 +3154,6 @@ arma::fcolvec getCrossprod_multiV(arma::fcolvec& bVec, arma::fvec& wVec, arma::f
         }
         return(crossProdVec);
 }
-
 
 
 
@@ -4792,6 +4859,62 @@ arma::fvec getDiagOfSigma_noV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO){
         return(diagVec);
 }
 
+
+
+// [[Rcpp::export]]
+arma::fvec getDiagOfSigma_V(arma::fvec& wVec, float tauVal, float tauVal0){
+        int Nnomissing = wVec.n_elem;
+        arma::fvec diagVec(Nnomissing);
+        arma::sp_fvec diagVecV0;
+        arma::fvec diagVecG, diagVecV, diagVecG_I, diagVecG_T, diagVecG_IT,diagVecV_I, diagVecV_T, diagVecV_IT;
+        unsigned int tauind = 0;
+
+        if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
+
+             diagVec = tauVal0/wVec;
+             tauind = tauind + 1;
+             //diagVecG = spV.diag();
+             diagVec = diagVec + tauVal;
+             tauind = tauind + 1;
+
+
+        }else{ //if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
+                diagVec = tauVal0/wVec;
+                //tauind = tauind + 1;
+                //diagVecG = spV.diag();
+                //diagVecG_I = diagVecG.elem(g_I_longl_vec);
+                //diagVec = diagVec + tauVec(indforV) * diagVecG_I;
+		diagVec = diagVec + tauVal;
+
+		/*
+		tauind = tauind + 1 + 3 * (indforV - 1);
+                tauind = tauind + 1;
+
+                if(g_T_longl_mat.n_rows > 0){
+		  diagVecG_I.ones(Nnomissing);
+                  diagVecG_IT = diagVecG_I % g_T_longl_vec;
+                  diagVecG_T = diagVecG_IT % g_T_longl_vec;
+                  diagVecG_IT = 2 * diagVecG_IT;
+                  diagVec = diagVec + tauVec(tauind) * diagVecG_IT;
+                  tauind = tauind + 1;
+                  diagVec = diagVec + tauVec(tauind) * diagVecG_T;
+                  tauind = tauind + 1;
+                }
+		*/
+        }
+
+        for(unsigned int i=0; i< Nnomissing; i++){
+                if(diagVec(i) < 1e-4){
+                        diagVec(i) = 1e-4 ;
+                }
+        }
+
+        return(diagVec);
+}
+
+
+
+
 // [[Rcpp::export]]
 arma::fcolvec getCrossprod_noV(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO){
 
@@ -4835,6 +4958,47 @@ arma::fcolvec getCrossprod_noV(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec
         return(crossProdVec);
 }
 
+
+
+
+// [[Rcpp::export]]
+arma::fcolvec getCrossprod_V(arma::fcolvec& bVec, arma::fvec& wVec, float tauVal, float tauVal0){
+	//indforV starts from 0
+        arma::fcolvec crossProdVec;
+        arma::fvec crossProd1, GRM_I_bvec, Ibvec, Tbvec, GRM_T_bvec, crossProdGRM_TGIb, crossProdGRM_IGTb, V_I_bvec, V_T_bvec, crossProdV_TGIb, crossProdV_IGTb, crossProdGRM_TIb, crossProdGRM_ITb;
+
+        unsigned int tau_ind = 0;
+        if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){ //it must have specified GRM
+                  crossProd1 = bVec;
+                  crossProdVec = tauVal0*(bVec % (1/wVec)) + tauVal*crossProd1;
+                  tau_ind = tau_ind + 2;
+        }else{
+
+                  Ibvec = g_I_longl_mat.t() * bVec;
+
+                  GRM_I_bvec = Ibvec;
+                  crossProd1 = g_I_longl_mat * GRM_I_bvec;
+                  crossProdVec = tauVal0*(bVec % (1/wVec)) + tauVal*crossProd1;
+		/*  
+                  tau_ind = tau_ind + 1 + 3 * (indforV - 1);
+		  tau_ind = tau_ind + 1;
+
+                if(g_T_longl_mat.n_rows > 0){
+                        Tbvec = g_T_longl_mat.t() * bVec;
+                        GRM_T_bvec = spV * Tbvec;
+                        crossProdGRM_TGIb = g_T_longl_mat * GRM_I_bvec;
+                        crossProdGRM_IGTb = g_I_longl_mat * GRM_T_bvec;
+                        crossProdVec = crossProdVec + tauVec(tau_ind) * (crossProdGRM_TGIb + crossProdGRM_IGTb);
+                        tau_ind = tau_ind + 1;
+                        crossProdVec = crossProdVec + tauVec(tau_ind) * (g_T_longl_mat * GRM_T_bvec);
+                        tau_ind = tau_ind + 1;
+                }
+		*/
+
+        }
+
+        return(crossProdVec);
+}
 
 
 // [[Rcpp::export]]
@@ -4894,12 +5058,84 @@ arma::fvec getPCG1ofSigmaAndVector_noV(arma::fvec& wVec,  arma::fvec& tauVec, ar
 }
 
 
+
+
+// [[Rcpp::export]]
+arma::fvec getPCG1ofSigmaAndVector_V(arma::fvec& wVec,  float tauVal, float tauVal0, arma::fvec& bVec, int maxiterPCG, float tolPCG){
+    // Start Timers
+    //double wall0 = get_wall_time();
+    //double cpu0  = get_cpu_time();
+    int Nnomissing = wVec.n_elem;
+    arma::fvec xVec(Nnomissing);
+    xVec.zeros();
+
+    if(g_isStoreSigma){
+        std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
+        //xVec = arma::spsolve(g_spSigma, bVec);
+        xVec = arma::spsolve(g_spSigma_V, bVec);
+        std::cout << " arma::spsolve(g_spSigma, bVec) 1" << std::endl;
+    }else{
+        arma::fvec rVec = bVec;
+        arma::fvec r1Vec;
+        arma::fvec crossProdVec(Nnomissing);
+        arma::fvec zVec(Nnomissing);
+        arma::fvec minvVec(Nnomissing);
+        minvVec = 1/getDiagOfSigma_V(wVec, tauVal, tauVal0);
+        zVec = minvVec % rVec;
+
+        float sumr2 = sum(rVec % rVec);
+        arma::fvec z1Vec(Nnomissing);
+        arma::fvec pVec = zVec;
+
+        int iter = 0;
+
+        while (sumr2 > tolPCG && iter < maxiterPCG) {
+                iter = iter + 1;
+                arma::fcolvec ApVec = getCrossprod_V(pVec, wVec, tauVal, tauVal0);
+                arma::fvec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
+
+                float a = preA(0);
+                xVec = xVec + a * pVec;
+                r1Vec = rVec - a * ApVec;
+                z1Vec = minvVec % r1Vec;
+
+                arma::fvec Prebet = (z1Vec.t() * r1Vec)/(zVec.t() * rVec);
+                float bet = Prebet(0);
+                pVec = z1Vec+ bet*pVec;
+                zVec = z1Vec;
+                rVec = r1Vec;
+                sumr2 = sum(rVec % rVec);
+        }
+
+        if (iter >= maxiterPCG){
+                cout << "pcg did not converge. You may increase maxiter number." << endl;
+
+        }
+        cout << "iter from getPCG1ofSigmaAndVector " << iter << endl;
+}
+        return(xVec);
+}
+
+
+
+
+
+// [[Rcpp::export]]
+arma::fvec  getSigma_G_V(arma::fvec& wVec, float tauVal, float tauVal0, arma::fvec& Gvec, int maxiterPCG, float tolPCG){
+        arma::fvec Sigma_iG;
+        Sigma_iG = getPCG1ofSigmaAndVector_V(wVec, tauVal, tauVal0, Gvec, maxiterPCG, tolPCG);
+        return(Sigma_iG);
+}
+
+
 // [[Rcpp::export]]
 arma::fvec  getSigma_G_noV(arma::fvec& wVec, arma::fvec& tauVec,arma::fvec& Gvec, int maxiterPCG, float tolPCG, bool LOCO){
         arma::fvec Sigma_iG;
         Sigma_iG = getPCG1ofSigmaAndVector_noV(wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO);
         return(Sigma_iG);
 }
+
+
 
 
 // [[Rcpp::export]]
@@ -5732,6 +5968,12 @@ arma::fvec Get_OneSNP_StdGeno(int SNPIdx)
 
 }
 
+// [[Rcpp::export]]
+void print_g_n_unique(){
+	std::cout << "g_n_unique print " << g_n_unique << std::endl;
+}
+
+
 /*
 // [[Rcpp::export]]
 void set_var_weights(arma::vec & t_var_weights){
@@ -5739,3 +5981,24 @@ void set_var_weights(arma::vec & t_var_weights){
 	g_var_weights = t_var_weights_f;
 }
 */
+
+void  get_indexinAnotherVector(std::vector<uint> & nonzeroInd_orig, arma::uvec & dupInd, arma::uvec &  nonzeroInd_new_arma){
+   std::vector<uint> nonzeroInd_new;
+   arma::uvec newIndfori;
+   for (unsigned int i = 0; i < nonzeroInd_orig.size(); i++) {
+	newIndfori = arma::find(dupInd == nonzeroInd_orig.at(i));
+	if(newIndfori.n_elem > 0){
+		for (unsigned int j = 0; j < newIndfori.n_elem; j++){
+			nonzeroInd_new.push_back(newIndfori(j));
+		}
+	}
+	newIndfori.clear();	
+   }
+   nonzeroInd_new_arma =  arma::conv_to< arma::uvec >::from(nonzeroInd_new);
+  nonzeroInd_new.clear(); 
+}
+
+// [[Rcpp::export]]
+arma::sp_fmat get_sp_Sigma_to_R(){
+	return(g_spSigma);
+}	

@@ -152,7 +152,6 @@ arma::ivec* NullGenoClass::Get_OneSNP_Geno(size_t SNPIdx){
 
 arma::ivec* NullGenoClass::Get_OneSNP_Geno_forVarRatio(size_t SNPIdx){
                 m_OneSNP_Geno.zeros(Nnomissing);
-
                 //avoid large continuous memory usage
                 int indexOfVectorPointer = SNPIdx/numMarkersofEachArray;
                 int SNPIdxinVec = SNPIdx % numMarkersofEachArray;
@@ -197,6 +196,8 @@ arma::ivec* NullGenoClass::Get_OneSNP_Geno_forVarRatio(size_t SNPIdx){
                                         return & m_OneSNP_Geno;
                                 }
                   }
+
+
 
                 return & m_OneSNP_Geno;
 }

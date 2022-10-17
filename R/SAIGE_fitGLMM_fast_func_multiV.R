@@ -40,11 +40,11 @@ Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG,
     print("y[2]")
     print(y[2])
 
-    #if(is.null(var_weights)){
+    if(is.null(var_weights)){
         sqrtW = mu.eta/sqrt(family$variance(mu))
-    #}else{
-    #    sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
-    #}
+    }else{
+        sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+    }
    W = sqrtW^2
 
     #sqrtW = mu.eta/sqrt(family$variance(mu))
@@ -415,7 +415,7 @@ getsubGRM_orig = function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", rel
             nrow(sparseGRMSampleID) != dim(sparseGRMLarge)[2]) {
             stop("ERROR! number of samples in the sparse GRM is not the same to the number of sample IDs in the specified sparseGRMSampleIDFile ",
                 sparseGRMSampleIDFile, "\n")
-        }else {
+        }else{
             sampleInModel = NULL
 	    modelID = unique(modelID) #model ID not duplicated
             sampleInModel$IID = modelID

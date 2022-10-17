@@ -203,8 +203,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // setSAIGEobjInCPP
-void setSAIGEobjInCPP(arma::mat& t_XVX, arma::mat& t_XXVX_inv, arma::mat& t_XV, arma::mat& t_XVX_inv_XV, arma::mat& t_Sigma_iXXSigma_iX, arma::mat& t_X, arma::vec& t_S_a, arma::vec& t_res, arma::vec& t_mu2, arma::vec& t_mu, arma::vec& t_varRatio_sparse, arma::vec& t_varRatio_null, arma::vec& t_cateVarRatioMinMACVecExclude, arma::vec& t_cateVarRatioMaxMACVecInclude, double t_SPA_Cutoff, arma::vec& t_tauvec, std::string t_traitType, arma::vec& t_y, std::string t_impute_method, bool t_flagSparseGRM, bool t_isFastTest, double t_pval_cutoff_for_fastTest, bool t_isCondition, std::vector<uint32_t>& t_condition_genoIndex, bool t_is_Firth_beta, double t_pCutoffforFirth, arma::vec& t_offset, arma::vec& t_resout, arma::sp_mat& t_SigmaMat_sp);
-RcppExport SEXP _SAIGE_setSAIGEobjInCPP(SEXP t_XVXSEXP, SEXP t_XXVX_invSEXP, SEXP t_XVSEXP, SEXP t_XVX_inv_XVSEXP, SEXP t_Sigma_iXXSigma_iXSEXP, SEXP t_XSEXP, SEXP t_S_aSEXP, SEXP t_resSEXP, SEXP t_mu2SEXP, SEXP t_muSEXP, SEXP t_varRatio_sparseSEXP, SEXP t_varRatio_nullSEXP, SEXP t_cateVarRatioMinMACVecExcludeSEXP, SEXP t_cateVarRatioMaxMACVecIncludeSEXP, SEXP t_SPA_CutoffSEXP, SEXP t_tauvecSEXP, SEXP t_traitTypeSEXP, SEXP t_ySEXP, SEXP t_impute_methodSEXP, SEXP t_flagSparseGRMSEXP, SEXP t_isFastTestSEXP, SEXP t_pval_cutoff_for_fastTestSEXP, SEXP t_isConditionSEXP, SEXP t_condition_genoIndexSEXP, SEXP t_is_Firth_betaSEXP, SEXP t_pCutoffforFirthSEXP, SEXP t_offsetSEXP, SEXP t_resoutSEXP, SEXP t_SigmaMat_spSEXP) {
+void setSAIGEobjInCPP(arma::mat& t_XVX, arma::mat& t_XXVX_inv, arma::mat& t_XV, arma::mat& t_XVX_inv_XV, arma::mat& t_Sigma_iXXSigma_iX, arma::mat& t_X, arma::vec& t_S_a, arma::vec& t_res, arma::vec& t_mu2, arma::vec& t_mu, arma::vec& t_varRatio_sparse, arma::vec& t_varRatio_null, arma::vec& t_cateVarRatioMinMACVecExclude, arma::vec& t_cateVarRatioMaxMACVecInclude, double t_SPA_Cutoff, arma::vec& t_tauvec, arma::vec& t_varWeightsvec, std::string t_traitType, arma::vec& t_y, std::string t_impute_method, bool t_flagSparseGRM, bool t_isFastTest, double t_pval_cutoff_for_fastTest, bool t_isCondition, std::vector<uint32_t>& t_condition_genoIndex, bool t_is_Firth_beta, double t_pCutoffforFirth, arma::vec& t_offset, arma::vec& t_resout, arma::sp_mat& t_SigmaMat_sp, float t_tauVal_sp, arma::sp_mat& t_Ilongmat, arma::vec& t_I_longl_vec, arma::sp_mat& t_Tlongmat, arma::vec& t_T_longl_vec);
+RcppExport SEXP _SAIGE_setSAIGEobjInCPP(SEXP t_XVXSEXP, SEXP t_XXVX_invSEXP, SEXP t_XVSEXP, SEXP t_XVX_inv_XVSEXP, SEXP t_Sigma_iXXSigma_iXSEXP, SEXP t_XSEXP, SEXP t_S_aSEXP, SEXP t_resSEXP, SEXP t_mu2SEXP, SEXP t_muSEXP, SEXP t_varRatio_sparseSEXP, SEXP t_varRatio_nullSEXP, SEXP t_cateVarRatioMinMACVecExcludeSEXP, SEXP t_cateVarRatioMaxMACVecIncludeSEXP, SEXP t_SPA_CutoffSEXP, SEXP t_tauvecSEXP, SEXP t_varWeightsvecSEXP, SEXP t_traitTypeSEXP, SEXP t_ySEXP, SEXP t_impute_methodSEXP, SEXP t_flagSparseGRMSEXP, SEXP t_isFastTestSEXP, SEXP t_pval_cutoff_for_fastTestSEXP, SEXP t_isConditionSEXP, SEXP t_condition_genoIndexSEXP, SEXP t_is_Firth_betaSEXP, SEXP t_pCutoffforFirthSEXP, SEXP t_offsetSEXP, SEXP t_resoutSEXP, SEXP t_SigmaMat_spSEXP, SEXP t_tauVal_spSEXP, SEXP t_IlongmatSEXP, SEXP t_I_longl_vecSEXP, SEXP t_TlongmatSEXP, SEXP t_T_longl_vecSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type t_XVX(t_XVXSEXP);
@@ -223,6 +223,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec& >::type t_cateVarRatioMaxMACVecInclude(t_cateVarRatioMaxMACVecIncludeSEXP);
     Rcpp::traits::input_parameter< double >::type t_SPA_Cutoff(t_SPA_CutoffSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type t_tauvec(t_tauvecSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type t_varWeightsvec(t_varWeightsvecSEXP);
     Rcpp::traits::input_parameter< std::string >::type t_traitType(t_traitTypeSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type t_y(t_ySEXP);
     Rcpp::traits::input_parameter< std::string >::type t_impute_method(t_impute_methodSEXP);
@@ -236,7 +237,12 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec& >::type t_offset(t_offsetSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type t_resout(t_resoutSEXP);
     Rcpp::traits::input_parameter< arma::sp_mat& >::type t_SigmaMat_sp(t_SigmaMat_spSEXP);
-    setSAIGEobjInCPP(t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isFastTest, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp);
+    Rcpp::traits::input_parameter< float >::type t_tauVal_sp(t_tauVal_spSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Ilongmat(t_IlongmatSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type t_I_longl_vec(t_I_longl_vecSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Tlongmat(t_TlongmatSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type t_T_longl_vec(t_T_longl_vecSEXP);
+    setSAIGEobjInCPP(t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isFastTest, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec);
     return R_NilValue;
 END_RCPP
 }
@@ -460,6 +466,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// getSparseSigma_new
+arma::sp_mat getSparseSigma_new();
+RcppExport SEXP _SAIGE_getSparseSigma_new() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(getSparseSigma_new());
+    return rcpp_result_gen;
+END_RCPP
+}
 // set_I_longl_mat
 void set_I_longl_mat(arma::sp_mat& t_Ilongmat, arma::vec& t_I_longl_vec);
 RcppExport SEXP _SAIGE_set_I_longl_mat(SEXP t_IlongmatSEXP, SEXP t_I_longl_vecSEXP) {
@@ -471,6 +487,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// set_I_longl_mat_SAIGEtest
+void set_I_longl_mat_SAIGEtest(arma::sp_mat& t_Ilongmat, arma::vec& t_I_longl_vec);
+RcppExport SEXP _SAIGE_set_I_longl_mat_SAIGEtest(SEXP t_IlongmatSEXP, SEXP t_I_longl_vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Ilongmat(t_IlongmatSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type t_I_longl_vec(t_I_longl_vecSEXP);
+    set_I_longl_mat_SAIGEtest(t_Ilongmat, t_I_longl_vec);
+    return R_NilValue;
+END_RCPP
+}
 // set_T_longl_mat
 void set_T_longl_mat(arma::sp_mat& t_Tlongmat, arma::vec& t_T_longl_vec);
 RcppExport SEXP _SAIGE_set_T_longl_mat(SEXP t_TlongmatSEXP, SEXP t_T_longl_vecSEXP) {
@@ -479,6 +506,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Tlongmat(t_TlongmatSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type t_T_longl_vec(t_T_longl_vecSEXP);
     set_T_longl_mat(t_Tlongmat, t_T_longl_vec);
+    return R_NilValue;
+END_RCPP
+}
+// set_T_longl_mat_SAIGEtest
+void set_T_longl_mat_SAIGEtest(arma::sp_mat& t_Tlongmat, arma::vec& t_T_longl_vec);
+RcppExport SEXP _SAIGE_set_T_longl_mat_SAIGEtest(SEXP t_TlongmatSEXP, SEXP t_T_longl_vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Tlongmat(t_TlongmatSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type t_T_longl_vec(t_T_longl_vecSEXP);
+    set_T_longl_mat_SAIGEtest(t_Tlongmat, t_T_longl_vec);
     return R_NilValue;
 END_RCPP
 }
@@ -927,6 +965,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getDiagOfSigma_V
+arma::fvec getDiagOfSigma_V(arma::fvec& wVec, float tauVal, float tauVal0);
+RcppExport SEXP _SAIGE_getDiagOfSigma_V(SEXP wVecSEXP, SEXP tauValSEXP, SEXP tauVal0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< float >::type tauVal(tauValSEXP);
+    Rcpp::traits::input_parameter< float >::type tauVal0(tauVal0SEXP);
+    rcpp_result_gen = Rcpp::wrap(getDiagOfSigma_V(wVec, tauVal, tauVal0));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getCrossprod_noV
 arma::fcolvec getCrossprod_noV(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
 RcppExport SEXP _SAIGE_getCrossprod_noV(SEXP bVecSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP LOCOSEXP) {
@@ -938,6 +989,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
     Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
     rcpp_result_gen = Rcpp::wrap(getCrossprod_noV(bVec, wVec, tauVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getCrossprod_V
+arma::fcolvec getCrossprod_V(arma::fcolvec& bVec, arma::fvec& wVec, float tauVal, float tauVal0);
+RcppExport SEXP _SAIGE_getCrossprod_V(SEXP bVecSEXP, SEXP wVecSEXP, SEXP tauValSEXP, SEXP tauVal0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fcolvec& >::type bVec(bVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< float >::type tauVal(tauValSEXP);
+    Rcpp::traits::input_parameter< float >::type tauVal0(tauVal0SEXP);
+    rcpp_result_gen = Rcpp::wrap(getCrossprod_V(bVec, wVec, tauVal, tauVal0));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -954,6 +1019,38 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
     Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
     rcpp_result_gen = Rcpp::wrap(getPCG1ofSigmaAndVector_noV(wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getPCG1ofSigmaAndVector_V
+arma::fvec getPCG1ofSigmaAndVector_V(arma::fvec& wVec, float tauVal, float tauVal0, arma::fvec& bVec, int maxiterPCG, float tolPCG);
+RcppExport SEXP _SAIGE_getPCG1ofSigmaAndVector_V(SEXP wVecSEXP, SEXP tauValSEXP, SEXP tauVal0SEXP, SEXP bVecSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< float >::type tauVal(tauValSEXP);
+    Rcpp::traits::input_parameter< float >::type tauVal0(tauVal0SEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type bVec(bVecSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    rcpp_result_gen = Rcpp::wrap(getPCG1ofSigmaAndVector_V(wVec, tauVal, tauVal0, bVec, maxiterPCG, tolPCG));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getSigma_G_V
+arma::fvec getSigma_G_V(arma::fvec& wVec, float tauVal, float tauVal0, arma::fvec& Gvec, int maxiterPCG, float tolPCG);
+RcppExport SEXP _SAIGE_getSigma_G_V(SEXP wVecSEXP, SEXP tauValSEXP, SEXP tauVal0SEXP, SEXP GvecSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< float >::type tauVal(tauValSEXP);
+    Rcpp::traits::input_parameter< float >::type tauVal0(tauVal0SEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type Gvec(GvecSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    rcpp_result_gen = Rcpp::wrap(getSigma_G_V(wVec, tauVal, tauVal0, Gvec, maxiterPCG, tolPCG));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1322,6 +1419,25 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type SNPIdx(SNPIdxSEXP);
     rcpp_result_gen = Rcpp::wrap(Get_OneSNP_StdGeno(SNPIdx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// print_g_n_unique
+void print_g_n_unique();
+RcppExport SEXP _SAIGE_print_g_n_unique() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    print_g_n_unique();
+    return R_NilValue;
+END_RCPP
+}
+// get_sp_Sigma_to_R
+arma::sp_fmat get_sp_Sigma_to_R();
+RcppExport SEXP _SAIGE_get_sp_Sigma_to_R() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(get_sp_Sigma_to_R());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1879,7 +1995,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_setPLINKobjInCPP", (DL_FUNC) &_SAIGE_setPLINKobjInCPP, 5},
     {"_SAIGE_setBGENobjInCPP", (DL_FUNC) &_SAIGE_setBGENobjInCPP, 5},
     {"_SAIGE_setVCFobjInCPP", (DL_FUNC) &_SAIGE_setVCFobjInCPP, 4},
-    {"_SAIGE_setSAIGEobjInCPP", (DL_FUNC) &_SAIGE_setSAIGEobjInCPP, 29},
+    {"_SAIGE_setSAIGEobjInCPP", (DL_FUNC) &_SAIGE_setSAIGEobjInCPP, 35},
     {"_SAIGE_RegionSetUpConditional_binary_InCPP", (DL_FUNC) &_SAIGE_RegionSetUpConditional_binary_InCPP, 1},
     {"_SAIGE_mainRegionInCPP", (DL_FUNC) &_SAIGE_mainRegionInCPP, 20},
     {"_SAIGE_assign_conditionMarkers_factors", (DL_FUNC) &_SAIGE_assign_conditionMarkers_factors, 5},
@@ -1897,8 +2013,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_copy_singleInGroup", (DL_FUNC) &_SAIGE_copy_singleInGroup, 0},
     {"_SAIGE_set_dup_sample_index", (DL_FUNC) &_SAIGE_set_dup_sample_index, 1},
     {"_SAIGE_setupSparseGRM_new", (DL_FUNC) &_SAIGE_setupSparseGRM_new, 1},
+    {"_SAIGE_getSparseSigma_new", (DL_FUNC) &_SAIGE_getSparseSigma_new, 0},
     {"_SAIGE_set_I_longl_mat", (DL_FUNC) &_SAIGE_set_I_longl_mat, 2},
+    {"_SAIGE_set_I_longl_mat_SAIGEtest", (DL_FUNC) &_SAIGE_set_I_longl_mat_SAIGEtest, 2},
     {"_SAIGE_set_T_longl_mat", (DL_FUNC) &_SAIGE_set_T_longl_mat, 2},
+    {"_SAIGE_set_T_longl_mat_SAIGEtest", (DL_FUNC) &_SAIGE_set_T_longl_mat_SAIGEtest, 2},
     {"_SAIGE_getCrossprodMatAndKin", (DL_FUNC) &_SAIGE_getCrossprodMatAndKin, 2},
     {"_SAIGE_getCrossprod_multiV", (DL_FUNC) &_SAIGE_getCrossprod_multiV, 4},
     {"_SAIGE_getDiagOfSigma_multiV", (DL_FUNC) &_SAIGE_getDiagOfSigma_multiV, 3},
@@ -1934,8 +2053,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_setRelatednessCutoff", (DL_FUNC) &_SAIGE_setRelatednessCutoff, 1},
     {"_SAIGE_innerProduct", (DL_FUNC) &_SAIGE_innerProduct, 2},
     {"_SAIGE_getDiagOfSigma_noV", (DL_FUNC) &_SAIGE_getDiagOfSigma_noV, 3},
+    {"_SAIGE_getDiagOfSigma_V", (DL_FUNC) &_SAIGE_getDiagOfSigma_V, 3},
     {"_SAIGE_getCrossprod_noV", (DL_FUNC) &_SAIGE_getCrossprod_noV, 4},
+    {"_SAIGE_getCrossprod_V", (DL_FUNC) &_SAIGE_getCrossprod_V, 4},
     {"_SAIGE_getPCG1ofSigmaAndVector_noV", (DL_FUNC) &_SAIGE_getPCG1ofSigmaAndVector_noV, 6},
+    {"_SAIGE_getPCG1ofSigmaAndVector_V", (DL_FUNC) &_SAIGE_getPCG1ofSigmaAndVector_V, 6},
+    {"_SAIGE_getSigma_G_V", (DL_FUNC) &_SAIGE_getSigma_G_V, 6},
     {"_SAIGE_getSigma_G_noV", (DL_FUNC) &_SAIGE_getSigma_G_noV, 6},
     {"_SAIGE_set_useGRMtoFitNULL", (DL_FUNC) &_SAIGE_set_useGRMtoFitNULL, 1},
     {"_SAIGE_set_isSparseGRM", (DL_FUNC) &_SAIGE_set_isSparseGRM, 1},
@@ -1971,6 +2094,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_Get_OneSNP_Geno", (DL_FUNC) &_SAIGE_Get_OneSNP_Geno, 1},
     {"_SAIGE_Get_OneSNP_Geno_forVarRatio", (DL_FUNC) &_SAIGE_Get_OneSNP_Geno_forVarRatio, 1},
     {"_SAIGE_Get_OneSNP_StdGeno", (DL_FUNC) &_SAIGE_Get_OneSNP_StdGeno, 1},
+    {"_SAIGE_print_g_n_unique", (DL_FUNC) &_SAIGE_print_g_n_unique, 0},
+    {"_SAIGE_get_sp_Sigma_to_R", (DL_FUNC) &_SAIGE_get_sp_Sigma_to_R, 0},
     {"_SAIGE_SPA", (DL_FUNC) &_SAIGE_SPA, 10},
     {"_SAIGE_SPA_fast", (DL_FUNC) &_SAIGE_SPA_fast, 16},
     {"_SAIGE_Korg_Binom", (DL_FUNC) &_SAIGE_Korg_Binom, 3},

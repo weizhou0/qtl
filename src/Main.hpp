@@ -134,12 +134,11 @@ void setVCFobjInCPP(std::string t_vcfFileName,
             std::string t_vcfField,
             std::vector<std::string> & t_SampleInModel);
 
-
-
 void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::mat & t_XXVX_inv,
         arma::mat & t_XV,
         arma::mat & t_XVX_inv_XV,
+                arma::mat & t_Sigma_iXXSigma_iX,
         arma::mat & t_X,
         arma::vec &  t_S_a,
         arma::vec & t_res,
@@ -151,17 +150,26 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,
         arma::vec & t_tauvec,
+        arma::vec & t_varWeightsvec,
         std::string t_traitType,
         arma::vec & t_y,
         std::string t_impute_method,
         bool t_flagSparseGRM,
-	bool t_isFastTest,
-	double t_pval_cutoff_for_fastTest,
+        bool t_isFastTest,
+        double t_pval_cutoff_for_fastTest,
         bool t_isCondition,
         std::vector<uint32_t> & t_condition_genoIndex,
-	bool t_is_Firth_beta,
-        double t_pCutoffforFirth, 
-	arma::vec & t_offset);
+        bool t_is_Firth_beta,
+        double t_pCutoffforFirth,
+        arma::vec & t_offset,
+           arma::vec & t_resout,
+        arma::sp_mat & t_SigmaMat_sp,
+	float t_tauVal_sp,
+	 arma::sp_mat & t_Ilongmat,
+        arma::vec & t_I_longl_vec,
+        arma::sp_mat & t_Tlongmat,
+        arma::vec & t_T_longl_vec);
+
 
 void assign_conditionMarkers_factors(
                            std::string t_genoType,     // "plink", "bgen", "vcf"
@@ -533,5 +541,19 @@ arma::ivec Get_OneSNP_Geno_forVarRatio(int SNPIdx);
 
 arma::fvec Get_OneSNP_StdGeno(int SNPIdx);
 
+arma::fvec  getSigma_G_V(arma::fvec& wVec, float tauVal, float tauVal0, arma::fvec& Gvec, int maxiterPCG, float tolPCG);
 
+arma::fvec getPCG1ofSigmaAndVector_V(arma::fvec& wVec,  float tauVal, float tauVal0, arma::fvec& bVec, int maxiterPCG, float tolPCG);
+
+arma::fcolvec getCrossprod_V(arma::fcolvec& bVec, arma::fvec& wVec, float tauVal, float tauVal0);
+
+arma::fvec getDiagOfSigma_V(arma::fvec& wVec, float tauVal, float tauVal0);
+
+void set_T_longl_mat_SAIGEtest(arma::sp_mat & t_Tlongmat, arma::vec & t_T_longl_vec);
+
+void set_I_longl_mat_SAIGEtest(arma::sp_mat & t_Ilongmat, arma::vec & t_I_longl_vec);
+
+void  get_indexinAnotherVector(std::vector<uint> & nonzeroInd_orig, arma::uvec & dupInd, arma::uvec &  nonzeroInd_new_arma);
+
+arma::sp_fmat get_sp_Sigma_to_R();
 #endif

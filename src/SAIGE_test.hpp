@@ -27,6 +27,7 @@ class SAIGEClass
     public:
       arma::vec m_mu2;
       arma::vec m_tauvec;
+      arma::vec m_varWeightsvec; 
       arma::mat m_XXVX_inv;
       arma::mat m_XV;
       int m_n, m_p; //MAIN Dimensions: sample size, number of covariates
@@ -78,9 +79,16 @@ class SAIGEClass
 
       arma::vec m_sigmainvG_noV;	
       arma::sp_mat m_SigmaMat_sp;
+      arma::sp_mat g_I_longl_mat;
+      arma::sp_mat g_T_longl_mat;
+      arma::uvec g_I_longl_vec;
+      arma::vec g_T_longl_vec;
+      double m_tauVal_sp;	
       //arma::m_var2m;
   ////////////////////// -------------------- functions ---------------------------------- //////////////////////
-  
+
+
+
 
   SAIGEClass(
         arma::mat & t_XVX,
@@ -99,6 +107,7 @@ class SAIGEClass
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,
         arma::vec & t_tauvec,
+	arma::vec & t_varWeightsvec,
         std::string t_traitType,
         arma::vec & t_y,
         std::string t_impute_method,
@@ -111,7 +120,12 @@ class SAIGEClass
         double t_pCutoffforFirth,
 	arma::vec & t_offset,
 	arma::vec & t_resout, 
-	arma::sp_mat & t_SigmaMat_sp);
+	arma::sp_mat & t_SigmaMat_sp,
+	float t_tauVal_sp,
+	 arma::sp_mat & t_Ilongmat,
+        arma::vec & t_I_longl_vec,
+        arma::sp_mat & t_Tlongmat,
+        arma::vec & t_T_longl_vec);
 
    void set_seed(unsigned int seed);
 
@@ -222,7 +236,12 @@ class SAIGEClass
         double & sebeta_G,
 	bool & isfirthconverge);	
 
+     arma::vec getSigma_G_V(arma::vec & bVec, int maxiterPCG, double tolPCG);
+     arma::vec getPCG1ofSigmaAndVector_V(arma::vec & bVec, int maxiterPCG, double tolPCG);
 
+     arma::vec getCrossprod_V(arma::vec& bVec);
+
+     arma::vec getDiagOfSigma_V();
 
 };
 }

@@ -147,6 +147,8 @@ SPAGMMATtest = function(bgenFile = "",
 
 
     #if(file.exists(SAIGEOutputFile)) {print("ok -2 file exist")} 
+  print("setSAIGEobjInCPP -3")
+  print_g_n_unique()
 
 
     ##check and create the output file
@@ -218,6 +220,8 @@ SPAGMMATtest = function(bgenFile = "",
      #cat("dosage_zerod_MAC_cutoff is ", dosage_zerod_MAC_cutoff, "\n")
 
     }
+  print("setSAIGEobjInCPP -2")
+  print_g_n_unique()
     
     obj.model = ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta) #readInGLMM.R8
     if(obj.model$traitType == "binary"){
@@ -233,44 +237,40 @@ SPAGMMATtest = function(bgenFile = "",
         print("LOCO = FASLE and leave-one-chromosome-out is not applied")
     }	    
 
-    #sparseSigmaRList = list()
+  #if(obj.model$useSparseGRMforVarRatio){
+  #  gen_sp_Sigma_multiV(obj.model$mu,  obj.model$theta)
+  #}
+
     isSparseGRM = TRUE
-    if(sparseGRMFile != ""){
 
-	       set_isSparseGRM(TRUE)
-        set_useGRMtoFitNULL(TRUE)	    
-	  #g_spGRM  
-      getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)	    
-      #sparseSigmaRList = setSparseSigma(sparseSigmaFile)
-      if(any(duplicated(obj.model$sampleID))){
-      #          getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)	      
-      #  sparseSigmaRList = setSparseSigma_new(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID, obj.model$theta, obj.model$mu2,  obj.model$traitType)
-      #}else{
-        cat(length(obj.model$sampleID), " observations are used for analysis\n")
-        set_I_mat_inR(obj.model$sampleID)
-        if(!is.null(obj.model$longlVar)){
-          set_T_mat_inR(obj.model$sampleID, obj.model$longlVar)
-        }
-        #getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)
-	SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0))) 
-      }else{
-	  SigmaMat_sp = setSparseSigma_new(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID, obj.model$theta, obj.model$mu2,  obj.model$traitType)     
+  #if(obj.model$useSparseGRMforVarRatio){
+#	if(sparseGRMFile != ""){
+#		getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)	
+#	}else{
+#		set_I_longl_mat_SAIGEtest(I_mat, b-1)
+#        if(!is.null(obj.model$T_longl_vec)){
+#                T_longl_mat = I_mat * (obj.model$T_longl_vec)
+#                set_T_longl_mat_SAIGEtest(T_longl_mat, obj.model$T_longl_vec)
+#        }
+#     }
+#      SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))	    
+#      isSparseGRM = TRUE 
+#    }
+  #}
 
-       }	       
-      isSparseGRM = TRUE
-    }else{
-      #if(!is.null(obj.model$useSparseGRMforVarRatio)){
-      #	if(obj.model$useSparseGRMforVarRatio == TRUE){
-      # 		stop("sparse GRM is not specified but it was used in Step 1.\n")
-      #	}	
-      #}		      
-      #sparseSigmaRList = list(nSubj = 0, locations = matrix(0,nrow=2,ncol=2), values = rep(0,2))
-      SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))	    
-      isSparseGRM = FALSE 
-    }
     set_Vmat_vec_orig(VmatFilelist, VmatSampleFilelist, obj.model$sampleID)
 
     ratioVecList = Get_Variance_Ratio(varianceRatioFile, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM) #readInGLMM.R
+
+
+    if(!is.null(obj.model$spSigma)){
+    	#SigmaMat_sp = getSparseSigma_new() 
+    	isSparseGRM = TRUE
+	SigmaMat_sp = chol2inv(chol(obj.model$spSigma)) 
+
+    }else{
+	      SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))
+    }	    
 
     if(is_fastTest){
       if(!file.exists(varianceRatioFile)){
@@ -279,6 +279,9 @@ SPAGMMATtest = function(bgenFile = "",
       }
     }
 
+
+  print("setSAIGEobjInCPP -1")
+  print_g_n_unique()
 
     if(is_fastTest){
       if(isSparseGRM){
@@ -297,6 +300,8 @@ SPAGMMATtest = function(bgenFile = "",
     nsample = length(obj.model$y)
     cateVarRatioMaxMACVecInclude = c(cateVarRatioMaxMACVecInclude, nsample)	
    
+  print("setSAIGEobjInCPP -1b")
+  print_g_n_unique()
 
     #in Geno.R
     objGeno = setGenoInput(bgenFile = bgenFile,
@@ -327,13 +332,41 @@ SPAGMMATtest = function(bgenFile = "",
         isCondition = FALSE
    }
     
+  print("setSAIGEobjInCPP -1a")
+  print_g_n_unique()
     condition_genoIndex = c(-1)
     if(isCondition){
         cat("Conducting conditional analysis. Please specify the conditioning markers in the order as they are store in the genotype/dosage file.\n")
     }	   
     #set up the SAIGE object based on the null model results
-	print("SigmaMat_sp")
-    print(SigmaMat_sp)
+#print("SigmaMat_sp")
+    #print(SigmaMat_sp)
+
+
+    #print(names(obj.model))
+    #print(names(obj.model$obj.noK))
+    obj.model$varWeights = rep(1, length(obj.model$y))
+    #print(obj.model$obj_cc$res.out)
+
+
+    #print("SigmaMat_sp")
+    #print(SigmaMat_sp)
+
+    b = as.numeric(factor(obj.model$sampleID, levels =  unique(obj.model$sampleID)))
+    I_mat = Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
+    I_mat = 1.0 * I_mat
+  #     set_I_longl_mat_SAIGEtest(I_mat, b-1)
+    if(!is.null(obj.model$T_longl_vec)){
+               T_longl_mat = I_mat * (obj.model$T_longl_vec)
+               #set_T_longl_mat_SAIGEtest(T_longl_mat, obj.model$T_longl_vec)
+    }else{
+	       obj.model$T_longl_vec = rep(1, length(b))
+               T_longl_mat = I_mat * (obj.model$T_longl_vec)
+    }	       
+
+  print("setSAIGEobjInCPP 0")
+  print_g_n_unique()
+
 
 
     setSAIGEobjInCPP(t_XVX=obj.model$obj.noK$XVX,
@@ -352,6 +385,7 @@ SPAGMMATtest = function(bgenFile = "",
 		     t_cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
 		     t_SPA_Cutoff = SPAcutoff,
 		     t_tauvec = obj.model$theta,
+		     t_varWeightsvec = obj.model$varWeights,
 		     t_traitType = obj.model$traitType,
 		     t_y = obj.model$y,
 		     t_impute_method = impute_method, 
@@ -363,8 +397,25 @@ SPAGMMATtest = function(bgenFile = "",
 		     t_is_Firth_beta = is_Firth_beta,
 		     t_pCutoffforFirth = pCutoffforFirth,
 		     t_offset = obj.model$offset, 
-		     t_resout = as.integer(obj.model$obj_cc$res.out),
-		     t_SigmaMat_sp = SigmaMat_sp)
+		     t_resout = obj.model$obj_cc$res.out,
+		     t_SigmaMat_sp = SigmaMat_sp,
+		     t_tauVal_sp = obj.model$tauVal_sp,
+		     t_Ilongmat = I_mat,
+		     t_I_longl_vec = b-1,
+		     t_Tlongmat = T_longl_mat,
+		     t_T_longl_vec = obj.model$T_longl_vec)
+
+  #if(any(duplicated(obj.model$sampleID))){
+  #	b = as.numeric(factor(obj.model$sampleID, levels =  unique(obj.model$sampleID)))
+  #	I_mat = Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
+  #	I_mat = 1.0 * I_mat
+  #	set_I_longl_mat_SAIGEtest(I_mat, b-1)
+  #	if(!is.null(obj.model$T_longl_vec)){
+  #		T_longl_mat = I_mat * (obj.model$T_longl_vec)
+  #		set_T_longl_mat_SAIGEtest(T_longl_mat, obj.model$T_longl_vec)	
+  #	}	
+  #}	  
+
   #rm(sparseSigmaRList)
   gc()
    #process condition
@@ -413,6 +464,8 @@ SPAGMMATtest = function(bgenFile = "",
     #cat("Number of markers in each chunk:\t", numLinesOutput, "\n")
     #cat("Number of chunks for all markers:\t", nChunks, "\n")
     #}
+  print("SAIGE.Marker -1")
+  print_g_n_unique()
 
     if(!isGroupTest){
     OutputFile = SAIGEOutputFile

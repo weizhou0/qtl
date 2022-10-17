@@ -57,8 +57,8 @@ setVCFobjInCPP <- function(t_vcfFileName, t_vcfFileIndex, t_vcfField, t_SampleIn
     invisible(.Call('_SAIGE_setVCFobjInCPP', PACKAGE = 'SAIGE', t_vcfFileName, t_vcfFileIndex, t_vcfField, t_SampleInModel))
 }
 
-setSAIGEobjInCPP <- function(t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isFastTest, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp) {
-    invisible(.Call('_SAIGE_setSAIGEobjInCPP', PACKAGE = 'SAIGE', t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isFastTest, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp))
+setSAIGEobjInCPP <- function(t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isFastTest, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec) {
+    invisible(.Call('_SAIGE_setSAIGEobjInCPP', PACKAGE = 'SAIGE', t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isFastTest, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec))
 }
 
 RegionSetUpConditional_binary_InCPP <- function(t_weight_cond) {
@@ -129,12 +129,24 @@ setupSparseGRM_new <- function(t_spGRM) {
     invisible(.Call('_SAIGE_setupSparseGRM_new', PACKAGE = 'SAIGE', t_spGRM))
 }
 
+getSparseSigma_new <- function() {
+    .Call('_SAIGE_getSparseSigma_new', PACKAGE = 'SAIGE')
+}
+
 set_I_longl_mat <- function(t_Ilongmat, t_I_longl_vec) {
     invisible(.Call('_SAIGE_set_I_longl_mat', PACKAGE = 'SAIGE', t_Ilongmat, t_I_longl_vec))
 }
 
+set_I_longl_mat_SAIGEtest <- function(t_Ilongmat, t_I_longl_vec) {
+    invisible(.Call('_SAIGE_set_I_longl_mat_SAIGEtest', PACKAGE = 'SAIGE', t_Ilongmat, t_I_longl_vec))
+}
+
 set_T_longl_mat <- function(t_Tlongmat, t_T_longl_vec) {
     invisible(.Call('_SAIGE_set_T_longl_mat', PACKAGE = 'SAIGE', t_Tlongmat, t_T_longl_vec))
+}
+
+set_T_longl_mat_SAIGEtest <- function(t_Tlongmat, t_T_longl_vec) {
+    invisible(.Call('_SAIGE_set_T_longl_mat_SAIGEtest', PACKAGE = 'SAIGE', t_Tlongmat, t_T_longl_vec))
 }
 
 getCrossprodMatAndKin <- function(bVec, LOCO) {
@@ -277,12 +289,28 @@ getDiagOfSigma_noV <- function(wVec, tauVec, LOCO) {
     .Call('_SAIGE_getDiagOfSigma_noV', PACKAGE = 'SAIGE', wVec, tauVec, LOCO)
 }
 
+getDiagOfSigma_V <- function(wVec, tauVal, tauVal0) {
+    .Call('_SAIGE_getDiagOfSigma_V', PACKAGE = 'SAIGE', wVec, tauVal, tauVal0)
+}
+
 getCrossprod_noV <- function(bVec, wVec, tauVec, LOCO) {
     .Call('_SAIGE_getCrossprod_noV', PACKAGE = 'SAIGE', bVec, wVec, tauVec, LOCO)
 }
 
+getCrossprod_V <- function(bVec, wVec, tauVal, tauVal0) {
+    .Call('_SAIGE_getCrossprod_V', PACKAGE = 'SAIGE', bVec, wVec, tauVal, tauVal0)
+}
+
 getPCG1ofSigmaAndVector_noV <- function(wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO) {
     .Call('_SAIGE_getPCG1ofSigmaAndVector_noV', PACKAGE = 'SAIGE', wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO)
+}
+
+getPCG1ofSigmaAndVector_V <- function(wVec, tauVal, tauVal0, bVec, maxiterPCG, tolPCG) {
+    .Call('_SAIGE_getPCG1ofSigmaAndVector_V', PACKAGE = 'SAIGE', wVec, tauVal, tauVal0, bVec, maxiterPCG, tolPCG)
+}
+
+getSigma_G_V <- function(wVec, tauVal, tauVal0, Gvec, maxiterPCG, tolPCG) {
+    .Call('_SAIGE_getSigma_G_V', PACKAGE = 'SAIGE', wVec, tauVal, tauVal0, Gvec, maxiterPCG, tolPCG)
 }
 
 getSigma_G_noV <- function(wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO) {
@@ -423,6 +451,14 @@ Get_OneSNP_Geno_forVarRatio <- function(SNPIdx) {
 
 Get_OneSNP_StdGeno <- function(SNPIdx) {
     .Call('_SAIGE_Get_OneSNP_StdGeno', PACKAGE = 'SAIGE', SNPIdx)
+}
+
+print_g_n_unique <- function() {
+    invisible(.Call('_SAIGE_print_g_n_unique', PACKAGE = 'SAIGE'))
+}
+
+get_sp_Sigma_to_R <- function() {
+    .Call('_SAIGE_get_sp_Sigma_to_R', PACKAGE = 'SAIGE')
 }
 
 SPA <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge) {

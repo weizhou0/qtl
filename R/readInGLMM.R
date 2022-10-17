@@ -128,8 +128,21 @@ ReadModel = function(GMMATmodelFile = "", chrom="", LOCO=TRUE, is_Firth_beta=FAL
     modglmm$mu2 = (1/tau[1])*rep(1,N)
   }else if(modglmm$traitType == "count"){
     modglmm$mu2 = modglmm$mu
-  }
+  }else if(modglmm$traitType == "count_nb"){
+    modglmm$mu2 = (1/tau[1])*rep(1,N)
+  }	  
  #if(FALSE){
+
+  modglmm$obj_cc = list(res.out = NULL)
+  print("check")
+  if(!is.null(modglmm$obj_cc$res.out)){
+               modglmm$obj_cc$res.out<-cbind(modglmm$obj_cc$res,
+modglmm$obj_cc$res.out)
+            } else {
+                modglmm$obj_cc$res.out<-modglmm$res
+             }
+
+
 
  if(is_Firth_beta){
         if(modglmm$traitType == "binary"){
@@ -166,6 +179,11 @@ ReadModel = function(GMMATmodelFile = "", chrom="", LOCO=TRUE, is_Firth_beta=FAL
  if(is.null(modglmm$Sigma_iXXSigma_iX)){
         modglmm$Sigma_iXXSigma_iX = matrix(0, nrow=1, ncol=1)
  }
+
+ if(is.null(modglmm$varWeights)){
+	modglmm$varWeights = rep(1, length(modglmm$y))
+ }	 
+
  return(modglmm)
 }
 

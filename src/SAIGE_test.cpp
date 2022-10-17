@@ -39,6 +39,7 @@ SAIGEClass::SAIGEClass(
         arma::vec & t_cateVarRatioMaxMACVecInclude,
 	double t_SPA_Cutoff,
 	arma::vec & t_tauvec,
+	arma::vec & t_varWeightsvec,
 	std::string t_traitType,
 	arma::vec & t_y,
 	std::string t_impute_method,
@@ -51,7 +52,12 @@ SAIGEClass::SAIGEClass(
         double t_pCutoffforFirth,
         arma::vec & t_offset,
 	arma::vec & t_resout, 
-	arma::sp_mat & t_SigmaMat_sp){
+	arma::sp_mat & t_SigmaMat_sp,
+	float t_tauVal_sp,
+	 arma::sp_mat & t_Ilongmat,
+        arma::vec & t_I_longl_vec,
+        arma::sp_mat & t_Tlongmat,
+        arma::vec & t_T_longl_vec){
 
 
     m_XVX = t_XVX;
@@ -76,6 +82,7 @@ SAIGEClass::SAIGEClass(
     m_cateVarRatioMinMACVecExclude = t_cateVarRatioMinMACVecExclude;
     m_cateVarRatioMaxMACVecInclude = t_cateVarRatioMaxMACVecInclude;
     m_tauvec = t_tauvec;
+    m_varWeightsvec = t_varWeightsvec;
     m_traitType = t_traitType;
     m_y = t_y;
 
@@ -118,7 +125,13 @@ SAIGEClass::SAIGEClass(
     //if(t_SigmaMat_sp.n_rows > 2){
 	std::cout << "here m_SigmaMat_sp" << std::endl;
 	m_SigmaMat_sp = t_SigmaMat_sp;
-    //}	    
+    //}	   
+    m_tauVal_sp = t_tauVal_sp;
+   g_I_longl_mat = t_Ilongmat;
+   arma::uvec t_I_longl_vec_new = arma::conv_to< arma::uvec >::from(t_I_longl_vec);
+   g_I_longl_vec = t_I_longl_vec_new;
+   g_T_longl_mat = t_Tlongmat;
+   g_T_longl_vec = t_T_longl_vec;   
 }    
 
 
@@ -153,33 +166,44 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     }
 
     S = dot(t_gtilde, m_res);
-    S = S/m_tauvec[0];
 
+    std::cout << "S " << S << std::endl;
+
+    S = S/m_tauvec[0];
+    
+
+      for(int i = 0; i < 10; i++){
+	std::cout << "t_gtilde  " << i << " " << t_gtilde[i] << std::endl;
+	std::cout << "m_mu2  " << i << " " << m_mu2[i] << std::endl;
+	std::cout << "m_mu  " << i << " " << m_mu2[i] << std::endl;
+      } 
 
     if(!m_flagSparseGRM_cur){
-      t_P2Vec = t_gtilde % m_mu2 *m_tauvec[0];  
-      var2m = dot(t_P2Vec , t_gtilde);
+      t_P2Vec = t_gtilde % m_mu2 *m_tauvec[0]; 
+      var2m = dot(t_P2Vec, t_gtilde);
     }else{
       if(m_SigmaMat_sp.n_rows > 2){	
-      t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
+      //t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
+      t_P2Vec = m_SigmaMat_sp * t_gtilde;
       var2m = dot(t_P2Vec, t_gtilde);
       if(m_isVarPsadj){
 	var2m = var2m - t_gtilde.t() * m_Sigma_iXXSigma_iX * m_X.t() * t_P2Vec;	
       }
      }else{	
-	t_P2Vec = m_sigmainvG_noV;
-	var2m = dot(t_P2Vec , t_gtilde);
+	//t_P2Vec = m_sigmainvG_noV;
+	t_P2Vec = getSigma_G_V(t_gtilde, 500, 1e-5);
+	var2m = dot(t_P2Vec, t_gtilde);
      }
-
     }	      
     var2 = var2m(0,0);
-        std::cout << "var2 " << var2 << std::endl;
+    std::cout << "var2 " << var2 << std::endl;
     std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
     double var1 = var2 * m_varRatioVal;
-        std::cout << "var1 " << var1 << std::endl;
+    std::cout << "var1 " << var1 << std::endl;
     double stat = S*S/var1;
     double t_pval;
-    
+    std::cout << "S " << S << std::endl;    
+    std::cout << "var1 " << var1 << std::endl;    
 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
@@ -204,7 +228,6 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     }
     std::string buffAsStdStr = pValueBuf;
     t_pval_str = buffAsStdStr;
-
     t_Beta = S/var1;
     t_seBeta = fabs(t_Beta) / sqrt(fabs(stat));
     t_Tstat = S;
@@ -224,6 +247,9 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
                      double &t_var2){
 
     arma::vec g1 = t_GVec.elem(t_indexForNonZero);
+
+    //m_varWeightsvec = m_varWeightsvec.elem(t_indexForNonZero);
+
     arma::mat X1 = m_X.rows(t_indexForNonZero);
     arma::mat A1 = m_XVX_inv_XV.rows(t_indexForNonZero);
     arma::vec mu21;
@@ -240,11 +266,14 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
       g1tildemu2 = dot(square(g1_tilde), mu21);
       Bmu2 = arma::dot(square(B),  mu21);
       var2 = ZtXVXZ(0,0) - Bmu2 + g1tildemu2;
-    }else if(m_traitType == "quantitative"){
+      std::cout << "ZtXVXZ(0,0) " << ZtXVXZ(0,0) << std::endl;
+      std::cout << "Bmu2 " << Bmu2 << std::endl;
+      std::cout << "g1tildemu2 " << g1tildemu2 << std::endl;
+    }else if(m_traitType == "quantitative" || m_traitType == "count_nb"){
       Bmu2 = dot(g1, B);
       var2 = ZtXVXZ(0,0)*m_tauvec[0] +  dot(g1,g1) - 2*Bmu2;
     }
-
+    
 
     std::cout << "var2 " << var2 << std::endl;
     var1 = var2 * m_varRatioVal;
@@ -291,7 +320,8 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
     t_Tstat = S;
     t_var1 = var1;
     t_var2 = var2;
-
+    std::cout << "t_pval_str " << t_pval_str << std::endl;
+    std::cout << "end of scoreTestFast" << std::endl;
 }
 
 
@@ -394,14 +424,23 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 
   //for test
  //arma::vec timeoutput3 = getTime();
+ //isScoreFast = true;
   if(!isScoreFast){
-	//std::cout << "scoreTest " << std::endl;  
+	std::cout << "scoreTest " << std::endl;  
   	is_gtilde = true;
+	unsigned int nonzero = iIndex.n_elem;
+	unsigned int nGvec = t_GVec.n_elem;
+	std::cout << "nonzero " << nonzero << std::endl;
+	std::cout << "nGvec " << nGvec << std::endl;
   	scoreTest(t_GVec, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, iIndex);
   }else{
   	is_gtilde = false;
-	//std::cout << "scoreTestFast "  << std::endl;  
+	std::cout << "scoreTestFast "  << std::endl;  
 	//arma::uvec iIndexVec = arma::find(t_GVec > 0);
+	unsigned int nonzero = iIndex.n_elem;
+	unsigned int nGvec = t_GVec.n_elem;
+	std::cout << "nonzero " << nonzero << std::endl;
+	std::cout << "nGvec " << nGvec << std::endl;
         scoreTestFast(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2);
   }
 
@@ -768,6 +807,7 @@ if(!t_isER){
         //t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
       }
     }
+    std::cout << "end of getPval" << std::endl;
 }
 
 
@@ -962,6 +1002,170 @@ void SAIGEClass::fast_logistf_fit_simple(arma::mat & x,
 
 void SAIGEClass::set_flagSparseGRM_cur(bool t_flagSparseGRM_cur){
 	m_flagSparseGRM_cur = t_flagSparseGRM_cur;
+}
+
+
+
+
+arma::vec SAIGEClass::getDiagOfSigma_V(){
+	double tauVal0 = m_tauvec(0);
+
+        int Nnomissing = m_mu2.n_elem;
+        arma::vec diagVec(Nnomissing);
+        arma::sp_vec diagVecV0;
+        arma::vec diagVecG, diagVecV, diagVecG_I, diagVecG_T, diagVecG_IT,diagVecV_I, diagVecV_T, diagVecV_IT;
+        unsigned int tauind = 0;
+
+        if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
+
+             diagVec = tauVal0/m_mu2;
+             tauind = tauind + 1;
+             //diagVecG = spV.diag();
+             diagVec = diagVec + m_tauVal_sp;
+             tauind = tauind + 1;
+
+
+        }else{ //if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
+                diagVec = tauVal0/m_mu2;
+                //tauind = tauind + 1;
+                //diagVecG = spV.diag();
+                //diagVecG_I = diagVecG.elem(g_I_longl_vec);
+                //diagVec = diagVec + tauVec(indforV) * diagVecG_I;
+                diagVec = diagVec + m_tauVal_sp;
+
+                /*
+                tauind = tauind + 1 + 3 * (indforV - 1);
+                tauind = tauind + 1;
+
+                if(g_T_longl_mat.n_rows > 0){
+                  diagVecG_I.ones(Nnomissing);
+                  diagVecG_IT = diagVecG_I % g_T_longl_vec;
+                  diagVecG_T = diagVecG_IT % g_T_longl_vec;
+                  diagVecG_IT = 2 * diagVecG_IT;
+                  diagVec = diagVec + tauVec(tauind) * diagVecG_IT;
+                  tauind = tauind + 1;
+                  diagVec = diagVec + tauVec(tauind) * diagVecG_T;
+                  tauind = tauind + 1;
+                }
+                */
+        }
+
+        for(unsigned int i=0; i< Nnomissing; i++){
+                if(diagVec(i) < 1e-4){
+                        diagVec(i) = 1e-4 ;
+                }
+        }
+
+        return(diagVec);
+}
+
+
+
+
+
+
+
+arma::vec SAIGEClass::getCrossprod_V(arma::vec& bVec){
+        //indforV starts from 0
+        arma::vec crossProdVec;
+        arma::vec crossProd1, GRM_I_bvec, Ibvec, Tbvec, GRM_T_bvec, crossProdGRM_TGIb, crossProdGRM_IGTb, V_I_bvec, V_T_bvec, crossProdV_TGIb, crossProdV_IGTb, crossProdGRM_TIb, crossProdGRM_ITb;
+	double tauVal0 = m_tauvec(0); 
+
+        unsigned int tau_ind = 0;
+        if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){ //it must have specified GRM
+                  crossProd1 = bVec;
+                  crossProdVec = tauVal0*(bVec % (1/m_mu2)) + m_tauVal_sp*crossProd1;
+                  tau_ind = tau_ind + 2;
+        }else{
+
+                  Ibvec = g_I_longl_mat.t() * bVec;
+
+                  GRM_I_bvec = Ibvec;
+                  crossProd1 = g_I_longl_mat * GRM_I_bvec;
+                  crossProdVec = tauVal0*(bVec % (1/m_mu2)) + m_tauVal_sp*crossProd1;
+                /*
+                  tau_ind = tau_ind + 1 + 3 * (indforV - 1);
+                  tau_ind = tau_ind + 1;
+
+                if(g_T_longl_mat.n_rows > 0){
+                        Tbvec = g_T_longl_mat.t() * bVec;
+                        GRM_T_bvec = spV * Tbvec;
+                        crossProdGRM_TGIb = g_T_longl_mat * GRM_I_bvec;
+                        crossProdGRM_IGTb = g_I_longl_mat * GRM_T_bvec;
+                        crossProdVec = crossProdVec + tauVec(tau_ind) * (crossProdGRM_TGIb + crossProdGRM_IGTb);
+                        tau_ind = tau_ind + 1;
+                        crossProdVec = crossProdVec + tauVec(tau_ind) * (g_T_longl_mat * GRM_T_bvec);
+                        tau_ind = tau_ind + 1;
+                }
+                */
+
+        }
+
+        return(crossProdVec);
+}
+
+
+
+arma::vec SAIGEClass::getPCG1ofSigmaAndVector_V(arma::vec& bVec, int maxiterPCG, double tolPCG){
+    // Start Timers
+    //double wall0 = get_wall_time();
+    //double cpu0  = get_cpu_time();
+    int Nnomissing = m_mu2.n_elem;
+    arma::vec xVec(Nnomissing);
+    xVec.zeros();
+
+    //if(g_isStoreSigma){
+    //    std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
+    //    //xVec = arma::spsolve(g_spSigma, bVec);
+    //    xVec = arma::spsolve(g_spSigma_V, bVec);
+    //    std::cout << " arma::spsolve(g_spSigma, bVec) 1" << std::endl;
+    //}else{
+        arma::vec rVec = bVec;
+        arma::vec r1Vec;
+        arma::vec crossProdVec(Nnomissing);
+        arma::vec zVec(Nnomissing);
+        arma::vec minvVec(Nnomissing);
+        minvVec = 1/getDiagOfSigma_V();
+        zVec = minvVec % rVec;
+
+        float sumr2 = sum(rVec % rVec);
+        arma::vec z1Vec(Nnomissing);
+        arma::vec pVec = zVec;
+
+        int iter = 0;
+
+        while (sumr2 > tolPCG && iter < maxiterPCG) {
+                iter = iter + 1;
+                arma::colvec ApVec = getCrossprod_V(pVec);
+                arma::vec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
+
+                double a = preA(0);
+                xVec = xVec + a * pVec;
+                r1Vec = rVec - a * ApVec;
+                z1Vec = minvVec % r1Vec;
+
+                arma::vec Prebet = (z1Vec.t() * r1Vec)/(zVec.t() * rVec);
+                double bet = Prebet(0);
+                pVec = z1Vec+ bet*pVec;
+                zVec = z1Vec;
+                rVec = r1Vec;
+                sumr2 = sum(rVec % rVec);
+        }
+
+        if (iter >= maxiterPCG){
+		std::cout << "pcg did not converge. You may increase maxiter number." << std::endl;
+
+        }
+	std::cout << "iter from getPCG1ofSigmaAndVector " << iter << std::endl;
+//}
+        return(xVec);
+}
+
+
+arma::vec SAIGEClass::getSigma_G_V(arma::vec & bVec, int maxiterPCG, double tolPCG){
+	arma::vec Sigma_iG;
+        Sigma_iG = getPCG1ofSigmaAndVector_V(bVec, maxiterPCG, tolPCG);
+        return(Sigma_iG);
 }
 
 }
