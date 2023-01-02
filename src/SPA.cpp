@@ -174,6 +174,8 @@ void SPA_fast(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_
                         pval = std::abs(p1)+std::abs(p2);
                         //std::cout << "p1 " << p1 << "p2 " << p2 << std::endl;
                 }
+		                std::cout << "pval " << pval << std::endl;
+
                 Isconverge=true;
         }else {
                         //std::cout << "Error_Converge" << std::endl;

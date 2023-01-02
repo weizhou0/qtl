@@ -127,8 +127,8 @@ setGenoInput = function(bgenFile = "",
 
   ########## ----------  Plink format ---------- ##########
  
-      print("setSAIGEobjInCPP -plink 3")
-  print_g_n_unique()
+  #print("setSAIGEobjInCPP -plink 3")
+  #print_g_n_unique()
 
 
   if(dosageFileType == "plink"){
@@ -171,11 +171,11 @@ setGenoInput = function(bgenFile = "",
     #samplesInGeno = sampleInfo[,1]
     #SampleIDs = updateSampleIDs(SampleIDs, samplesInGeno)
     #markerInfo$ID = paste0(markerInfo$CHROM,":", markerInfo$POS ,"_", markerInfo$REF, "/", markerInfo$ALT) 
-      print("setSAIGEobjInCPP -plink 2")
-  print_g_n_unique()
+    #print("setSAIGEobjInCPP -plink 2")
+    #print_g_n_unique()
     setPLINKobjInCPP(bimFile, famFile, bedFile, sampleInModel, AlleleOrder)
-    print("setSAIGEobjInCPP -plink 1")
-  print_g_n_unique()
+    #print("setSAIGEobjInCPP -plink 1")
+    #print_g_n_unique()
   }
   
   ########## ----------  BGEN format ---------- ##########

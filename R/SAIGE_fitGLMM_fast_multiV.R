@@ -762,6 +762,7 @@ print("HERERE2")
         }	
     }else if(traitType == "count"){
         cat(phenoCol, " is a count trait\n")
+        dataMerge_sort = dataMerge_sort[which(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)] > 0),]
         miny = min(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)])
         if (miny < 0 ) {
             stop("ERROR! phenotype value needs to be non-negative \n")
@@ -828,9 +829,9 @@ print("HERERE2")
 
 
     #if(length(fit0$y) > 20000){
-    isStoreSigma = FALSE
+    #isStoreSigma = FALSE
     #}else{
-    #  isStoreSigma = TRUE
+      isStoreSigma = FALSE
     #}
     print("isStoreSigma")
     print(isStoreSigma)
@@ -940,18 +941,19 @@ print("HERERE2")
 	print("CHECK HERE")
 
 
-        if(skipVarianceRatioEstimation & useSparseGRMtoFitNULL){
+        #if((skipVarianceRatioEstimation & useSparseGRMtoFitNULL)){
                 family = fit0$family
                 eta = modglmm$linear.predictors
                 mu = modglmm$fitted.values
                 mu.eta = family$mu.eta(eta)
                 sqrtW = mu.eta/sqrt(family$variance(mu))
                 W = sqrtW^2
+		W = W * modglmm$varWeights;
                 tauVecNew = modglmm$theta
                 Sigma_iX =  getSigma_X_multiV(W, tauVecNew, modglmm$X, maxiterPCG, tolPCG, LOCO=FALSE)
                 Sigma_iXXSigma_iX = Sigma_iX%*%(solve(t(modglmm$X)%*%Sigma_iX))
                 modglmm$Sigma_iXXSigma_iX = Sigma_iXXSigma_iX
-        }
+        #}
     
         modglmm$useSparseGRMforVarRatio = useSparseGRMforVarRatio 	   
 
@@ -965,13 +967,14 @@ print("HERERE2")
         #}
 
 
-	 if(length(fit0$y) > 10000){
+	 if(length(fit0$y) <= 10000){
 		family = fit0$family
                 eta = modglmm$linear.predictors
                 mu = modglmm$fitted.values
                 mu.eta = family$mu.eta(eta)
                 sqrtW = mu.eta/sqrt(family$variance(mu))
                 W = sqrtW^2
+		W = W * modglmm$varWeights;
                 tauVecNew = modglmm$theta
 		gen_sp_Sigma_multiV(W, tauVecNew)
 		modglmm$spSigma = get_sp_Sigma_to_R()
@@ -1043,12 +1046,16 @@ print("HERERE2")
                                 }else{
                                         coef.alpha = alpha
                                 }
-                                if(!isCovariateOffset){
-                                        obj.noK = ScoreTest_NULL_Model(mu, mu2, y, X)
-                                }else{
-                                        obj.noK = ScoreTest_NULL_Model(mu, mu2, y, Xorig)
-                                }
 
+				  mu2_rescaled = mu2 * var_weights
+        			mu_rescaled = mu * var_weights
+
+
+        if(!isCovariateOffset){
+           obj.noK = ScoreTest_NULL_Model(mu_rescaled, mu2_rescaled, y_rescaled, X)
+        }else{
+           obj.noK = ScoreTest_NULL_Model(mu_rescaled, mu2_rescaled, y_rescaled, Xorig)
+        }
                                 modglmm$LOCOResult[[j]] = list(isLOCO = TRUE, coefficients=coef.alpha, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, obj.noK = obj.noK)
                                 if(!isCovariateOffset & hasCovariate){
 					 data.new.X = model.matrix(fit0)[,-1,drop=F]
@@ -1209,9 +1216,10 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   #}
 
   W = sqrtW^2   ##(mu*(1-mu) for binary)
-  #W = W * var_weights
+  W = W * var_weights
   tauVecNew = obj.glmm.null$theta
 
+  isStoreSigma=FALSE
   if(isStoreSigma){
          gen_sp_Sigma_multiV(W, tauVecNew)
   }
@@ -1383,11 +1391,12 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
           #g = G/sqrt(AC)
           #q = innerProduct(g * sqrt(var_weights),y)
           q = innerProduct(G,y)
-          eta = obj.glmm.null$linear.predictors
-          mu = obj.glmm.null$fitted.values
-          mu.eta = family$mu.eta(eta)
-          sqrtW = mu.eta/sqrt(obj.glm.null$family$variance(mu))
-          W = sqrtW^2
+          #eta = obj.glmm.null$linear.predictors
+          #mu = obj.glmm.null$fitted.values
+          #mu.eta = family$mu.eta(eta)
+          #sqrtW = mu.eta/sqrt(obj.glm.null$family$variance(mu))
+          #W = sqrtW^2
+	  #W = W * var_weights
 	  #W = W * var_weights  
           #print("W[1:10]")
           #print(W[1:10])
@@ -1407,7 +1416,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
           Sigma_iG = getSigma_G_multiV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
 
-	Sigma_iX = Sigma_iX_noLOCO
+	  Sigma_iX = Sigma_iX_noLOCO
 
           #var1a = t(G)%*%Sigma_iG - t(G)%*%Sigma_iX%*%(solve(t(X)%*%Sigma_iX))%*%t(X)%*%Sigma_iG
           var1 = t(G)%*%Sigma_iG - t(G)%*%Sigma_iX%*%(solve(t(X)%*%Sigma_iX))%*%t(X)%*%Sigma_iG
@@ -1415,7 +1424,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	  cat("AC ", AC, "\n")	
           #m1 = innerProduct(mu * sqrt(var_weights),g)
 	  #S = q-m1
-	  S = innerProduct(G , obj.glmm.null$residuals)
+	  S = innerProduct(G , obj.glmm.null$residuals*var_weights)
           cat("S is ", S, "\n")
 	#if(obj.glmm.null$traitType == "count_nb"){
 	#	gs = g * (mu.eta/obj.glm.null$family$variance(mu))	
@@ -1452,14 +1461,15 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
 
     if(obj.glmm.null$traitType == "binary"){
-         var2null = innerProduct(mu*(1-mu), G*G)
-    varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
+         var2null = innerProduct(mu*(1-mu)*var_weights, G*G)
+         #varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
     }else if(obj.glmm.null$traitType == "quantitative"){
-         var2null = innerProduct(G, G)
-         varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
+         var2null = innerProduct(G, G*var_weights)
+         #varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
     }else if(obj.glmm.null$traitType == "count"){
-         var2null = innerProduct(mu, G*G)
-    varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
+         var2null = innerProduct(mu*var_weights, G*G)
+	 #varres2null = innerProduct(var(obj.glmm.null$residuals)*G, G) 
+         #varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
     }else if(obj.glmm.null$traitType == "count_nb"){
 	 var2null = innerProduct(W, G*G) ##To update
     }	    
@@ -1472,7 +1482,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
    # cat("S ", S*sqrt(AC), "\n")
    cat("var1 ", var1, "\n")
    cat("var2null ", var2null, "\n")
-   # cat("p_exact ", p_exact, "\n")
+    cat("p_exact ", p_exact, "\n")
    # cat("p_approx ", p_approx, "\n")
    # cat("p_approx_true ", p_approx_true, "\n")
     varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
@@ -1512,6 +1522,9 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   }#end of while(ratioCV > ratioCVcutoff)
 
   if(length(varRatio_sparseGRM_vec) > 0){
+   cat("varRatio_sparseGRM_vec\n")
+  print(varRatio_sparseGRM_vec)
+
     varRatio_sparse = mean(varRatio_sparseGRM_vec)
     cat("varRatio_sparse", varRatio_sparse, "\n")
     varRatioTable = rbind(varRatioTable, c(varRatio_sparse, "sparse", k))
@@ -1617,11 +1630,12 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   Y = eta - offset + (y - mu)/mu.eta
 
   if(is.null(var_weights)){
-     sqrtW = mu.eta/sqrt(family$variance(mu))
-  }else{
-     sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+     var_weights = rep(1, length(mu.eta))
   }
-
+     #sqrtW = mu.eta/sqrt(family$variance(mu))
+  #}else{
+  sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+  #}
   W = sqrtW^2
 
   alpha0 = fit0$coef
@@ -1683,10 +1697,10 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     print(tau)
 
 
-####set up weights for variance
-#if(!is.null(var_weights)){
-#	set_var_weights(var_weights)
-#}
+    ####set up weights for variance
+    #if(!is.null(var_weights)){
+    #	set_var_weights(var_weights)
+    #}
 
 
     if(isStoreSigma){
@@ -1727,7 +1741,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   }
 
   for (i in seq_len(maxiter)) {
-    W = sqrtW^2
+    #W = sqrtW^2
 
     if(verbose) cat("\nIteration ", i, tau, ":\n")
       alpha0 = re.coef$alpha
@@ -1787,9 +1801,13 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
         #}
       #}
 
-      if(sum(tau[2:length(tau)]) == 0) break
-      
+      #if(sum(tau[2:length(tau)]) == 0) break
       # Use only tau for convergence evaluation, because alpha was evaluated already in Get_Coef
+      if(sum(tau[2:length(tau)]) == 0){
+	break      
+	#tau[2:length(tau)] = rep(0.1,length(tau)-1)
+      }else{	      
+      
       if(max(abs(tau - tau0)/(abs(tau) + abs(tau0) + tol)) < tol) break
 
       if(max(tau) > tol^(-2)) {
@@ -1797,6 +1815,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
         i = maxiter
         break
       }
+      } 
   }
 
   if(verbose) cat("\nFinal " ,tau, ":\n")
@@ -1845,20 +1864,25 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   #mu2 = mu * (1-mu)
 
    #if(!is.null(var_weights)){
-   #     mu2 = mu2 * var_weights
-   #}
+   mu2_rescaled = mu2 * var_weights
+   y_rescaled = y * var_weights
+   mu_rescaled = mu * var_weights
+   #}else{
+	
 
+   #}	   
 
   if(!isCovariateOffset){
-    obj.noK = ScoreTest_NULL_Model(mu, mu2, y, X)
+    obj.noK = ScoreTest_NULL_Model(mu_rescaled, mu2_rescaled, y_rescaled, X)
     glmmResult = list(theta=tau, coefficients=alpha, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, converged=converged,sampleID = subPheno$IID, obj.noK=obj.noK, y = y, X = X, traitType=traitType, isCovariateOffset = isCovariateOffset)
   }else{
-    obj.noK = ScoreTest_NULL_Model(mu, mu2, y, Xorig)
+    obj.noK = ScoreTest_NULL_Model(mu_rescaled, mu2_rescaled, y_rescaled, Xorig)
     glmmResult = list(theta=tau, coefficients=alpha, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, converged=converged,sampleID = subPheno$IID, obj.noK=obj.noK, y = y, X = Xorig, traitType=traitType, isCovariateOffset = isCovariateOffset)
   }
 
-
+  glmmResult$varWeights = var_weights
   #LOCO: estimate fixed effect coefficients, random effects, and residuals for each chromoosme
+  #glmmResult$Sigma_iX = re.coef$Sigma_iX 
 
   glmmResult$LOCO = LOCO
   t_end_null = proc.time()
@@ -1889,11 +1913,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
         #mu2 = mu * (1-mu)
         #mu2 = mu
 
-	if(!is.null(varWeights)){
-    		res = (y - mu) * sqrt(varWeights)
-  	}else{
-    		res = y - mu
-  	}
+        res = y - mu
 
 
         if(family$family == "binomial"){
@@ -1904,19 +1924,21 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
           mu2 = rep((1/(tau[1])),length(res))
         }
 
-	#if(!is.null(var_weights)){
-        #  mu2 = mu2 * var_weights
-   	#}
 
         if(!is.null(out.transform) & is.null(fit0$offset)){
           coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
         }else{
           coef.alpha = alpha
         }
+
+	mu2_rescaled = mu2 * var_weights
+        mu_rescaled = mu * var_weights
+
+
         if(!isCovariateOffset){
-          obj.noK = ScoreTest_NULL_Model(mu, mu2, y, X)
+	   obj.noK = ScoreTest_NULL_Model(mu_rescaled, mu2_rescaled, y_rescaled, X)	
         }else{
-          obj.noK = ScoreTest_NULL_Model(mu, mu2, y, Xorig)
+	   obj.noK = ScoreTest_NULL_Model(mu_rescaled, mu2_rescaled, y_rescaled, Xorig)	
         }
         glmmResult$LOCOResult[[j]] = list(isLOCO = TRUE, coefficients=coef.alpha, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, obj.noK = obj.noK)
       }else{

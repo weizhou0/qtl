@@ -168,7 +168,9 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
 	 arma::sp_mat & t_Ilongmat,
         arma::vec & t_I_longl_vec,
         arma::sp_mat & t_Tlongmat,
-        arma::vec & t_T_longl_vec);
+        arma::vec & t_T_longl_vec,
+	       bool t_is_EmpSPA,
+        arma::mat & t_cumul);
 
 
 void assign_conditionMarkers_factors(

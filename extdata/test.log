@@ -1,5 +1,5 @@
 Loading required package: optparse
-R version 4.2.0 (2022-04-22)
+R version 4.2.1 (2022-06-23)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 18.04.5 LTS
 
@@ -22,8 +22,8 @@ other attached packages:
 [1] optparse_1.7.1 SAIGE_1.1.4   
 
 loaded via a namespace (and not attached):
-[1] compiler_4.2.0     Matrix_1.4-1       Rcpp_1.0.7         getopt_1.20.3     
-[5] grid_4.2.0         data.table_1.14.2  RcppParallel_5.0.2 lattice_0.20-45   
+[1] compiler_4.2.1     Matrix_1.4-1       Rcpp_1.0.7         getopt_1.20.3     
+[5] grid_4.2.1         data.table_1.14.2  RcppParallel_5.0.2 lattice_0.20-45   
 $plinkFile
 [1] ""
 
@@ -37,28 +37,28 @@ $famFile
 [1] ""
 
 $phenoFile
-[1] "./GMMAT_pheno_quantitative_repeat.txt"
+[1] "/net/hunt/zhowei/project/imbalancedCaseCtrlMixedModel/Rpackage_SPAGMMAT/SAIGE_newgit/SAIGE_1.1.3/NB_test/NBZIMM_pheno.txt"
 
 $phenoCol
-[1] "y.trend"
+[1] "y"
 
 $traitType
-[1] "quantitative"
+[1] "count_nb"
 
 $invNormalize
 [1] FALSE
 
 $covarColList
-[1] "sex"
+[1] "Days,Age,Race,preg"
 
 $longlCol
-[1] "time"
+[1] ""
 
 $qCovarColList
 [1] ""
 
 $sampleIDColinphenoFile
-[1] "id"
+[1] "subject"
 
 $tol
 [1] 0.02
@@ -100,7 +100,7 @@ $isLowMemLOCO
 [1] FALSE
 
 $traceCVcutoff
-[1] 0.0025
+[1] 0.1
 
 $nrun
 [1] 30
@@ -109,7 +109,7 @@ $ratioCVcutoff
 [1] 0.001
 
 $outputPrefix
-[1] "GMMAT_quantitative_1.1.4"
+[1] "NB_1.1.4"
 
 $outputPrefix_varRatio
 [1] ""
@@ -118,10 +118,10 @@ $IsOverwriteVarianceRatioFile
 [1] FALSE
 
 $sparseGRMFile
-[1] "./GMMAT_GRM.mtx"
+[1] ""
 
 $sparseGRMSampleIDFile
-[1] "./GMMAT_sampleID.txt"
+[1] ""
 
 $isCateVarianceRatio
 [1] FALSE
@@ -142,7 +142,7 @@ $isDiagofKinSetAsOne
 [1] FALSE
 
 $useSparseGRMtoFitNULL
-[1] TRUE
+[1] FALSE
 
 $useSparseGRMforVarRatio
 [1] FALSE
@@ -186,5671 +186,1141 @@ $VmatFilelist
 $VmatSampleFilelist
 [1] ""
 
+$useGRMtoFitNULL
+[1] FALSE
+
 $help
 [1] FALSE
 
 tauInit  is  0 0 
 cateVarRatioMinMACVecExclude  is  10 20.5 
 cateVarRatioMaxMACVecInclude  is  20.5 
-Sparse GRM is used to fit the null model and plink file is not specified, so variance ratios won't be estimated
+No GRM will be used to fit the NULL model and nThreads is set to 1
 Variance ratio estimation will be skipped
-.Leave-one-chromosome-out is not applied
-400  samples are in the sparse GRM
-formula is  y.trend~sex 
-2000  samples have non-missing phenotypes
-Longitudinal variable  time  is specified
+.formula is  y~Days+Age+Race+preg 
+897  samples have non-missing phenotypes
+Duplicated sample IDs are detected in the phenotype file. Assuming repeated measurements
 [1] "Test"
-     IID X.Intercept. sex y.trend longlVar IndexPheno IndexGeno
-1426 356            1   1    4.81        3          1       356
-438  178            1   1    9.95        3          2       178
-1023 283            1   0    4.35        4          3       283
-1737  51            1   0    0.42        2          4        51
-1086 295            1   0    7.41        4          5       295
-1708  46            1   1    5.95        5          6        46
-400  samples in geno file do not have phenotypes
-0  samples will be used for analysis
-2000  observations will be used for analysis
+  X.Intercept.       Days       Age Race preg    y  IID IndexPheno IIDgeno
+1            1 -0.9775030 -1.670625    1    1 1050 N001          1    N001
+2            1 -0.8507621 -1.670625    1    1 2029 N001          2    N001
+3            1 -0.7107134 -1.670625    1    1 1425 N001          3    N001
+4            1 -0.6473430 -1.670625    1    1 1786 N001          4    N001
+5            1 -0.5206020 -1.670625    1    1 1270 N001          5    N001
+6            1 -0.4480429 -1.670625    1    1 2566 N001          6    N001
+897  observations will be used for analysis
 [1] "Test3"
-     IID X.Intercept. sex y.trend longlVar IndexPheno IndexGeno
-1426 356            1   1    4.81        3          1       356
-438  178            1   1    9.95        3          2       178
-1023 283            1   0    4.35        4          3       283
-1737  51            1   0    0.42        2          4        51
-1086 295            1   0    7.41        4          5       295
-1708  46            1   1    5.95        5          6        46
+  X.Intercept.       Days       Age Race preg    y  IID IndexPheno IIDgeno
+1            1 -0.9775030 -1.670625    1    1 1050 N001          1    N001
+2            1 -0.8507621 -1.670625    1    1 2029 N001          2    N001
+3            1 -0.7107134 -1.670625    1    1 1425 N001          3    N001
+4            1 -0.6473430 -1.670625    1    1 1786 N001          4    N001
+5            1 -0.5206020 -1.670625    1    1 1270 N001          5    N001
+6            1 -0.4480429 -1.670625    1    1 2566 N001          6    N001
 [1] "Test4"
-     IID X.Intercept. sex y.trend longlVar IndexPheno IndexGeno
-1426 356            1   1    4.81        3          1       356
-438  178            1   1    9.95        3          2       178
-1023 283            1   0    4.35        4          3       283
-1737  51            1   0    0.42        2          4        51
-1086 295            1   0    7.41        4          5       295
-1708  46            1   1    5.95        5          6        46
-extract sparse GRM
-[1] 160000
-set elements in the sparse GRM <=  0  to zero
-2000  observations have been used to fit the glmm null model
-10 x 10 sparse Matrix of class "dsCMatrix"
-                                                                           
- [1,] 1.0175600 0.0551690 0.1148750 0.0368524 0.1164480 0.0357948 0.0557410
- [2,] 0.0551690 1.0269100 0.0709140 0.1045650 0.0685968 0.1004130 0.1872690
- [3,] 0.1148750 0.0709140 1.0173200 0.0491134 0.1702060 0.0488954 0.0704934
- [4,] 0.0368524 0.1045650 0.0491134 1.0484200 0.0480411 0.2346070 0.1026090
- [5,] 0.1164480 0.0685968 0.1702060 0.0480411 1.0137700 0.0485249 0.0702965
- [6,] 0.0357948 0.1004130 0.0488954 0.2346070 0.0485249 1.0456500 0.1011020
- [7,] 0.0557410 0.1872690 0.0704934 0.1026090 0.0702965 0.1011020 1.0203700
- [8,] 0.0472823 0.1417690 0.0604059 0.1279530 0.0613667 0.1298820 0.1378780
- [9,] 0.0341348 0.1022470 0.0484478 0.2340460 0.0504777 0.2345600 0.1010970
-[10,] 0.1117250 0.0416363 0.0806733 0.0244852 0.0819293 0.0255313 0.0382752
-                                   
- [1,] 0.0472823 0.0341348 0.1117250
- [2,] 0.1417690 0.1022470 0.0416363
- [3,] 0.0604059 0.0484478 0.0806733
- [4,] 0.1279530 0.2340460 0.0244852
- [5,] 0.0613667 0.0504777 0.0819293
- [6,] 0.1298820 0.2345600 0.0255313
- [7,] 0.1378780 0.1010970 0.0382752
- [8,] 1.0315400 0.1279830 0.0338191
- [9,] 0.1279830 1.0440200 0.0237909
-[10,] 0.0338191 0.0237909 1.0150000
-Kmat_vec.size() 1
-10 x 10 sparse Matrix of class "dgCMatrix"
-                                                                            
- [1,] 6.1053600 0.3310140 0.8041250 0.1842620 0.8151360  0.2863584 0.2229640
- [2,] 0.3310140 6.1614600 0.4963980 0.5228250 0.4801776  0.8033040 0.7490760
- [3,] 0.8041250 0.4963980 8.1385600 0.2946804 1.3616480  0.4400586 0.3524670
- [4,] 0.1842620 0.5228250 0.2946804 4.1936800 0.2882466  1.6422490 0.3078270
- [5,] 0.8151360 0.4801776 1.3616480 0.2882466 8.1101600  0.4367241 0.3514825
- [6,] 0.2863584 0.8033040 0.4400586 1.6422490 0.4367241 10.4565000 0.6066120
- [7,] 0.2229640 0.7490760 0.3524670 0.3078270 0.3514825  0.6066120 2.0407400
- [8,] 0.2364115 0.7088450 0.3624354 0.5118120 0.3682002  0.9091740 0.4136340
- [9,] 0.1365392 0.4089880 0.2422390 0.7021380 0.2523885  1.4073600 0.2021940
-[10,] 0.6703500 0.2498178 0.5647131 0.1224260 0.5735051  0.2042504 0.1531008
-                                   
- [1,] 0.2364115 0.1365392 0.6703500
- [2,] 0.7088450 0.4089880 0.2498178
- [3,] 0.3624354 0.2422390 0.5647131
- [4,] 0.5118120 0.7021380 0.1224260
- [5,] 0.3682002 0.2523885 0.5735051
- [6,] 0.9091740 1.4073600 0.2042504
- [7,] 0.4136340 0.2021940 0.1531008
- [8,] 4.1261600 0.3839490 0.1690955
- [9,] 0.3839490 2.0880400 0.0951636
-[10,] 0.1690955 0.0951636 6.0900000
-Kmat_vec.size() 2
-10 x 10 sparse Matrix of class "dgCMatrix"
-                                                                              
- [1,] 9.1580400 0.4965210  1.3785000 0.2211144  1.3973760  0.5369220 0.1672230
- [2,] 0.4965210 9.2421900  0.8509680 0.6273900  0.8231616  1.5061950 0.5618070
- [3,] 1.3785000 0.8509680 16.2771200 0.3929072  2.7232960  0.9779080 0.2819736
- [4,] 0.2211144 0.6273900  0.3929072 4.1936800  0.3843288  2.3460700 0.2052180
- [5,] 1.3973760 0.8231616  2.7232960 0.3843288 16.2203200  0.9704980 0.2811860
- [6,] 0.5369220 1.5061950  0.9779080 2.3460700  0.9704980 26.1412500 0.5055100
- [7,] 0.1672230 0.5618070  0.2819736 0.2052180  0.2811860  0.5055100 1.0203700
- [8,] 0.2836938 0.8506140  0.4832472 0.5118120  0.4909336  1.2988200 0.2757560
- [9,] 0.1024044 0.3067410  0.1937912 0.4680920  0.2019108  1.1728000 0.1010970
-[10,] 1.0055250 0.3747267  0.9680796 0.1469112  0.9831516  0.3829695 0.1148256
-                                   
- [1,] 0.2836938 0.1024044 1.0055250
- [2,] 0.8506140 0.3067410 0.3747267
- [3,] 0.4832472 0.1937912 0.9680796
- [4,] 0.5118120 0.4680920 0.1469112
- [5,] 0.4909336 0.2019108 0.9831516
- [6,] 1.2988200 1.1728000 0.3829695
- [7,] 0.2757560 0.1010970 0.1148256
- [8,] 4.1261600 0.2559660 0.2029146
- [9,] 0.2559660 1.0440200 0.0713727
-[10,] 0.2029146 0.0713727 9.1350000
-length(unique(modelID))  400 
-[1] 400 400
-[1] "okkk5"
-[1] 2000
-[1] "okkk6"
-Kmat_vec.size() 3
-10 x 10 sparse Matrix of class "dgCMatrix"
-                         
- [1,] 1 . . . . . . . . .
- [2,] . 1 . . . . . . . .
- [3,] . . 1 . . . . . . .
- [4,] . . . 1 . . . . . .
- [5,] . . . . 1 . . . . .
- [6,] . . . . . 1 . . . .
- [7,] . . . . . . 1 . . .
- [8,] . . . . . . . 1 . .
- [9,] . . . . . . . . 1 .
-[10,] . . . . . . . . . 1
-[1] "okkkkkkk7"
-Kmat_vec.size() 4
-10 x 10 sparse Matrix of class "dgCMatrix"
-                          
- [1,] 6 . . . .  . . . . .
- [2,] . 6 . . .  . . . . .
- [3,] . . 8 . .  . . . . .
- [4,] . . . 4 .  . . . . .
- [5,] . . . . 8  . . . . .
- [6,] . . . . . 10 . . . .
- [7,] . . . . .  . 2 . . .
- [8,] . . . . .  . . 4 . .
- [9,] . . . . .  . . . 2 .
-[10,] . . . . .  . . . . 6
-Kmat_vec.size() 5
-10 x 10 sparse Matrix of class "dgCMatrix"
-                            
- [1,] 9 .  . .  .  . . . . .
- [2,] . 9  . .  .  . . . . .
- [3,] . . 16 .  .  . . . . .
- [4,] . .  . 4  .  . . . . .
- [5,] . .  . . 16  . . . . .
- [6,] . .  . .  . 25 . . . .
- [7,] . .  . .  .  . 1 . . .
- [8,] . .  . .  .  . . 4 . .
- [9,] . .  . .  .  . . . 1 .
-[10,] . .  . .  .  . . . . 9
+  X.Intercept.       Days       Age Race preg    y  IID IndexPheno IIDgeno
+1            1 -0.9775030 -1.670625    1    1 1050 N001          1    N001
+2            1 -0.8507621 -1.670625    1    1 2029 N001          2    N001
+3            1 -0.7107134 -1.670625    1    1 1425 N001          3    N001
+4            1 -0.6473430 -1.670625    1    1 1786 N001          4    N001
+5            1 -0.5206020 -1.670625    1    1 1270 N001          5    N001
+6            1 -0.4480429 -1.670625    1    1 2566 N001          6    N001
+numofV  0 
+num_Kmat  2 
 Markers in the Plink file with MAF <  0.01  will be removed before constructing GRM
 Markers in the Plink file with missing rate >  0.15  will be removed before constructing GRM
-y.trend  is a quantitative trait
+y  is a count_nb trait
 glm:
 
-Call:  glm(formula = formula.new, family = gaussian(link = "identity"), 
-    data = data.new)
+Call:  glm(formula = formula.new, family = NegBin(), data = data.new)
 
 Coefficients:
-(Intercept)          sex  
-      3.758        1.521  
+(Intercept)         Days          Age         Race         preg  
+   6.606153     0.001752     0.052089     0.331902     0.557953  
 
-Degrees of Freedom: 1999 Total (i.e. Null);  1998 Residual
-Null Deviance:	    61350 
-Residual Deviance: 60190 	AIC: 12490
+Degrees of Freedom: 896 Total (i.e. Null);  892 Residual
+Null Deviance:	    19580 
+Residual Deviance: 18760 	AIC: 27550
+[1] "isStoreSigma"
+[1] TRUE
 Start fitting the NULL GLMM
    user  system elapsed 
-  3.145   0.624   3.806 
+  1.276   0.078   1.355 
    user  system elapsed 
-  3.243   0.624   3.905 
+  1.386   0.078   1.466 
 [1] "Start reading genotype plink file here"
-Error! fam file not open!time: 0.037
+  X.Intercept.       Days       Age Race preg    y  IID IndexPheno IIDgeno
+1            1 -0.9775030 -1.670625    1    1 1050 N001          1    N001
+2            1 -0.8507621 -1.670625    1    1 2029 N001          2    N001
+3            1 -0.7107134 -1.670625    1    1 1425 N001          3    N001
+4            1 -0.6473430 -1.670625    1    1 1786 N001          4    N001
+5            1 -0.5206020 -1.670625    1    1 1270 N001          5    N001
+6            1 -0.4480429 -1.670625    1    1 2566 N001          6    N001
 [1] "Genotype reading is done"
-tauInit[1] 0 0 0 0 0 0 0
-[1] "covarianceIdxMat"
-     [,1] [,2] [,3]
-[1,]    3    2    4
-[2,]    6    5    7
-[1] "idxtau2"
-[1] 3 6
-inital tau is  4.384421 4.384421 0 4.384421 4.384421 0 4.384421 
+[1] "offset"
+NULL
+[1] "eta"
+       1        2        3        4        5        6        7        8 
+7.407274 7.407496 7.407741 7.407853 7.408075 7.408202 7.141977 7.142088 
+       9       10 
+7.142310 7.142421 
+[1] "invwt"
+        1         2         3         4         5         6         7         8 
+0.2006028 0.2006026 0.2006025 0.2006024 0.2006022 0.2006022 0.2007872 0.2007871 
+        9        10 
+0.2007869 0.2007868 
+[1] "Y"
+       1        2        3        4        5        6        7        8 
+7.044438 7.638466 7.272060 7.491011 7.178123 7.963865 7.862808 7.746436 
+       9       10 
+6.374841 6.149538 
+[1] "Y2"
+       1        2        3        4        5        6        7        8 
+7.044438 7.638466 7.272060 7.491011 7.178123 7.963865 7.862808 7.746436 
+       9       10 
+6.374841 6.149538 
+
+Iteration  1 0 0 :
+   user  system elapsed 
+  1.500   0.078   1.580 
+[1] "Start reading genotype plink file here"
+  X.Intercept.       Days       Age Race preg    y  IID IndexPheno IIDgeno
+1            1 -0.9775030 -1.670625    1    1 1050 N001          1    N001
+2            1 -0.8507621 -1.670625    1    1 2029 N001          2    N001
+3            1 -0.7107134 -1.670625    1    1 1425 N001          3    N001
+4            1 -0.6473430 -1.670625    1    1 1786 N001          4    N001
+5            1 -0.5206020 -1.670625    1    1 1270 N001          5    N001
+6            1 -0.4480429 -1.670625    1    1 2566 N001          6    N001
+[1] "Genotype reading is done"
+tauInit[1] 0 0
+inital tau is  0.9246798 0.9246798 
 [1] "tau"
-[1] 4.384421 4.384421 0.000000 4.384421 4.384421 0.000000 4.384421
-[1] "Kmatdiag"
-          [,1]
-[1,]  1.029211
-[2,]  6.175266
-[3,] 11.321311
-[4,]  1.000000
-[5,]  6.000000
-[6,] 11.000000
-[1] "tau"
-[1] 4.3844208 4.2599818 0.0000000 0.3872715 4.3844208 0.0000000 0.3985837
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
+[1] 0.9246798 0.9246798
+before Sigma_iY
+Yvec.n_elem 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+cov
+   6.4922e-02  -5.5229e-04  -2.0511e-02  -2.8355e-02  -6.3782e-02
+  -5.5229e-04   5.8610e-03  -5.1138e-05  -2.8473e-05   4.8175e-03
+  -2.0511e-02  -5.1138e-05   4.3806e-02   1.2128e-02   5.9109e-02
+  -2.8355e-02  -2.8473e-05   1.2128e-02   3.0414e-02   1.5602e-02
+  -6.3782e-02   4.8175e-03   5.9109e-02   1.5602e-02   1.9610e-01
 Tau:
-[1] 4.3844208 4.2599818 0.0000000 0.3872715 4.3844208 0.0000000 0.3985837
+[1] 0.9246798 0.9246798
 Fixed-effect coefficients:
-          [,1]
-[1,] 1.1021335
-[2,] 0.9886711
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-Tau:
-[1] 4.3844208 4.2599818 0.0000000 0.3872715 4.3844208 0.0000000 0.3985837
-Fixed-effect coefficients:
-          [,1]
-[1,] 1.1021335
-[2,] 0.9886711
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
 [1] "alpha"
-          [,1]
-[1,] 1.1021335
-[2,] 0.9886711
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
+[1] "alpha0"
+(Intercept)        Days         Age        Race        preg 
+6.606138573 0.001733479 0.052514592 0.331885701 0.558300926 
+[1] "y[1]"
+       1 
+7.044438 
+[1] "y[2]"
+       2 
+7.638466 
+before Sigma_iY
+Yvec.n_elem 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+after Sigma_iY
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+cov
+   6.4922e-02  -5.5229e-04  -2.0511e-02  -2.8355e-02  -6.3782e-02
+  -5.5229e-04   5.8610e-03  -5.1138e-05  -2.8473e-05   4.8175e-03
+  -2.0511e-02  -5.1138e-05   4.3806e-02   1.2128e-02   5.9109e-02
+  -2.8355e-02  -2.8473e-05   1.2128e-02   3.0414e-02   1.5602e-02
+  -6.3782e-02   4.8175e-03   5.9109e-02   1.5602e-02   1.9610e-01
+Tau:
+[1] 0.9246798 0.9246798
+Fixed-effect coefficients:
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
+[1] "alpha"
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
+[1] "alpha0"
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
+[1] "y[1]"
+       1 
+7.044438 
+[1] "y[2]"
+       2 
+7.638466 
+[1] "alpha"
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
+fixtauVec
+        0
+        0
+k1 2
+Ibvec.n_elem 54
+g_I_longl_mat.n_rows 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 AI
-   3.2812e+01  -1.0894e-01  -3.1073e+00   2.8287e+01  -1.1567e-01  -3.4306e+00   3.2349e+01
-  -1.0894e-01   1.4161e+00   7.8872e+00   6.8652e+00   1.5836e+00   8.7790e+00   7.8271e+00
-  -3.1073e+00   7.8872e+00   9.5268e+01   1.2615e+02   8.7787e+00   8.8788e+01   1.3883e+02
-   2.8287e+01   6.8652e+00   1.2615e+02   7.2723e+02   7.8272e+00   1.3873e+02   6.1323e+02
-  -1.1567e-01   1.5836e+00   8.7787e+00   7.8272e+00   1.8687e+00   1.0338e+01   9.3006e+00
-  -3.4306e+00   8.7790e+00   8.8788e+01   1.3873e+02   1.0338e+01   1.0387e+02   1.6369e+02
-   3.2349e+01   7.8271e+00   1.3883e+02   6.1323e+02   9.3006e+00   1.6369e+02   7.1227e+02
+    5.6858    1.6692
+    1.6692   30.0842
+YPAPY
+   27.6809
+   35.4956
+YPAPY
+   27.6809
+   35.4956
 idxtau
         0
         1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0026
-   0.0046
-   0.0026
-   0.0026
-   0.0046
-   0.0024
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0021
-   0.0042
-   0.0021
-   0.0019
-   0.0041
-   0.0019
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0016
-   0.0034
-   0.0016
-   0.0016
-   0.0033
-   0.0014
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0014
-   0.0027
-   0.0014
-   0.0013
-   0.0026
-   0.0013
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-use sparse kinship to fit the model 
-tauVec(0) 4.38442
-dim temp_mat_update70 7
-YPAPY_update
-   1.6676e+02
-   1.8277e+01
-   1.6244e+02
-   7.1365e+02
-   2.1170e+01
-   1.8662e+02
-   7.3734e+02
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+dim temp_mat_update30 2
 Trace
-   3.2650e+02
-   3.0306e+01
-   6.6916e+01
-   3.3549e+02
-   3.5097e+01
-   7.9852e+01
-   3.8618e+02
+   1.8648e+02
+   3.7103e+01
 [1] "tau0_q2 a"
-[1] 4.3844208 4.2599818 0.0000000 0.3872715 4.3844208 0.0000000 0.3985837
+[1] 0.9246798 0.9246798
 [1] "idxtau"
-[1] 1 2 3 4 5 6 7
+[1] 1 2
 [1] "re$YPAPY"
-          [,1]
-[1,] 166.75760
-[2,]  18.27702
-[3,] 162.44008
-[4,] 713.64667
-[5,]  21.17048
-[6,] 186.61844
-[7,] 737.33673
+         [,1]
+[1,] 27.68090
+[2,] 35.49558
 [1] "re$Trace"
           [,1]
-[1,] 326.50418
-[2,]  30.30630
-[3,]  66.91622
-[4,] 335.49475
-[5,]  35.09686
-[6,]  79.85207
-[7,] 386.18265
+[1,] 186.47845
+[2,]  37.10282
 Variance component estimates:
-[1] 2.8490049 4.1508314 0.0000000 0.4156289 4.2505663 0.0000000 0.4264775
+[1] 0.7733118 0.9231477
 
-Iteration  1 2.849005 4.150831 0 0.4156289 4.250566 0 0.4264775 :
-tau0_v1:  2.849005 4.150831 0 0.4156289 4.250566 0 0.4264775 
-use sparse kinship to fit the model 
-tauVec(0) 2.849
+Iteration  1 0.7733118 0.9231477 :
+tau0_v1:  0.7733118 0.9231477 
+before Sigma_iY
+Yvec.n_elem 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+cov
+   6.4922e-02  -5.5229e-04  -2.0511e-02  -2.8355e-02  -6.3782e-02
+  -5.5229e-04   5.8610e-03  -5.1138e-05  -2.8473e-05   4.8175e-03
+  -2.0511e-02  -5.1138e-05   4.3806e-02   1.2128e-02   5.9109e-02
+  -2.8355e-02  -2.8473e-05   1.2128e-02   3.0414e-02   1.5602e-02
+  -6.3782e-02   4.8175e-03   5.9109e-02   1.5602e-02   1.9610e-01
 Tau:
-[1] 2.8490049 4.1508314 0.0000000 0.4156289 4.2505663 0.0000000 0.4264775
+[1] 0.7733118 0.9231477
 Fixed-effect coefficients:
-          [,1]
-[1,] 1.1008554
-[2,] 0.8949239
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
 [1] "alpha"
-          [,1]
-[1,] 1.1008554
-[2,] 0.8949239
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
+[1] "alpha0"
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
+[1] "y[1]"
+       1 
+7.044438 
+[1] "y[2]"
+       2 
+7.638466 
+[1] "alpha"
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
 t_end_Get_Coef - t_begin_Get_Coef
    user  system elapsed 
-  2.292   0.372   2.665 
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
+  0.005   0.000   0.005 
+check 1
+fixtauVec
+        0
+        0
+k1 2
+Ibvec.n_elem 54
+g_I_longl_mat.n_rows 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 AI
-   1.1136e+02   5.1906e-02  -7.3184e+00   3.6614e+01   7.5595e-02  -8.4365e+00   4.2401e+01
-   5.1906e-02   1.5572e+00   7.2017e+00   4.5856e+00   1.7502e+00   7.9920e+00   5.2421e+00
-  -7.3184e+00   7.2017e+00   9.7866e+01   1.0749e+02   7.9918e+00   9.3321e+01   1.1902e+02
-   3.6614e+01   4.5856e+00   1.0749e+02   7.4320e+02   5.2423e+00   1.1888e+02   6.6552e+02
-   7.5595e-02   1.7502e+00   7.9918e+00   5.2423e+00   2.0671e+00   9.4064e+00   6.2367e+00
-  -8.4365e+00   7.9920e+00   9.3321e+01   1.1888e+02   9.4064e+00   1.0940e+02   1.4051e+02
-   4.2401e+01   5.2421e+00   1.1902e+02   6.6552e+02   6.2367e+00   1.4051e+02   7.7692e+02
+    6.7811    1.7455
+    1.7455   31.1773
+YPAPY
+   27.6809
+   35.4956
+YPAPY
+   27.6809
+   35.4956
 idxtau
         0
         1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0028
-   0.0060
-   0.0027
-   0.0028
-   0.0060
-   0.0026
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0022
-   0.0056
-   0.0022
-   0.0021
-   0.0054
-   0.0020
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0017
-   0.0045
-   0.0017
-   0.0017
-   0.0044
-   0.0015
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0015
-   0.0036
-   0.0015
-   0.0014
-   0.0035
-   0.0014
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-dim temp_mat_update70 7
-CV for trace random estimator using 70 runs is    0.0002
-   0.0013
-   0.0029
-   0.0013
-   0.0012
-   0.0028
-   0.0012
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-use sparse kinship to fit the model 
-tauVec(0) 2.849
-dim temp_mat_update80 7
-YPAPY_update
-   3.5115e+02
-   1.8193e+01
-   1.3819e+02
-   7.3835e+02
-   2.1105e+01
-   1.5839e+02
-   7.7702e+02
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+dim temp_mat_update30 2
 Trace
-   4.8516e+02
-   3.3237e+01
-   5.2590e+01
-   3.4624e+02
-   3.8525e+01
-   6.2806e+01
-   3.9968e+02
-YPAPY
-   3.5115e+02
-   1.8193e+01
-   1.3819e+02
-   7.3835e+02
-   2.1105e+01
-   1.5839e+02
-   7.7702e+02
-Trace
-   4.8516e+02
-   3.3237e+01
-   5.2590e+01
-   3.4624e+02
-   3.8525e+01
-   6.2806e+01
-   3.9968e+02
-score
-  -1.3401e+02
-  -1.5044e+01
-   8.5603e+01
-   3.9211e+02
-  -1.7419e+01
-   9.5580e+01
-   3.7733e+02
-Dtau
-   -1.1851
-   -6.6754
-    0.1989
-    0.4048
-  -12.3378
-    1.7114
-    0.0077
+   2.2263e+02
+   3.9009e+01
+check 2
 score1
-  -1.3401e+02
-  -1.5044e+01
-   8.5603e+01
-   3.9211e+02
-  -1.7419e+01
-   9.5580e+01
-   3.7733e+02
+  -1.9495e+02
+  -3.5135e+00
+YPAPY
+   27.6809
+   35.4956
+Trace
+   2.2263e+02
+   3.9009e+01
+score
+  -1.9495e+02
+  -3.5135e+00
+Dtau
+  -29.1393
+    1.5187
+score1
+  -1.9495e+02
+  -3.5135e+00
 AI1
-   1.1136e+02   5.1906e-02  -7.3184e+00   3.6614e+01   7.5595e-02  -8.4365e+00   4.2401e+01
-   5.1906e-02   1.5572e+00   7.2017e+00   4.5856e+00   1.7502e+00   7.9920e+00   5.2421e+00
-  -7.3184e+00   7.2017e+00   9.7866e+01   1.0749e+02   7.9918e+00   9.3321e+01   1.1902e+02
-   3.6614e+01   4.5856e+00   1.0749e+02   7.4320e+02   5.2423e+00   1.1888e+02   6.6552e+02
-   7.5595e-02   1.7502e+00   7.9918e+00   5.2423e+00   2.0671e+00   9.4064e+00   6.2367e+00
-  -8.4365e+00   7.9920e+00   9.3321e+01   1.1888e+02   9.4064e+00   1.0940e+02   1.4051e+02
-   4.2401e+01   5.2421e+00   1.1902e+02   6.6552e+02   6.2367e+00   1.4051e+02   7.7692e+02
+    6.7811    1.7455
+    1.7455   31.1773
+k1 2
+fixtauVec
+        0
+        0
+i 0
+i 1
 Dtau_k1
-   -1.1851
-   -6.6754
-    0.1989
-    0.4048
-  -12.3378
-    1.7114
-    0.0077
-tauVec
-   1.6639
-  -2.5245
-        0
-   0.8204
-  -8.0872
-        0
-   0.4342
-tauupdateidx
-        1
-        1
-tauVec
-   2.2564
-   0.8132
-        0
-   0.6180
-  -1.9183
-        0
-   0.4303
-tauupdateidx
-        1
-        1
+  -29.1393
+    1.5187
 t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
    user  system elapsed 
- 68.856  11.118  79.989 
-[1] 0.054647426 0.250846883 0.000000000 0.106248080 0.567336837 0.000000000
-[7] 0.002203359
-tau:  2.552722 2.481992 0 0.5168254 1.166129 0 0.4284051 
-tau0:  2.849005 4.150831 0 0.4156289 4.250566 0 0.4264775 
+  0.020   0.004   0.026 
+[1] 0.40969373 0.01255557
+tau:  0.3180102 0.9468781 
+tau0:  0.7733118 0.9231477 
 
-Iteration  2 2.552722 2.481992 0 0.5168254 1.166129 0 0.4284051 :
-tau0_v1:  2.552722 2.481992 0 0.5168254 1.166129 0 0.4284051 
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
+Iteration  2 0.3180102 0.9468781 :
+tau0_v1:  0.3180102 0.9468781 
+before Sigma_iY
+Yvec.n_elem 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+cov
+   6.2878e-02  -4.5664e-04  -1.9829e-02  -2.7403e-02  -6.1718e-02
+  -4.5664e-04   4.9086e-03  -3.6213e-05  -1.8447e-05   4.0324e-03
+  -1.9829e-02  -3.6213e-05   4.2255e-02   1.1674e-02   5.7060e-02
+  -2.7403e-02  -1.8447e-05   1.1674e-02   2.9341e-02   1.5077e-02
+  -6.1718e-02   4.0324e-03   5.7060e-02   1.5077e-02   1.8601e-01
 Tau:
-[1] 2.5527215 2.4819915 0.0000000 0.5168254 1.1661289 0.0000000 0.4284051
+[1] 0.3180102 0.9468781
 Fixed-effect coefficients:
-          [,1]
-[1,] 1.0969315
-[2,] 0.8607441
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
+            [,1]
+[1,]  6.67399693
+[2,] -0.01578507
+[3,] -0.02915764
+[4,]  0.29265606
+[5,]  0.42249298
 [1] "alpha"
-          [,1]
-[1,] 1.0969315
-[2,] 0.8607441
+            [,1]
+[1,]  6.67399693
+[2,] -0.01578507
+[3,] -0.02915764
+[4,]  0.29265606
+[5,]  0.42249298
+[1] "alpha0"
+            [,1]
+[1,]  6.67263365
+[2,] -0.01516753
+[3,] -0.02594852
+[4,]  0.29428351
+[5,]  0.42590904
+[1] "y[1]"
+       1 
+7.044438 
+[1] "y[2]"
+       2 
+7.638466 
+[1] "alpha"
+            [,1]
+[1,]  6.67399693
+[2,] -0.01578507
+[3,] -0.02915764
+[4,]  0.29265606
+[5,]  0.42249298
 t_end_Get_Coef - t_begin_Get_Coef
    user  system elapsed 
-  2.292   0.380   2.672 
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
+  0.005   0.000   0.004 
+check 1
+fixtauVec
+        0
+        0
+k1 2
+Ibvec.n_elem 54
+g_I_longl_mat.n_rows 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 AI
-   1.5633e+02   4.1240e+00  -9.3803e+00   2.0346e+01   4.9043e+00  -1.0919e+01   2.3757e+01
-   4.1240e+00   8.9098e+00   2.4922e+01   1.2457e+01   1.0125e+01   2.8195e+01   1.4447e+01
-  -9.3803e+00   2.4922e+01   1.9108e+02   1.7093e+02   2.8194e+01   1.9908e+02   1.9356e+02
-   2.0346e+01   1.2457e+01   1.7093e+02   6.3006e+02   1.4447e+01   1.9333e+02   6.2518e+02
-   4.9043e+00   1.0125e+01   2.8194e+01   1.4447e+01   1.1995e+01   3.3388e+01   1.7262e+01
-  -1.0919e+01   2.8195e+01   1.9908e+02   1.9333e+02   3.3388e+01   2.3534e+02   2.2982e+02
-   2.3757e+01   1.4447e+01   1.9356e+02   6.2518e+02   1.7262e+01   2.2982e+02   7.3714e+02
+   23.2823    2.1840
+    2.1840   36.7862
+YPAPY
+   38.8757
+   38.2866
+YPAPY
+   38.8757
+   38.2866
 idxtau
         0
         1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0029
-   0.0064
-   0.0024
-   0.0029
-   0.0065
-   0.0023
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0023
-   0.0058
-   0.0020
-   0.0022
-   0.0054
-   0.0018
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0018
-   0.0046
-   0.0015
-   0.0017
-   0.0044
-   0.0014
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0015
-   0.0037
-   0.0013
-   0.0015
-   0.0036
-   0.0012
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-dim temp_mat_update70 7
-CV for trace random estimator using 70 runs is    0.0002
-   0.0013
-   0.0031
-   0.0011
-   0.0013
-   0.0030
-   0.0011
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-dim temp_mat_update80 7
-CV for trace random estimator using 80 runs is    0.0002
-   0.0011
-   0.0027
-   0.0010
-   0.0011
-   0.0027
-   0.0009
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-use sparse kinship to fit the model 
-tauVec(0) 2.55272
-dim temp_mat_update90 7
-YPAPY_update
-   4.3579e+02
-   5.7077e+01
-   2.4168e+02
-   6.9316e+02
-   6.6499e+01
-   2.7930e+02
-   7.5553e+02
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+dim temp_mat_update30 2
 Trace
-   5.5746e+02
-   6.1204e+01
-   8.2269e+01
-   3.3621e+02
-   7.1009e+01
-   9.7644e+01
-   3.8975e+02
-YPAPY
-   4.3579e+02
-   5.7077e+01
-   2.4168e+02
-   6.9316e+02
-   6.6499e+01
-   2.7930e+02
-   7.5553e+02
-Trace
-   5.5746e+02
-   6.1204e+01
-   8.2269e+01
-   3.3621e+02
-   7.1009e+01
-   9.7644e+01
-   3.8975e+02
-score
-  -1.2167e+02
-  -4.1276e+00
-   1.5941e+02
-   3.5695e+02
-  -4.5099e+00
-   1.8166e+02
-   3.6578e+02
-Dtau
-  -0.6796
-  -1.8491
-   0.1776
-   0.4695
-  -1.3210
-   0.6847
-  -0.0730
+   5.3756e+02
+   4.5177e+01
+check 2
 score1
-  -1.2167e+02
-  -4.1276e+00
-   1.5941e+02
-   3.5695e+02
-  -4.5099e+00
-   1.8166e+02
-   3.6578e+02
+  -4.9869e+02
+  -6.8904e+00
+YPAPY
+   38.8757
+   38.2866
+Trace
+   5.3756e+02
+   4.5177e+01
+score
+  -4.9869e+02
+  -6.8904e+00
+Dtau
+  -21.5214
+    1.0904
+score1
+  -4.9869e+02
+  -6.8904e+00
 AI1
-   1.5633e+02   4.1240e+00  -9.3803e+00   2.0346e+01   4.9043e+00  -1.0919e+01   2.3757e+01
-   4.1240e+00   8.9098e+00   2.4922e+01   1.2457e+01   1.0125e+01   2.8195e+01   1.4447e+01
-  -9.3803e+00   2.4922e+01   1.9108e+02   1.7093e+02   2.8194e+01   1.9908e+02   1.9356e+02
-   2.0346e+01   1.2457e+01   1.7093e+02   6.3006e+02   1.4447e+01   1.9333e+02   6.2518e+02
-   4.9043e+00   1.0125e+01   2.8194e+01   1.4447e+01   1.1995e+01   3.3388e+01   1.7262e+01
-  -1.0919e+01   2.8195e+01   1.9908e+02   1.9333e+02   3.3388e+01   2.3534e+02   2.2982e+02
-   2.3757e+01   1.4447e+01   1.9356e+02   6.2518e+02   1.7262e+01   2.2982e+02   7.3714e+02
+   23.2823    2.1840
+    2.1840   36.7862
+k1 2
+fixtauVec
+        0
+        0
+i 0
+i 1
 Dtau_k1
-  -0.6796
-  -1.8491
-   0.1776
-   0.4695
-  -1.3210
-   0.6847
-  -0.0730
-tauVec
-   1.8731
-   0.6329
-        0
-   0.9863
-  -0.1548
-        0
-   0.3554
-tauupdateidx
-        1
-        1
+  -21.5214
+    1.0904
 t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
    user  system elapsed 
- 77.038  12.162  89.214 
-[1] 0.07100626 0.22774888 0.00000000 0.18219061 0.39040424 0.00000000 0.04341140
-tau:  2.212912 1.557457 0 0.7515565 0.5056509 0 0.3919252 
-tau0:  2.552722 2.481992 0 0.5168254 1.166129 0 0.4284051 
+  0.023   0.000   0.024 
+[1] 0.344623552 0.004431786
+tau:  0.1498738 0.9553972 
+tau0:  0.3180102 0.9468781 
 
-Iteration  3 2.212912 1.557457 0 0.7515565 0.5056509 0 0.3919252 :
-tau0_v1:  2.212912 1.557457 0 0.7515565 0.5056509 0 0.3919252 
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
+Iteration  3 0.1498738 0.9553972 :
+tau0_v1:  0.1498738 0.9553972 
+before Sigma_iY
+Yvec.n_elem 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+cov
+   5.8052e-02  -1.8192e-04  -1.8109e-02  -2.4867e-02  -5.6913e-02
+  -1.8192e-04   2.0302e-03  -1.0871e-06   7.8465e-06   1.6652e-03
+  -1.8109e-02  -1.0871e-06   3.8348e-02   1.0388e-02   5.1957e-02
+  -2.4867e-02   7.8465e-06   1.0388e-02   2.6235e-02   1.3795e-02
+  -5.6913e-02   1.6652e-03   5.1957e-02   1.3795e-02   1.5911e-01
 Tau:
-[1] 2.2129116 1.5574567 0.0000000 0.7515565 0.5056509 0.0000000 0.3919252
+[1] 0.1498738 0.9553972
 Fixed-effect coefficients:
-          [,1]
-[1,] 1.0949554
-[2,] 0.8167826
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
+            [,1]
+[1,]  6.67949486
+[2,] -0.01823069
+[3,] -0.04199314
+[4,]  0.28274107
+[5,]  0.41293907
 [1] "alpha"
-          [,1]
-[1,] 1.0949554
-[2,] 0.8167826
+            [,1]
+[1,]  6.67949486
+[2,] -0.01823069
+[3,] -0.04199314
+[4,]  0.28274107
+[5,]  0.41293907
+[1] "alpha0"
+            [,1]
+[1,]  6.67399693
+[2,] -0.01578507
+[3,] -0.02915764
+[4,]  0.29265606
+[5,]  0.42249298
+[1] "y[1]"
+       1 
+7.044438 
+[1] "y[2]"
+       2 
+7.638466 
+[1] "alpha"
+            [,1]
+[1,]  6.67949486
+[2,] -0.01823069
+[3,] -0.04199314
+[4,]  0.28274107
+[5,]  0.41293907
 t_end_Get_Coef - t_begin_Get_Coef
    user  system elapsed 
-  2.304   0.356   2.660 
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
+  0.005   0.000   0.004 
+check 1
+fixtauVec
+        0
+        0
+k1 2
+Ibvec.n_elem 54
+g_I_longl_mat.n_rows 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 AI
-   2.4734e+02   1.6541e+01  -5.0628e+00   8.7397e+00   1.9528e+01  -5.9998e+00   1.0436e+01
-   1.6541e+01   2.3825e+01   4.3711e+01   1.6017e+01   2.6867e+01   4.9609e+01   1.8692e+01
-  -5.0628e+00   4.3711e+01   2.4103e+02   1.6648e+02   4.9605e+01   2.6243e+02   1.9126e+02
-   8.7397e+00   1.6017e+01   1.6648e+02   4.2082e+02   1.8692e+01   1.9102e+02   4.5554e+02
-   1.9528e+01   2.6867e+01   4.9605e+01   1.8692e+01   3.1754e+01   5.8797e+01   2.2379e+01
-  -5.9998e+00   4.9609e+01   2.6243e+02   1.9102e+02   5.8797e+01   3.1149e+02   2.2798e+02
-   1.0436e+01   1.8692e+01   1.9126e+02   4.5554e+02   2.2379e+01   2.2798e+02   5.4214e+02
+   2.8999e+02   3.1449e+00
+   3.1449e+00   4.6866e+01
+YPAPY
+   2.1907e+02
+   4.7120e+01
+YPAPY
+   2.1907e+02
+   4.7120e+01
 idxtau
         0
         1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0030
-   0.0085
-   0.0022
-   0.0030
-   0.0084
-   0.0021
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0024
-   0.0075
-   0.0018
-   0.0022
-   0.0069
-   0.0017
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0019
-   0.0060
-   0.0013
-   0.0018
-   0.0055
-   0.0013
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0016
-   0.0049
-   0.0012
-   0.0015
-   0.0046
-   0.0011
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update70 7
-CV for trace random estimator using 70 runs is    0.0002
-   0.0014
-   0.0042
-   0.0010
-   0.0013
-   0.0040
-   0.0010
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update80 7
-CV for trace random estimator using 80 runs is    0.0002
-   0.0012
-   0.0037
-   0.0009
-   0.0012
-   0.0035
-   0.0008
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update90 7
-CV for trace random estimator using 90 runs is    0.0002
-   0.0011
-   0.0034
-   0.0008
-   0.0011
-   0.0032
-   0.0007
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update100 7
-CV for trace random estimator using 100 runs is    0.0001
-   0.0010
-   0.0029
-   0.0007
-   0.0010
-   0.0028
-   0.0006
- > 0.0025
-try 110runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update110 7
-CV for trace random estimator using 110 runs is    0.0001
-   0.0009
-   0.0027
-   0.0006
-   0.0009
-   0.0026
-   0.0006
- > 0.0025
-try 120runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update120 7
-CV for trace random estimator using 120 runs is    0.0001
-   0.0008
-   0.0025
-   0.0006
-   0.0008
-   0.0025
-   0.0005
- > 0.0025
-try 130runs
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-use sparse kinship to fit the model 
-tauVec(0) 2.21291
-dim temp_mat_update130 7
-YPAPY_update
-   5.9373e+02
-   1.0666e+02
-   2.8165e+02
-   5.4855e+02
-   1.2393e+02
-   3.2652e+02
-   6.1836e+02
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+dim temp_mat_update30 2
 Trace
-   6.5530e+02
-   8.7316e+01
-   8.9681e+01
-   2.9844e+02
-   1.0081e+02
-   1.0574e+02
-   3.4895e+02
-YPAPY
-   5.9373e+02
-   1.0666e+02
-   2.8165e+02
-   5.4855e+02
-   1.2393e+02
-   3.2652e+02
-   6.1836e+02
-Trace
-   6.5530e+02
-   8.7316e+01
-   8.9681e+01
-   2.9844e+02
-   1.0081e+02
-   1.0574e+02
-   3.4895e+02
-score
-  -6.1570e+01
-   1.9344e+01
-   1.9197e+02
-   2.5011e+02
-   2.3126e+01
-   2.2078e+02
-   2.6941e+02
-Dtau
-  -0.2137
-  -0.5923
-   0.1770
-   0.6081
-   0.0900
-   0.4344
-  -0.2384
+   1.1360e+03
+   4.8084e+01
+check 2
 score1
-  -6.1570e+01
-   1.9344e+01
-   1.9197e+02
-   2.5011e+02
-   2.3126e+01
-   2.2078e+02
-   2.6941e+02
+  -9.1695e+02
+  -9.6418e-01
+YPAPY
+   2.1907e+02
+   4.7120e+01
+Trace
+   1.1360e+03
+   4.8084e+01
+score
+  -9.1695e+02
+  -9.6418e-01
+Dtau
+  -3.1641
+   0.1917
+score1
+  -9.1695e+02
+  -9.6418e-01
 AI1
-   2.4734e+02   1.6541e+01  -5.0628e+00   8.7397e+00   1.9528e+01  -5.9998e+00   1.0436e+01
-   1.6541e+01   2.3825e+01   4.3711e+01   1.6017e+01   2.6867e+01   4.9609e+01   1.8692e+01
-  -5.0628e+00   4.3711e+01   2.4103e+02   1.6648e+02   4.9605e+01   2.6243e+02   1.9126e+02
-   8.7397e+00   1.6017e+01   1.6648e+02   4.2082e+02   1.8692e+01   1.9102e+02   4.5554e+02
-   1.9528e+01   2.6867e+01   4.9605e+01   1.8692e+01   3.1754e+01   5.8797e+01   2.2379e+01
-  -5.9998e+00   4.9609e+01   2.6243e+02   1.9102e+02   5.8797e+01   3.1149e+02   2.2798e+02
-   1.0436e+01   1.8692e+01   1.9126e+02   4.5554e+02   2.2379e+01   2.2798e+02   5.4214e+02
+   2.8999e+02   3.1449e+00
+   3.1449e+00   4.6866e+01
+k1 2
+fixtauVec
+        0
+        0
+i 0
+i 1
 Dtau_k1
-  -0.2137
-  -0.5923
-   0.1770
-   0.6081
-   0.0900
-   0.4344
-  -0.2384
+  -3.1641
+   0.1917
 t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
    user  system elapsed 
-109.039  17.057 126.119 
-[1] 0.05049290 0.23296810 0.00000000 0.28534359 0.08028295 0.00000000 0.42149705
-tau:  1.999219 0.9651179 0 1.359696 0.5956742 0 0.1535705 
-tau0:  2.212912 1.557457 0 0.7515565 0.5056509 0 0.3919252 
+  0.019   0.004   0.024 
+[1] 0.447668313 0.003093874
+tau:  0.05099697 0.9613894 
+tau0:  0.1498738 0.9553972 
 
-Iteration  4 1.999219 0.9651179 0 1.359696 0.5956742 0 0.1535705 :
-tau0_v1:  1.999219 0.9651179 0 1.359696 0.5956742 0 0.1535705 
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
+Iteration  4 0.05099697 0.9613894 :
+tau0_v1:  0.05099697 0.9613894 
+before Sigma_iY
+Yvec.n_elem 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+cov
+   5.6008e-02  -8.6221e-05  -1.7326e-02  -2.3564e-02  -5.5019e-02
+  -8.6221e-05   9.5947e-04   4.0284e-06   1.1003e-05   7.8666e-04
+  -1.7326e-02   4.0284e-06   3.6699e-02   9.7040e-03   4.9840e-02
+  -2.3564e-02   1.1003e-05   9.7040e-03   2.4441e-02   1.3269e-02
+  -5.5019e-02   7.8666e-04   4.9840e-02   1.3269e-02   1.4871e-01
 Tau:
-[1] 1.9992191 0.9651179 0.0000000 1.3596956 0.5956742 0.0000000 0.1535705
+[1] 0.05099697 0.96138936
 Fixed-effect coefficients:
-          [,1]
-[1,] 1.0947156
-[2,] 0.7778755
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
+            [,1]
+[1,]  6.68368626
+[2,] -0.01943900
+[3,] -0.04886723
+[4,]  0.27300167
+[5,]  0.41130257
 [1] "alpha"
-          [,1]
-[1,] 1.0947156
-[2,] 0.7778755
+            [,1]
+[1,]  6.68368626
+[2,] -0.01943900
+[3,] -0.04886723
+[4,]  0.27300167
+[5,]  0.41130257
+[1] "alpha0"
+            [,1]
+[1,]  6.67949486
+[2,] -0.01823069
+[3,] -0.04199314
+[4,]  0.28274107
+[5,]  0.41293907
+[1] "y[1]"
+       1 
+7.044438 
+[1] "y[2]"
+       2 
+7.638466 
+[1] "alpha"
+            [,1]
+[1,]  6.68368626
+[2,] -0.01943900
+[3,] -0.04886723
+[4,]  0.27300167
+[5,]  0.41130257
 t_end_Get_Coef - t_begin_Get_Coef
    user  system elapsed 
-  2.280   0.384   2.664 
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
+  0.005   0.000   0.004 
+check 1
+fixtauVec
+        0
+        0
+k1 2
+Ibvec.n_elem 54
+g_I_longl_mat.n_rows 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 AI
-   3.4127e+02   2.9839e+01  -1.6757e-01   2.8580e+00   3.4836e+01  -4.8276e-01   3.5406e+00
-   2.9839e+01   3.6174e+01   4.4331e+01   1.1654e+01   3.9544e+01   5.0093e+01   1.3678e+01
-  -1.6757e-01   4.4331e+01   2.0136e+02   1.0663e+02   5.0086e+01   2.2558e+02   1.2428e+02
-   2.8580e+00   1.1654e+01   1.0663e+02   2.1719e+02   1.3678e+01   1.2411e+02   2.5095e+02
-   3.4836e+01   3.9544e+01   5.0086e+01   1.3678e+01   4.6348e+01   5.9294e+01   1.6411e+01
-  -4.8276e-01   5.0093e+01   2.2558e+02   1.2411e+02   5.9294e+01   2.6856e+02   1.4881e+02
-   3.5406e+00   1.3678e+01   1.2428e+02   2.5095e+02   1.6411e+01   1.4881e+02   3.0133e+02
+   3.8327e+03   3.8812e+00
+   3.8812e+00   5.2851e+01
+YPAPY
+   9.7538e+02
+   5.1790e+01
+YPAPY
+   9.7538e+02
+   5.1790e+01
 idxtau
         0
         1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0032
-   0.0117
-   0.0021
-   0.0031
-   0.0113
-   0.0020
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0025
-   0.0106
-   0.0017
-   0.0023
-   0.0091
-   0.0017
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0020
-   0.0084
-   0.0013
-   0.0019
-   0.0072
-   0.0013
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0016
-   0.0069
-   0.0011
-   0.0016
-   0.0061
-   0.0011
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update70 7
-CV for trace random estimator using 70 runs is    0.0002
-   0.0014
-   0.0060
-   0.0010
-   0.0014
-   0.0054
-   0.0010
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update80 7
-CV for trace random estimator using 80 runs is    0.0002
-   0.0013
-   0.0052
-   0.0008
-   0.0012
-   0.0049
-   0.0008
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update90 7
-CV for trace random estimator using 90 runs is    0.0002
-   0.0012
-   0.0048
-   0.0007
-   0.0011
-   0.0045
-   0.0007
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update100 7
-CV for trace random estimator using 100 runs is    0.0001
-   0.0011
-   0.0042
-   0.0006
-   0.0010
-   0.0039
-   0.0006
- > 0.0025
-try 110runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update110 7
-CV for trace random estimator using 110 runs is    0.0001
-   0.0009
-   0.0039
-   0.0006
-   0.0009
-   0.0036
-   0.0006
- > 0.0025
-try 120runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update120 7
-CV for trace random estimator using 120 runs is    0.0001
-   0.0009
-   0.0036
-   0.0005
-   0.0008
-   0.0034
-   0.0005
- > 0.0025
-try 130runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update130 7
-CV for trace random estimator using 130 runs is    0.0001
-   0.0008
-   0.0033
-   0.0005
-   0.0008
-   0.0031
-   0.0005
- > 0.0025
-try 140runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update140 7
-CV for trace random estimator using 140 runs is    0.0001
-   0.0007
-   0.0031
-   0.0004
-   0.0007
-   0.0029
-   0.0004
- > 0.0025
-try 150runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update150 7
-CV for trace random estimator using 150 runs is    9.7401e-05
-   6.8890e-04
-   2.8742e-03
-   4.1616e-04
-   6.5365e-04
-   2.6799e-03
-   4.0645e-04
- > 0.0025
-try 160runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update160 7
-CV for trace random estimator using 160 runs is    9.2634e-05
-   6.5223e-04
-   2.7163e-03
-   3.8928e-04
-   6.1361e-04
-   2.5168e-03
-   3.8040e-04
- > 0.0025
-try 170runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update170 7
-CV for trace random estimator using 170 runs is    8.6220e-05
-   6.0227e-04
-   2.5425e-03
-   3.5985e-04
-   5.8261e-04
-   2.3947e-03
-   3.5191e-04
- > 0.0025
-try 180runs
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-use sparse kinship to fit the model 
-tauVec(0) 1.99922
-dim temp_mat_update180 7
-YPAPY_update
-   7.3633e+02
-   1.3607e+02
-   2.3607e+02
-   3.5895e+02
-   1.5654e+02
-   2.7428e+02
-   4.1754e+02
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+dim temp_mat_update30 2
 Trace
-   7.2843e+02
-   1.0191e+02
-   7.7353e+01
-   2.4281e+02
-   1.1674e+02
-   9.1033e+01
-   2.8590e+02
-YPAPY
-   7.3633e+02
-   1.3607e+02
-   2.3607e+02
-   3.5895e+02
-   1.5654e+02
-   2.7428e+02
-   4.1754e+02
-Trace
-   7.2843e+02
-   1.0191e+02
-   7.7353e+01
-   2.4281e+02
-   1.1674e+02
-   9.1033e+01
-   2.8590e+02
-score
-   7.8954e+00
-   3.4164e+01
-   1.5872e+02
-   1.1614e+02
-   3.9797e+01
-   1.8324e+02
-   1.3164e+02
-Dtau
-   0.0198
-  -0.0503
-   0.2460
-   0.6938
-   0.0704
-   0.3914
-  -0.4374
+   3.3298e+03
+   5.0184e+01
+check 2
 score1
-   7.8954e+00
-   3.4164e+01
-   1.5872e+02
-   1.1614e+02
-   3.9797e+01
-   1.8324e+02
-   1.3164e+02
+  -2.3544e+03
+   1.6057e+00
+YPAPY
+   9.7538e+02
+   5.1790e+01
+Trace
+   3.3298e+03
+   5.0184e+01
+score
+  -2.3544e+03
+   1.6057e+00
+Dtau
+  -0.6144
+   0.0755
+score1
+  -2.3544e+03
+   1.6057e+00
 AI1
-   3.4127e+02   2.9839e+01  -1.6757e-01   2.8580e+00   3.4836e+01  -4.8276e-01   3.5406e+00
-   2.9839e+01   3.6174e+01   4.4331e+01   1.1654e+01   3.9544e+01   5.0093e+01   1.3678e+01
-  -1.6757e-01   4.4331e+01   2.0136e+02   1.0663e+02   5.0086e+01   2.2558e+02   1.2428e+02
-   2.8580e+00   1.1654e+01   1.0663e+02   2.1719e+02   1.3678e+01   1.2411e+02   2.5095e+02
-   3.4836e+01   3.9544e+01   5.0086e+01   1.3678e+01   4.6348e+01   5.9294e+01   1.6411e+01
-  -4.8276e-01   5.0093e+01   2.2558e+02   1.2411e+02   5.9294e+01   2.6856e+02   1.4881e+02
-   3.5406e+00   1.3678e+01   1.2428e+02   2.5095e+02   1.6411e+01   1.4881e+02   3.0133e+02
+   3.8327e+03   3.8812e+00
+   3.8812e+00   5.2851e+01
+k1 2
+fixtauVec
+        0
+        0
+i 0
+i 1
 Dtau_k1
-   0.0198
-  -0.0503
-   0.2460
-   0.6938
-   0.0704
-   0.3914
-  -0.4374
-tauVec
-   2.0190
-   0.9148
-        0
-   2.0535
-   0.6661
-        0
-  -0.2838
-tauupdateidx
-        1
-        1
-tauVec
-   2.0091
-   0.9400
-        0
-   1.7066
-   0.6309
-        0
-  -0.0651
-tauupdateidx
-        1
-        1
+  -0.6144
+   0.0755
 t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
    user  system elapsed 
-148.919  23.284 172.233 
-[1] 0.001227211 0.006489769 0.000000000 0.059543246 0.014319849 0.000000000
-[7] 0.502108455
-tau:  2.004157 0.952543 0 1.533135 0.6132725 0 0.04421736 
-tau0:  1.999219 0.9651179 0 1.359696 0.5956742 0 0.1535705 
+  0.023   0.000   0.024 
+[1] 0.718297854 0.002422997
+tau:  0 0.9661081 
+tau0:  0.05099697 0.9613894 
 
-Iteration  5 2.004157 0.952543 0 1.533135 0.6132725 0 0.04421736 :
-tau0_v1:  2.004157 0.952543 0 1.533135 0.6132725 0 0.04421736 
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
+Iteration  5 0 0.9661081 :
+tau0_v1:  0 0.9661081 
+before Sigma_iY
+Yvec.n_elem 897
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
 after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+ arma::spsolve(g_spSigma, bVec) 0
+ arma::spsolve(g_spSigma, bVec) 1
+cov
+   5.4694e-02  -3.0032e-05  -1.6786e-02  -2.2540e-02  -5.3919e-02
+  -3.0032e-05   3.2710e-04   2.7916e-06   6.5823e-06   2.6816e-04
+  -1.6786e-02   2.7916e-06   3.5666e-02   9.1504e-03   4.8559e-02
+  -2.2540e-02   6.5823e-06   9.1504e-03   2.2886e-02   1.2956e-02
+  -5.3919e-02   2.6816e-04   4.8559e-02   1.2956e-02   1.4256e-01
 Tau:
-[1] 2.00415659 0.95254296 0.00000000 1.53313494 0.61327249 0.00000000 0.04421736
+[1] 0.0000000 0.9661081
 Fixed-effect coefficients:
-          [,1]
-[1,] 1.0938196
-[2,] 0.7754885
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
+            [,1]
+[1,]  6.68861389
+[2,] -0.02030803
+[3,] -0.05456972
+[4,]  0.26156044
+[5,]  0.41160393
 [1] "alpha"
-          [,1]
-[1,] 1.0938196
-[2,] 0.7754885
+            [,1]
+[1,]  6.68861389
+[2,] -0.02030803
+[3,] -0.05456972
+[4,]  0.26156044
+[5,]  0.41160393
+[1] "alpha0"
+            [,1]
+[1,]  6.68368626
+[2,] -0.01943900
+[3,] -0.04886723
+[4,]  0.27300167
+[5,]  0.41130257
+[1] "y[1]"
+       1 
+7.044438 
+[1] "y[2]"
+       2 
+7.638466 
+[1] "alpha"
+            [,1]
+[1,]  6.68861389
+[2,] -0.02030803
+[3,] -0.05456972
+[4,]  0.26156044
+[5,]  0.41160393
 t_end_Get_Coef - t_begin_Get_Coef
    user  system elapsed 
-  2.233   0.432   2.665 
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-AI
-   3.3866e+02   2.9624e+01  -5.6635e-02   2.5655e+00   3.4558e+01  -3.5152e-01   3.1847e+00
-   2.9624e+01   3.5569e+01   4.2255e+01   1.0864e+01   3.8832e+01   4.7903e+01   1.2794e+01
-  -5.6635e-02   4.2255e+01   1.8981e+02   9.8978e+01   4.7897e+01   2.1440e+02   1.1590e+02
-   2.5655e+00   1.0864e+01   9.8978e+01   1.9945e+02   1.2794e+01   1.1575e+02   2.3261e+02
-   3.4558e+01   3.8832e+01   4.7897e+01   1.2794e+01   4.5501e+01   5.6767e+01   1.5369e+01
-  -3.5152e-01   4.7903e+01   2.1440e+02   1.1575e+02   5.6767e+01   2.5558e+02   1.3900e+02
-   3.1847e+00   1.2794e+01   1.1590e+02   2.3261e+02   1.5369e+01   1.3900e+02   2.7977e+02
-idxtau
+  0.005   0.000   0.004 
+check 1
+fixtauVec
         0
-        1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0032
-   0.0120
-   0.0021
-   0.0031
-   0.0115
-   0.0020
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0026
-   0.0109
-   0.0017
-   0.0023
-   0.0093
-   0.0017
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0020
-   0.0086
-   0.0013
-   0.0019
-   0.0074
-   0.0013
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0017
-   0.0071
-   0.0011
-   0.0016
-   0.0063
-   0.0011
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update70 7
-CV for trace random estimator using 70 runs is    0.0002
-   0.0014
-   0.0061
-   0.0010
-   0.0014
-   0.0055
-   0.0010
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update80 7
-CV for trace random estimator using 80 runs is    0.0002
-   0.0013
-   0.0054
-   0.0008
-   0.0012
-   0.0050
-   0.0008
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update90 7
-CV for trace random estimator using 90 runs is    0.0002
-   0.0012
-   0.0049
-   0.0007
-   0.0011
-   0.0046
-   0.0007
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update100 7
-CV for trace random estimator using 100 runs is    0.0001
-   0.0011
-   0.0043
-   0.0006
-   0.0010
-   0.0040
-   0.0006
- > 0.0025
-try 110runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update110 7
-CV for trace random estimator using 110 runs is    0.0001
-   0.0009
-   0.0040
-   0.0006
-   0.0009
-   0.0037
-   0.0006
- > 0.0025
-try 120runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update120 7
-CV for trace random estimator using 120 runs is    0.0001
-   0.0009
-   0.0037
-   0.0005
-   0.0008
-   0.0035
-   0.0005
- > 0.0025
-try 130runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update130 7
-CV for trace random estimator using 130 runs is    0.0001
-   0.0008
-   0.0034
-   0.0005
-   0.0008
-   0.0032
-   0.0005
- > 0.0025
-try 140runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update140 7
-CV for trace random estimator using 140 runs is    0.0001
-   0.0007
-   0.0031
-   0.0004
-   0.0007
-   0.0029
-   0.0004
- > 0.0025
-try 150runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update150 7
-CV for trace random estimator using 150 runs is    9.7502e-05
-   6.9116e-04
-   2.9504e-03
-   4.1454e-04
-   6.5498e-04
-   2.7439e-03
-   4.0657e-04
- > 0.0025
-try 160runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update160 7
-CV for trace random estimator using 160 runs is    9.2728e-05
-   6.5440e-04
-   2.7886e-03
-   3.8780e-04
-   6.1484e-04
-   2.5770e-03
-   3.8047e-04
- > 0.0025
-try 170runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update170 7
-CV for trace random estimator using 170 runs is    8.6307e-05
-   6.0420e-04
-   2.6095e-03
-   3.5848e-04
-   5.8373e-04
-   2.4523e-03
-   3.5197e-04
- > 0.0025
-try 180runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update180 7
-CV for trace random estimator using 180 runs is    8.0828e-05
-   5.7558e-04
-   2.5005e-03
-   3.3559e-04
-   5.5756e-04
-   2.3420e-03
-   3.3266e-04
- > 0.0025
-try 190runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-use sparse kinship to fit the model 
-tauVec(0) 2.00416
-dim temp_mat_update190 7
-YPAPY_update
-   7.3228e+02
-   1.3429e+02
-   2.2612e+02
-   3.3941e+02
-   1.5445e+02
-   2.6333e+02
-   3.9699e+02
-Trace
-   7.2629e+02
-   1.0153e+02
-   7.6149e+01
-   2.3633e+02
-   1.1629e+02
-   8.9444e+01
-   2.7868e+02
-YPAPY
-   7.3228e+02
-   1.3429e+02
-   2.2612e+02
-   3.3941e+02
-   1.5445e+02
-   2.6333e+02
-   3.9699e+02
-Trace
-   7.2629e+02
-   1.0153e+02
-   7.6149e+01
-   2.3633e+02
-   1.1629e+02
-   8.9444e+01
-   2.7868e+02
-score
-   5.9907e+00
-   3.2756e+01
-   1.4997e+02
-   1.0308e+02
-   3.8163e+01
-   1.7389e+02
-   1.1831e+02
-Dtau
-   0.0146
-  -0.0280
-   0.2632
-   0.6542
-   0.0491
-   0.3887
-  -0.4247
-score1
-   5.9907e+00
-   3.2756e+01
-   1.4997e+02
-   1.0308e+02
-   3.8163e+01
-   1.7389e+02
-   1.1831e+02
-AI1
-   3.3866e+02   2.9624e+01  -5.6635e-02   2.5655e+00   3.4558e+01  -3.5152e-01   3.1847e+00
-   2.9624e+01   3.5569e+01   4.2255e+01   1.0864e+01   3.8832e+01   4.7903e+01   1.2794e+01
-  -5.6635e-02   4.2255e+01   1.8981e+02   9.8978e+01   4.7897e+01   2.1440e+02   1.1590e+02
-   2.5655e+00   1.0864e+01   9.8978e+01   1.9945e+02   1.2794e+01   1.1575e+02   2.3261e+02
-   3.4558e+01   3.8832e+01   4.7897e+01   1.2794e+01   4.5501e+01   5.6767e+01   1.5369e+01
-  -3.5152e-01   4.7903e+01   2.1440e+02   1.1575e+02   5.6767e+01   2.5558e+02   1.3900e+02
-   3.1847e+00   1.2794e+01   1.1590e+02   2.3261e+02   1.5369e+01   1.3900e+02   2.7977e+02
-Dtau_k1
-   0.0146
-  -0.0280
-   0.2632
-   0.6542
-   0.0491
-   0.3887
-  -0.4247
-tauVec
-   2.0188
-   0.9245
         0
-   2.1874
-   0.6624
-        0
-  -0.3805
-tauupdateidx
-        1
-        1
-tauVec
-   2.0115
-   0.9385
-        0
-   1.8602
-   0.6378
-        0
-  -0.1682
-tauupdateidx
-        1
-        1
-tauVec
-   2.0078
-   0.9455
-        0
-   1.6967
-   0.6256
-        0
-  -0.0620
-tauupdateidx
-        1
-        1
-tauVec
-   2.0060
-   0.9490
-        0
-   1.6149
-   0.6194
-        0
-  -0.0089
-tauupdateidx
-        1
-        1
-t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
-   user  system elapsed 
-156.566  24.875 181.477 
-[1] 0.0002266299 0.0009103077 0.0000000000 0.0130754171 0.0024577058
-[6] 0.0000000000 0.3241835576
-tau:  2.00507 0.9507921 0 1.574024 0.6163437 0 0.01767062 
-tau0:  2.004157 0.952543 0 1.533135 0.6132725 0 0.04421736 
-
-Iteration  6 2.00507 0.9507921 0 1.574024 0.6163437 0 0.01767062 :
-tau0_v1:  2.00507 0.9507921 0 1.574024 0.6163437 0 0.01767062 
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-Tau:
-[1] 2.00506973 0.95079213 0.00000000 1.57402384 0.61634368 0.00000000 0.01767062
-Fixed-effect coefficients:
-          [,1]
-[1,] 1.0936456
-[2,] 0.7749906
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
-[1] "alpha"
-          [,1]
-[1,] 1.0936456
-[2,] 0.7749906
-t_end_Get_Coef - t_begin_Get_Coef
-   user  system elapsed 
-  2.276   0.396   2.672 
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-AI
-   3.3817e+02   2.9578e+01  -3.7241e-02   2.5078e+00   3.4499e+01  -3.2773e-01   3.1145e+00
-   2.9578e+01   3.5439e+01   4.1825e+01   1.0704e+01   3.8683e+01   4.7452e+01   1.2615e+01
-  -3.7241e-02   4.1825e+01   1.8747e+02   9.7438e+01   4.7446e+01   2.1212e+02   1.1421e+02
-   2.5078e+00   1.0704e+01   9.7438e+01   1.9595e+02   1.2615e+01   1.1406e+02   2.2894e+02
-   3.4499e+01   3.8683e+01   4.7446e+01   1.2615e+01   4.5325e+01   5.6247e+01   1.5158e+01
-  -3.2773e-01   4.7452e+01   2.1212e+02   1.1406e+02   5.6247e+01   2.5294e+02   1.3702e+02
-   3.1145e+00   1.2615e+01   1.1421e+02   2.2894e+02   1.5158e+01   1.3702e+02   2.7545e+02
-idxtau
-        0
-        1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0032
-   0.0121
-   0.0021
-   0.0031
-   0.0115
-   0.0020
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0026
-   0.0110
-   0.0017
-   0.0023
-   0.0093
-   0.0017
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0020
-   0.0086
-   0.0013
-   0.0019
-   0.0074
-   0.0013
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0017
-   0.0071
-   0.0011
-   0.0016
-   0.0063
-   0.0011
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update70 7
-CV for trace random estimator using 70 runs is    0.0002
-   0.0014
-   0.0062
-   0.0010
-   0.0014
-   0.0055
-   0.0010
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update80 7
-CV for trace random estimator using 80 runs is    0.0002
-   0.0013
-   0.0054
-   0.0008
-   0.0012
-   0.0050
-   0.0008
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update90 7
-CV for trace random estimator using 90 runs is    0.0002
-   0.0012
-   0.0049
-   0.0007
-   0.0011
-   0.0046
-   0.0007
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update100 7
-CV for trace random estimator using 100 runs is    0.0001
-   0.0011
-   0.0043
-   0.0006
-   0.0010
-   0.0040
-   0.0006
- > 0.0025
-try 110runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update110 7
-CV for trace random estimator using 110 runs is    0.0001
-   0.0009
-   0.0040
-   0.0006
-   0.0009
-   0.0037
-   0.0006
- > 0.0025
-try 120runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update120 7
-CV for trace random estimator using 120 runs is    0.0001
-   0.0009
-   0.0037
-   0.0005
-   0.0008
-   0.0035
-   0.0005
- > 0.0025
-try 130runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update130 7
-CV for trace random estimator using 130 runs is    0.0001
-   0.0008
-   0.0034
-   0.0005
-   0.0008
-   0.0032
-   0.0005
- > 0.0025
-try 140runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update140 7
-CV for trace random estimator using 140 runs is    0.0001
-   0.0007
-   0.0031
-   0.0004
-   0.0007
-   0.0030
-   0.0004
- > 0.0025
-try 150runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update150 7
-CV for trace random estimator using 150 runs is    9.7525e-05
-   6.9159e-04
-   2.9667e-03
-   4.1422e-04
-   6.5526e-04
-   2.7578e-03
-   4.0661e-04
- > 0.0025
-try 160runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update160 7
-CV for trace random estimator using 160 runs is    9.2749e-05
-   6.5482e-04
-   2.8040e-03
-   3.8751e-04
-   6.1510e-04
-   2.5900e-03
-   3.8049e-04
- > 0.0025
-try 170runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update170 7
-CV for trace random estimator using 170 runs is    8.6326e-05
-   6.0457e-04
-   2.6238e-03
-   3.5822e-04
-   5.8397e-04
-   2.4647e-03
-   3.5199e-04
- > 0.0025
-try 180runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update180 7
-CV for trace random estimator using 180 runs is    8.0846e-05
-   5.7592e-04
-   2.5141e-03
-   3.3539e-04
-   5.5778e-04
-   2.3539e-03
-   3.3271e-04
- > 0.0025
-try 190runs
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-use sparse kinship to fit the model 
-tauVec(0) 2.00507
-dim temp_mat_update190 7
-YPAPY_update
-   7.3151e+02
-   1.3392e+02
-   2.2407e+02
-   3.3546e+02
-   1.5401e+02
-   2.6108e+02
-   3.9280e+02
-Trace
-   7.2589e+02
-   1.0144e+02
-   7.5711e+01
-   2.3499e+02
-   1.1616e+02
-   8.8933e+01
-   2.7719e+02
-YPAPY
-   7.3151e+02
-   1.3392e+02
-   2.2407e+02
-   3.3546e+02
-   1.5401e+02
-   2.6108e+02
-   3.9280e+02
-Trace
-   7.2589e+02
-   1.0144e+02
-   7.5711e+01
-   2.3499e+02
-   1.1616e+02
-   8.8933e+01
-   2.7719e+02
-score
-   5.6232e+00
-   3.2480e+01
-   1.4836e+02
-   1.0046e+02
-   3.7850e+01
-   1.7214e+02
-   1.1561e+02
-Dtau
-   0.0137
-  -0.0287
-   0.2722
-   0.6396
-   0.0484
-   0.3847
-  -0.4176
-score1
-   5.6232e+00
-   3.2480e+01
-   1.4836e+02
-   1.0046e+02
-   3.7850e+01
-   1.7214e+02
-   1.1561e+02
-AI1
-   3.3817e+02   2.9578e+01  -3.7241e-02   2.5078e+00   3.4499e+01  -3.2773e-01   3.1145e+00
-   2.9578e+01   3.5439e+01   4.1825e+01   1.0704e+01   3.8683e+01   4.7452e+01   1.2615e+01
-  -3.7241e-02   4.1825e+01   1.8747e+02   9.7438e+01   4.7446e+01   2.1212e+02   1.1421e+02
-   2.5078e+00   1.0704e+01   9.7438e+01   1.9595e+02   1.2615e+01   1.1406e+02   2.2894e+02
-   3.4499e+01   3.8683e+01   4.7446e+01   1.2615e+01   4.5325e+01   5.6247e+01   1.5158e+01
-  -3.2773e-01   4.7452e+01   2.1212e+02   1.1406e+02   5.6247e+01   2.5294e+02   1.3702e+02
-   3.1145e+00   1.2615e+01   1.1421e+02   2.2894e+02   1.5158e+01   1.3702e+02   2.7545e+02
-Dtau_k1
-   0.0137
-  -0.0287
-   0.2722
-   0.6396
-   0.0484
-   0.3847
-  -0.4176
-t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
-   user  system elapsed 
-157.954  25.123 183.113 
-[1] 0.003389575 0.015187138 0.000000000 0.167985106 0.037226548 0.000000000
-[7] 0.469082275
-tau:  2.018777 0.9220454 0 2.213658 0.66478 0 0 
-tau0:  2.00507 0.9507921 0 1.574024 0.6163437 0 0.01767062 
-
-Iteration  7 2.018777 0.9220454 0 2.213658 0.66478 0 0 :
-tau0_v1:  2.018777 0.9220454 0 2.213658 0.66478 0 0 
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-Tau:
-[1] 2.0187767 0.9220454 0.0000000 2.2136576 0.6647800 0.0000000 0.0000000
-Fixed-effect coefficients:
-         [,1]
-[1,] 1.103090
-[2,] 0.746582
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
-[1] "alpha"
-         [,1]
-[1,] 1.103090
-[2,] 0.746582
-t_end_Get_Coef - t_begin_Get_Coef
-   user  system elapsed 
-  2.344   0.408   2.752 
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-AI
-   3.3110e+02   2.9393e+01   1.1852e+00   3.7767e-01   3.4237e+01   1.1739e+00   5.1052e-01
-   2.9393e+01   3.1782e+01   2.6583e+01   4.9565e+00   3.4365e+01   2.9973e+01   5.8284e+00
-   1.1852e+00   2.6583e+01   1.0844e+02   4.3085e+01   2.9968e+01   1.2270e+02   5.0368e+01
-   3.7767e-01   4.9565e+00   4.3085e+01   7.7488e+01   5.8285e+00   5.0303e+01   9.0760e+01
-   3.4237e+01   3.4365e+01   2.9968e+01   5.8285e+00   4.0157e+01   3.5454e+01   6.9991e+00
-   1.1739e+00   2.9973e+01   1.2270e+02   5.0303e+01   3.5454e+01   1.4619e+02   6.0378e+01
-   5.1052e-01   5.8284e+00   5.0368e+01   9.0760e+01   6.9991e+00   6.0378e+01   1.0925e+02
-idxtau
-        0
-        1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0033
-   0.0163
-   0.0021
-   0.0032
-   0.0152
-   0.0020
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0026
-   0.0148
-   0.0017
-   0.0024
-   0.0122
-   0.0017
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0020
-   0.0115
-   0.0013
-   0.0019
-   0.0097
-   0.0013
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0017
-   0.0096
-   0.0011
-   0.0016
-   0.0084
-   0.0011
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update70 7
-CV for trace random estimator using 70 runs is    0.0002
-   0.0015
-   0.0084
-   0.0010
-   0.0014
-   0.0075
-   0.0010
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update80 7
-CV for trace random estimator using 80 runs is    0.0002
-   0.0013
-   0.0074
-   0.0008
-   0.0012
-   0.0068
-   0.0008
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update90 7
-CV for trace random estimator using 90 runs is    0.0002
-   0.0012
-   0.0068
-   0.0007
-   0.0012
-   0.0063
-   0.0007
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update100 7
-CV for trace random estimator using 100 runs is    0.0001
-   0.0011
-   0.0059
-   0.0006
-   0.0010
-   0.0054
-   0.0006
- > 0.0025
-try 110runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update110 7
-CV for trace random estimator using 110 runs is    0.0001
-   0.0010
-   0.0055
-   0.0006
-   0.0009
-   0.0051
-   0.0006
- > 0.0025
-try 120runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update120 7
-CV for trace random estimator using 120 runs is    0.0001
-   0.0009
-   0.0051
-   0.0005
-   0.0009
-   0.0048
-   0.0005
- > 0.0025
-try 130runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update130 7
-CV for trace random estimator using 130 runs is    0.0001
-   0.0008
-   0.0047
-   0.0005
-   0.0008
-   0.0044
-   0.0005
- > 0.0025
-try 140runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update140 7
-CV for trace random estimator using 140 runs is    0.0001
-   0.0008
-   0.0043
-   0.0004
-   0.0007
-   0.0041
-   0.0004
- > 0.0025
-try 150runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update150 7
-CV for trace random estimator using 150 runs is    9.8479e-05
-   7.0919e-04
-   4.0789e-03
-   4.1437e-04
-   6.7049e-04
-   3.7833e-03
-   4.0737e-04
- > 0.0025
-try 160runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update160 7
-CV for trace random estimator using 160 runs is    9.3630e-05
-   6.7132e-04
-   3.8542e-03
-   3.8761e-04
-   6.2913e-04
-   3.5536e-03
-   3.8113e-04
- > 0.0025
-try 170runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update170 7
-CV for trace random estimator using 170 runs is    8.7139e-05
-   6.1956e-04
-   3.6052e-03
-   3.5831e-04
-   5.9701e-04
-   3.3905e-03
-   3.5258e-04
- > 0.0025
-try 180runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update180 7
-CV for trace random estimator using 180 runs is    8.1582e-05
-   5.9002e-04
-   3.4537e-03
-   3.3558e-04
-   5.7023e-04
-   3.2340e-03
-   3.3331e-04
- > 0.0025
-try 190runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update190 7
-CV for trace random estimator using 190 runs is    7.7111e-05
-   5.4962e-04
-   3.2065e-03
-   3.1828e-04
-   5.3370e-04
-   3.0078e-03
-   3.1613e-04
- > 0.0025
-try 200runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update200 7
-CV for trace random estimator using 200 runs is    7.2872e-05
-   5.1755e-04
-   2.9781e-03
-   2.9938e-04
-   5.0139e-04
-   2.8012e-03
-   2.9666e-04
- > 0.0025
-try 210runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update210 7
-CV for trace random estimator using 210 runs is    7.2220e-05
-   5.0784e-04
-   2.8737e-03
-   2.9061e-04
-   4.8418e-04
-   2.6870e-03
-   2.8696e-04
- > 0.0025
-try 220runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update220 7
-CV for trace random estimator using 220 runs is    6.9892e-05
-   4.8276e-04
-   2.7392e-03
-   2.7907e-04
-   4.6189e-04
-   2.5750e-03
-   2.7571e-04
- > 0.0025
-try 230runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update230 7
-CV for trace random estimator using 230 runs is    6.8625e-05
-   4.6744e-04
-   2.6477e-03
-   2.6950e-04
-   4.4090e-04
-   2.4728e-03
-   2.6742e-04
- > 0.0025
-try 240runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update240 7
-CV for trace random estimator using 240 runs is    6.5477e-05
-   4.4254e-04
-   2.5015e-03
-   2.5795e-04
-   4.1984e-04
-   2.3507e-03
-   2.5643e-04
- > 0.0025
-try 250runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-use sparse kinship to fit the model 
-tauVec(0) 2.01878
-dim temp_mat_update250 7
-YPAPY_update
-   7.1916e+02
-   1.2246e+02
-   1.4206e+02
-   1.8074e+02
-   1.4040e+02
-   1.6493e+02
-   2.1197e+02
-Trace
-   7.1868e+02
-   9.8885e+01
-   5.5836e+01
-   1.7212e+02
-   1.1312e+02
-   6.5458e+01
-   2.0297e+02
-YPAPY
-   7.1916e+02
-   1.2246e+02
-   1.4206e+02
-   1.8074e+02
-   1.4040e+02
-   1.6493e+02
-   2.1197e+02
-Trace
-   7.1868e+02
-   9.8885e+01
-   5.5836e+01
-   1.7212e+02
-   1.1312e+02
-   6.5458e+01
-   2.0297e+02
-score
-    0.4842
-   23.5759
-   86.2198
-    8.6201
-   27.2776
-   99.4722
-    9.0022
-Dtau
-  -0.0019
-  -0.0372
-   0.4338
-   0.2583
-   0.0397
-   0.4702
-  -0.5926
-score1
-    0.4842
-   23.5759
-   86.2198
-    8.6201
-   27.2776
-   99.4722
-    9.0022
-AI1
-   3.3110e+02   2.9393e+01   1.1852e+00   3.7767e-01   3.4237e+01   1.1739e+00   5.1052e-01
-   2.9393e+01   3.1782e+01   2.6583e+01   4.9565e+00   3.4365e+01   2.9973e+01   5.8284e+00
-   1.1852e+00   2.6583e+01   1.0844e+02   4.3085e+01   2.9968e+01   1.2270e+02   5.0368e+01
-   3.7767e-01   4.9565e+00   4.3085e+01   7.7488e+01   5.8285e+00   5.0303e+01   9.0760e+01
-   3.4237e+01   3.4365e+01   2.9968e+01   5.8285e+00   4.0157e+01   3.5454e+01   6.9991e+00
-   1.1739e+00   2.9973e+01   1.2270e+02   5.0303e+01   3.5454e+01   1.4619e+02   6.0378e+01
-   5.1052e-01   5.8284e+00   5.0368e+01   9.0760e+01   6.9991e+00   6.0378e+01   1.0925e+02
-Dtau_k1
-  -0.0019
-  -0.0372
-   0.4338
-   0.2583
-   0.0397
-   0.4702
-  -0.5926
-t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
-   user  system elapsed 
-205.199  34.825 240.070 
-[1] 0.0004775289 0.0203605874 0.0000000000 0.0548884313 0.0285433754
-[6] 0.0000000000 0.0000000000
-tau:  2.01684 0.8848487 0 2.471941 0.7044328 0 0 
-tau0:  2.018777 0.9220454 0 2.213658 0.66478 0 0 
-
-Iteration  8 2.01684 0.8848487 0 2.471941 0.7044328 0 0 :
-tau0_v1:  2.01684 0.8848487 0 2.471941 0.7044328 0 0 
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-Tau:
-[1] 2.0168400 0.8848487 0.0000000 2.4719405 0.7044328 0.0000000 0.0000000
-Fixed-effect coefficients:
-          [,1]
-[1,] 1.1058180
-[2,] 0.7382042
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
-[1] "alpha"
-          [,1]
-[1,] 1.1058180
-[2,] 0.7382042
-t_end_Get_Coef - t_begin_Get_Coef
-   user  system elapsed 
-  2.276   0.400   2.676 
-k1 7
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-AI
-   3.3187e+02   2.9461e+01   1.3851e+00   8.4638e-02   3.4267e+01   1.4188e+00   1.4873e-01
-   2.9461e+01   3.1120e+01   2.3020e+01   3.8312e+00   3.3425e+01   2.5854e+01   4.4979e+00
-   1.3851e+00   2.3020e+01   9.1100e+01   3.2806e+01   2.5849e+01   1.0291e+02   3.8287e+01
-   8.4638e-02   3.8312e+00   3.2806e+01   5.6520e+01   4.4979e+00   3.8239e+01   6.6223e+01
-   3.4267e+01   3.3425e+01   2.5849e+01   4.4979e+00   3.8991e+01   3.0543e+01   5.3986e+00
-   1.4188e+00   2.5854e+01   1.0291e+02   3.8239e+01   3.0543e+01   1.2253e+02   4.5872e+01
-   1.4873e-01   4.4979e+00   3.8287e+01   6.6223e+01   5.3986e+00   4.5872e+01   7.9719e+01
-idxtau
-        0
-        1
-        2
-        3
-        4
-        5
-        6
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update30 7
-CV for trace random estimator using 30 runs is    0.0005
-   0.0033
-   0.0181
-   0.0021
-   0.0032
-   0.0167
-   0.0021
- > 0.0025
-try 40runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update40 7
-CV for trace random estimator using 40 runs is    0.0004
-   0.0027
-   0.0164
-   0.0017
-   0.0024
-   0.0135
-   0.0017
- > 0.0025
-try 50runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update50 7
-CV for trace random estimator using 50 runs is    0.0003
-   0.0021
-   0.0128
-   0.0013
-   0.0019
-   0.0107
-   0.0013
- > 0.0025
-try 60runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update60 7
-CV for trace random estimator using 60 runs is    0.0003
-   0.0017
-   0.0107
-   0.0011
-   0.0016
-   0.0092
-   0.0011
- > 0.0025
-try 70runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update70 7
-CV for trace random estimator using 70 runs is    0.0002
-   0.0015
-   0.0094
-   0.0010
-   0.0014
-   0.0083
-   0.0010
- > 0.0025
-try 80runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update80 7
-CV for trace random estimator using 80 runs is    0.0002
-   0.0013
-   0.0084
-   0.0008
-   0.0012
-   0.0076
-   0.0008
- > 0.0025
-try 90runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update90 7
-CV for trace random estimator using 90 runs is    0.0002
-   0.0012
-   0.0076
-   0.0007
-   0.0012
-   0.0070
-   0.0007
- > 0.0025
-try 100runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update100 7
-CV for trace random estimator using 100 runs is    0.0002
-   0.0011
-   0.0066
-   0.0006
-   0.0010
-   0.0060
-   0.0006
- > 0.0025
-try 110runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update110 7
-CV for trace random estimator using 110 runs is    0.0001
-   0.0010
-   0.0061
-   0.0006
-   0.0009
-   0.0057
-   0.0006
- > 0.0025
-try 120runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update120 7
-CV for trace random estimator using 120 runs is    0.0001
-   0.0009
-   0.0057
-   0.0005
-   0.0009
-   0.0054
-   0.0005
- > 0.0025
-try 130runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update130 7
-CV for trace random estimator using 130 runs is    0.0001
-   0.0008
-   0.0052
-   0.0005
-   0.0008
-   0.0049
-   0.0005
- > 0.0025
-try 140runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update140 7
-CV for trace random estimator using 140 runs is    0.0001
-   0.0008
-   0.0048
-   0.0004
-   0.0007
-   0.0045
-   0.0004
- > 0.0025
-try 150runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update150 7
-CV for trace random estimator using 150 runs is    9.8797e-05
-   7.1603e-04
-   4.5764e-03
-   4.1466e-04
-   6.7494e-04
-   4.2330e-03
-   4.0785e-04
- > 0.0025
-try 160runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update160 7
-CV for trace random estimator using 160 runs is    9.3923e-05
-   6.7785e-04
-   4.3250e-03
-   3.8786e-04
-   6.3326e-04
-   3.9769e-03
-   3.8156e-04
- > 0.0025
-try 170runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update170 7
-CV for trace random estimator using 170 runs is    8.7409e-05
-   6.2540e-04
-   4.0441e-03
-   3.5854e-04
-   6.0077e-04
-   3.7988e-03
-   3.5296e-04
- > 0.0025
-try 180runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update180 7
-CV for trace random estimator using 180 runs is    8.1825e-05
-   5.9550e-04
-   3.8742e-03
-   3.3582e-04
-   5.7380e-04
-   3.6213e-03
-   3.3370e-04
- > 0.0025
-try 190runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update190 7
-CV for trace random estimator using 190 runs is    7.7344e-05
-   5.5468e-04
-   3.5906e-03
-   3.1852e-04
-   5.3705e-04
-   3.3635e-03
-   3.1650e-04
- > 0.0025
-try 200runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update200 7
-CV for trace random estimator using 200 runs is    7.3088e-05
-   5.2236e-04
-   3.3329e-03
-   2.9959e-04
-   5.0456e-04
-   3.1296e-03
-   2.9701e-04
- > 0.0025
-try 210runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update210 7
-CV for trace random estimator using 210 runs is    7.2431e-05
-   5.1259e-04
-   3.2156e-03
-   2.9079e-04
-   4.8722e-04
-   3.0007e-03
-   2.8727e-04
- > 0.0025
-try 220runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update220 7
-CV for trace random estimator using 220 runs is    7.0101e-05
-   4.8719e-04
-   3.0638e-03
-   2.7924e-04
-   4.6474e-04
-   2.8753e-03
-   2.7601e-04
- > 0.0025
-try 230runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update230 7
-CV for trace random estimator using 230 runs is    6.8827e-05
-   4.7184e-04
-   2.9619e-03
-   2.6965e-04
-   4.4358e-04
-   2.7607e-03
-   2.6769e-04
- > 0.0025
-try 240runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update240 7
-CV for trace random estimator using 240 runs is    6.5674e-05
-   4.4666e-04
-   2.7942e-03
-   2.5810e-04
-   4.2238e-04
-   2.6211e-03
-   2.5670e-04
- > 0.0025
-try 250runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update250 7
-CV for trace random estimator using 250 runs is    6.2816e-05
-   4.2844e-04
-   2.6718e-03
-   2.4531e-04
-   4.0527e-04
-   2.5049e-03
-   2.4357e-04
- > 0.0025
-try 260runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update260 7
-CV for trace random estimator using 260 runs is    6.0573e-05
-   4.0989e-04
-   2.5680e-03
-   2.3776e-04
-   3.8472e-04
-   2.4015e-03
-   2.3496e-04
- > 0.0025
-try 270runs
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-use sparse kinship to fit the model 
-tauVec(0) 2.01684
-dim temp_mat_update270 7
-YPAPY_update
-   7.1979e+02
-   1.1997e+02
-   1.2235e+02
-   1.4644e+02
-   1.3727e+02
-   1.4178e+02
-   1.7178e+02
-Trace
-   7.1837e+02
-   9.8505e+01
-   5.0657e+01
-   1.5493e+02
-   1.1256e+02
-   5.9288e+01
-   1.8270e+02
-YPAPY
-   7.1979e+02
-   1.1997e+02
-   1.2235e+02
-   1.4644e+02
-   1.3727e+02
-   1.4178e+02
-   1.7178e+02
-Trace
-   7.1837e+02
-   9.8505e+01
-   5.0657e+01
-   1.5493e+02
-   1.1256e+02
-   5.9288e+01
-   1.8270e+02
-score
-    1.4199
-   21.4687
-   71.6888
-   -8.4871
-   24.7109
-   82.4896
-  -10.9151
-Dtau
-   0.0003
-  -0.0194
-   0.4825
-   0.0204
-   0.0174
-   0.5171
-  -0.6833
-score1
-    1.4199
-   21.4687
-   71.6888
-   -8.4871
-   24.7109
-   82.4896
-  -10.9151
-AI1
-   3.3187e+02   2.9461e+01   1.3851e+00   8.4638e-02   3.4267e+01   1.4188e+00   1.4873e-01
-   2.9461e+01   3.1120e+01   2.3020e+01   3.8312e+00   3.3425e+01   2.5854e+01   4.4979e+00
-   1.3851e+00   2.3020e+01   9.1100e+01   3.2806e+01   2.5849e+01   1.0291e+02   3.8287e+01
-   8.4638e-02   3.8312e+00   3.2806e+01   5.6520e+01   4.4979e+00   3.8239e+01   6.6223e+01
-   3.4267e+01   3.3425e+01   2.5849e+01   4.4979e+00   3.8991e+01   3.0543e+01   5.3986e+00
-   1.4188e+00   2.5854e+01   1.0291e+02   3.8239e+01   3.0543e+01   1.2253e+02   4.5872e+01
-   1.4873e-01   4.4979e+00   3.8287e+01   6.6223e+01   5.3986e+00   4.5872e+01   7.9719e+01
-Dtau_k1
-   0.0003
-  -0.0194
-   0.4825
-   0.0204
-   0.0174
-   0.5171
-  -0.6833
-t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG
-   user  system elapsed 
-217.767  37.368 255.189 
-[1] 6.804472e-05 1.095429e-02 0.000000e+00 4.098688e-03 1.205629e-02
-[6] 0.000000e+00 0.000000e+00
-tau:  2.017116 0.8654563 0 2.49237 0.7218699 0 0 
-tau0:  2.01684 0.8848487 0 2.471941 0.7044328 0 0 
-
-Final  2.017116 0.8654563 0 2.49237 0.7218699 0 0 :
-use sparse kinship to fit the model 
-tauVec(0) 2.01712
-after Sigma_iY
-use sparse kinship to fit the model 
-tauVec(0) 2.01712
-use sparse kinship to fit the model 
-tauVec(0) 2.01712
-Tau:
-[1] 2.0171158 0.8654563 0.0000000 2.4923697 0.7218699 0.0000000 0.0000000
-Fixed-effect coefficients:
-          [,1]
-[1,] 1.1059091
-[2,] 0.7375767
-[1] "y[1]"
-1426 
-4.81 
-[1] "y[2]"
- 438 
-9.95 
-[1] "alpha"
-          [,1]
-[1,] 1.1059091
-[2,] 0.7375767
-t_end_null - t_begin, fitting the NULL model without LOCO took
-    user   system  elapsed 
-1227.394  199.802 1427.467 
-     IID X.Intercept. sex y.trend longlVar IndexPheno IndexGeno covoffset
-1426 356            1   1    4.81        3          1       356         0
-438  178            1   1    9.95        3          2       178         0
-1023 283            1   0    4.35        4          3       283         0
-1737  51            1   0    0.42        2          4        51         0
-1086 295            1   0    7.41        4          5       295         0
-1708  46            1   1    5.95        5          6        46         0
-     sex
-1426   1
-438    1
-1023   0
-1737   0
-1086   0
-1708   1
-[1] 0.7375767
-use sparse kinship to fit the model 
-tauVec(0) 2.01712
-use sparse kinship to fit the model 
-tauVec(0) 2.01712
-    user   system  elapsed 
-1232.144  200.718 1433.173 
-t_end - t_begin, fitting the NULL model took
-    user   system  elapsed 
-1228.999  200.094 1429.367 
-Skip estimating variance ratios
-closed the plinkFile!
+k1 2
+Ibvec.n_elem 54
+g_I_longl_mat.n_rows 897
+ arma::spsolve(g_spSigma, bVec) 0
+Error in fitglmmaiRPCG_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY,  : 
+  spsolve(): solution not found
+Calls: fitNULLGLMM_multiV ... system.time -> glmmkin.ai_PCG_Rcpp_multiV -> fitglmmaiRPCG_multiV
+Timing stopped at: 0.154 0.012 0.17
+Timing stopped at: 0.268 0.012 0.284
+Execution halted

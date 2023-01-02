@@ -13,7 +13,7 @@ Rscript step1_fitNULLGLMM.R     \
     --traitType=binary        \
     --IsOverwriteVarianceRatioFile=TRUE	\
     --isCateVarianceRatio=TRUE      \
-    --outputPrefix=./output/example_binary_sparseGRM_1.1.4
+    --outputPrefix=./output/example_binary_sparseGRM_1.1.4_test
 
 
 
@@ -22,13 +22,13 @@ Rscript step1_fitNULLGLMM.R     \
  Rscript step2_SPAtests.R        \
      --bgenFile=./input/genotype_100markers.bgen    \
      --bgenFileIndex=./input/genotype_100markers.bgen.bgi \
-     --SAIGEOutputFile=./output/genotype_100markers_bgen_groupTest_out_sparseGRMforStep1.txt \
+     --SAIGEOutputFile=./output/genotype_100markers_bgen_groupTest_out_sparseGRMforStep1.txt_test \
      --chrom=1 \
      --AlleleOrder=ref-first \
      --minMAF=0 \
      --minMAC=0.5 \
      --sampleFile=./input/samplelist.txt \
-     --GMMATmodelFile=./output/example_binary_sparseGRM.rda \
+     --GMMATmodelFile=./output/example_binary_sparseGRM_1.1.4_test.rda \
      --sparseGRMFile=output/sparseGRM_relatednessCutoff_0.125_1000_randomMarkersUsed.sparseGRM.mtx   \
      --sparseGRMSampleIDFile=output/sparseGRM_relatednessCutoff_0.125_1000_randomMarkersUsed.sparseGRM.mtx.sampleIDs.txt     \
      --groupFile=./input/group_new_chrposa1a2.txt    \
@@ -172,3 +172,18 @@ Rscript step2_SPAtests.R        \
       --is_output_moreDetails=TRUE
 
 
+
+
+Rscript step2_SPAtests.R        \
+        --bedFile=./input/genotype_100markers.bed       \
+        --bimFile=./input/genotype_100markers.bim       \
+        --famFile=./input/genotype_100markers.fam       \
+        --AlleleOrder=alt-first \
+        --SAIGEOutputFile=./output/genotype_100markers_marker_plink.txt \
+        --chrom=1       \
+        --minMAF=0 \
+        --minMAC=20 \
+        --GMMATmodelFile=./output/example_binary.rda \
+        --varianceRatioFile=./output/example_binary.varianceRatio.txt   \
+        --LOCO=TRUE \
+        --is_output_moreDetails=TRUE

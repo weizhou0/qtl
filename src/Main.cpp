@@ -184,9 +184,9 @@ void mainMarkerInCPP(
 			   bool & t_isFirth) 
 {
 
-      std::cout << "Here1 mainMarkerInCPP" << std::endl;
-  std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
-  std::cout << "ptr_gSAIGEobj->m_flagSparseGRM " << ptr_gSAIGEobj->m_flagSparseGRM << std::endl;
+  //std::cout << "Here1 mainMarkerInCPP" << std::endl;
+  //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
+  //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM " << ptr_gSAIGEobj->m_flagSparseGRM << std::endl;
 
 
   int q = t_genoIndex.size();  // number of markers
@@ -311,9 +311,9 @@ void mainMarkerInCPP(
    indexForMissing.clear();
    //t_GVec0.clear();
    //t_GVec.clear();
-   std::cout << "Unified_getOneMarker " << std::endl;
-   std::cout << "n " << n << std::endl;
-   std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
+   //std::cout << "Unified_getOneMarker " << std::endl;
+   //std::cout << "n " << n << std::endl;
+   //std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
 
    //t_GVec.set_size(n);
    bool isReadMarker = Unified_getOneMarker(t_genoType, gIndex_prev, gIndex, ref, alt, marker, pd, chr, altFreq, altCounts, missingRate, imputeInfo,
@@ -377,13 +377,13 @@ void mainMarkerInCPP(
     int nG = t_GVec.n_elem;
     double MAC = MAF * n * (1 - missingRate) *2;
    
+   /*
    std::cout << "MAC " << MAC << std::endl;
    std::cout << "MAF " << MAF << std::endl;
    std::cout << "n " << n << std::endl;
    std::cout << "nG " << nG << std::endl;
  
     
-   /*
    std::cout << "missingRate " << missingRate << std::endl;
    std::cout << "MAF " << MAF << std::endl;
    std::cout << "MAC " << MAC << std::endl;
@@ -413,12 +413,14 @@ void mainMarkerInCPP(
     altCountsVec.at(i) = altCounts;         // allele frequencies of ALT allele, this is not always < 0.5.
     MAC = std::min(altCounts, 2*n-altCounts);
     
-    
+   /* 
     std::cout << "MAC " << MAC << std::endl; 
     std::cout << "altCounts " << altCounts << std::endl; 
    //std::cout << "altFreq after flip " << altFreq << std::endl; 
    //std::cout << "info " << info << std::endl;
    std::cout << "flip " << flip << std::endl; 
+  */
+
     // analysis results for single-marker
     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
@@ -430,7 +432,7 @@ void mainMarkerInCPP(
 
     arma::vec t_GVec0;
 
-    std::cout << "g_n_unique " << g_n_unique << std::endl;
+    //std::cout << "g_n_unique " << g_n_unique << std::endl;
     if(g_n_unique == 0){
       indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
       indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
@@ -442,13 +444,13 @@ void mainMarkerInCPP(
       indexZeroVec_arma = arma::find(t_GVec0 == 0.0);
       indexNonZeroVec_arma = arma::find(t_GVec0 > 0.0);
       double altCounts_new = arma::sum(t_GVec0);
-      std::cout << "altCounts_new " << altCounts_new << std::endl;
+      //std::cout << "altCounts_new " << altCounts_new << std::endl;
       //
       //
       //get_indexinAnotherVector(indexNonZeroVec, g_dup_sample_Index,indexNonZeroVec_arma);
       //get_indexinAnotherVector(indexZeroVec, g_dup_sample_Index,indexZeroVec_arma);
-      std::cout << "indexNonZeroVec_arma.n_elem " << indexNonZeroVec_arma.n_elem << std::endl;
-      std::cout << "indexZeroVec_arma.n_elem " << indexZeroVec_arma.n_elem << std::endl;
+      //std::cout << "indexNonZeroVec_arma.n_elem " << indexNonZeroVec_arma.n_elem << std::endl;
+      //std::cout << "indexZeroVec_arma.n_elem " << indexZeroVec_arma.n_elem << std::endl;
       gtildeVec.set_size(t_GVec0.n_elem);
     }
 
@@ -460,7 +462,7 @@ void mainMarkerInCPP(
     //arma::vec timeoutput5 = getTime(); 
 
 
-      std::cout << "Here1a" << std::endl;
+    //std::cout << "Here1a" << std::endl;
     //set_varianceRatio(MAC, isSingleVarianceRatio);
 
     if(ptr_gSAIGEobj->m_isFastTest){
@@ -482,8 +484,8 @@ void mainMarkerInCPP(
 
 
 
-      std::cout << "Here1" << std::endl;
-  std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
+  //std::cout << "Here1" << std::endl;
+  //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
 
   /*
     if(ptr_gSAIGEobj->m_flagSparseGRM_cur && ptr_gSAIGEobj->m_SigmaMat_sp.n_rows == 2){
@@ -500,7 +502,7 @@ if(g_n_unique == 0){
 
 
     if(MAC > g_MACCutoffforER){
-      std::cout << "Here" << std::endl;
+      //std::cout << "Here" << std::endl;
       Unified_getMarkerPval( 
 		    t_GVec, 
                           false, // bool t_isOnlyOutputNonZero, 
@@ -554,10 +556,10 @@ if(g_n_unique == 0){
      }
 
 }else{//if(g_n_unique == 0){
-      std::cout << "Here OK1 " << std::endl;	    
+      //std::cout << "Here OK1 " << std::endl;	    
 
     if(MAC > g_MACCutoffforER){
-      std::cout << "Here OK2" << std::endl;	    
+      //std::cout << "Here OK2" << std::endl;	    
       Unified_getMarkerPval(
                     t_GVec0,
                           false, // bool t_isOnlyOutputNonZero,
@@ -591,7 +593,7 @@ if(g_n_unique == 0){
 
      if(MAC > g_MACCutoffforER){
 
-	     std::cout << "Here using sparse GRM" << std::endl;
+	//     std::cout << "Here using sparse GRM" << std::endl;
       Unified_getMarkerPval(
                     t_GVec0,
                           false, // bool t_isOnlyOutputNonZero,
@@ -612,8 +614,8 @@ if(g_n_unique == 0){
 }
 
 
-std::cout << "pval_noSPA " << pval_noSPA << std::endl;
-std::cout << "pval " << pval << std::endl;
+//std::cout << "pval_noSPA " << pval_noSPA << std::endl;
+//std::cout << "pval " << pval << std::endl;
 
 
    if(t_traitType == "binary"){
@@ -956,7 +958,9 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
 	arma::sp_mat & t_Ilongmat,
 	arma::vec & t_I_longl_vec,
 	arma::sp_mat & t_Tlongmat, 
-	arma::vec & t_T_longl_vec
+	arma::vec & t_T_longl_vec,
+	bool t_is_EmpSPA,
+	arma::mat & t_cumul
 	)
 {
 //	t_SigmaMat_sp.print("t_SigmaMat_sp");
@@ -996,7 +1000,9 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
 	t_Ilongmat,
         t_I_longl_vec,
         t_Tlongmat,
-        t_T_longl_vec);
+        t_T_longl_vec,
+	t_is_EmpSPA,
+	t_cumul);
   //ptr_gSAIGEobj->m_flagSparseGRM = false;
 }
 

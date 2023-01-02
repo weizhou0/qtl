@@ -328,7 +328,7 @@ SAIGE.Region = function(mu,
 
         if(regionTestType != "BURDEN"){
  	  #ta0 = proc.time()
-          if(traitType == "binary"){	     
+          if(traitType == "binary" | traitType == "count"){	     
             outList$gyVec = outList$gyVec[noNAIndices]
           }
 
@@ -401,7 +401,7 @@ SAIGE.Region = function(mu,
 		annoMAFIndVec = c(annoMAFIndVec, jm)
 		Phi = wadjVarSMat[tempPos, tempPos, drop=F]
 		Score = wStatVec[tempPos]
-		if(traitType == "binary"){
+		if(traitType == "binary" | traitType == "count"){
 			p.new = adjPVec[tempPos]
 			g.sum = outList$genoSumMat[,jm]
 			q.sum<-sum(outList$gyVec[tempPos] * AnnoWeights[tempPos])
@@ -607,7 +607,7 @@ if(is_fastTest){
 		annoMAFIndVec = c(annoMAFIndVec, jm)
 		Phi = wadjVarSMat[tempPos, tempPos, drop=F]
 		Score = wStatVec[tempPos]
-		if(traitType == "binary"){
+		if(traitType == "binary" | traitType == "count"){
 			p.new = adjPVec[tempPos]
 			g.sum = outList$genoSumMat[,jm]
 			q.sum<-sum(outList$gyVec[tempPos] * AnnoWeights[tempPos])

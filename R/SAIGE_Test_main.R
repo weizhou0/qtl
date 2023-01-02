@@ -116,7 +116,8 @@ SPAGMMATtest = function(bgenFile = "",
 		 is_output_markerList_in_groupTest = FALSE,
 		 is_fastTest = FALSE,
 		 pval_cutoff_for_fastTest = 0.05, 
-		 max_MAC_use_ER = 4
+		 max_MAC_use_ER = 4,
+		 is_EmpSPA = FALSE
 ){
    #cat("r.corr is ", r.corr, "\n")
    if(!(impute_method %in% c("best_guess", "mean","minor"))){
@@ -147,8 +148,8 @@ SPAGMMATtest = function(bgenFile = "",
 
 
     #if(file.exists(SAIGEOutputFile)) {print("ok -2 file exist")} 
-  print("setSAIGEobjInCPP -3")
-  print_g_n_unique()
+  #print("setSAIGEobjInCPP -3")
+  #print_g_n_unique()
 
 
     ##check and create the output file
@@ -220,10 +221,10 @@ SPAGMMATtest = function(bgenFile = "",
      #cat("dosage_zerod_MAC_cutoff is ", dosage_zerod_MAC_cutoff, "\n")
 
     }
-  print("setSAIGEobjInCPP -2")
-  print_g_n_unique()
+  #print("setSAIGEobjInCPP -2")
+  #print_g_n_unique()
     
-    obj.model = ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta) #readInGLMM.R8
+    obj.model = ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt=9999, espa_range=c(-20,20)) #readInGLMM.R8
     if(obj.model$traitType == "binary"){
         if(max_MAC_use_ER > 0){
              cat("P-values of genetic variants with MAC <= ", max_MAC_use_ER, " will be calculated via effecient resampling.\n")
@@ -280,8 +281,8 @@ SPAGMMATtest = function(bgenFile = "",
     }
 
 
-  print("setSAIGEobjInCPP -1")
-  print_g_n_unique()
+  #print("setSAIGEobjInCPP -1")
+  #print_g_n_unique()
 
     if(is_fastTest){
       if(isSparseGRM){
@@ -300,8 +301,8 @@ SPAGMMATtest = function(bgenFile = "",
     nsample = length(obj.model$y)
     cateVarRatioMaxMACVecInclude = c(cateVarRatioMaxMACVecInclude, nsample)	
    
-  print("setSAIGEobjInCPP -1b")
-  print_g_n_unique()
+  #print("setSAIGEobjInCPP -1b")
+  #print_g_n_unique()
 
     #in Geno.R
     objGeno = setGenoInput(bgenFile = bgenFile,
@@ -332,8 +333,8 @@ SPAGMMATtest = function(bgenFile = "",
         isCondition = FALSE
    }
     
-  print("setSAIGEobjInCPP -1a")
-  print_g_n_unique()
+  #print("setSAIGEobjInCPP -1a")
+  #print_g_n_unique()
     condition_genoIndex = c(-1)
     if(isCondition){
         cat("Conducting conditional analysis. Please specify the conditioning markers in the order as they are store in the genotype/dosage file.\n")
@@ -345,7 +346,7 @@ SPAGMMATtest = function(bgenFile = "",
 
     #print(names(obj.model))
     #print(names(obj.model$obj.noK))
-    obj.model$varWeights = rep(1, length(obj.model$y))
+    #obj.model$varWeights = rep(1, length(obj.model$y))
     #print(obj.model$obj_cc$res.out)
 
 
@@ -364,8 +365,8 @@ SPAGMMATtest = function(bgenFile = "",
                T_longl_mat = I_mat * (obj.model$T_longl_vec)
     }	       
 
-  print("setSAIGEobjInCPP 0")
-  print_g_n_unique()
+  #print("setSAIGEobjInCPP 0")
+  #print_g_n_unique()
 
 
 
@@ -403,7 +404,9 @@ SPAGMMATtest = function(bgenFile = "",
 		     t_Ilongmat = I_mat,
 		     t_I_longl_vec = b-1,
 		     t_Tlongmat = T_longl_mat,
-		     t_T_longl_vec = obj.model$T_longl_vec)
+		     t_T_longl_vec = obj.model$T_longl_vec,
+		     t_is_EmpSPA = is_EmpSPA,
+		     t_cumul = obj.model$cumul)
 
   #if(any(duplicated(obj.model$sampleID))){
   #	b = as.numeric(factor(obj.model$sampleID, levels =  unique(obj.model$sampleID)))
@@ -464,8 +467,8 @@ SPAGMMATtest = function(bgenFile = "",
     #cat("Number of markers in each chunk:\t", numLinesOutput, "\n")
     #cat("Number of chunks for all markers:\t", nChunks, "\n")
     #}
-  print("SAIGE.Marker -1")
-  print_g_n_unique()
+  #print("SAIGE.Marker -1")
+  #print_g_n_unique()
 
     if(!isGroupTest){
     OutputFile = SAIGEOutputFile

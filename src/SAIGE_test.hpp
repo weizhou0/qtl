@@ -5,6 +5,7 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
+#include "approxfun.hpp"
 
 namespace SAIGE{
 
@@ -22,7 +23,9 @@ class SAIGEClass
       std::string m_traitType; 
       std::string m_impute_method;
       std::vector<uint32_t> m_condition_genoIndex;
-      	
+
+ 
+
 
     public:
       arma::vec m_mu2;
@@ -51,6 +54,9 @@ class SAIGEClass
       bool m_flagSparseGRM;
       bool m_flagSparseGRM_cur;
       bool m_isFastTest;
+      
+      bool m_is_EmpSPA;
+
       double m_pval_cutoff_for_fastTest; 
       double m_SPA_Cutoff;
       arma::umat m_locationMat;
@@ -87,7 +93,11 @@ class SAIGEClass
       //arma::m_var2m;
   ////////////////////// -------------------- functions ---------------------------------- //////////////////////
 
-
+      approxfun::approxfunClass m_K_0_emp;
+      approxfun::approxfunClass m_K_1_emp;
+      approxfun::approxfunClass m_K_2_emp;
+      arma::mat m_cumul;
+      double m_varResid;
 
 
   SAIGEClass(
@@ -125,7 +135,9 @@ class SAIGEClass
 	 arma::sp_mat & t_Ilongmat,
         arma::vec & t_I_longl_vec,
         arma::sp_mat & t_Tlongmat,
-        arma::vec & t_T_longl_vec);
+        arma::vec & t_T_longl_vec,
+	   bool t_is_EmpSPA,
+        arma::mat & t_cumul);
 
    void set_seed(unsigned int seed);
 
@@ -242,6 +254,43 @@ class SAIGEClass
      arma::vec getCrossprod_V(arma::vec& bVec);
 
      arma::vec getDiagOfSigma_V();
+
+     double EmpSPA_K_0(double t,
+             int N0,
+             double adjG0,
+             arma::vec & adjG1); 	
+
+
+     double EmpSPA_K_1(double t,
+             int N0,
+             double adjG0,
+             arma::vec & adjG1,        // adjusted Genotype
+             double q2);
+
+
+     double EmpSPA_K_2(double t,
+             int N0,
+             double adjG0,
+             arma::vec & adjG1);
+
+
+     Rcpp::List EmpSPA_fastgetroot_K1(double t_initX,
+                            int N0,
+                            double adjG0,
+                            arma::vec & adjG1,        // adjusted Genotype
+                            double q2);
+
+     double EmpSPA_GetProb_SPA(double adjG0,
+                     arma::vec & adjG1,
+                     int N0,
+                     double q2,
+                     bool lowerTail);
+
+
+     double EmpSPA_getMarkerPval(arma::vec & t_g,
+                       double t_Tstat,
+		       double g_altFreq_new,
+                       int g_N);
 
 };
 }

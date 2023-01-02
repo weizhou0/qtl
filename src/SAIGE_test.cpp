@@ -11,6 +11,7 @@
 #include "SPA.hpp"
 #include "ER_binary_func.hpp"
 #include "UTIL.hpp"
+#include "approxfun.hpp"
 #include "getMem.hpp"
 #include "getMem.hpp"
 #include <thread>         // std::this_thread::sleep_for
@@ -57,7 +58,9 @@ SAIGEClass::SAIGEClass(
 	 arma::sp_mat & t_Ilongmat,
         arma::vec & t_I_longl_vec,
         arma::sp_mat & t_Tlongmat,
-        arma::vec & t_T_longl_vec){
+        arma::vec & t_T_longl_vec,
+	bool t_is_EmpSPA,
+        arma::mat & t_cumul){
 
 
     m_XVX = t_XVX;
@@ -75,7 +78,7 @@ SAIGEClass::SAIGEClass(
     m_S_a = t_S_a;
     m_res = t_res;
     m_resout = t_resout;
-    m_mu2 = t_mu2;
+    m_mu2 = t_mu2 % t_varWeightsvec;
     m_mu = t_mu;
     m_varRatio_sparse = t_varRatio_sparse;
     m_varRatio_null = t_varRatio_null;
@@ -123,7 +126,7 @@ SAIGEClass::SAIGEClass(
     //}
     //
     //if(t_SigmaMat_sp.n_rows > 2){
-	std::cout << "here m_SigmaMat_sp" << std::endl;
+	//std::cout << "here m_SigmaMat_sp" << std::endl;
 	m_SigmaMat_sp = t_SigmaMat_sp;
     //}	   
     m_tauVal_sp = t_tauVal_sp;
@@ -131,7 +134,17 @@ SAIGEClass::SAIGEClass(
    arma::uvec t_I_longl_vec_new = arma::conv_to< arma::uvec >::from(t_I_longl_vec);
    g_I_longl_vec = t_I_longl_vec_new;
    g_T_longl_mat = t_Tlongmat;
-   g_T_longl_vec = t_T_longl_vec;   
+   g_T_longl_vec = t_T_longl_vec;
+
+   m_is_EmpSPA = false;
+   if(t_is_EmpSPA){
+      m_K_0_emp.setApproxFun(t_cumul.col(0), t_cumul.col(1));
+      m_K_1_emp.setApproxFun(t_cumul.col(0), t_cumul.col(2));
+      m_K_2_emp.setApproxFun(t_cumul.col(0), t_cumul.col(3));
+      m_is_EmpSPA = t_is_EmpSPA;
+      m_cumul = t_cumul;
+      m_varResid = arma::var(m_res);
+   }
 }    
 
 
@@ -165,21 +178,16 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
       t_gy = dot(t_gtilde, m_y);
     }
 
-    S = dot(t_gtilde, m_res);
+    S = dot(t_gtilde, m_res % m_varWeightsvec);
 
-    std::cout << "S " << S << std::endl;
+    //std::cout << "S " << S << std::endl;
 
-    S = S/m_tauvec[0];
-    
+    S = S/m_tauvec[0]; 
 
-      for(int i = 0; i < 10; i++){
-	std::cout << "t_gtilde  " << i << " " << t_gtilde[i] << std::endl;
-	std::cout << "m_mu2  " << i << " " << m_mu2[i] << std::endl;
-	std::cout << "m_mu  " << i << " " << m_mu2[i] << std::endl;
-      } 
-
+    double varRatioVal_var2 = m_varRatioVal;
     if(!m_flagSparseGRM_cur){
       t_P2Vec = t_gtilde % m_mu2 *m_tauvec[0]; 
+      //t_P2Vec = t_gtilde % m_mu2; 
       var2m = dot(t_P2Vec, t_gtilde);
     }else{
       if(m_SigmaMat_sp.n_rows > 2){	
@@ -187,23 +195,30 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
       t_P2Vec = m_SigmaMat_sp * t_gtilde;
       var2m = dot(t_P2Vec, t_gtilde);
       if(m_isVarPsadj){
+	varRatioVal_var2 = 1;     
 	var2m = var2m - t_gtilde.t() * m_Sigma_iXXSigma_iX * m_X.t() * t_P2Vec;	
       }
-     }else{	
+     }else{
 	//t_P2Vec = m_sigmainvG_noV;
 	t_P2Vec = getSigma_G_V(t_gtilde, 500, 1e-5);
 	var2m = dot(t_P2Vec, t_gtilde);
+      if(m_isVarPsadj){
+	varRatioVal_var2 = 1;      
+	var2m = var2m - t_gtilde.t() * m_Sigma_iXXSigma_iX * m_X.t() * t_P2Vec;	
+      }
      }
-    }	      
+    }
+
     var2 = var2m(0,0);
-    std::cout << "var2 " << var2 << std::endl;
-    std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
-    double var1 = var2 * m_varRatioVal;
-    std::cout << "var1 " << var1 << std::endl;
+    //std::cout << "var2 " << var2 << std::endl;
+    //std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
+    //double var1 = var2 * m_varRatioVal;
+    double var1 = var2 * varRatioVal_var2;
+    //std::cout << "var1 " << var1 << std::endl;
     double stat = S*S/var1;
     double t_pval;
-    std::cout << "S " << S << std::endl;    
-    std::cout << "var1 " << var1 << std::endl;    
+    //std::cout << "S " << S << std::endl;    
+    //std::cout << "var1 " << var1 << std::endl;    
 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
@@ -233,6 +248,7 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     t_Tstat = S;
     t_var1 = var1;
     t_var2 = var2;
+    //std::cout << "t_pval_str " << t_pval_str << std::endl;
 }
 
 
@@ -248,12 +264,14 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
 
     arma::vec g1 = t_GVec.elem(t_indexForNonZero);
 
-    //m_varWeightsvec = m_varWeightsvec.elem(t_indexForNonZero);
+    arma::vec m_varWeightsvec_new = m_varWeightsvec.elem(t_indexForNonZero);
+
 
     arma::mat X1 = m_X.rows(t_indexForNonZero);
     arma::mat A1 = m_XVX_inv_XV.rows(t_indexForNonZero);
     arma::vec mu21;
     arma::vec res1 = m_res.elem(t_indexForNonZero);
+    res1 = res1 % m_varWeightsvec_new;
     arma::vec Z = A1.t() * g1;
     arma::vec B = X1 * Z;
     arma::vec g1_tilde = g1 - B;
@@ -266,18 +284,17 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
       g1tildemu2 = dot(square(g1_tilde), mu21);
       Bmu2 = arma::dot(square(B),  mu21);
       var2 = ZtXVXZ(0,0) - Bmu2 + g1tildemu2;
-      std::cout << "ZtXVXZ(0,0) " << ZtXVXZ(0,0) << std::endl;
-      std::cout << "Bmu2 " << Bmu2 << std::endl;
-      std::cout << "g1tildemu2 " << g1tildemu2 << std::endl;
     }else if(m_traitType == "quantitative" || m_traitType == "count_nb"){
-      Bmu2 = dot(g1, B);
-      var2 = ZtXVXZ(0,0)*m_tauvec[0] +  dot(g1,g1) - 2*Bmu2;
+      Bmu2 = dot(g1, B % m_varWeightsvec_new);
+      //Bmu2 = dot(g1, B);
+      var2 = ZtXVXZ(0,0)*m_tauvec[0] +  dot(g1,g1 % m_varWeightsvec_new) - 2*Bmu2;
+      //var2 = ZtXVXZ(0,0)*m_tauvec[0] +  dot(g1,g1) - 2*Bmu2;
     }
     
 
-    std::cout << "var2 " << var2 << std::endl;
+    //std::cout << "var2 " << var2 << std::endl;
     var1 = var2 * m_varRatioVal;
-    std::cout << "var1 " << var1 << std::endl;
+    //std::cout << "var1 " << var1 << std::endl;
     S1 = dot(res1, g1_tilde);
     arma::mat res1X1_temp = (res1.t()) * X1;
     arma::vec res1X1 = res1X1_temp.t();
@@ -289,7 +306,7 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
 
     double stat = S*S/var1;
     double t_pval;
-    std::cout << "S " << S << std::endl;
+    //std::cout << "S " << S << std::endl;
 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
@@ -320,8 +337,8 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
     t_Tstat = S;
     t_var1 = var1;
     t_var2 = var2;
-    std::cout << "t_pval_str " << t_pval_str << std::endl;
-    std::cout << "end of scoreTestFast" << std::endl;
+    //std::cout << "t_pval_str scoreTestFast " << t_pval_str << std::endl;
+    //std::cout << "end of scoreTestFast" << std::endl;
 }
 
 
@@ -424,27 +441,29 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 
   //for test
  //arma::vec timeoutput3 = getTime();
- //isScoreFast = true;
   if(!isScoreFast){
-	std::cout << "scoreTest " << std::endl;  
+	//std::cout << "scoreTest " << std::endl;  
   	is_gtilde = true;
 	unsigned int nonzero = iIndex.n_elem;
 	unsigned int nGvec = t_GVec.n_elem;
-	std::cout << "nonzero " << nonzero << std::endl;
-	std::cout << "nGvec " << nGvec << std::endl;
+	//std::cout << "nonzero " << nonzero << std::endl;
+	//std::cout << "nGvec " << nGvec << std::endl;
   	scoreTest(t_GVec, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, iIndex);
   }else{
   	is_gtilde = false;
-	std::cout << "scoreTestFast "  << std::endl;  
+	//std::cout << "scoreTestFast "  << std::endl;  
 	//arma::uvec iIndexVec = arma::find(t_GVec > 0);
 	unsigned int nonzero = iIndex.n_elem;
 	unsigned int nGvec = t_GVec.n_elem;
-	std::cout << "nonzero " << nonzero << std::endl;
-	std::cout << "nGvec " << nGvec << std::endl;
+	//std::cout << "nonzero " << nonzero << std::endl;
+	//std::cout << "nGvec " << nGvec << std::endl;
         scoreTestFast(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2);
   }
 
   double StdStat = std::abs(t_Tstat) / sqrt(t_var1);
+  //std::cout << "before SPA t_Tstat " << t_Tstat << std::endl;
+  //std::cout << "before SPA t_var1 " << t_var1 << std::endl;
+  //std::cout << "t_altFreq " << t_altFreq << std::endl;
   t_isSPAConverge = false;
 
   double pval_noadj;
@@ -461,6 +480,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
   }
 
   
+    std::cout << "pval_noadj " << pval_noadj << std::endl;
  //arma::vec timeoutput3_a = getTime();
   double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
 
@@ -479,9 +499,9 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
     std::cout << "iIndexComVecSize " << iIndexComVecSize << std::endl;
     std::cout << "iIndexSize " << iIndexSize << std::endl;
     std::cout << "gNA.n_elem 1 " << gNA.n_elem << std::endl;
-        std::cout << "gNB.n_elem 1 " << gNB.n_elem << std::endl;
-        std::cout << "muNA.n_elem 1 " << muNA.n_elem << std::endl;
-        std::cout << "muNB.n_elem 1 " << muNB.n_elem << std::endl;
+    std::cout << "gNB.n_elem 1 " << gNB.n_elem << std::endl;
+    std::cout << "muNA.n_elem 1 " << muNA.n_elem << std::endl;
+    std::cout << "muNB.n_elem 1 " << muNB.n_elem << std::endl;
   */
 
 
@@ -490,14 +510,17 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 if(!t_isER){
 
 
-  //if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
-  if(StdStat > m_SPA_Cutoff && m_traitType == "binary"){
+  if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
+  //if(StdStat > m_SPA_Cutoff && m_traitType == "binary"){
 
        if(!is_gtilde){
           t_gtilde.resize(m_n);
           getadjGFast(t_GVec, t_gtilde, iIndex);
 	  is_gtilde = true;
        }
+
+    if(!m_is_EmpSPA){
+
 	//int t_gtilden = t_gtilde.n_elem;
         p_iIndexComVecSize = double(iIndexComVecSize)/m_n;
    	m1 = dot(m_mu, t_gtilde);
@@ -573,12 +596,26 @@ if(!t_isER){
 	double tol0 = std::numeric_limits<double>::epsilon();
 	tol1 = std::pow(tol0, 0.25);
 	if(p_iIndexComVecSize >= 0.5){
-		std::cout << "SPA_fast" << std::endl;
+		//std::cout << "SPA_fast" << std::endl;
         	SPA_fast(m_mu, t_gtilde, q, qinv, pval_noadj, false, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, t_SPApval, t_isSPAConverge);
 	}else{
-		std::cout << "SPA" << std::endl;
+		//std::cout << "SPA" << std::endl;
 		SPA(m_mu, t_gtilde, q, qinv, pval_noadj, tol1, logp, m_traitType, t_SPApval, t_isSPAConverge);	
 	}
+
+	//std::cout << "t_SPApval " << t_SPApval << std::endl;
+   }else{ //if(!m_is_EmpSPA){
+	double g_altFreq_new = arma::mean(t_GVec)/2;
+        int g_N = t_GVec.n_elem;
+        //double t_Tstat_G = dot(t_GVec, m_res % m_varWeightsvec); 
+        //double t_Tstat_G = dot(t_gtilde, m_res % m_varWeightsvec); 
+        //t_Tstat_G = t_Tstat_G/m_tauvec[0];
+	//t_SPApval = EmpSPA_getMarkerPval(t_gtilde, t_Tstat_G, g_altFreq_new, g_N);
+	t_SPApval = EmpSPA_getMarkerPval(t_GVec, StdStat, g_altFreq_new, g_N);
+	//std::cout << "Empirical SPA p value " << t_SPApval << std::endl;   
+	//std::cout << "g_altFreq_new " << g_altFreq_new << std::endl;   
+   }	   
+
 
 
     	boost::math::normal ns;
@@ -594,8 +631,8 @@ if(!t_isER){
         } 
   }
    t_pval_noSPA = pval_noadj; 
-   //if(m_traitType!="quantitative"){
-   if(m_traitType=="binary"){
+   if(m_traitType!="quantitative"){
+   //if(m_traitType=="binary"){
         if(t_isSPAConverge){
                 t_pval = t_SPApval;
                 //t_pval = pval_noadj;
@@ -722,8 +759,8 @@ if(!t_isER){
   t_pval_noSPA_c = pval_noSPA_c; 
 
 
-    //if(m_traitType != "quantitative" && stat_c > std::pow(m_SPA_Cutoff,2)){
-    if(m_traitType == "binary" && stat_c > std::pow(m_SPA_Cutoff,2)){
+    if(m_traitType != "quantitative" && stat_c > std::pow(m_SPA_Cutoff,2)){
+    //if(m_traitType == "binary" && stat_c > std::pow(m_SPA_Cutoff,2)){
 	bool t_isSPAConverge_c;
 	double q_c, qinv_c, pval_noadj_c, SPApval_c;    
 	if(m_traitType == "binary"){
@@ -807,7 +844,7 @@ if(!t_isER){
         //t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
       }
     }
-    std::cout << "end of getPval" << std::endl;
+    //std::cout << "end of getPval" << std::endl;
 }
 
 
@@ -1018,7 +1055,8 @@ arma::vec SAIGEClass::getDiagOfSigma_V(){
 
         if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
 
-             diagVec = tauVal0/m_mu2;
+             //diagVec = tauVal0/m_mu2;
+             diagVec = 1/m_mu2;
              tauind = tauind + 1;
              //diagVecG = spV.diag();
              diagVec = diagVec + m_tauVal_sp;
@@ -1026,7 +1064,8 @@ arma::vec SAIGEClass::getDiagOfSigma_V(){
 
 
         }else{ //if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
-                diagVec = tauVal0/m_mu2;
+                //diagVec = tauVal0/m_mu2;
+                diagVec = 1/m_mu2;
                 //tauind = tauind + 1;
                 //diagVecG = spV.diag();
                 //diagVecG_I = diagVecG.elem(g_I_longl_vec);
@@ -1074,7 +1113,8 @@ arma::vec SAIGEClass::getCrossprod_V(arma::vec& bVec){
         unsigned int tau_ind = 0;
         if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){ //it must have specified GRM
                   crossProd1 = bVec;
-                  crossProdVec = tauVal0*(bVec % (1/m_mu2)) + m_tauVal_sp*crossProd1;
+                  //crossProdVec = tauVal0*(bVec % (1/m_mu2)) + m_tauVal_sp*crossProd1;
+                  crossProdVec = (bVec % (1/m_mu2)) + m_tauVal_sp*crossProd1;
                   tau_ind = tau_ind + 2;
         }else{
 
@@ -1082,7 +1122,8 @@ arma::vec SAIGEClass::getCrossprod_V(arma::vec& bVec){
 
                   GRM_I_bvec = Ibvec;
                   crossProd1 = g_I_longl_mat * GRM_I_bvec;
-                  crossProdVec = tauVal0*(bVec % (1/m_mu2)) + m_tauVal_sp*crossProd1;
+                  //crossProdVec = tauVal0*(bVec % (1/m_mu2)) + m_tauVal_sp*crossProd1;
+                  crossProdVec = (bVec % (1/m_mu2)) + m_tauVal_sp*crossProd1;
                 /*
                   tau_ind = tau_ind + 1 + 3 * (indforV - 1);
                   tau_ind = tau_ind + 1;
@@ -1167,5 +1208,168 @@ arma::vec SAIGEClass::getSigma_G_V(arma::vec & bVec, int maxiterPCG, double tolP
         Sigma_iG = getPCG1ofSigmaAndVector_V(bVec, maxiterPCG, tolPCG);
         return(Sigma_iG);
 }
+
+
+double SAIGEClass::EmpSPA_K_0(double t, 
+             int N0, 
+             double adjG0, 
+             arma::vec & adjG1)        // adjusted Genotype 
+{
+    double t_adjG0 = t * adjG0;
+    arma::vec t_adjG1 = t * adjG1;
+    double out = N0 * m_K_0_emp.getValue(t_adjG0) + arma::sum(m_K_0_emp.getVector(t_adjG1));
+    return out;
+}
+
+double SAIGEClass::EmpSPA_K_1(double t,
+             int N0, 
+             double adjG0, 
+             arma::vec & adjG1,        // adjusted Genotype
+             double q2)
+{
+    double t_adjG0 = t * adjG0;
+    arma::vec t_adjG1 = t * adjG1;
+    double out = N0 * adjG0 * m_K_1_emp.getValue(t_adjG0) + arma::sum(adjG1 % m_K_1_emp.getVector(t_adjG1)) - q2;
+    return out;
+}
+
+
+double SAIGEClass::EmpSPA_K_2(double t, 
+             int N0, 
+             double adjG0, 
+             arma::vec & adjG1)       // adjusted Genotype
+{
+    double t_adjG0 = t * adjG0;
+    arma::vec t_adjG1 = t * adjG1;
+    double out = N0 * pow(adjG0, 2) * m_K_2_emp.getValue(t_adjG0) + arma::sum(pow(adjG1, 2) % m_K_2_emp.getVector(t_adjG1));
+    return out;
+}
+
+Rcpp::List SAIGEClass::EmpSPA_fastgetroot_K1(double t_initX,
+                            int N0, 
+                            double adjG0, 
+                            arma::vec & adjG1,        // adjusted Genotype
+                            double q2)
+  {
+    double x = t_initX, oldX;
+    double K1 = 0, K2 = 0, oldK1;
+    double diffX = arma::datum::inf, oldDiffX;
+    bool converge = true;
+    double tol = 0.001;
+    int maxiter = 100;
+    int iter = 0;
+    
+    for(iter = 0; iter < maxiter; iter ++){
+      
+      oldX = x;
+      oldDiffX = diffX;
+      oldK1 = K1;
+      
+      K1 = EmpSPA_K_1(x, N0, adjG0, adjG1, q2);
+      K2 = EmpSPA_K_2(x, N0, adjG0, adjG1);
+      
+      diffX = -1 * K1 / K2;
+      
+      // Checked on 03/25/2021: Expected!!!!
+      // std::cout << "x:\t" << x << std::endl;
+      // std::cout << "K1:\t" << K1 << std::endl;
+      // std::cout << "arma::sign(K1):\t" << arma::sign(K1) << std::endl;
+      // std::cout << "arma::sign(oldK1):\t" << arma::sign(oldK1) << std::endl;
+      // std::cout << "K2:\t" << K2 << std::endl;
+      // std::cout << "diffX:\t" << diffX << std::endl;
+      
+      if(!std::isfinite(K1)){
+        // checked it on 07/05:
+        // if the solution 'x' tends to infinity, 'K2' tends to 0, and 'K1' tends to 0 very slowly.
+        // then we can set the one sided p value as 0 (instead of setting converge = F)
+        x = arma::datum::inf;
+        K2 = 0;
+        break;
+      }
+      
+      if(arma::sign(K1) != arma::sign(oldK1)){
+        while(std::abs(diffX) > std::abs(oldDiffX) - tol){
+          diffX = diffX / 2;
+        }
+      }
+      
+      if(std::abs(diffX) < tol) break;
+      
+      x = oldX + diffX;
+    }
+    
+    if(iter == maxiter) 
+      converge = false;
+
+    Rcpp::List yList = Rcpp::List::create(Rcpp::Named("root") = x,
+                                          Rcpp::Named("iter") = iter,
+                                          Rcpp::Named("converge") = converge,
+                                          Rcpp::Named("K2") = K2);
+    return yList;
+  }
+
+double SAIGEClass::EmpSPA_GetProb_SPA(double adjG0, 
+                     arma::vec & adjG1,
+                     int N0, 
+                     double q2, 
+                     bool lowerTail)
+  {
+    double initX = 0;
+    
+    // The following initial values are validated on 03/25/2021
+    if(q2 > 0) initX = 3;
+    if(q2 <= 0) initX = -3;
+    
+    Rcpp::List rootList = EmpSPA_fastgetroot_K1(initX, N0, adjG0, adjG1, q2);
+    double zeta = rootList["root"];
+    
+    double k1 = EmpSPA_K_0(zeta,  N0, adjG0, adjG1);
+    double k2 = EmpSPA_K_2(zeta,  N0, adjG0, adjG1);
+    double temp1 = zeta * q2 - k1;
+    
+    double w = arma::sign(zeta) * sqrt(2 * temp1);
+    double v = zeta * sqrt(k2);
+    
+    double pval = arma::normcdf(arma::sign(lowerTail-0.5) * (w + 1/w * log(v/w)));
+
+    return pval;
+  }
+
+double SAIGEClass::EmpSPA_getMarkerPval(arma::vec & t_g,
+                       double t_Tstat,
+		       double g_altFreq_new, 
+		       int g_N)
+{
+
+    // estimated variance after adjusting for covariates
+
+    arma::vec adjGVec2 = pow(t_g, 2);
+    double VarS = m_varResid * sum(adjGVec2) * m_varRatioVal;
+    double VarS_rawG = m_varResid*2*g_altFreq_new*(1-g_altFreq_new)*g_N * m_varRatioVal; 
+    //double t_zScore = t_Tstat / sqrt(VarS);
+    double t_zScore = t_Tstat;
+    //arma::vec adjGVecNorm = t_g / sqrt(VarS);
+    arma::vec adjGVecNorm = t_g / sqrt(sum(adjGVec2));
+    double pval_noEmpSPA = arma::normcdf(-1*std::abs(t_zScore))*2;
+    std::cout << "pval_noEmpSPA " << pval_noEmpSPA << std::endl;
+    std::cout << "t_Tstat " << t_Tstat << std::endl;
+    std::cout << "VarS " << VarS << std::endl;
+    std::cout << "VarS_rawG " << VarS_rawG << std::endl;
+    std::cout << "m_varResid " << m_varResid << std::endl;
+    std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
+
+    double varg = arma::mean(t_g);
+    std::cout << "varg " << varg << std::endl;
+
+    int N0 = 0;
+    double adjG0 = 0;   // since N0=0, this value actually does not matter
+
+    double pval1 = EmpSPA_GetProb_SPA(adjG0, adjGVecNorm, N0, std::abs(t_zScore), false);
+    double pval2 = EmpSPA_GetProb_SPA(adjG0, adjGVecNorm, N0, -1*std::abs(t_zScore), true);
+    double pval = pval1 + pval2;
+
+    return pval;
+  }
+
 
 }

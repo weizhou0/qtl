@@ -2,7 +2,9 @@
 
 #options(stringsAsFactors=F, scipen = 999)
 options(stringsAsFactors=F)
-library(SAIGE)
+#library(SAIGE)
+#library(SAIGE, lib.loc="/net/hunt/zhowei/project/imbalancedCaseCtrlMixedModel/Rpackage_SPAGMMAT/SAIGE_newgit/SAIGE_1.1.3/SAIGE/src/../../../install_1.1.3_Poisson3")
+library(SAIGE, lib.loc="~/install")
 BLASctl_installed <- require(RhpcBLASctl)
 library(optparse)
 library(data.table)

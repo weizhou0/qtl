@@ -36,7 +36,7 @@ removeLOCOResult = function(chromList, obj.glmm.null){
 }	
 
 
-ReadModel = function(GMMATmodelFile = "", chrom="", LOCO=TRUE, is_Firth_beta=FALSE){
+ReadModel = function(GMMATmodelFile = "", chrom="", LOCO=TRUE, is_Firth_beta=FALSE, is_EmpSPA=FALSE, espa_nt=9999, espa_range=c(-20,20)){
   # Check file existence
   Check_File_Exist(GMMATmodelFile, "GMMATmodelFile")
   if(!LOCO %in% c(TRUE, FALSE))
@@ -183,6 +183,39 @@ modglmm$obj_cc$res.out)
  if(is.null(modglmm$varWeights)){
 	modglmm$varWeights = rep(1, length(modglmm$y))
  }	 
+
+
+ if(is_EmpSPA){
+    idx0 = qcauchy(1:espa_nt/(espa_nt+1))
+    idx1 = idx0*max(espa_range)/max(idx0)
+    resid = modglmm$residuals
+    var_resid = var(resid)
+    cat("var_resid ", var_resid, "\n")
+    scaled_resid= as.numeric(resid) / as.numeric(sqrt(var_resid))
+
+    cumul<-NULL
+    for(id in idx1){
+      t<-id
+      e_resid<-exp(scaled_resid*t)
+      M0<-mean(e_resid)
+      M1<-mean(scaled_resid*e_resid)
+      M2<-mean(scaled_resid^2*e_resid)
+      k0<-log(M0)
+      k1<-M1/M0
+      k2<-(M0*M2-M1^2)/M0^2
+      cumul<-rbind(cumul, c(t, k0, k1, k2))
+    }
+    
+    #K_org_emp<-approxfun(cumul[,1], cumul[,2], rule=2)
+    #K_1_emp<-approxfun(cumul[,1], cumul[,3], rule=2)
+    #K_2_emp<-approxfun(cumul[,1], cumul[,4], rule=2)    
+    #modglmm$K_org_emp=K_org_emp
+    #modglmm$K_1_emp=K_1_emp
+    #modglmm$K_2_emp=K_2_emp
+  }else{
+    cumul = matrix(1:8, ncol=4)
+  }
+  modglmm$cumul = cumul
 
  return(modglmm)
 }

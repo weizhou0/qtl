@@ -4,11 +4,11 @@ Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG,
   mu = family$linkinv(eta0)
   mu.eta = family$mu.eta(eta0)
   Y = eta0 - offset + (y - mu)/mu.eta
-  if(is.null(var_weights)){
-  	sqrtW = mu.eta/sqrt(family$variance(mu))
-  }else{
-	sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
-  }	  
+  #if(is.null(var_weights)){
+  #	sqrtW = mu.eta/sqrt(family$variance(mu))
+  #}else{
+  sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+  #}	  
   W = sqrtW^2
 
 
@@ -40,16 +40,14 @@ Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG,
     print("y[2]")
     print(y[2])
 
-    if(is.null(var_weights)){
-        sqrtW = mu.eta/sqrt(family$variance(mu))
-    }else{
-        sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
-    }
-   W = sqrtW^2
-
+    #if(is.null(var_weights)){
+    #sqrtW = mu.eta/sqrt(family$variance(mu))
+    #}else{
+    sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+    #}
+    W = sqrtW^2
     #sqrtW = mu.eta/sqrt(family$variance(mu))
     #W = sqrtW^2
-
     if( max(abs(alpha - alpha0)/(abs(alpha) + abs(alpha0) + tol.coef))< tol.coef){
         break
     }
@@ -58,7 +56,8 @@ Get_Coef_multiV = function(y, X, tau, family, alpha0, eta0,  offset, maxiterPCG,
 
     print("alpha")
     print(alpha)
-    
+    #sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+    #W = sqrtW^2 
     re = list(Y=Y, alpha=alpha, eta=eta, W=W, cov=re.coef$cov, sqrtW=sqrtW, Sigma_iY = re.coef$Sigma_iY, Sigma_iX = re.coef$Sigma_iX, mu=mu)
 }
 

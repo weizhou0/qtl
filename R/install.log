@@ -1,0 +1,747 @@
+* installing *source* package ‘SAIGE’ ...
+staged installation is only possible with locking
+** using non-staged installation
+** libs
+g++ -std=gnu++11 -I"/usr/share/R/include" -DNDEBUG -I ../thirdParty/cget/include -I ../thirdParty/cget/lib -I ../thirdParty/cget/lib64 -D SQLITE_ENABLE_COLUMN_METADATA -O3 -fpic -Wall -Wextra -pedantic  -DARMA_64BIT_WORD=1 -D__STDC_FORMAT_MACROS -I'/net/hunt/zhowei/script/Rlibs/Rcpp/include' -I'/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include' -I'/net/hunt/zhowei/script/Rlibs/RcppParallel/include' -I'/net/hunt/zhowei/script/Rlibs/data.table/include' -I'/net/hunt/zhowei/script/Rlibs/SPAtest/include' -I'/net/hunt/zhowei/script/Rlibs/RcppEigen/include' -I'/net/hunt/zhowei/script/Rlibs/Matrix/include' -I'/usr/lib/R/library/methods/include' -I'/net/hunt/zhowei/script/Rlibs/BH/include' -I'/net/hunt/zhowei/script/Rlibs/optparse/include' -I'/net/hunt/zhowei/script/Rlibs/SKAT/include' -I'/net/hunt/zhowei/script/Rlibs/MetaSKAT/include' -I'/net/hunt/zhowei/script/Rlibs/qlcMatrix/include' -I'/net/hunt/zhowei/script/Rlibs/RhpcBLASctl/include' -I'/net/hunt/zhowei/script/Rlibs/RSQLite/include' -I'/net/mario/cluster/lib/R/site-library-bionic-40/dplyr/include' -I'/net/hunt/zhowei/script/Rlibs/nlme/include' -I'/net/hunt/zhowei/script/Rlibs/MASS/include'    -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-7BvS0x/r-base-4.0.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c Main.cpp -o Main.o
+In file included from ../thirdParty/cget/include/savvy/site_info.hpp:12:0,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:10,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/savvy/typed_value.hpp:32:43: warning: overflow in implicit constant conversion [-Woverflow]
+   static const std::int8_t missing_int8 = 0x80;
+                                           ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp:33:45: warning: overflow in implicit constant conversion [-Woverflow]
+   static const std::int16_t missing_int16 = 0x8000;
+                                             ^~~~~~
+../thirdParty/cget/include/savvy/typed_value.hpp:37:49: warning: overflow in implicit constant conversion [-Woverflow]
+   static const std::int8_t end_of_vector_int8 = 0x81;
+                                                 ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp:38:51: warning: overflow in implicit constant conversion [-Woverflow]
+   static const std::int16_t end_of_vector_int16 = 0x8001;
+                                                   ^~~~~~
+In file included from ../thirdParty/cget/include/savvy/site_info.hpp:12:0,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:10,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function ‘static T savvy::typed_value::missing_value() [with T = signed char]’:
+../thirdParty/cget/include/savvy/typed_value.hpp:1882:85: warning: overflow in implicit constant conversion [-Woverflow]
+   template <> inline std::int8_t typed_value::missing_value<std::int8_t>() { return 0x80; }
+                                                                                     ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function ‘static T savvy::typed_value::missing_value() [with T = short int]’:
+../thirdParty/cget/include/savvy/typed_value.hpp:1883:87: warning: overflow in implicit constant conversion [-Woverflow]
+   template <> inline std::int16_t typed_value::missing_value<std::int16_t>() { return 0x8000; }
+                                                                                       ^~~~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function ‘static T savvy::typed_value::end_of_vector_value() [with T = signed char]’:
+../thirdParty/cget/include/savvy/typed_value.hpp:1910:91: warning: overflow in implicit constant conversion [-Woverflow]
+   template <> inline std::int8_t typed_value::end_of_vector_value<std::int8_t>() { return 0x81; }
+                                                                                           ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function ‘static T savvy::typed_value::end_of_vector_value() [with T = short int]’:
+../thirdParty/cget/include/savvy/typed_value.hpp:1911:93: warning: overflow in implicit constant conversion [-Woverflow]
+   template <> inline std::int16_t typed_value::end_of_vector_value<std::int16_t>() { return 0x8001; }
+                                                                                             ^~~~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function ‘static T savvy::typed_value::max_reserved_value() [with T = signed char]’:
+../thirdParty/cget/include/savvy/typed_value.hpp:1938:90: warning: overflow in implicit constant conversion [-Woverflow]
+   template <> inline std::int8_t typed_value::max_reserved_value<std::int8_t>() { return 0x87; }
+                                                                                          ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function ‘static T savvy::typed_value::max_reserved_value() [with T = short int]’:
+../thirdParty/cget/include/savvy/typed_value.hpp:1939:92: warning: overflow in implicit constant conversion [-Woverflow]
+   template <> inline std::int16_t typed_value::max_reserved_value<std::int16_t>() { return 0x8007; }
+                                                                                            ^~~~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function ‘static typename std::enable_if<std::is_signed<typename T::value_type>::value, unsigned int>::type savvy::typed_value::internal::get_typed_value_size(const T&)’:
+../thirdParty/cget/include/savvy/typed_value.hpp:3876:5: warning: this ‘else’ clause does not guard... [-Wmisleading-indentation]
+     else
+     ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp:3879:7: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘else’
+       ret += vec.size() * sizeof(typename T::value_type);
+       ^~~
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10:0,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In constructor ‘shrinkwrap::gz::ibuf::ibuf(FILE*)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:174:16: warning: ‘shrinkwrap::gz::ibuf::zstrm_’ will be initialized after [-Wreorder]
+       z_stream zstrm_;
+                ^~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:167:33: warning:   ‘std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::gz::ibuf::compressed_buffer_’ [-Wreorder]
+       std::vector<std::uint8_t> compressed_buffer_;
+                                 ^~~~~~~~~~~~~~~~~~
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10:0,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:21:7: warning:   when initialized here [-Wreorder]
+       ibuf(FILE* fp)
+       ^~~~
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10:0,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:178:13: warning: ‘shrinkwrap::gz::ibuf::fp_’ will be initialized after [-Wreorder]
+       FILE* fp_;
+             ^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:169:19: warning:   ‘std::size_t shrinkwrap::gz::ibuf::put_back_size_’ [-Wreorder]
+       std::size_t put_back_size_;
+                   ^~~~~~~~~~~~~~
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10:0,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:21:7: warning:   when initialized here [-Wreorder]
+       ibuf(FILE* fp)
+       ^~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::avail_in’ [-Wmissing-field-initializers]
+         at_block_boundary_(false)
+                                 ^
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::total_in’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::next_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::avail_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::total_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::msg’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::state’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::zalloc’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::zfree’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::opaque’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::data_type’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::adler’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member ‘z_stream_s::reserved’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function ‘void shrinkwrap::gz::ibuf::move(shrinkwrap::gz::ibuf&&)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::avail_in’ [-Wmissing-field-initializers]
+         src.zstrm_ = {0};
+                        ^
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::total_in’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::next_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::avail_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::total_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::msg’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::state’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::zalloc’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::zfree’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::opaque’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::data_type’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::adler’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member ‘z_stream_s::reserved’ [-Wmissing-field-initializers]
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10:0,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function ‘virtual std::basic_streambuf<char>::int_type shrinkwrap::gz::ibuf::underflow()’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:146:36: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+             if ((egptr() - gptr()) < advance_amount)
+                 ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function ‘virtual std::basic_streambuf<char>::pos_type shrinkwrap::gz::ibuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:161:73: warning: unused parameter ‘off’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+                                                                         ^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:161:101: warning: unused parameter ‘way’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+                                                                                                     ^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:161:130: warning: unused parameter ‘which’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+                                                                                                                                  ^~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In constructor ‘shrinkwrap::gz::obuf::obuf(FILE*)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:341:13: warning: ‘shrinkwrap::gz::obuf::fp_’ will be initialized after [-Wreorder]
+       FILE* fp_;
+             ^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:338:33: warning:   ‘std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::gz::obuf::compressed_buffer_’ [-Wreorder]
+       std::vector<std::uint8_t> compressed_buffer_;
+                                 ^~~~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:184:7: warning:   when initialized here [-Wreorder]
+       obuf(FILE* fp)
+       ^~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::avail_in’ [-Wmissing-field-initializers]
+         decompressed_buffer_(default_block_size)
+                                                ^
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::total_in’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::next_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::avail_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::total_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::msg’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::state’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::zalloc’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::zfree’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::opaque’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::data_type’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::adler’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member ‘z_stream_s::reserved’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function ‘virtual std::basic_streambuf<char>::pos_type shrinkwrap::bgzf::ibuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:439:130: warning: unused parameter ‘which’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which) // Supports tellg for virtual offset.
+                                                                                                                                  ^~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function ‘virtual std::basic_streambuf<char>::pos_type shrinkwrap::bgzf::ibuf::seekpos(std::basic_streambuf<char>::pos_type, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:462:102: warning: unused parameter ‘which’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekpos(std::streambuf::pos_type pos, std::ios_base::openmode which)
+                                                                                                      ^~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In constructor ‘shrinkwrap::bgzf::obuf::obuf(FILE*, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:723:13: warning: ‘shrinkwrap::bgzf::obuf::fp_’ will be initialized after [-Wreorder]
+       FILE* fp_;
+             ^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:721:33: warning:   ‘std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::bgzf::obuf::compressed_buffer_’ [-Wreorder]
+       std::vector<std::uint8_t> compressed_buffer_;
+                                 ^~~~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:491:7: warning:   when initialized here [-Wreorder]
+       obuf(FILE* fp, std::ios::openmode mode = std::ios::out)
+       ^~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:509:18: warning: unused variable ‘has_eof’ [-Wunused-variable]
+             bool has_eof = false;
+                  ^~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function ‘int shrinkwrap::bgzf::obuf::write_compressed_block(uint32_t)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::avail_in’ [-Wmissing-field-initializers]
+           zs = {0};
+                  ^
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::total_in’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::next_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::avail_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::total_out’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::msg’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::state’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::zalloc’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::zfree’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::opaque’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::data_type’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::adler’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member ‘z_stream_s::reserved’ [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:633:23: warning: unused variable ‘buffer_size’ [-Wunused-variable]
+         std::uint32_t buffer_size = bgzf_block_size;
+                       ^~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In constructor ‘shrinkwrap::bgzf::ostream::ostream(const string&, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:760:81: warning: unused parameter ‘mode’ [-Wunused-parameter]
+       ostream(const std::string& file_path, std::ios::openmode mode = std::ios::out)
+                                                                                 ^~~
+In file included from /usr/include/c++/7/cassert:44:0,
+                 from ../thirdParty/cget/include/savvy/s1r.hpp:22,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:14,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/savvy/s1r.hpp: In member function ‘void savvy::s1r::reader::init()’:
+../thirdParty/cget/include/savvy/s1r.hpp:669:101: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+             assert(total_file_size - (block_count * block_size + footer.size() + tree_details_size) >= 0ll);
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16:0,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In constructor ‘shrinkwrap::zstd::ibuf::ibuf(FILE*)’:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:184:21: warning: ‘shrinkwrap::zstd::ibuf::input_’ will be initialized after [-Wreorder]
+       ZSTD_inBuffer input_;
+                     ^~~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:181:33: warning:   ‘std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::zstd::ibuf::compressed_buffer_’ [-Wreorder]
+       std::vector<std::uint8_t> compressed_buffer_;
+                                 ^~~~~~~~~~~~~~~~~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16:0,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:21:7: warning:   when initialized here [-Wreorder]
+       ibuf(FILE* fp)
+       ^~~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16:0,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:187:19: warning: ‘shrinkwrap::zstd::ibuf::current_block_position_’ will be initialized after [-Wreorder]
+       std::size_t current_block_position_;
+                   ^~~~~~~~~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:185:13: warning:   ‘FILE* shrinkwrap::zstd::ibuf::fp_’ [-Wreorder]
+       FILE* fp_;
+             ^~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16:0,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:21:7: warning:   when initialized here [-Wreorder]
+       ibuf(FILE* fp)
+       ^~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:28:15: warning: missing initializer for member ‘ZSTD_inBuffer_s::size’ [-Wmissing-field-initializers]
+         fp_(fp)
+               ^
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:28:15: warning: missing initializer for member ‘ZSTD_inBuffer_s::pos’ [-Wmissing-field-initializers]
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16:0,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In member function ‘virtual std::basic_streambuf<char>::pos_type shrinkwrap::zstd::ibuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:141:130: warning: unused parameter ‘which’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+                                                                                                                                  ^~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In member function ‘virtual std::basic_streambuf<char>::pos_type shrinkwrap::zstd::ibuf::seekpos(std::basic_streambuf<char>::pos_type, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:159:102: warning: unused parameter ‘which’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekpos(std::streambuf::pos_type pos, std::ios_base::openmode which)
+                                                                                                      ^~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In constructor ‘shrinkwrap::zstd::obuf::obuf(FILE*, int)’:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:373:13: warning: ‘shrinkwrap::zstd::obuf::fp_’ will be initialized after [-Wreorder]
+       FILE* fp_;
+             ^~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:368:33: warning:   ‘std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::zstd::obuf::compressed_buffer_’ [-Wreorder]
+       std::vector<std::uint8_t> compressed_buffer_;
+                                 ^~~~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:193:7: warning:   when initialized here [-Wreorder]
+       obuf(FILE* fp, int compression_level)
+       ^~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In member function ‘virtual std::basic_streambuf<char>::pos_type shrinkwrap::zstd::obuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:307:130: warning: unused parameter ‘which’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+                                                                                                                                  ^~~~~
+In file included from /usr/include/c++/7/cassert:44:0,
+                 from ../thirdParty/cget/include/savvy/s1r.hpp:22,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:14,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In member function ‘virtual int shrinkwrap::zstd::obuf::sync()’:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:357:49: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+           assert(ftell(fp_) == -1 || ftell(fp_) == total_compressed_bytes_written_); // ftell() returns -1 when output file is piped stream
+                                      ~~~~~~~~~~~^~~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:18:0,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/stdio.hpp: In member function ‘virtual std::basic_streambuf<char>::pos_type shrinkwrap::stdio::filebuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/stdio.hpp:70:130: warning: unused parameter ‘which’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+                                                                                                                                  ^~~~~
+../thirdParty/cget/include/shrinkwrap/stdio.hpp: In member function ‘virtual std::basic_streambuf<char>::pos_type shrinkwrap::stdio::filebuf::seekpos(std::basic_streambuf<char>::pos_type, std::ios_base::openmode)’:
+../thirdParty/cget/include/shrinkwrap/stdio.hpp:85:102: warning: unused parameter ‘which’ [-Wunused-parameter]
+       virtual std::streambuf::pos_type seekpos(std::streambuf::pos_type pos, std::ios_base::openmode which)
+                                                                                                      ^~~~~
+In file included from /net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/shared_ptr.hpp:17:0,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/shared_ptr.hpp:17,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/detail/shared_count.hpp: At global scope:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/detail/shared_count.hpp:361:33: warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+     explicit shared_count( std::auto_ptr<Y> & r ): pi_( new sp_counted_impl_p<Y>( r.get() ) )
+                                 ^~~~~~~~
+In file included from /usr/include/c++/7/bits/locale_conv.h:41:0,
+                 from /usr/include/c++/7/locale:43,
+                 from /usr/include/c++/7/iomanip:43,
+                 from /net/hunt/zhowei/script/Rlibs/Rcpp/include/RcppCommon.h:53,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/usr/include/c++/7/bits/unique_ptr.h:51:28: note: declared here
+   template<typename> class auto_ptr;
+                            ^~~~~~~~
+In file included from /net/hunt/zhowei/script/Rlibs/BH/include/boost/shared_ptr.hpp:17:0,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/shared_ptr.hpp:250:65: warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+ template< class T, class R > struct sp_enable_if_auto_ptr< std::auto_ptr< T >, R >
+                                                                 ^~~~~~~~
+In file included from /usr/include/c++/7/bits/locale_conv.h:41:0,
+                 from /usr/include/c++/7/locale:43,
+                 from /usr/include/c++/7/iomanip:43,
+                 from /net/hunt/zhowei/script/Rlibs/Rcpp/include/RcppCommon.h:53,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/usr/include/c++/7/bits/unique_ptr.h:51:28: note: declared here
+   template<typename> class auto_ptr;
+                            ^~~~~~~~
+In file included from /net/hunt/zhowei/script/Rlibs/BH/include/boost/shared_ptr.hpp:17:0,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/shared_ptr.hpp:507:31: warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+     explicit shared_ptr( std::auto_ptr<Y> & r ): px(r.get()), pn()
+                               ^~~~~~~~
+In file included from /usr/include/c++/7/bits/locale_conv.h:41:0,
+                 from /usr/include/c++/7/locale:43,
+                 from /usr/include/c++/7/iomanip:43,
+                 from /net/hunt/zhowei/script/Rlibs/Rcpp/include/RcppCommon.h:53,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/usr/include/c++/7/bits/unique_ptr.h:51:28: note: declared here
+   template<typename> class auto_ptr;
+                            ^~~~~~~~
+In file included from /net/hunt/zhowei/script/Rlibs/BH/include/boost/shared_ptr.hpp:17:0,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/shared_ptr.hpp:520:22: warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+     shared_ptr( std::auto_ptr<Y> && r ): px(r.get()), pn()
+                      ^~~~~~~~
+In file included from /usr/include/c++/7/bits/locale_conv.h:41:0,
+                 from /usr/include/c++/7/locale:43,
+                 from /usr/include/c++/7/iomanip:43,
+                 from /net/hunt/zhowei/script/Rlibs/Rcpp/include/RcppCommon.h:53,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/usr/include/c++/7/bits/unique_ptr.h:51:28: note: declared here
+   template<typename> class auto_ptr;
+                            ^~~~~~~~
+In file included from /net/hunt/zhowei/script/Rlibs/BH/include/boost/shared_ptr.hpp:17:0,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/shared_ptr.hpp:603:34: warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+     shared_ptr & operator=( std::auto_ptr<Y> & r )
+                                  ^~~~~~~~
+In file included from /usr/include/c++/7/bits/locale_conv.h:41:0,
+                 from /usr/include/c++/7/locale:43,
+                 from /usr/include/c++/7/iomanip:43,
+                 from /net/hunt/zhowei/script/Rlibs/Rcpp/include/RcppCommon.h:53,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/usr/include/c++/7/bits/unique_ptr.h:51:28: note: declared here
+   template<typename> class auto_ptr;
+                            ^~~~~~~~
+In file included from /net/hunt/zhowei/script/Rlibs/BH/include/boost/shared_ptr.hpp:17:0,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/shared_ptr.hpp:612:34: warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+     shared_ptr & operator=( std::auto_ptr<Y> && r )
+                                  ^~~~~~~~
+In file included from /usr/include/c++/7/bits/locale_conv.h:41:0,
+                 from /usr/include/c++/7/locale:43,
+                 from /usr/include/c++/7/iomanip:43,
+                 from /net/hunt/zhowei/script/Rlibs/Rcpp/include/RcppCommon.h:53,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/usr/include/c++/7/bits/unique_ptr.h:51:28: note: declared here
+   template<typename> class auto_ptr;
+                            ^~~~~~~~
+In file included from /net/hunt/zhowei/script/Rlibs/BH/include/boost/shared_ptr.hpp:17:0,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/shared_ptr.hpp: In member function ‘boost::shared_ptr<T>& boost::shared_ptr<T>::operator=(std::auto_ptr<_Up>&&)’:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/smart_ptr/shared_ptr.hpp:614:38: warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+         this_type( static_cast< std::auto_ptr<Y> && >( r ) ).swap( *this );
+                                      ^~~~~~~~
+In file included from /usr/include/c++/7/bits/locale_conv.h:41:0,
+                 from /usr/include/c++/7/locale:43,
+                 from /usr/include/c++/7/iomanip:43,
+                 from /net/hunt/zhowei/script/Rlibs/Rcpp/include/RcppCommon.h:53,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/usr/include/c++/7/bits/unique_ptr.h:51:28: note: declared here
+   template<typename> class auto_ptr;
+                            ^~~~~~~~
+In file included from /net/hunt/zhowei/script/Rlibs/BH/include/boost/bind/mem_fn.hpp:25:0,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/mem_fn.hpp:22,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/function/detail/prologue.hpp:18,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/function.hpp:30,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/algorithm/string/detail/find_iterator.hpp:18,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/algorithm/string/find_iterator.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/algorithm/string/iter_find.hpp:27,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/algorithm/string/split.hpp:16,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/algorithm/string.hpp:23,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/tz_db_base.hpp:24,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/tz_database.hpp:14,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time/local_time/local_time.hpp:19,
+                 from /net/hunt/zhowei/script/Rlibs/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/get_pointer.hpp: At global scope:
+/net/hunt/zhowei/script/Rlibs/BH/include/boost/get_pointer.hpp:48:40: warning: ‘template<class> class std::auto_ptr’ is deprecated [-Wdeprecated-declarations]
+ template<class T> T * get_pointer(std::auto_ptr<T> const& p)
+                                        ^~~~~~~~
+In file included from /usr/include/c++/7/bits/locale_conv.h:41:0,
+                 from /usr/include/c++/7/locale:43,
+                 from /usr/include/c++/7/iomanip:43,
+                 from /net/hunt/zhowei/script/Rlibs/Rcpp/include/RcppCommon.h:53,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/usr/include/c++/7/bits/unique_ptr.h:51:28: note: declared here
+   template<typename> class auto_ptr;
+                            ^~~~~~~~
+Main.cpp: In function ‘void mainMarkerInCPP(std::__cxx11::string&, std::__cxx11::string&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, bool&, bool&, bool&)’:
+Main.cpp:330:12: warning: unused variable ‘isEndFile’ [-Wunused-variable]
+       bool isEndFile = check_Vcf_end();
+            ^~~~~~~~~
+Main.cpp:446:48: error: conversion from ‘arma::enable_if2<true, const arma::mtOp<long long unsigned int, arma::mtOp<long long unsigned int, arma::Col<double>, arma::op_rel_noteq>, arma::op_find_simple> >::result {aka const arma::mtOp<long long unsigned int, arma::mtOp<long long unsigned int, arma::Col<double>, arma::op_rel_noteq>, arma::op_find_simple>}’ to non-scalar type ‘arma::ivec {aka arma::Col<long long int>}’ requested
+   arma::ivec indexZeroVec_arma_orig= arma::find(t_GVec != 0);
+                                      ~~~~~~~~~~^~~~~~~~~~~~~
+Main.cpp:447:63: error: no matching function for call to ‘arma::Col<double>::elem(arma::ivec&)’
+  arma::vec t_GVec_nonzero = t_GVec.elem(indexZeroVec_arma_orig);
+                                                               ^
+In file included from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo:146:0,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:48,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo_bits/Mat_bones.hpp:252:64: note: candidate: template<class T1> arma::subview_elem1<eT, T1> arma::Mat<eT>::elem(const arma::Base<long long unsigned int, T1>&) [with T1 = T1; eT = double]
+   template<typename T1> arma_inline       subview_elem1<eT,T1> elem(const Base<uword,T1>& a);
+                                                                ^~~~
+/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo_bits/Mat_bones.hpp:252:64: note:   template argument deduction/substitution failed:
+Main.cpp:447:63: note:   mismatched types ‘long long unsigned int’ and ‘long long int’
+  arma::vec t_GVec_nonzero = t_GVec.elem(indexZeroVec_arma_orig);
+                                                               ^
+Main.cpp:447:63: note:   ‘arma::ivec {aka arma::Col<long long int>}’ is not derived from ‘const arma::Base<long long unsigned int, T1>’
+In file included from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo:146:0,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:48,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo_bits/Mat_bones.hpp:253:64: note: candidate: template<class T1> const arma::subview_elem1<eT, T1> arma::Mat<eT>::elem(const arma::Base<long long unsigned int, T1>&) const [with T1 = T1; eT = double]
+   template<typename T1> arma_inline const subview_elem1<eT,T1> elem(const Base<uword,T1>& a) const;
+                                                                ^~~~
+/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo_bits/Mat_bones.hpp:253:64: note:   template argument deduction/substitution failed:
+Main.cpp:447:63: note:   mismatched types ‘long long unsigned int’ and ‘long long int’
+  arma::vec t_GVec_nonzero = t_GVec.elem(indexZeroVec_arma_orig);
+                                                               ^
+Main.cpp:447:63: note:   ‘arma::ivec {aka arma::Col<long long int>}’ is not derived from ‘const arma::Base<long long unsigned int, T1>’
+In file included from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo:146:0,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:48,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo_bits/Mat_bones.hpp:259:80: note: candidate: template<class T1, class T2> arma::subview_elem2<eT, T1, T2> arma::Mat<eT>::elem(const arma::Base<long long unsigned int, T1>&, const arma::Base<long long unsigned int, T2>&) [with T1 = T1; T2 = T2; eT = double]
+   template<typename T1, typename T2> arma_inline       subview_elem2<eT,T1,T2> elem(const Base<uword,T1>& ri, const Base<uword,T2>& ci);
+                                                                                ^~~~
+/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo_bits/Mat_bones.hpp:259:80: note:   template argument deduction/substitution failed:
+Main.cpp:447:63: note:   mismatched types ‘long long unsigned int’ and ‘long long int’
+  arma::vec t_GVec_nonzero = t_GVec.elem(indexZeroVec_arma_orig);
+                                                               ^
+Main.cpp:447:63: note:   ‘arma::ivec {aka arma::Col<long long int>}’ is not derived from ‘const arma::Base<long long unsigned int, T1>’
+In file included from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo:146:0,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadilloForward.h:48,
+                 from /net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo_bits/Mat_bones.hpp:260:80: note: candidate: template<class T1, class T2> const arma::subview_elem2<eT, T1, T2> arma::Mat<eT>::elem(const arma::Base<long long unsigned int, T1>&, const arma::Base<long long unsigned int, T2>&) const [with T1 = T1; T2 = T2; eT = double]
+   template<typename T1, typename T2> arma_inline const subview_elem2<eT,T1,T2> elem(const Base<uword,T1>& ri, const Base<uword,T2>& ci) const;
+                                                                                ^~~~
+/net/hunt/zhowei/script/Rlibs/RcppArmadillo/include/armadillo_bits/Mat_bones.hpp:260:80: note:   template argument deduction/substitution failed:
+Main.cpp:447:63: note:   mismatched types ‘long long unsigned int’ and ‘long long int’
+  arma::vec t_GVec_nonzero = t_GVec.elem(indexZeroVec_arma_orig);
+                                                               ^
+Main.cpp:447:63: note:   ‘arma::ivec {aka arma::Col<long long int>}’ is not derived from ‘const arma::Base<long long unsigned int, T1>’
+Main.cpp:272:75: warning: unused variable ‘N_case_hom’ [-Wunused-variable]
+     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+                                                                           ^~~~~~~~~~
+Main.cpp:272:87: warning: unused variable ‘N_ctrl_het’ [-Wunused-variable]
+     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+                                                                                       ^~~~~~~~~~
+Main.cpp:272:99: warning: unused variable ‘N_case_het’ [-Wunused-variable]
+     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+                                                                                                   ^~~~~~~~~~
+Main.cpp:272:111: warning: unused variable ‘N_ctrl_hom’ [-Wunused-variable]
+     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+                                                                                                               ^~~~~~~~~~
+Main.cpp:274:34: warning: unused variable ‘N’ [-Wunused-variable]
+     uint32_t pd, N_case, N_ctrl, N;
+                                  ^
+Main.cpp: In function ‘void setVCFobjInCPP(std::__cxx11::string, std::__cxx11::string, std::__cxx11::string, std::vector<std::__cxx11::basic_string<char> >&)’:
+Main.cpp:911:6: warning: unused variable ‘isEnd’ [-Wunused-variable]
+ bool isEnd = ptr_gVCFobj->check_iterator_end();
+      ^~~~~
+Main.cpp: In function ‘Rcpp::List mainRegionInCPP(std::__cxx11::string, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, arma::mat&, arma::vec&, std::__cxx11::string, std::__cxx11::string, unsigned int, arma::mat&, arma::mat&, std::__cxx11::string, bool, arma::vec&, arma::vec&, bool, bool, std::vector<std::__cxx11::basic_string<char> >&, std::__cxx11::string, bool, bool)’:
+Main.cpp:1549:11: warning: unused variable ‘imputeInfo’ [-Wunused-variable]
+    double imputeInfo = 1;
+           ^~~~~~~~~~
+Main.cpp:1855:13: warning: unused variable ‘n’ [-Wunused-variable]
+         int n = genoSumVec.size();
+             ^
+Main.cpp:1872:16: warning: unused variable ‘missingRate’ [-Wunused-variable]
+         double missingRate = 0;
+                ^~~~~~~~~~~
+Main.cpp:1873:16: warning: unused variable ‘imputeInfo’ [-Wunused-variable]
+         double imputeInfo = 1;
+                ^~~~~~~~~~
+Main.cpp:1875:14: warning: unused variable ‘flip’ [-Wunused-variable]
+         bool flip = false;
+              ^~~~
+Main.cpp:1878:16: warning: unused variable ‘w0’ [-Wunused-variable]
+         double w0;
+                ^~
+Main.cpp:1128:10: warning: unused variable ‘MACgroup’ [-Wunused-variable]
+   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+          ^~~~~~~~
+Main.cpp:1128:69: warning: unused variable ‘N_case_hom’ [-Wunused-variable]
+   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+                                                                     ^~~~~~~~~~
+Main.cpp:1128:81: warning: unused variable ‘N_ctrl_het’ [-Wunused-variable]
+   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+                                                                                 ^~~~~~~~~~
+Main.cpp:1128:93: warning: unused variable ‘N_case_het’ [-Wunused-variable]
+   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+                                                                                             ^~~~~~~~~~
+Main.cpp:1128:105: warning: unused variable ‘N_ctrl_hom’ [-Wunused-variable]
+   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+                                                                                                         ^~~~~~~~~~
+Main.cpp:1129:28: warning: unused variable ‘N’ [-Wunused-variable]
+   uint32_t N_case, N_ctrl, N;
+                            ^
+Main.cpp: In function ‘arma::vec fast_logistf_fit(arma::mat&, arma::vec&, arma::vec&, arma::vec&, bool, arma::uvec&, arma::vec, int, int, int, double, double, double, bool&)’:
+Main.cpp:2351:16: warning: unused parameter ‘col_fit’ [-Wunused-parameter]
+   arma::uvec & col_fit,
+                ^~~~~~~
+Main.cpp:2355:6: warning: unused parameter ‘maxhs’ [-Wunused-parameter]
+  int maxhs,
+      ^~~~~
+Main.cpp:2356:9: warning: unused parameter ‘lconv’ [-Wunused-parameter]
+  double lconv,
+         ^~~~~
+Main.cpp: In function ‘int writeOutfile_singleInGroup(bool, bool, bool, bool, int, int, std::__cxx11::string, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<bool>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<unsigned int>&, std::vector<unsigned int>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<unsigned int>&, std::ofstream&)’:
+Main.cpp:2821:30: warning: unused parameter ‘t_isFirth’ [-Wunused-parameter]
+                         bool t_isFirth,
+                              ^~~~~~~~~
+Main.cpp:2822:30: warning: unused parameter ‘mFirth’ [-Wunused-parameter]
+                          int mFirth,
+                              ^~~~~~
+Main.cpp:2823:30: warning: unused parameter ‘mFirthConverge’ [-Wunused-parameter]
+                          int mFirthConverge,
+                              ^~~~~~~~~~~~~~
+Main.cpp: In function ‘arma::fvec getDiagOfSigma_multiV(arma::fvec&, arma::fvec&, bool)’:
+Main.cpp:3271:32: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(unsigned int i=0; i< Nnomissing; i++){
+                               ~^~~~~~~~~~~~
+Main.cpp: In function ‘void setStartEndIndex(int, int, int)’:
+Main.cpp:3445:14: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         if(i < startIndex || i > endIndex){
+            ~~^~~~~~~~~~~~
+Main.cpp:3445:32: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         if(i < startIndex || i > endIndex){
+                              ~~^~~~~~~~~~
+Main.cpp: In function ‘Rcpp::List fitglmmaiRPCG_multiV(arma::fvec&, arma::fmat&, arma::fvec&, arma::fvec&, arma::ivec&, arma::fvec&, arma::fmat&, arma::fmat&, int, int, float, float, float, bool)’:
+Main.cpp:3545:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(int i=0; i<k1; i++){
+                      ~^~~
+Main.cpp:3506:13: warning: unused variable ‘q2’ [-Wunused-variable]
+         int q2 = arma::sum(fixtauVec==0);
+             ^~
+Main.cpp: In function ‘arma::ivec updatefixrhoidx0(arma::fvec&, float)’:
+Main.cpp:3786:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(int i=0; i<g_covarianceidxMat.n_rows; i++){
+                      ~^~~~~~~~~~~~~~~~~~~~~~~~~~
+Main.cpp: In function ‘arma::ivec tauUpdateValue(arma::fvec&)’:
+Main.cpp:3807:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(int i=0; i<g_covarianceidxMat.n_rows; i++){
+                      ~^~~~~~~~~~~~~~~~~~~~~~~~~~
+Main.cpp:3806:54: warning: unused variable ‘tau0temp’ [-Wunused-variable]
+         float tau0_x1, tau0_x2, tau0_x3, tau0_x2_x3, tau0temp;
+                                                      ^~~~~~~~
+Main.cpp: In function ‘Rcpp::List getAIScore_multiV(arma::fvec&, arma::fmat&, arma::fvec&, arma::fvec&, arma::ivec&, arma::fvec&, arma::fmat&, arma::fmat&, int, int, float, float, bool)’:
+Main.cpp:3868:31: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                 for(int i=0; i<k1; i++){
+                              ~^~~
+Main.cpp:3913:33: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                   for(int i=0; i<k1; i++){
+                                ~^~~
+Main.cpp:3968:33: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                   for(int i=0; i<k1; i++){
+                                ~^~~
+Main.cpp:3829:13: warning: unused variable ‘q2’ [-Wunused-variable]
+         int q2 = arma::sum(fixtauVec==0);
+             ^~
+Main.cpp: In function ‘arma::fvec GetTrace_multiV(arma::fmat, arma::fmat&, arma::fvec&, arma::fvec&, arma::ivec&, arma::fmat&, int, int, float, float, bool)’:
+Main.cpp:4139:41: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                           for(int j=2; j<k1;j++){
+                                        ~^~~
+Main.cpp:4146:20: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+      for(int j=2; j<k1;j++){
+                   ~^~~
+Main.cpp:4176:47: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                                 for(int j=3; j<k1;j++){
+                                              ~^~~
+Main.cpp:4192:47: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                                 for(int j=2; j<k1;j++){
+                                              ~^~~
+Main.cpp:4243:41: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                                 while(j < k1){
+                                       ~~^~~~
+Main.cpp:4292:41: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                                 while(j < k1){
+                                       ~~^~~~
+Main.cpp:4063:61: warning: unused parameter ‘Xmat’ [-Wunused-parameter]
+ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec & fixtauVec, arma::fmat& cov1,  int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
+                                                             ^~~~
+Main.cpp: In function ‘arma::fvec get_GRMdiagVec()’:
+Main.cpp:4442:7: warning: unused variable ‘mMarker’ [-Wunused-variable]
+   int mMarker = gettotalMarker();
+       ^~~~~~~
+Main.cpp: In function ‘void set_Diagof_StdGeno_LOCO()’:
+Main.cpp:4472:18: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+ for(size_t k=0; k< chrlength; k++){
+                 ~^~~~~~~~~~~
+Main.cpp: In function ‘Rcpp::List createSparseKin(arma::fvec&, float, arma::fvec&, arma::fvec&)’:
+Main.cpp:4661:32: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(unsigned int i=0; i< Ntotal; i++){
+                               ~^~~~~~~~
+Main.cpp:4662:41: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+               for(unsigned int j = i; j < Ntotal; j++){
+                                       ~~^~~~~~~~
+Main.cpp:4686:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(size_t i=0; i< Mmarker; i++){
+                         ~^~~~~~~~~
+Main.cpp:4651:16: warning: unused variable ‘sizeTemp’ [-Wunused-variable]
+         size_t sizeTemp;
+                ^~~~~~~~
+Main.cpp:4652:15: warning: unused variable ‘kinValue’ [-Wunused-variable]
+         float kinValue;
+               ^~~~~~~~
+Main.cpp: In function ‘Rcpp::List refineKin(float)’:
+Main.cpp:4735:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(size_t i=0; i< Mmarker; i++){
+                         ~^~~~~~~~~
+Main.cpp: In function ‘arma::fvec getDiagOfSigma_noV(arma::fvec&, arma::fvec&, bool)’:
+Main.cpp:4848:32: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(unsigned int i=0; i< Nnomissing; i++){
+                               ~^~~~~~~~~~~~
+Main.cpp:4807:74: warning: unused parameter ‘LOCO’ [-Wunused-parameter]
+ arma::fvec getDiagOfSigma_noV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO){
+                                                                          ^~~~
+Main.cpp: In function ‘arma::fvec getDiagOfSigma_V(arma::fvec&, float, float)’:
+Main.cpp:4901:32: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(unsigned int i=0; i< Nnomissing; i++){
+                               ~^~~~~~~~~~~~
+Main.cpp: At global scope:
+Main.cpp:5311:2: warning: extra ‘;’ [-Wpedantic]
+ };
+  ^
+Main.cpp: In function ‘void Get_MultiMarkersBySample_StdGeno_Mat()’:
+Main.cpp:5354:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(size_t k=0; k< m_M_Submarker; k++){
+                         ~^~~~~~~~~~~~~~~
+Main.cpp:5392:40: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                                 if(ind == Nnomissing){
+                                    ~~~~^~~~~~~~~~~~~
+Main.cpp: In function ‘void Get_MultiMarkersBySample_StdGeno(arma::fvec&, std::vector<float, std::allocator<float> >&)’:
+Main.cpp:5433:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for(size_t k=0; k< m_M_Submarker; k++){
+                         ~^~~~~~~~~~~~~~~
+Main.cpp:5467:40: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+                                 if(ind == Nnomissing){
+                                    ~~~~^~~~~~~~~~~~~
+Main.cpp: In function ‘void printComb(int)’:
+Main.cpp:5756:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for(std::size_t k=0; k < x; k++) {
+                        ~~^~~
+/usr/lib/R/etc/Makeconf:181: recipe for target 'Main.o' failed
+make: *** [Main.o] Error 1
+ERROR: compilation failed for package ‘SAIGE’
+* removing ‘/net/hunt/zhowei/project/imbalancedCaseCtrlMixedModel/Rpackage_SPAGMMAT/SAIGE_newgit/install_1.1.3_Poisson3/SAIGE’

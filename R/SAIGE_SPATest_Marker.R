@@ -14,8 +14,8 @@ SAIGE.Marker = function(traitType,
 			isCondition,
 			isOverWriteOutput)
 {
-  print("SAIGE.Marker 0")
-  print_g_n_unique()
+  #print("SAIGE.Marker 0")
+  #print_g_n_unique()
 
   if(is.null(OutputFileIndex))
     OutputFileIndex = paste0(OutputFile, ".index")
@@ -143,8 +143,8 @@ SAIGE.Marker = function(traitType,
    #resMarker = resMarker[which(!is.na(resMarker$BETA)), ]
 
 
-     print("SAIGE.Marker 2 ")
-  print_g_n_unique() 
+  #print("SAIGE.Marker 2 ")
+  #print_g_n_unique() 
   mainMarkerInCPP(genoType, traitType, genoIndex_prev, genoIndex, isMoreOutput, isImputation, isFirth)
 
     #timeoutput=system.time({writeOutputFile(Output = list(resMarker),

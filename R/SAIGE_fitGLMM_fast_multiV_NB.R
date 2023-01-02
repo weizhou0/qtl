@@ -136,12 +136,15 @@ glmmkin.ai_PCG_Rcpp_multiV_NB = function(bedFile, bimFile, famFile, Xorig, isCov
                 isDiagofKinSetAsOne = isDiagofKinSetAsOne,
                 isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL)) 
       etaold = eta
-      eta = modglmm_gaussian$fitted.values + offset
+      #eta = (modglmm_gaussian$fitted.values)*(modglmm_gaussian$varWeights) + offset
+      eta = (modglmm_gaussian$fitted.values) + offset
 
       print("modglmm_gaussian$fitted.value")
       print(modglmm_gaussian$fitted.value[1:10])
 
-      if (i > 1 & sum((eta - etaold)^2) < 1e-05 * sum(eta^2)) break
+      #cat("sum((eta - etaold)^2)/sum(eta^2) ", sum((eta - etaold)^2)/sum(eta^2), "\n")	
+
+      #if (i > 1 & sum((eta - etaold)^2) < 1e-05 * sum(eta^2)) break
       mu <- fam$linkinv(eta)
       mu.eta.val <- fam$mu.eta(eta)
       mu.eta.val <- ifelse(mu.eta.val == 0, 1e-04, mu.eta.val) 
@@ -164,10 +167,21 @@ glmmkin.ai_PCG_Rcpp_multiV_NB = function(bedFile, bimFile, famFile, Xorig, isCov
 	print("invwt")
        print(invwt[1:10])
 
-
+      if(i > 1){
+	th0 = th
+      }else{
+	th0 = th = 0
+      }	      
       th <- suppressWarnings( MASS::theta.ml(y=y, mu=mu, n=sum(wts), weights=wts, limit=10, trace=FALSE) )
       if (is.null(th)) th <- fam$theta
-      fam <- NegBin(theta = th)
+
+     if(i > 1){
+      cat("th ", th, "\n")
+      cat("th0 ", th0, "\n")
+      cat("abs(th - th0)/(abs(th) + abs(th0) + tol) ", abs(th - th0)/(abs(th) + abs(th0) + tol), "\n")	
+      if(abs(th - th0)/(abs(th) + abs(th0) + tol) < tol) break
+     }
+     fam <- NegBin(theta = th)
 
   }
 
@@ -191,7 +205,7 @@ glmmkin.ai_PCG_Rcpp_multiV_NB = function(bedFile, bimFile, famFile, Xorig, isCov
   converged = ifelse(i < maxiter, TRUE, FALSE)
   #res = y - mu
   #mu2 = fit0$family$variance(mu)
-  traitType = "count_nb"
+  #traitType = "count_nb"
 
   print(names(modglmm_gaussian))
   print(modglmm_gaussian$coefficients)
@@ -200,42 +214,42 @@ glmmkin.ai_PCG_Rcpp_multiV_NB = function(bedFile, bimFile, famFile, Xorig, isCov
   glmmResult = modglmm_gaussian
 
 
-  print("names(modglmm_gaussian)")
-  print(names(modglmm_gaussian))
-  print("modglmm_gaussian$y[1:10]")
-  print(modglmm_gaussian$y[1:10])
+  #print("names(modglmm_gaussian)")
+  #print(names(modglmm_gaussian))
+  #print("modglmm_gaussian$y[1:10]")
+  #print(modglmm_gaussian$y[1:10])
 
   #mu2 = varmu
-  mu2 = rep(((1/(modglmm_gaussian$theta[1]))),length(modglmm_gaussian$y))
+  #mu2 = rep(((1/(modglmm_gaussian$theta[1]))),length(modglmm_gaussian$y))
   #mu2 = mu2 * invwt
-  print("mu2 HEREHREHREHREHRERHE")
-  print(mu2[1:10])
-  print(length(mu2))
-  print("y[1:10]")
-  print(y[1:10])
+  #print("mu2 HEREHREHREHREHRERHE")
+  #print(mu2[1:10])
+  #print(length(mu2))
+  #print("y[1:10]")
+  #print(y[1:10])
 
 
   #mu2 = mu + (mu^2/fam$theta)
   #res = y - mu
-  y = modglmm_gaussian$y
+  #y = modglmm_gaussian$y
 
-  if(!isCovariateOffset){
-    obj.noK = ScoreTest_NULL_Model(mu, mu2, y, X)
-    glmmResult$X = X
-     glmmResult$obj.noK = obj.noK
+  #if(!isCovariateOffset){
+  #  obj.noK = ScoreTest_NULL_Model(mu, mu2, y, X)
+  #  glmmResult$X = X
+  #   glmmResult$obj.noK = obj.noK
     #glmmResult = list(theta=modglmm_gaussian$theta, coefficients=modglmm_gaussian$coefficients, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, converged=converged,sampleID = modglmm_gaussian$sampleID, obj.noK=obj.noK, y = y, X = modglmm_gaussian$X, traitType=traitType, isCovariateOffset = modglmm_gaussian$isCovariateOffset)
-  }else{
-    obj.noK = ScoreTest_NULL_Model(mu, mu2, y, Xorig)
-    glmmResult$X = Xorig
-    glmmResult$obj.noK = obj.noK
+  #}else{
+  #  obj.noK = ScoreTest_NULL_Model(mu, mu2, y, Xorig)
+  #  glmmResult$X = Xorig
+  #  glmmResult$obj.noK = obj.noK
     #glmmResult = list(theta=modglmm_gaussian$theta, coefficients=modglmm_gaussian$coefficients, linear.predictors=eta, fitted.values=mu, Y=Y, residuals=res, cov=cov, converged=converged,sampleID = modglmm_gaussian$sampleID, obj.noK=obj.noK, y = y, X = modglmm_gaussian$Xorig, traitType=traitType, isCovariateOffset = modglmm_gaussian$isCovariateOffset)
-  }
-  glmmResult$traitType = traitType
+  #}
+  #glmmResult$traitType = traitType
   #glmmResult$theta[1] = 1
   glmmResult$theta_overdispersion = fam$theta
   #glmmResult$varWeights = invwt 
-  glmmResult$varWeights = NULL
-  glmmResult$traitType = "quantitative"
+  #glmmResult$varWeights = NULL
+  #glmmResult$traitType = "quantitative"
   #if(isLowMemLOCO & LOCO){
   #  glmmResult$chromosomeStartIndexVec = modglmm_gaussian$chromosomeStartIndexVec
   #  glmmResult$chromosomeEndIndexVec = modglmm_gaussian$chromosomeEndIndexVec
