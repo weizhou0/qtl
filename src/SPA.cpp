@@ -75,7 +75,7 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
                                 p2 = pval_noadj/2;
                         }
                 }
-                std::cout << "p1_nofast " << p1 << "p2 " << p2 << std::endl;
+                //std::cout << "p1_nofast " << p1 << "p2 " << p2 << std::endl;
 
                 if(logp)
                 {
@@ -84,7 +84,7 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
                         pval = std::abs(p1)+std::abs(p2);
                 }
 
-		std::cout << "pval " << pval << std::endl;
+		//std::cout << "pval " << pval << std::endl;
                 Isconverge=true;
         }else {
                         //std::cout << "Error_Converge" << std::endl;
@@ -122,7 +122,7 @@ void SPA_fast(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_
           //double qinv = -1*q;
           outuni2 = getroot_K1_fast_Binom(0, mu, g, qinv, gNA,gNB,muNA,muNB,NAmu, NAsigma, tol);
 	 // arma::vec timeoutput3 = getTime();
- //printTime(timeoutput2, timeoutput3, "getroot_K1_fast_Binom");
+         //printTime(timeoutput2, timeoutput3, "getroot_K1_fast_Binom");
           //std::cout << "outuni1root" << outuni1["root"] << std::endl;
           //std::cout << "outuni2root" << outuni2["root"] << std::endl;
         }else if(traitType == "count"){
@@ -139,9 +139,9 @@ void SPA_fast(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_
                 getSaddle  = Get_Saddle_Prob_fast_Binom(outuni1["root"], mu, g, q, gNA,gNB,muNA,muNB,NAmu, NAsigma, logp);
 		// arma::vec timeoutput5 = getTime();
                 getSaddle2 = Get_Saddle_Prob_fast_Binom(outuni2["root"], mu, g, qinv, gNA,gNB,muNA,muNB,NAmu, NAsigma, logp);
-	//	arma::vec timeoutput6 = getTime();
-	//printTime(timeoutput4, timeoutput5, "Get_Saddle_Prob_fast_Binom");
- //printTime(timeoutput5, timeoutput6, "Get_Saddle_Prob_fast_Binom");
+	  //arma::vec timeoutput6 = getTime();
+	  //printTime(timeoutput4, timeoutput5, "Get_Saddle_Prob_fast_Binom");
+          //printTime(timeoutput5, timeoutput6, "Get_Saddle_Prob_fast_Binom");
           }else if(traitType == "count"){
                 getSaddle  = Get_Saddle_Prob_fast_Poi(outuni1["root"], mu, g, q, gNA,gNB,muNA,muNB,NAmu, NAsigma, logp);
                 getSaddle2 = Get_Saddle_Prob_fast_Poi(outuni2["root"], mu, g, qinv, gNA,gNB,muNA,muNB,NAmu, NAsigma, logp);
@@ -174,14 +174,14 @@ void SPA_fast(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_
                         pval = std::abs(p1)+std::abs(p2);
                         //std::cout << "p1 " << p1 << "p2 " << p2 << std::endl;
                 }
-		                std::cout << "pval " << pval << std::endl;
+		//std::cout << "pval " << pval << std::endl;
 
                 Isconverge=true;
-        }else {
+        }else{
                         //std::cout << "Error_Converge" << std::endl;
                         pval = pval_noadj;
                         Isconverge=false;
-                }
+        }
 	isSPAConverge = Isconverge;
         //result["pvalue"] = pval;
         //result["Isconverge"] = Isconverge;

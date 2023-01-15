@@ -446,7 +446,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
   	is_gtilde = true;
 	unsigned int nonzero = iIndex.n_elem;
 	unsigned int nGvec = t_GVec.n_elem;
-	//std::cout << "nonzero " << nonzero << std::endl;
+ 	//std::cout << "nonzero " << nonzero << std::endl;
 	//std::cout << "nGvec " << nGvec << std::endl;
   	scoreTest(t_GVec, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, iIndex);
   }else{
@@ -480,7 +480,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
   }
 
   
-    std::cout << "pval_noadj " << pval_noadj << std::endl;
+    //std::cout << "pval_noadj " << pval_noadj << std::endl;
  //arma::vec timeoutput3_a = getTime();
   double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
 

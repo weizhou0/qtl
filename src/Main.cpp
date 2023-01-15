@@ -438,9 +438,10 @@ void mainMarkerInCPP(
       indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
       t_GVec0 = t_GVec;
     }else{
-      t_GVec0 = t_GVec.elem(g_dup_sample_Index);
+      //t_GVec0 = t_GVec.elem(g_dup_sample_Index);
       //t_GVec.set_size(t_GVec0.n_elem);
       //t_GVec = t_GVec0;
+      t_GVec0 = g_I_longl_mat * t_GVec;
       indexZeroVec_arma = arma::find(t_GVec0 == 0.0);
       indexNonZeroVec_arma = arma::find(t_GVec0 > 0.0);
       double altCounts_new = arma::sum(t_GVec0);
@@ -1190,8 +1191,17 @@ Rcpp::List mainRegionInCPP(
   double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
   bool isSPAConverge, is_gtilde, is_Firth, is_FirthConverge;
   arma::vec P1Vec(t_n), P2Vec(t_n);
-  arma::vec GVec(t_n);
-  arma::vec GZeroVec(t_n);
+  //arma::vec GVec(t_n);
+  //arma::vec GZeroVec(t_n);
+
+  int n = ptr_gSAIGEobj->m_n;
+
+  if(g_n_unique > 0){
+    n = g_n_unique;
+  }
+  arma::vec GVec(n);
+
+
   std::vector<uint> indexZeroVec;
   std::vector<uint> indexNonZeroVec;
 
@@ -1270,10 +1280,44 @@ Rcpp::List mainRegionInCPP(
 
     double MAF = std::min(altFreq, 1 - altFreq);
     double w0;
-    double MAC = MAF * 2 * t_n * (1 - missingRate);   // checked on 08-10-2021
+    //double MAC = MAF * 2 * t_n * (1 - missingRate);   // checked on 08-10-2021
+    double MAC = MAF * 2 * n * (1 - missingRate);   // checked on 08-10-2021
     flip = imputeGenoAndFlip(GVec, altFreq, altCounts, indexForMissing, g_impute_method, g_dosage_zerod_cutoff, g_dosage_zerod_MAC_cutoff, MAC, indexZeroVec, indexNonZeroVec);
-    arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
     MAF = std::min(altFreq, 1 - altFreq);
+   
+    arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
+    arma::vec t_GVec0;
+    //std::cout << "g_n_unique " << g_n_unique << std::endl;
+    if(g_n_unique == 0){
+      indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
+      indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
+      //t_GVec0 = t_GVec;
+    }else{
+    //if(g_n_unique > 0){
+      t_GVec0 = GVec.elem(g_dup_sample_Index);
+      //t_GVec.set_size(t_GVec0.n_elem);
+      //t_GVec = t_GVec0;
+      //t_GVec0 = g_I_longl_mat * GVec;
+      indexZeroVec_arma = arma::find(t_GVec0 == 0.0);
+      indexNonZeroVec_arma = arma::find(t_GVec0 > 0.0);
+      double altCounts_new = arma::sum(t_GVec0);
+      //std::cout << "altCounts_new " << altCounts_new << std::endl;
+      //get_indexinAnotherVector(indexNonZeroVec, g_dup_sample_Index,indexNonZeroVec_arma);
+      //get_indexinAnotherVector(indexZeroVec, g_dup_sample_Index,indexZeroVec_arma);
+      //std::cout << "indexNonZeroVec_arma.n_elem " << indexNonZeroVec_arma.n_elem << std::endl;
+      //std::cout << "indexZeroVec_arma.n_elem " << indexZeroVec_arma.n_elem << std::endl;
+      gtildeVec.set_size(t_GVec0.n_elem);
+      GVec.resize(t_n);
+      GVec.zeros();
+      GVec = t_GVec0;
+      altCounts = arma::accu(GVec);
+      altFreq = altCounts/(2*double(t_n));
+    }
+
+
+
+
+    //MAF = std::min(altFreq, 1 - altFreq);
     MAC = std::min(altCounts, t_n *2 - altCounts);
     chrVec.at(i) = chr;
     posVec.at(i) = pds;
@@ -1283,10 +1327,13 @@ Rcpp::List mainRegionInCPP(
     infoVec.at(i) = info;                 // marker information: CHR:POS:REF:ALT
     altFreqVec.at(i) = altFreq;           // allele frequencies of ALT allele, this is not always < 0.5.
     missingRateVec.at(i) = missingRate;
+
     altCountsVec.at(i) = altCounts;
     MACVec.at(i) = MAC;
     MAFVec.at(i) = MAF;
     imputationInfoVec.at(i) = imputeInfo;
+
+
 
 //arma::vec timeoutput3a = getTime();
     //printTime(timeoutput2a, timeoutput3a, "Unified_getOneMarker 2");
@@ -1301,7 +1348,7 @@ Rcpp::List mainRegionInCPP(
     }
 
 
-    indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
+    //indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
     uint nNonZero = indexNonZeroVec_arma.n_elem;
 
     if(MAC > g_region_minMAC_cutoff){  // not Ultra-Rare Variants
@@ -1310,6 +1357,9 @@ Rcpp::List mainRegionInCPP(
       if(i1InChunk == 0){
         std::cout << "Start analyzing chunk " << ichunk << "....." << std::endl;
       }
+
+
+      ptr_gSAIGEobj->set_flagSparseGRM_cur(false); // first - not using the sparse GRM
 
       if(!isSingleVarianceRatio){
         hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur);
@@ -1320,7 +1370,6 @@ Rcpp::List mainRegionInCPP(
 
       if(t_regionTestType != "BURDEN" || t_isSingleinGroupTest){ //perform single-variant assoc tests 
  
-        indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
 
         //set_varianceRatio(MAC, isSingleVarianceRatio);
         if(MAC > g_MACCutoffforER){	
@@ -1328,6 +1377,25 @@ Rcpp::List mainRegionInCPP(
                     GVec,
                     false, // bool t_isOnlyOutputNonZero,
           indexNonZeroVec_arma, indexZeroVec_arma, Beta, seBeta, pval, pval_noSPA, Tstat, gy, varT, altFreq, isSPAConverge, gtildeVec, is_gtilde, true, P2Vec, isCondition, Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c, G1tilde_P_G2tilde_Vec, is_Firth, is_FirthConverge, false);
+	if(pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
+	  ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
+          ptr_gSAIGEobj->getadjGFast(GVec, gtildeVec, indexNonZeroVec_arma);
+          arma::fvec tauvec_f = arma::conv_to< arma::fvec >::from(ptr_gSAIGEobj->m_tauvec);
+          arma::fvec m_mu2_f = arma::conv_to< arma::fvec >::from(ptr_gSAIGEobj->m_mu2);
+          arma::fvec t_GVec_f = arma::conv_to< arma::fvec >::from(gtildeVec);
+	  if(!isSingleVarianceRatio){
+            hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur);
+          }else{
+            ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur);
+          }	
+
+	  Unified_getMarkerPval(
+                    GVec,
+                    false, // bool t_isOnlyOutputNonZero,
+          indexNonZeroVec_arma, indexZeroVec_arma, Beta, seBeta, pval, pval_noSPA, Tstat, gy, varT, altFreq, isSPAConverge, gtildeVec, is_gtilde, true, P2Vec, isCondition, Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c, G1tilde_P_G2tilde_Vec, is_Firth, is_FirthConverge, false);
+
+	}
+
 
 	}else{	
           Unified_getMarkerPval(
