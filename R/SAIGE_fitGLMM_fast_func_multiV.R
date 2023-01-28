@@ -445,6 +445,9 @@ getsubGRM_orig = function (sparseGRMFile = NULL, sparseGRMSampleIDFile = "", rel
 set_dup_sample_index_inR = function(modelID){
         b = as.numeric(factor(modelID, levels =  unique(modelID)))
         set_dup_sample_index(b-1)
+	I_mat = Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
+        I_mat = 1.0 * I_mat
+        set_I_longl_mat(I_mat, b-1)
 }
 
 

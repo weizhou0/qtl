@@ -114,8 +114,9 @@ SPAGMMATtest = function(bgenFile = "",
 		 is_single_in_groupTest = TRUE,
 		 is_no_weight_in_groupTest = FALSE,
 		 is_output_markerList_in_groupTest = FALSE,
-		 is_fastTest = FALSE,
-		 pval_cutoff_for_fastTest = 0.05, 
+		 pval_cutoff_for_fastTest = 0.05,
+		 is_noadjCov = TRUE,
+		 is_sparseGRM = TRUE, 
 		 max_MAC_use_ER = 4,
 		 is_EmpSPA = FALSE
 ){
@@ -242,8 +243,9 @@ SPAGMMATtest = function(bgenFile = "",
   #  gen_sp_Sigma_multiV(obj.model$mu,  obj.model$theta)
   #}
 
-    isSparseGRM = TRUE
+    #isSparseGRM = TRUE
 
+    isSparseGRM = is_sparseGRM
   #if(obj.model$useSparseGRMforVarRatio){
 #	if(sparseGRMFile != ""){
 #		getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)	
@@ -270,9 +272,10 @@ SPAGMMATtest = function(bgenFile = "",
 	SigmaMat_sp = chol2inv(chol(obj.model$spSigma)) 
 
     }else{
-	      SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))
+	SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))
     }	    
 
+    is_fastTest = TRUE
     if(is_fastTest){
       if(!file.exists(varianceRatioFile)){
          is_fastTest = FALSE
@@ -368,7 +371,8 @@ SPAGMMATtest = function(bgenFile = "",
   #print("setSAIGEobjInCPP 0")
   #print_g_n_unique()
 
-
+print("ratioVecList")
+print(ratioVecList)
 
     setSAIGEobjInCPP(t_XVX=obj.model$obj.noK$XVX,
 		     t_XXVX_inv=obj.model$obj.noK$XXVX_inv,
@@ -382,6 +386,7 @@ SPAGMMATtest = function(bgenFile = "",
 		     t_mu=obj.model$mu,
 		     t_varRatio_sparse = as.vector(ratioVecList$ratioVec_sparse),
 		     t_varRatio_null = as.vector(ratioVecList$ratioVec_null),
+		     t_varRatio_null_noXadj = as.vector(ratioVecList$ratioVec_null_noXadj),
 		     t_cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
 		     t_cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
 		     t_SPA_Cutoff = SPAcutoff,
@@ -391,7 +396,7 @@ SPAGMMATtest = function(bgenFile = "",
 		     t_y = obj.model$y,
 		     t_impute_method = impute_method, 
 		     t_flagSparseGRM = isSparseGRM,
-		     t_isFastTest = is_fastTest,
+		     t_isnoadjCov = is_noadjCov, 
 		     t_pval_cutoff_for_fastTest = pval_cutoff_for_fastTest,
 		     t_isCondition = isCondition,
 		     t_condition_genoIndex = condition_genoIndex,

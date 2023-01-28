@@ -36,6 +36,7 @@ SAIGEClass::SAIGEClass(
 	arma::vec & t_mu,
 	arma::vec & t_varRatio_sparse,
 	arma::vec & t_varRatio_null,
+	arma::vec & t_varRatio_null_noXadj,
 	arma::vec & t_cateVarRatioMinMACVecExclude,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
 	double t_SPA_Cutoff,
@@ -45,7 +46,7 @@ SAIGEClass::SAIGEClass(
 	arma::vec & t_y,
 	std::string t_impute_method,
 	bool t_flagSparseGRM,
-	bool t_isFastTest,
+	bool t_isnoadjCov,
 	double t_pval_cutoff_for_fastTest,
 	bool t_isCondition,
         std::vector<uint32_t> & t_condition_genoIndex,
@@ -82,6 +83,7 @@ SAIGEClass::SAIGEClass(
     m_mu = t_mu;
     m_varRatio_sparse = t_varRatio_sparse;
     m_varRatio_null = t_varRatio_null;
+    m_varRatio_null_noXadj = t_varRatio_null_noXadj;
     m_cateVarRatioMinMACVecExclude = t_cateVarRatioMinMACVecExclude;
     m_cateVarRatioMaxMACVecInclude = t_cateVarRatioMaxMACVecInclude;
     m_tauvec = t_tauvec;
@@ -118,7 +120,8 @@ SAIGEClass::SAIGEClass(
     }
     //m_dimNum = t_dimNum;
     m_flagSparseGRM = t_flagSparseGRM;
-    m_isFastTest = t_isFastTest;
+    //m_isFastTest = t_isFastTest;
+    m_isnoadjCov = t_isnoadjCov;
     m_pval_cutoff_for_fastTest = t_pval_cutoff_for_fastTest;
     //if(m_dimNum != 0){
     //	m_locationMat = t_locationMat;
@@ -135,6 +138,10 @@ SAIGEClass::SAIGEClass(
    g_I_longl_vec = t_I_longl_vec_new;
    g_T_longl_mat = t_Tlongmat;
    g_T_longl_vec = t_T_longl_vec;
+
+   m_res_sample = (g_I_longl_mat.t()) * m_res;
+   m_mu2_sample = (g_I_longl_mat.t()) * m_mu2;
+
 
    m_is_EmpSPA = false;
    if(t_is_EmpSPA){
@@ -266,7 +273,6 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
 
     arma::vec m_varWeightsvec_new = m_varWeightsvec.elem(t_indexForNonZero);
 
-
     arma::mat X1 = m_X.rows(t_indexForNonZero);
     arma::mat A1 = m_XVX_inv_XV.rows(t_indexForNonZero);
     arma::vec mu21;
@@ -342,6 +348,85 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
 }
 
 
+
+void SAIGEClass::scoreTestFast_noadjCov(arma::vec & t_GVec,
+                     arma::uvec & t_indexForNonZero,
+                     double& t_Beta,
+                     double& t_seBeta,
+                     std::string& t_pval_str,
+                     double t_altFreq,
+                     double &t_Tstat,
+                     double &t_var1,
+                     double &t_var2){
+
+    arma::vec g1 = t_GVec.elem(t_indexForNonZero);
+    arma::vec m_varWeightsvec_new = m_varWeightsvec.elem(t_indexForNonZero);
+    arma::vec mu21;
+    m_res_sample.print("m_res_sample");
+    arma::vec res1 = m_res_sample.elem(t_indexForNonZero);
+    res1 = res1 % m_varWeightsvec_new;
+    double g1mu2, mu2f, mu2fg, altFreq2;
+    altFreq2 = t_altFreq * 2;
+    mu2f = arma::sum(m_mu2_sample * pow(altFreq2,2));
+    mu21  = m_mu2_sample.elem(t_indexForNonZero);
+    g1mu2 = dot(square(g1), mu21);
+
+    mu2fg = dot(g1, mu21 * altFreq2);
+    double var2 = g1mu2 - 2*mu2fg + mu2f;
+
+    //if(m_traitType == "binary" || m_traitType == "count"){
+    if(m_traitType == "quantitative" || m_traitType == "count_nb"){
+      var2 = var2 * m_tauvec[0];
+    }
+
+
+    //std::cout << "var2 " << var2 << std::endl;
+    double var1 = var2 * m_varRatioVal;
+    //std::cout << "var1 " << var1 << std::endl;
+    double S1 = dot(res1, g1);
+    double S2 = arma::sum(m_res * altFreq2);
+    double S = S1 - S2;
+    S = S/m_tauvec[0];
+
+
+    double stat = S*S/var1;
+    double t_pval;
+    //std::cout << "S " << S << std::endl;
+
+    //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
+    if (var1 <= std::numeric_limits<double>::min()){
+        t_pval = 1;
+    } else{
+      boost::math::chi_squared chisq_dist(1);
+      t_pval = boost::math::cdf(complement(chisq_dist, stat));
+    }
+
+
+    char pValueBuf[100];
+    if (t_pval != 0)
+        sprintf(pValueBuf, "%.6E", t_pval);
+    else {
+        double log10p = log10(2.0) - M_LOG10E*stat/2 - 0.5*log10(stat*2*M_PI);
+        int exponent = floor(log10p);
+        double fraction = pow(10.0, log10p - exponent);
+        if (fraction >= 9.95) {
+          fraction = 1;
+           exponent++;
+         }
+        sprintf(pValueBuf, "%.1fE%d", fraction, exponent);
+    }
+    std::string buffAsStdStr = pValueBuf;
+    t_pval_str = buffAsStdStr;
+    t_Beta = S/var1;
+    t_seBeta = fabs(t_Beta) / sqrt(fabs(stat));
+    t_Tstat = S;
+    t_var1 = var1;
+    t_var2 = var2;
+    //std::cout << "t_pval_str scoreTestFast " << t_pval_str << std::endl;
+    //std::cout << "end of scoreTestFast" << std::endl;
+}
+
+
 void SAIGEClass::getadjG(arma::vec & t_GVec, arma::vec & g){
    g = m_XV * t_GVec;
    //t_GVec.t().print("t_GVec");
@@ -385,9 +470,9 @@ void SAIGEClass::setupSparseMat(int r, arma::umat & locationMatinR, arma::vec & 
 
 
 arma::sp_mat SAIGEClass::gen_sp_SigmaMat() {
-    std::cout << "gen_sp_SigmaMat " << std::endl;
+    //std::cout << "gen_sp_SigmaMat " << std::endl;
     arma::sp_mat resultMat(m_locationMat, m_valueVec, m_dimNum, m_dimNum);
-    std::cout << "gen_sp_SigmaMat2 " << std::endl;
+    //std::cout << "gen_sp_SigmaMat2 " << std::endl;
     return resultMat;
 }
 
@@ -420,7 +505,9 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 			   	arma::rowvec & t_G1tilde_P_G2tilde, 
 				bool & t_isFirth,
 				bool & t_isFirthConverge, 
-				bool t_isER)
+				bool t_isER, 
+				bool t_isnoadjCov,
+                                bool t_isSparseGRM)
 {
 
 
@@ -431,24 +518,48 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
   double t_var2, t_SPApval;
   //iIndex = arma::find(t_GVec != 0);
   //arma::vec t_gtilde;
-  bool isScoreFast = true;
+  //bool isScoreFast = true;
 
   //if((t_altFreq >= 0.3 && t_altFreq <= 0.7) || m_flagSparseGRM || is_region){
-  if(m_flagSparseGRM_cur){
-    isScoreFast = false;
-  }
+  //if(m_flagSparseGRM_cur){
+  //  isScoreFast = false;
+  //}
+   double altFreq0;
+   arma::vec t_GVec0;
+   arma::uvec indexNonZeroVec0_arma, indexZeroVec0_arma;
+   if(g_I_longl_mat.n_cols != g_I_longl_mat.n_rows){
+      t_GVec0 = g_I_longl_mat * t_GVec;
+      altFreq0 = arma::mean(t_GVec0) /2;
+      indexNonZeroVec0_arma = arma::find(t_GVec0 > 0.0);
+      indexZeroVec0_arma = arma::find(t_GVec0 == 0.0);
+   }else{
+      t_GVec0 = t_GVec;
+      altFreq0 = t_altFreq;
+      indexNonZeroVec0_arma = iIndex; 	
+      indexZeroVec0_arma = iIndexComVec;
+   }
 
-
-  //for test
  //arma::vec timeoutput3 = getTime();
-  if(!isScoreFast){
+ //
+ //
+ //
+ if(t_isSparseGRM){
+ 	t_isnoadjCov = false;
+ }
+  if(!t_isnoadjCov){
 	//std::cout << "scoreTest " << std::endl;  
   	is_gtilde = true;
 	unsigned int nonzero = iIndex.n_elem;
 	unsigned int nGvec = t_GVec.n_elem;
- 	//std::cout << "nonzero " << nonzero << std::endl;
-	//std::cout << "nGvec " << nGvec << std::endl;
-  	scoreTest(t_GVec, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, iIndex);
+ 	std::cout << "nonzero " << nonzero << std::endl;
+	std::cout << "nGvec " << nGvec << std::endl;
+	//
+  	//scoreTest(t_GVec, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, iIndex);
+	if(!t_isSparseGRM){
+	  scoreTestFast(t_GVec0, indexNonZeroVec0_arma, t_Beta, t_seBeta, t_pval_str, altFreq0, t_Tstat, t_var1, t_var2);
+	}else{
+	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma);	
+	}	
   }else{
   	is_gtilde = false;
 	//std::cout << "scoreTestFast "  << std::endl;  
@@ -457,8 +568,26 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 	unsigned int nGvec = t_GVec.n_elem;
 	//std::cout << "nonzero " << nonzero << std::endl;
 	//std::cout << "nGvec " << nGvec << std::endl;
-        scoreTestFast(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2);
+	//
+	/*
+        arma::vec t_GVec_cell = g_I_longl_mat * t_GVec;
+	arma::uvec indexZeroVec_arma = arma::find(t_GVec_cell == 0.0);
+        arma::uvec indexNonZeroVec_arma = arma::find(t_GVec_cell > 0.0);
+        scoreTestFast(t_GVec_cell, indexNonZeroVec_arma, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2);
+	std::cout << "t_var1 " << t_var1 << std::endl;
+	std::cout << "t_var2 " << t_var2 << std::endl;
+        */
+	std::cout << "t_var1 a" << t_var1 << std::endl;
+	std::cout << "t_var2 a" << t_var2 << std::endl;
+	
+	scoreTestFast_noadjCov(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, altFreq0,t_Tstat, t_var1, t_var2);
+	std::cout << "t_var1 " << t_var1 << std::endl;
+	std::cout << "t_var2 " << t_var2 << std::endl;
   }
+
+
+
+
 
   double StdStat = std::abs(t_Tstat) / sqrt(t_var1);
   //std::cout << "before SPA t_Tstat " << t_Tstat << std::endl;
@@ -480,7 +609,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
   }
 
   
-    //std::cout << "pval_noadj " << pval_noadj << std::endl;
+  std::cout << "pval_noadj " << pval_noadj << std::endl;
  //arma::vec timeoutput3_a = getTime();
   double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
 
@@ -510,8 +639,8 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 if(!t_isER){
 
 
-  if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
-  //if(StdStat > m_SPA_Cutoff && m_traitType == "binary"){
+  //if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
+  if(StdStat > m_SPA_Cutoff && m_traitType == "binary"){
 
        if(!is_gtilde){
           t_gtilde.resize(m_n);
@@ -643,6 +772,10 @@ if(!t_isER){
         t_pval = t_pval_noSPA;
    }
 
+
+   std::cout << "TEST" << std::endl;
+
+
 }else{ //if(!t_isER){
 
     t_pval_noSPA = pval_noadj; 
@@ -665,6 +798,9 @@ if(!t_isER){
     }
 }
 
+
+
+
    if(m_traitType == "binary" & m_is_Firth_beta & t_pval <= m_pCutoffforFirth){
 	t_isFirth = true;
 
@@ -683,8 +819,8 @@ if(!t_isER){
 	//std::cout << "t_seBeta after " << t_seBeta << std::endl;
    }
    
- //arma::vec timeoutput4 = getTime();
- //printTime(timeoutput3, timeoutput3_a, "Test Marker  ScoreTest");
+//arma::vec timeoutput4 = getTime();
+//printTime(timeoutput3, timeoutput3_a, "Test Marker  ScoreTest");
 //printTime(timeoutput3, timeoutput4, "Test Marker 3 to 4");
 //printTime(timeoutput3_a, timeoutput4, "Test Marker SPA");
 
@@ -759,8 +895,8 @@ if(!t_isER){
   t_pval_noSPA_c = pval_noSPA_c; 
 
 
-    if(m_traitType != "quantitative" && stat_c > std::pow(m_SPA_Cutoff,2)){
-    //if(m_traitType == "binary" && stat_c > std::pow(m_SPA_Cutoff,2)){
+    //if(m_traitType != "quantitative" && stat_c > std::pow(m_SPA_Cutoff,2)){
+    if(m_traitType == "binary" && stat_c > std::pow(m_SPA_Cutoff,2)){
 	bool t_isSPAConverge_c;
 	double q_c, qinv_c, pval_noadj_c, SPApval_c;    
 	if(m_traitType == "binary"){
@@ -812,11 +948,17 @@ if(!t_isER){
 
 
     if(is_region && !is_gtilde){
-	getadjGFast(t_GVec, t_gtilde, iIndex);
+	    arma::vec t_GVec0 = g_I_longl_mat * t_GVec;
+	    arma::uvec iIndex0 = arma::find(t_GVec0 > 0.0);
+
+
+	//getadjGFast(t_GVec, t_gtilde, iIndex);
+	getadjGFast(t_GVec0, t_gtilde, iIndex0);
 	is_gtilde = true; 
     }
 
-    if(is_region && isScoreFast){
+    //if(is_region && isScoreFast){
+    if(is_region && (t_isnoadjCov || (!t_isnoadjCov && !t_isSparseGRM))){
 
       t_gy = dot(t_gtilde, m_y);
 
@@ -848,13 +990,17 @@ if(!t_isER){
 }
 
 
-bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR){
+bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj){
     bool hasVarRatio = false;
     arma::vec m_varRatio;
     if(issparseforVR){
 	m_varRatio = m_varRatio_sparse;
     }else{
-	m_varRatio = m_varRatio_null;
+	if(!isnoXadj){    
+	    m_varRatio = m_varRatio_null;
+	}else{
+	    m_varRatio = m_varRatio_null_noXadj;
+	}	
     }
     for(unsigned int i = 0; i < m_cateVarRatioMaxMACVecInclude.n_elem; i++)
     {
@@ -882,12 +1028,16 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR){
     return(hasVarRatio);    
 }
 
-void SAIGEClass::assignSingleVarianceRatio(bool issparseforVR){ 
+void SAIGEClass::assignSingleVarianceRatio(bool issparseforVR, bool isnoXadj){ 
     arma::vec m_varRatio;
     if(issparseforVR){
         m_varRatio = m_varRatio_sparse;
     }else{
-        m_varRatio = m_varRatio_null;
+	if(isnoXadj){    
+            m_varRatio = m_varRatio_null_noXadj;
+	}else{
+	    m_varRatio = m_varRatio_null;	
+	}	
     }	
     m_varRatioVal = m_varRatio(0);
 }

@@ -401,7 +401,8 @@ SAIGE.Region = function(mu,
 		annoMAFIndVec = c(annoMAFIndVec, jm)
 		Phi = wadjVarSMat[tempPos, tempPos, drop=F]
 		Score = wStatVec[tempPos]
-		if(traitType == "binary" | traitType == "count"){
+		#if(traitType == "binary" | traitType == "count"){
+		if(traitType == "binary"){
 			p.new = adjPVec[tempPos]
 			g.sum = outList$genoSumMat[,jm]
 			q.sum<-sum(outList$gyVec[tempPos] * AnnoWeights[tempPos])

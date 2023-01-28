@@ -1122,7 +1122,7 @@ print("HERERE2")
 
         setgeno(bedFile, bimFile, famFile, dataMerge_sort$IndexGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
         tau = modglmm$theta	    
-        setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
+        #setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
     }
 
     if(!skipVarianceRatioEstimation) {
@@ -1345,6 +1345,8 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
       numMarkers0 = numMarkers
       varRatio_sparseGRM_vec = NULL
       varRatio_NULL_vec = NULL
+      varRatio_NULL_noXadj_vec = NULL
+
       indexInMarkerList = 1
       numTestedMarker = 0
       ratioCV = ratioCVcutoff + 0.1
@@ -1431,6 +1433,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	#	S = innerProduct(gs,y) - innerProduct(mu,gs) 
 	#}	
 
+   G_noXadj = G0 - 2*AF 
    if(useSparseGRMforVarRatio){
 	set_isSparseGRM(useSparseGRMforVarRatio)
 	Sigma_iG = getSigma_G_noV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
@@ -1462,19 +1465,17 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
     if(obj.glmm.null$traitType == "binary"){
          var2null = innerProduct(mu*(1-mu)*var_weights, G*G)
-         #varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
+         var2null_noXadj = innerProduct(mu*(1-mu)*var_weights, G_noXadj*G_noXadj)
     }else if(obj.glmm.null$traitType == "quantitative"){
          var2null = innerProduct(G, G*var_weights)
-         #varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
+         var2null_noXadj = innerProduct(G_noXadj, G_noXadj*var_weights)
     }else if(obj.glmm.null$traitType == "count"){
          var2null = innerProduct(mu*var_weights, G*G)
-	 #varres2null = innerProduct(var(obj.glmm.null$residuals)*G, G) 
-         #varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
+         var2null_noXadj = innerProduct(mu*var_weights, G_noXadj*G_noXadj)
     }else if(obj.glmm.null$traitType == "count_nb"){
 	 var2null = innerProduct(W, G*G) ##To update
+         var2null_noXadj = innerProduct(W, G_noXadj*G_noXadj)
     }	    
-         #p_approx = pchisq(S^2/(var2null), df=1, lower.tail=F)
-         #p_approx_true = pchisq(S^2/(var2null*0.0009604056), df=1, lower.tail=F)
 
   cat("mu\n")
   print(mu[1:100])
@@ -1482,10 +1483,12 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
    # cat("S ", S*sqrt(AC), "\n")
    cat("var1 ", var1, "\n")
    cat("var2null ", var2null, "\n")
+   cat("var2null_noXadj ", var2null_noXadj, "\n")
     cat("p_exact ", p_exact, "\n")
    # cat("p_approx ", p_approx, "\n")
    # cat("p_approx_true ", p_approx_true, "\n")
     varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
+    varRatio_NULL_noXadj_vec = c(varRatio_NULL_noXadj_vec, var1/var2null_noXadj)
 
     #indexInMarkerList = indexInMarkerList + 1
     numTestedMarker = numTestedMarker + 1
@@ -1502,8 +1505,11 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
     print("varRatio_NULL_vec")
     print(varRatio_NULL_vec)
+    print("varRatio_NULL_noXadj_vec")
+    print(varRatio_NULL_noXadj_vec)
 
-    ratioCV = calCV(varRatio_NULL_vec)
+    #ratioCV = calCV(varRatio_NULL_vec)
+    ratioCV = calCV(varRatio_NULL_noXadj_vec)
 
     if(ratioCV > ratioCVcutoff){
       cat("CV for variance ratio estimate using ", numMarkers0, " markers is ", ratioCV, " > ", ratioCVcutoff, "\n")
@@ -1523,7 +1529,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
   if(length(varRatio_sparseGRM_vec) > 0){
    cat("varRatio_sparseGRM_vec\n")
-  print(varRatio_sparseGRM_vec)
+   print(varRatio_sparseGRM_vec)
 
     varRatio_sparse = mean(varRatio_sparseGRM_vec)
     cat("varRatio_sparse", varRatio_sparse, "\n")
@@ -1531,9 +1537,16 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   }
   varRatio_null = mean(varRatio_NULL_vec)
   cat("varRatio_null", varRatio_null, "\n")
+
+  varRatio_null_noXadj = mean(varRatio_NULL_noXadj_vec)
+  cat("varRatio_null_noXadj", varRatio_null_noXadj, "\n")
+
   varRatioTable = rbind(varRatioTable, c(varRatio_null, "null", k))
+  varRatioTable = rbind(varRatioTable, c(varRatio_null_noXadj, "null_noXadj", k))
+  #varRatioTable = rbind(varRatioTable, c(varRatio_null_noXadj, "null", k))
   }else{# if(cateVarRatioVec[k] == 1)
     varRatioTable = rbind(varRatioTable, c(1, "null", k))
+    varRatioTable = rbind(varRatioTable, c(1, "null_noXadj", k))
     if(length(varRatio_sparseGRM_vec) > 0){
       varRatioTable = rbind(varRatioTable, c(1, "sparse", k))
     }

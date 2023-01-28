@@ -17,6 +17,7 @@ class SAIGEClass
       arma::mat m_X;
       arma::mat m_Sigma_iXXSigma_iX;
       arma::vec m_res;
+      arma::vec m_res_sample;
       arma::vec m_resout;
       arma::vec m_mu;
       arma::vec  m_S_a;
@@ -29,6 +30,7 @@ class SAIGEClass
 
     public:
       arma::vec m_mu2;
+      arma::vec m_mu2_sample;
       arma::vec m_tauvec;
       arma::vec m_varWeightsvec; 
       arma::mat m_XXVX_inv;
@@ -37,6 +39,7 @@ class SAIGEClass
       double m_varRatioVal;
       arma::vec m_varRatio_sparse;
       arma::vec m_varRatio_null;
+      arma::vec m_varRatio_null_noXadj;
       arma::vec m_y;
 
       bool m_isOutputAFinCaseCtrl;
@@ -54,7 +57,7 @@ class SAIGEClass
       bool m_flagSparseGRM;
       bool m_flagSparseGRM_cur;
       bool m_isFastTest;
-      
+      bool m_isnoadjCov;      
       bool m_is_EmpSPA;
 
       double m_pval_cutoff_for_fastTest; 
@@ -99,13 +102,12 @@ class SAIGEClass
       arma::mat m_cumul;
       double m_varResid;
 
-
-  SAIGEClass(
+SAIGEClass(
         arma::mat & t_XVX,
-        arma::mat  t_XXVX_inv,
+        arma::mat t_XXVX_inv,
         arma::mat & t_XV,
         arma::mat & t_XVX_inv_XV,
-	arma::mat & t_sigmainvX_XsignmainXtXinv,
+        arma::mat & t_Sigma_iXXSigma_iX,
         arma::mat & t_X,
         arma::vec &  t_S_a,
         arma::vec & t_res,
@@ -113,31 +115,33 @@ class SAIGEClass
         arma::vec & t_mu,
         arma::vec & t_varRatio_sparse,
         arma::vec & t_varRatio_null,
+	arma::vec & t_varRatio_null_noXadj,
         arma::vec & t_cateVarRatioMinMACVecExclude,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,
         arma::vec & t_tauvec,
-	arma::vec & t_varWeightsvec,
+        arma::vec & t_varWeightsvec,
         std::string t_traitType,
         arma::vec & t_y,
         std::string t_impute_method,
         bool t_flagSparseGRM,
-	bool t_isFastTest,
-	double t_pval_cutoff_for_fastTest,
+        bool t_isnoadjCov,
+        double t_pval_cutoff_for_fastTest,
         bool t_isCondition,
         std::vector<uint32_t> & t_condition_genoIndex,
-	bool t_is_Firth_beta,
+        bool t_is_Firth_beta,
         double t_pCutoffforFirth,
-	arma::vec & t_offset,
-	arma::vec & t_resout, 
-	arma::sp_mat & t_SigmaMat_sp,
-	float t_tauVal_sp,
-	 arma::sp_mat & t_Ilongmat,
+        arma::vec & t_offset,
+        arma::vec & t_resout,
+        arma::sp_mat & t_SigmaMat_sp,
+        float t_tauVal_sp,
+         arma::sp_mat & t_Ilongmat,
         arma::vec & t_I_longl_vec,
         arma::sp_mat & t_Tlongmat,
         arma::vec & t_T_longl_vec,
-	   bool t_is_EmpSPA,
+        bool t_is_EmpSPA,
         arma::mat & t_cumul);
+
 
    void set_seed(unsigned int seed);
 
@@ -164,6 +168,17 @@ class SAIGEClass
                      double &t_Tstat,
                      double &t_var1,
                      double &t_var2);
+
+    void scoreTestFast_noadjCov(arma::vec & t_GVec,
+                     arma::uvec & t_indexForNonZero,
+                     double& t_Beta,
+                     double& t_seBeta,
+                     std::string& t_pval_str,
+                     double t_altFreq,
+                     double &t_Tstat,
+                     double &t_var1,
+                     double &t_var2);	
+
      void set_flagSparseGRM_cur(bool t_flagSparseGRM_cur);
 
      void get_mu(arma::vec & t_mu);
@@ -197,7 +212,9 @@ class SAIGEClass
                                 arma::rowvec & t_G1tilde_P_G2tilde,
 				 bool & t_isFirth,
                                 bool & t_isFirthConverge, 
-				bool t_isER);
+				bool t_isER, 
+				bool t_isnoadjCov,
+				bool t_isSparseGRM);
 
 
     void getindices(arma::uvec & t_case_indices,
@@ -208,9 +225,10 @@ class SAIGEClass
 
     arma::sp_mat gen_sp_SigmaMat();
 
-    bool assignVarianceRatio(double MAC, bool issparseforVR);
 
-    void assignSingleVarianceRatio(bool issparseforVR);
+    bool assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj);
+
+    void assignSingleVarianceRatio(bool issparseforVR, bool isnoXadj);
 
 
     void assignSingleVarianceRatio_withinput(double t_varRatioVal);

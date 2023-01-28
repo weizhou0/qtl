@@ -88,32 +88,33 @@ void Unified_getMarkerPval(
 			   arma::rowvec & t_G1tilde_P_G2tilde_Vec,
 			    bool & t_isFirth,
 			   bool & t_isFirthConverge,
-			   bool t_isER);
+			   bool t_isER,
+			   bool t_isnoadjCov,
+                                bool t_isSparseGRM); 
+
 
 
 Rcpp::List mainRegionInCPP(
                            std::string t_genoType,     // "PLINK", "BGEN"
-			   std::vector<std::string> & t_genoIndex_prev,
+                           std::vector<std::string> & t_genoIndex_prev,
                            std::vector<std::string> & t_genoIndex,
                            arma::mat & annoIndicatorMat,
                            arma::vec & maxMAFVec,
                            std::string t_outputFile,
                            std::string t_traitType,
                            unsigned int t_n,           // sample size
-                           arma::mat P1Mat,            // edited on 2021-08-19: to avoid repeated memory allocation of P1Mat and P2Mat
-                           arma::mat P2Mat,
+                           arma::mat & P1Mat,            // edited on 2021-08-19: to avoid repeated memory allocation of P1Mat and P2Mat
+                           arma::mat & P2Mat,
                            std::string t_regionTestType,
-			   bool t_isImputation,
-			   arma::vec & t_weight,
-			   arma::vec & t_weight_cond,
-			   bool t_isSingleinGroupTest,
-			   bool t_isOutputMarkerList,
-			   std::vector<std::string> & annoStringVec,
+                           bool t_isImputation,
+                           arma::vec & t_weight,
+                           arma::vec & t_weight_cond,
+                           bool t_isSingleinGroupTest,
+                           bool t_isOutputMarkerList,
+                           std::vector<std::string> & annoStringVec,
                            std::string regionName,
 			   bool t_isFastTest,
-			   bool t_isMoreOutput);
-
-
+                           bool t_isMoreOutput);
 
 void setPLINKobjInCPP(std::string t_bimFile,
                       std::string t_famFile,
@@ -146,6 +147,7 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::vec & t_mu,
         arma::vec & t_varRatio_sparse,
         arma::vec & t_varRatio_null,
+	arma::vec & t_varRatio_null_noXadj,
         arma::vec & t_cateVarRatioMinMACVecExclude,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,
@@ -155,7 +157,7 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::vec & t_y,
         std::string t_impute_method,
         bool t_flagSparseGRM,
-        bool t_isFastTest,
+	bool t_isnoadjCov,
         double t_pval_cutoff_for_fastTest,
         bool t_isCondition,
         std::vector<uint32_t> & t_condition_genoIndex,
@@ -324,7 +326,7 @@ void writeOutfile_BURDEN(std::string regionName,
 
 void copy_singleInGroup();
 
-void set_varianceRatio(double MAC, bool isSingleVarianceRatio);
+void set_varianceRatio(double MAC, bool isSingleVarianceRatio, bool isnoXadj);
 
 int writeOutfile_singleInGroup(bool t_isMoreOutput,
                         bool t_isImputation,
