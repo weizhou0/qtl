@@ -298,9 +298,7 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
     }
     
 
-    //std::cout << "var2 " << var2 << std::endl;
     var1 = var2 * m_varRatioVal;
-    //std::cout << "var1 " << var1 << std::endl;
     S1 = dot(res1, g1_tilde);
     arma::mat res1X1_temp = (res1.t()) * X1;
     arma::vec res1X1 = res1X1_temp.t();
@@ -312,7 +310,6 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
 
     double stat = S*S/var1;
     double t_pval;
-    //std::cout << "S " << S << std::endl;
 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
@@ -362,7 +359,6 @@ void SAIGEClass::scoreTestFast_noadjCov(arma::vec & t_GVec,
     arma::vec g1 = t_GVec.elem(t_indexForNonZero);
     arma::vec m_varWeightsvec_new = m_varWeightsvec.elem(t_indexForNonZero);
     arma::vec mu21;
-    m_res_sample.print("m_res_sample");
     arma::vec res1 = m_res_sample.elem(t_indexForNonZero);
     res1 = res1 % m_varWeightsvec_new;
     double g1mu2, mu2f, mu2fg, altFreq2;
@@ -391,7 +387,6 @@ void SAIGEClass::scoreTestFast_noadjCov(arma::vec & t_GVec,
 
     double stat = S*S/var1;
     double t_pval;
-    //std::cout << "S " << S << std::endl;
 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
@@ -441,12 +436,23 @@ void SAIGEClass::getadjG(arma::vec & t_GVec, arma::vec & g){
 void SAIGEClass::getadjGFast(arma::vec & t_GVec, arma::vec & g, arma::uvec & iIndex)
 {
 
+   arma::vec t_GVec0;	
+   arma::uvec indexNonZeroVec0_arma;	
+   if(g_I_longl_mat.n_cols != g_I_longl_mat.n_rows && t_GVec.n_elem != m_XV.n_cols){
+      t_GVec0 = g_I_longl_mat * t_GVec;
+      indexNonZeroVec0_arma = arma::find(t_GVec0 > 0.0);
+   }else{
+      t_GVec0 = t_GVec;
+      indexNonZeroVec0_arma = iIndex;
+   }	   
+
+
   // To increase computational efficiency when lots of GVec elements are 0
  arma::vec m_XVG(m_p, arma::fill::zeros);
-  for(int i = 0; i < iIndex.n_elem; i++){
-      m_XVG += m_XV.col(iIndex(i)) * t_GVec(iIndex(i));
+  for(int i = 0; i < indexNonZeroVec0_arma.n_elem; i++){
+      m_XVG += m_XV.col(indexNonZeroVec0_arma(i)) * t_GVec0(indexNonZeroVec0_arma(i));
   }
-  g = t_GVec - m_XXVX_inv * m_XVG; 
+  g = t_GVec0 - m_XXVX_inv * m_XVG; 
 }
 
 
@@ -513,17 +519,8 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 
 
   t_isFirth = false;
-  //arma::vec adjGVec = getadjGFast(t_GVec);
   std::string t_pval_str;
   double t_var2, t_SPApval;
-  //iIndex = arma::find(t_GVec != 0);
-  //arma::vec t_gtilde;
-  //bool isScoreFast = true;
-
-  //if((t_altFreq >= 0.3 && t_altFreq <= 0.7) || m_flagSparseGRM || is_region){
-  //if(m_flagSparseGRM_cur){
-  //  isScoreFast = false;
-  //}
    double altFreq0;
    arma::vec t_GVec0;
    arma::uvec indexNonZeroVec0_arma, indexZeroVec0_arma;
@@ -548,41 +545,25 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
  }
   if(!t_isnoadjCov){
 	//std::cout << "scoreTest " << std::endl;  
-  	is_gtilde = true;
-	unsigned int nonzero = iIndex.n_elem;
-	unsigned int nGvec = t_GVec.n_elem;
- 	std::cout << "nonzero " << nonzero << std::endl;
-	std::cout << "nGvec " << nGvec << std::endl;
+	unsigned int nonzero = indexNonZeroVec0_arma.n_elem;
+	unsigned int nGvec = t_GVec0.n_elem;
+ 	//std::cout << "nonzero " << nonzero << std::endl;
+	//std::cout << "nGvec " << nGvec << std::endl;
 	//
   	//scoreTest(t_GVec, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, iIndex);
 	if(!t_isSparseGRM){
+  	  is_gtilde = false;
+	  //std::cout << "t_isSparseGRM " << t_isSparseGRM << std::endl;	
 	  scoreTestFast(t_GVec0, indexNonZeroVec0_arma, t_Beta, t_seBeta, t_pval_str, altFreq0, t_Tstat, t_var1, t_var2);
 	}else{
+  	  is_gtilde = true;
 	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma);	
 	}	
   }else{
   	is_gtilde = false;
-	//std::cout << "scoreTestFast "  << std::endl;  
-	//arma::uvec iIndexVec = arma::find(t_GVec > 0);
 	unsigned int nonzero = iIndex.n_elem;
 	unsigned int nGvec = t_GVec.n_elem;
-	//std::cout << "nonzero " << nonzero << std::endl;
-	//std::cout << "nGvec " << nGvec << std::endl;
-	//
-	/*
-        arma::vec t_GVec_cell = g_I_longl_mat * t_GVec;
-	arma::uvec indexZeroVec_arma = arma::find(t_GVec_cell == 0.0);
-        arma::uvec indexNonZeroVec_arma = arma::find(t_GVec_cell > 0.0);
-        scoreTestFast(t_GVec_cell, indexNonZeroVec_arma, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2);
-	std::cout << "t_var1 " << t_var1 << std::endl;
-	std::cout << "t_var2 " << t_var2 << std::endl;
-        */
-	std::cout << "t_var1 a" << t_var1 << std::endl;
-	std::cout << "t_var2 a" << t_var2 << std::endl;
-	
 	scoreTestFast_noadjCov(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, altFreq0,t_Tstat, t_var1, t_var2);
-	std::cout << "t_var1 " << t_var1 << std::endl;
-	std::cout << "t_var2 " << t_var2 << std::endl;
   }
 
 
@@ -609,7 +590,6 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
   }
 
   
-  std::cout << "pval_noadj " << pval_noadj << std::endl;
  //arma::vec timeoutput3_a = getTime();
   double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
 
@@ -771,9 +751,6 @@ if(!t_isER){
    }else{
         t_pval = t_pval_noSPA;
    }
-
-
-   std::cout << "TEST" << std::endl;
 
 
 }else{ //if(!t_isER){
@@ -952,8 +929,8 @@ if(!t_isER){
 	    arma::uvec iIndex0 = arma::find(t_GVec0 > 0.0);
 
 
-	//getadjGFast(t_GVec, t_gtilde, iIndex);
-	getadjGFast(t_GVec0, t_gtilde, iIndex0);
+	getadjGFast(t_GVec, t_gtilde, iIndex);
+	//getadjGFast(t_GVec0, t_gtilde, iIndex0);
 	is_gtilde = true; 
     }
 

@@ -303,7 +303,6 @@ SAIGE.Region = function(mu,
           }
 	}
       }	
-
 #print("time_mainRegionInCPP")
 #print(time_mainRegionInCPP)
      if(!is_fastTest){
@@ -319,8 +318,6 @@ SAIGE.Region = function(mu,
           AnnoWeights = c(WEIGHT, rep(1, outList$numofUR))
         }
       }
-
-
 
       annoMAFIndicatorMat = outList$annoMAFIndicatorMat
 
@@ -411,6 +408,7 @@ SAIGE.Region = function(mu,
 			re_phi = get_newPhi_scaleFactor(q.sum, mu.a, g.sum, p.new, Score, Phi, regionTestType)
 		        Phi = re_phi$val
                 }
+		
 		groupOutList = get_SKAT_pvalue(Score, Phi, r.corr, regionTestType)
 		resultDF = data.frame(Region = regionName,
                                                     Group = AnnoName,
