@@ -297,7 +297,6 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
       //var2 = ZtXVXZ(0,0)*m_tauvec[0] +  dot(g1,g1) - 2*Bmu2;
     }
     
-
     var1 = var2 * m_varRatioVal;
     S1 = dot(res1, g1_tilde);
     arma::mat res1X1_temp = (res1.t()) * X1;
@@ -306,7 +305,6 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
     S2 = - arma::dot(S_a2,  Z);
     S = S1 + S2;
     S = S/m_tauvec[0];
-
 
     double stat = S*S/var1;
     double t_pval;
@@ -376,9 +374,7 @@ void SAIGEClass::scoreTestFast_noadjCov(arma::vec & t_GVec,
     }
 
 
-    //std::cout << "var2 " << var2 << std::endl;
     double var1 = var2 * m_varRatioVal;
-    //std::cout << "var1 " << var1 << std::endl;
     double S1 = dot(res1, g1);
     double S2 = arma::sum(m_res * altFreq2);
     double S = S1 - S2;
@@ -537,7 +533,6 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
    }
 
  //arma::vec timeoutput3 = getTime();
- //
  //
  //
  if(t_isSparseGRM){

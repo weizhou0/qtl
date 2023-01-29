@@ -319,6 +319,7 @@ SAIGE.Region = function(mu,
         }
       }
 
+
       annoMAFIndicatorMat = outList$annoMAFIndicatorMat
 
       if((sum(outList$NumUltraRare_GroupVec) + sum(outList$NumRare_GroupVec)) > 0){
