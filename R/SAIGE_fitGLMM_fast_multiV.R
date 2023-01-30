@@ -1381,7 +1381,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
           print("length(NAset)")
 	  print(length(NAset))
          indexInMarkerList = indexInMarkerList + 1
-         if((CHR >= 1 & CHR <= 22) | includeNonautoMarkersforVarRatio){
+         if((CHR >= 1 & CHR <= 22 & AC > 0 & AC < length(G0)) | includeNonautoMarkersforVarRatio){
           AF = AC/(2*Nnomissing)
           if(CHR >= 1 & CHR <= 22){
                autoMarker=TRUE

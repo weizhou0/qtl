@@ -784,6 +784,7 @@ gc()
   AnalysisType = "Region"
   nEachChunk = 1
 
+
 if(regionTestType != "BURDEN"){  
     pval.Region.all = rbind(pval.Region.all, pval.Region)
 }

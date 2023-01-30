@@ -1,0 +1,4 @@
+gene1 var 1:100010:A:C 1:100016:A:C 
+gene1 anno lof missense
+gene2 var 1:100021:A:C 1:100022:A:C 1:100023:A:C
+gene2 anno lof missense lof

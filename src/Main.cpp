@@ -505,7 +505,7 @@ void mainMarkerInCPP(
 //if(g_n_unique == 0){
 
 
-    if(MAC > g_MACCutoffforER && t_traitType == "binary"){
+    if(MAC > g_MACCutoffforER){
       //std::cout << "Here" << std::endl;
       Unified_getMarkerPval( 
 		    t_GVec, 
