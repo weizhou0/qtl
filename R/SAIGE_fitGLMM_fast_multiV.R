@@ -1778,10 +1778,6 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 
       fit = fitglmmaiRPCG_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG, tolPCG, tol = tol, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
 
-	if(i == 1){
-		save(fit, file="/net/hunt/zhowei/project/imbalancedCaseCtrlMixedModel/Rpackage_SPAGMMAT/SAIGE_newgit/SAIGE_1.1.3/SAIGE/extdata/SAIGE_fit.rda")
-	}	
-
       t_end_fitglmmaiRPCG= proc.time()
       cat("t_end_fitglmmaiRPCG - t_begin_fitglmmaiRPCG\n")
       print(t_end_fitglmmaiRPCG - t_end_Get_Coef)
