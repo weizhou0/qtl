@@ -4,7 +4,8 @@ options(stringsAsFactors=F)
 
 ## load R libraries
 
-library(SAIGE)
+#library(SAIGE)
+library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs/")
 require(optparse) #install.packages("optparse")
 
 print(sessionInfo())
@@ -23,6 +24,8 @@ option_list <- list(
     help="Required. Path to the phenotype file. The file can be either tab or space delimited. The phenotype file has a header and contains at least two columns. One column is for phentoype and the other column is for sample IDs. Additional columns can be included in the phenotype file for covariates in the null model. Please specify the names of the covariates using the argument covarColList and specify categorical covariates using the argument qCovarColList. All categorical covariates must also be included in covarColList."),
   make_option("--phenoCol", type="character", default="",
     help="Required. Column name for phenotype to be tested in the phenotype file, e.g CAD"),
+  make_option("--isRemoveZerosinPheno", type="logical", default=FALSE,  
+    help="Optional. Whether to remove zeros in the phenotype"),
   make_option("--traitType", type="character", default="binary",help="Required. binary or quantitative [default=binary]"),
   make_option("--invNormalize", type="logical",default=FALSE,
     help="Optional. Only for quantitative. Whether to perform the inverse normalization for the phenotype [default='FALSE']"),
@@ -164,6 +167,7 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
             sparseGRMSampleIDFile=opt$sparseGRMSampleIDFile,
             phenoFile = opt$phenoFile,
             phenoCol = opt$phenoCol,
+	    isRemoveZerosinPheno = opt$isRemoveZerosinPheno,
             sampleIDColinphenoFile = opt$sampleIDColinphenoFile,
             traitType = opt$traitType,
             outputPrefix = opt$outputPrefix,

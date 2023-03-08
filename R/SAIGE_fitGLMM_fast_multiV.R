@@ -52,6 +52,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		famFile="",
                 phenoFile = "",
                 phenoCol = "",
+		isRemoveZerosinPheno = FALSE, 
                 traitType = "binary",
                 invNormalize = FALSE,
                 covarColList = NULL,
@@ -359,7 +360,7 @@ print("HERERE1")
         }
 
 
-print("HERERE2")
+	print("HERERE2")
 
         if (length(covarColList) > 0) {
             formula = paste0(phenoCol, "~", paste0(covarColList, 
@@ -762,8 +763,15 @@ print("HERERE2")
         }	
     }else if(traitType == "count"){
         cat(phenoCol, " is a count trait\n")
-        dataMerge_sort = dataMerge_sort[which(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)] > 0),]
-        miny = min(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)])
+	if(isRemoveZerosinPheno){
+            dataMerge_sort = dataMerge_sort[which(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)] > 0),]
+	    cat("Removing all zeros in the phenotype\n")
+	    if(nrow(dataMerge_sort) == 0){
+	        stop("ERROR: no samples are left after removing zeros in the phenotype\n")	
+
+	    }	
+	}
+	miny = min(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)])
         if (miny < 0 ) {
             stop("ERROR! phenotype value needs to be non-negative \n")
         }
@@ -792,6 +800,14 @@ print("HERERE2")
         }
     }else if(traitType == "count_nb"){
 	cat(phenoCol, " is a count_nb trait\n")
+	if(isRemoveZerosinPheno){
+            dataMerge_sort = dataMerge_sort[which(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)] > 0),]
+            cat("Removing all zeros in the phenotype\n")
+            if(nrow(dataMerge_sort) == 0){
+                stop("ERROR: no samples are left after removing zeros in the phenotype\n")
+
+            }
+        }
 	miny = min(dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)])
         if (miny < 0 ) {
             stop("ERROR! phenotype value needs to be non-negative \n")

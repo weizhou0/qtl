@@ -161,10 +161,12 @@ setGenoInput = function(bgenFile = "",
     }
     #markerInfo$ID2 = lapply(markerInfo$ID, splitreformatMarkerIDinBgen)    
     markerInfo$ID2 = paste0(markerInfo$CHROM,":",markerInfo$POS, ":", markerInfo$REF,":", markerInfo$ALT)
+    markerInfo$ID = paste0(markerInfo$CHROM,":",markerInfo$POS, ":", markerInfo$ALT,":", markerInfo$REF)
 #    markerInfo[,POS:=NULL]
     #print(is.data.table(markerInfo))
     markerInfo[,REF:=NULL]
     markerInfo[,ALT:=NULL]
+    #setkeyv(markerInfo, c("ID","ID2"))
     setkeyv(markerInfo, c("ID","ID2"))
     #markerInfo$genoIndex_prev = NULL
     #sampleInfo = data.table::fread(famFile, select = c(2), data.table=F)
@@ -274,11 +276,9 @@ setGenoInput = function(bgenFile = "",
     }
 
     if(!is.null(markerInfo$ID2)){
-
     	posRows = which((markerInfo$ID %in% IDsToInclude) | (markerInfo$ID2 %in% IDsToInclude))
     }else{
 	posRows = which((markerInfo$ID %in% IDsToInclude))
-
     }	    
     if(length(posRows) != 0)
       cat(length(posRows), " markers in idstoIncludeFile are found in the geno/dosage file.\n") 
