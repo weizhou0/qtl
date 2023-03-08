@@ -4,8 +4,8 @@ options(stringsAsFactors=F)
 
 ## load R libraries
 
-#library(SAIGE)
-library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs/")
+library(SAIGE)
+#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs/")
 require(optparse) #install.packages("optparse")
 
 print(sessionInfo())
