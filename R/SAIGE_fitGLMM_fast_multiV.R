@@ -1014,7 +1014,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
 
         if(!is.null(out.transform) & is.null(fit0$offset)){
-                coef.alpha<-Covariate_Transform_Back(alpha, out.transform$Param.transform)
+                coef.alpha<-Covariate_Transform_Back(alpha0, out.transform$Param.transform)
                 modglmm$coefficients = coef.alpha
         }
 
