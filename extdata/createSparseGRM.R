@@ -4,7 +4,7 @@ options(stringsAsFactors=F)
 
 ## load R libraries
 #library(SAIGE, lib.loc="../../install_0.93")
-library(SAIGE, lib.loc="/net/hunt/zhowei/project/imbalancedCaseCtrlMixedModel/Rpackage_SPAGMMAT/SAIGE_newgit/install_1.1.4")
+library(SAIGE)
 require(optparse) #install.packages("optparse")
 
 print(sessionInfo())
