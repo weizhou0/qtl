@@ -246,6 +246,9 @@ SPAGMMATtest = function(bgenFile = "",
     #isSparseGRM = TRUE
 
     isSparseGRM = is_sparseGRM
+
+
+    cat("isSparseGRM ", isSparseGRM, "\n")
   #if(obj.model$useSparseGRMforVarRatio){
 #	if(sparseGRMFile != ""){
 #		getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, obj.model$sampleID)	
@@ -265,12 +268,13 @@ SPAGMMATtest = function(bgenFile = "",
 
     ratioVecList = Get_Variance_Ratio(varianceRatioFile, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM) #readInGLMM.R
 
-
+	print("obj.model$spSigma ")
+	print(obj.model$spSigma)
     if(!is.null(obj.model$spSigma)){
     	#SigmaMat_sp = getSparseSigma_new() 
     	isSparseGRM = TRUE
 	SigmaMat_sp = chol2inv(chol(obj.model$spSigma)) 
-
+	    cat("isSparseGRM 2 ", isSparseGRM, "\n")	
     }else{
 	SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))
     }	    
@@ -497,7 +501,8 @@ print(ratioVecList)
                    LOCO,
                    chrom,
 		   isCondition,
-		   is_overwrite_output)
+		   is_overwrite_output,
+		   objGeno$anyInclude)
     }else{
       maxMACbinind = which(maxMAC_in_groupTest > 0)	
       if(length(maxMACbinind) > 0){ 

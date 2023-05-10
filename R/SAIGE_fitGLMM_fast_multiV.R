@@ -467,6 +467,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         rm(mmat)
 	rm(mmat_nomissing)
 	gc()
+	isSparseGRMIdentity = FALSE
 	if(useGRMtoFitNULL){	
 		indicatorGenoSamplesWithPheno = (sampleListwithGeno$IndexGeno %in% dataMerge_sort$IndexGeno)
 
@@ -493,7 +494,11 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	
 	}else{
 		if(!useGRMtoFitNULL){
-			stop("No duplicated IDs are observed in the phenotype file, so GRM must be used to fit the null model. Please set useGRMtoFitNULL=TRUE\n")
+			#stop("No duplicated IDs are observed in the phenotype file, so GRM must be used to fit the null model. Please set useGRMtoFitNULL=TRUE\n")
+			cat("No duplicated IDs are observed in the phenotype file, so the identity matrix will be used as a sparse GRM will be used to fit the null model\n")
+			isSparseGRMIdentity = TRUE
+			useSparseGRMtoFitNULL = TRUE
+			useGRMtoFitNULL = TRUE
 		}
 	}
 	set_useGRMtoFitNULL(useGRMtoFitNULL)	
@@ -620,7 +625,14 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 
 
     if (useSparseGRMtoFitNULL | useSparseGRMforVarRatio) {
-	getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)
+	if(!isSparseGRMIdentity){
+    	
+		getsubGRM_orig(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID)
+	}else{
+		print(length(dataMerge_sort$IIDgeno))
+		sparseGRM = Matrix:::sparseMatrix(i = as.vector(1:nrow(data.new)), j = as.vector(1:nrow(data.new)), x = rep(1, nrow(data.new)), symmetric = TRUE)
+		setupSparseGRM_new(sparseGRM)	
+	}
    	#getsubGRM(sparseGRMFile, sparseGRMSampleIDFile, relatednessCutoff, dataMerge_sort$IID, dataMerge_sort$longlVar)    
         #m4 = gen_sp_v2(sparseGRMtest)
         #cat("Setting up sparse GRM using ", sparseGRMFile, " and ", sparseGRMSampleIDFile, "\n")
@@ -890,7 +902,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 chromosomeEndIndexVec = chromosomeEndIndexVec, 
                 traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform, 
                 isDiagofKinSetAsOne = isDiagofKinSetAsOne, 
-		isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL))
+		isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL, isSparseGRMIdentity = isSparseGRMIdentity))
 	modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
       }else{
 	      
@@ -904,7 +916,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 chromosomeEndIndexVec = chromosomeEndIndexVec,
                 traceCVcutoff = traceCVcutoff, isCovariateTransform = isCovariateTransform,
                 isDiagofKinSetAsOne = isDiagofKinSetAsOne,
-                isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL))	
+                isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL, isSparseGRMIdentity = isSparseGRMIdentity))	
 
         data.new$y = modglmm$y
 	varWeights = modglmm$varWeights 
@@ -994,7 +1006,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 }
         #}
 
-
+	if(FALSE){
 	 if(length(fit0$y) <= 10000){
 		family = fit0$family
                 eta = modglmm$linear.predictors
@@ -1007,7 +1019,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		gen_sp_Sigma_multiV(W, tauVecNew)
 		modglmm$spSigma = get_sp_Sigma_to_R()
          }		 
-
+	}
         #save(modglmm, file = modelOut)
         tau = modglmm$theta
         alpha0 = modglmm$coefficients
@@ -1589,7 +1601,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
 
 #Fits the null glmm
-glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE, useSparseGRMtoFitNULL = TRUE, useGRMtoFitNULL = TRUE) {
+glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovariateOffset, fit0, tau=c(0,0), fixtau = c(0,0), maxiter =20, tol = 0.02, verbose = TRUE, nrun=30, tolPCG = 1e-5, maxiterPCG = 500, subPheno, indicatorGenoSamplesWithPheno, obj.noK, out.transform, tauInit, memoryChunk, LOCO, chromosomeStartIndexVec, chromosomeEndIndexVec, traceCVcutoff, isCovariateTransform, isDiagofKinSetAsOne, isLowMemLOCO, covarianceIdxMat = NULL, isStoreSigma = FALSE, useSparseGRMtoFitNULL = TRUE, useGRMtoFitNULL = TRUE, isSparseGRMIdentity = FALSE) {
   #Fits the null generalized linear mixed model for a poisson, binomial, and gaussian
   #Args:
   #  genofile: string. Plink file for the M1 markers to be used to construct the genetic relationship matrix
@@ -1747,7 +1759,11 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     if(isStoreSigma){
       gen_sp_Sigma_multiV(W, tau)
     }
-    
+   
+    if(isSparseGRMIdentity){
+	tau[2] = 0
+    }
+
     re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE, var_weights = var_weights)
 
     if(isStoreSigma){
@@ -1781,7 +1797,17 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     print(tau)
   }
 
-  for (i in seq_len(maxiter)) {
+  maxiter_in = maxiter
+  if(isSparseGRMIdentity){
+        tau[2] = 0
+	maxiter_in = 0
+        alpha = re.coef$alpha
+        tau0 = tau
+        cat("tau0_v1: ", tau0, "\n")
+        eta0 = eta
+  }
+
+  for (i in seq_len(maxiter_in)) {
     #W = sqrtW^2
 
     if(verbose) cat("\nIteration ", i, tau, ":\n")
@@ -1863,13 +1889,14 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
      }
 
     #added these steps after tau is estimated 04-14-2018
+
   re.coef = Get_Coef_multiV(y, X, tau, family, alpha, eta,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=FALSE, var_weights = var_weights)
-  cov = re.coef$cov
+
+cov = re.coef$cov
   alpha = re.coef$alpha
   eta = re.coef$eta
   Y = re.coef$Y
   mu = re.coef$mu
-
   converged = ifelse(i < maxiter, TRUE, FALSE)
 
   #var_weights = NULL

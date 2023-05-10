@@ -12,10 +12,9 @@ SAIGE.Marker = function(traitType,
 			LOCO,
 			chrom,
 			isCondition,
-			isOverWriteOutput)
+			isOverWriteOutput, 
+			isAnyInclude)
 {
-  #print("SAIGE.Marker 0")
-  #print_g_n_unique()
 
   if(is.null(OutputFileIndex))
     OutputFileIndex = paste0(OutputFile, ".index")
@@ -74,11 +73,13 @@ SAIGE.Marker = function(traitType,
     }
     
   }else{
+   if(!isAnyInclude){	  
     if(chrom == ""){
       stop("chrom needs to be specified for single-variant assoc tests when using VCF as input\n")
     }else{
       set_iterator_inVcf("", chrom, 1, 250000000)
     }
+   }
     if(outIndex > 1){
 	move_forward_iterator_Vcf(outIndex*nMarkersEachChunk)    
     }
@@ -142,9 +143,6 @@ SAIGE.Marker = function(traitType,
    #resMarker = as.data.frame(mainMarkerInCPP(genoType, traitType, genoIndex_prev, genoIndex, isMoreOutput, isImputation)) 
    #resMarker = resMarker[which(!is.na(resMarker$BETA)), ]
 
-
-  #print("SAIGE.Marker 2 ")
-  #print_g_n_unique() 
   mainMarkerInCPP(genoType, traitType, genoIndex_prev, genoIndex, isMoreOutput, isImputation, isFirth)
 
     #timeoutput=system.time({writeOutputFile(Output = list(resMarker),
