@@ -137,6 +137,11 @@ setGenoInput = function(bgenFile = "",
 		 sampleInModel = NULL)
 {
 
+  if(any(duplicated(sampleInModel))){	
+    set_dup_sample_index_inR(sampleInModel)
+    sampleInModel = unique(sampleInModel)
+  }
+
   dosageFileType = checkGenoInput(bgenFile = bgenFile,
                  bgenFileIndex = bgenFileIndex,
                  vcfFile = vcfFile,
