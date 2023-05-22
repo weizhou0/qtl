@@ -226,6 +226,12 @@ SPAGMMATtest = function(bgenFile = "",
   #print_g_n_unique()
     
     obj.model = ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt=9999, espa_range=c(-20,20)) #readInGLMM.R8
+
+    setAssocTest_GlobalVarsInCPP_GbyE(obj.model$eMat, obj.model$isgxe);	
+
+
+
+
     if(obj.model$traitType == "binary"){
         if(max_MAC_use_ER > 0){
              cat("P-values of genetic variants with MAC <= ", max_MAC_use_ER, " will be calculated via effecient resampling.\n")
@@ -391,6 +397,8 @@ print(ratioVecList)
 		     t_varRatio_sparse = as.vector(ratioVecList$ratioVec_sparse),
 		     t_varRatio_null = as.vector(ratioVecList$ratioVec_null),
 		     t_varRatio_null_noXadj = as.vector(ratioVecList$ratioVec_null_noXadj),
+		     t_varRatio_null_eg = as.vector(ratioVecList$ratioVec_null_eg),	
+		     t_varRatio_sparse_eg = as.vector(ratioVecList$ratioVec_sparse_eg),	
 		     t_cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
 		     t_cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
 		     t_SPA_Cutoff = SPAcutoff,
@@ -466,6 +474,7 @@ print(ratioVecList)
 
     traitType = obj.model$traitType
     mu = obj.model$mu
+    isgxe = obj.model$isgxe 
     rm(obj.model)
     gc()
     #print(gc(v=T))
@@ -502,7 +511,8 @@ print(ratioVecList)
                    chrom,
 		   isCondition,
 		   is_overwrite_output,
-		   objGeno$anyInclude)
+		   objGeno$anyInclude,
+		   isgxe)
     }else{
       maxMACbinind = which(maxMAC_in_groupTest > 0)	
       if(length(maxMACbinind) > 0){ 

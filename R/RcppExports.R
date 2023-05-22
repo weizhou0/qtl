@@ -25,6 +25,10 @@ setAssocTest_GlobalVarsInCPP <- function(t_impute_method, t_missing_cutoff, t_mi
     invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP', PACKAGE = 'SAIGE', t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_weights_beta, t_outputFilePrefix, t_MACCutoffforER))
 }
 
+setAssocTest_GlobalVarsInCPP_GbyE <- function(t_emat, t_isgxe) {
+    invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE', PACKAGE = 'SAIGE', t_emat, t_isgxe))
+}
+
 setMarker_GlobalVarsInCPP <- function(t_isOutputMoreDetails, t_marker_chunksize) {
     invisible(.Call('_SAIGE_setMarker_GlobalVarsInCPP', PACKAGE = 'SAIGE', t_isOutputMoreDetails, t_marker_chunksize))
 }
@@ -57,8 +61,8 @@ setVCFobjInCPP <- function(t_vcfFileName, t_vcfFileIndex, t_vcfField, t_SampleIn
     invisible(.Call('_SAIGE_setVCFobjInCPP', PACKAGE = 'SAIGE', t_vcfFileName, t_vcfFileIndex, t_vcfField, t_SampleInModel))
 }
 
-setSAIGEobjInCPP <- function(t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_varRatio_null_noXadj, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isnoadjCov, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec, t_is_EmpSPA, t_cumul) {
-    invisible(.Call('_SAIGE_setSAIGEobjInCPP', PACKAGE = 'SAIGE', t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_varRatio_null_noXadj, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isnoadjCov, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec, t_is_EmpSPA, t_cumul))
+setSAIGEobjInCPP <- function(t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_varRatio_null_noXadj, t_varRatio_null_eg, t_varRatio_sparse_eg, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isnoadjCov, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec, t_is_EmpSPA, t_cumul) {
+    invisible(.Call('_SAIGE_setSAIGEobjInCPP', PACKAGE = 'SAIGE', t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_varRatio_null_noXadj, t_varRatio_null_eg, t_varRatio_sparse_eg, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isnoadjCov, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec, t_is_EmpSPA, t_cumul))
 }
 
 RegionSetUpConditional_binary_InCPP <- function(t_weight_cond) {
@@ -105,8 +109,8 @@ openOutfile_singleinGroup <- function(t_traitType, t_isImputation, isappend, t_i
     .Call('_SAIGE_openOutfile_singleinGroup', PACKAGE = 'SAIGE', t_traitType, t_isImputation, isappend, t_isMoreOutput)
 }
 
-openOutfile_single <- function(t_traitType, t_isImputation, isappend, t_isMoreOutput) {
-    .Call('_SAIGE_openOutfile_single', PACKAGE = 'SAIGE', t_traitType, t_isImputation, isappend, t_isMoreOutput)
+openOutfile_single <- function(t_traitType, t_isImputation, isappend, t_isMoreOutput, t_isGbyE) {
+    .Call('_SAIGE_openOutfile_single', PACKAGE = 'SAIGE', t_traitType, t_isImputation, isappend, t_isMoreOutput, t_isGbyE)
 }
 
 set_flagSparseGRM_cur_SAIGE <- function(t_flagSparseGRM_cur) {

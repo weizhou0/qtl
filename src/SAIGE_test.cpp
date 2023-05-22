@@ -37,6 +37,8 @@ SAIGEClass::SAIGEClass(
 	arma::vec & t_varRatio_sparse,
 	arma::vec & t_varRatio_null,
 	arma::vec & t_varRatio_null_noXadj,
+	arma::vec & t_varRatio_null_eg,
+	arma::vec & t_varRatio_sparse_eg,
 	arma::vec & t_cateVarRatioMinMACVecExclude,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
 	double t_SPA_Cutoff,
@@ -84,6 +86,8 @@ SAIGEClass::SAIGEClass(
     m_varRatio_sparse = t_varRatio_sparse;
     m_varRatio_null = t_varRatio_null;
     m_varRatio_null_noXadj = t_varRatio_null_noXadj;
+    m_varRatio_null_eg = t_varRatio_null_eg;
+    m_varRatio_sparse_eg = t_varRatio_sparse_eg;
     m_cateVarRatioMinMACVecExclude = t_cateVarRatioMinMACVecExclude;
     m_cateVarRatioMaxMACVecInclude = t_cateVarRatioMaxMACVecInclude;
     m_tauvec = t_tauvec;
@@ -520,7 +524,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
    double altFreq0;
    arma::vec t_GVec0;
    arma::uvec indexNonZeroVec0_arma, indexZeroVec0_arma;
-   if(g_I_longl_mat.n_cols != g_I_longl_mat.n_rows){
+   if((g_I_longl_mat.n_cols != g_I_longl_mat.n_rows) && (t_GVec.n_elem < m_y.n_elem)){
       t_GVec0 = g_I_longl_mat * t_GVec;
       altFreq0 = arma::mean(t_GVec0) /2;
       indexNonZeroVec0_arma = arma::find(t_GVec0 > 0.0);
@@ -538,7 +542,9 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
  if(t_isSparseGRM){
  	t_isnoadjCov = false;
  }
-  if(!t_isnoadjCov){
+
+
+if(!t_isnoadjCov){
 	//std::cout << "scoreTest " << std::endl;  
 	unsigned int nonzero = indexNonZeroVec0_arma.n_elem;
 	unsigned int nGvec = t_GVec0.n_elem;
@@ -548,7 +554,6 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
   	//scoreTest(t_GVec, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, iIndex);
 	if(!t_isSparseGRM){
   	  is_gtilde = false;
-	  //std::cout << "t_isSparseGRM " << t_isSparseGRM << std::endl;	
 	  scoreTestFast(t_GVec0, indexNonZeroVec0_arma, t_Beta, t_seBeta, t_pval_str, altFreq0, t_Tstat, t_var1, t_var2);
 	}else{
   	  is_gtilde = true;
@@ -560,10 +565,6 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 	unsigned int nGvec = t_GVec.n_elem;
 	scoreTestFast_noadjCov(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, altFreq0,t_Tstat, t_var1, t_var2);
   }
-
-
-
-
 
   double StdStat = std::abs(t_Tstat) / sqrt(t_var1);
   //std::cout << "before SPA t_Tstat " << t_Tstat << std::endl;
@@ -795,13 +796,6 @@ if(!t_isER){
 //printTime(timeoutput3, timeoutput3_a, "Test Marker  ScoreTest");
 //printTime(timeoutput3, timeoutput4, "Test Marker 3 to 4");
 //printTime(timeoutput3_a, timeoutput4, "Test Marker SPA");
-
-
-
-
-
-
-
    //condition
    if(t_isCondition){
 	if(!is_gtilde){
@@ -819,9 +813,6 @@ if(!t_isER){
     double S_c = t_Tstat_c;
 
     double stat_c = S_c*S_c/t_varT_c;
-
-
-     //if (t_varT_c <= std::pow(std::numeric_limits<double>::min(), 2)){
      if (t_varT_c <= std::numeric_limits<double>::min()){
         t_pval_noSPA_c = 1;
 	stat_c = 0;

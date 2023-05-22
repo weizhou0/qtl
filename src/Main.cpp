@@ -110,6 +110,10 @@ std::string g_outputFilePrefixSingleInGroup_temp;
 std::string g_outputFilePrefixSingle;
 
 
+arma::mat g_emat;
+arma::fmat g_emat_f;
+bool g_isgxe;
+
 
 // [[Rcpp::export]]
 void setAssocTest_GlobalVarsInCPP(std::string t_impute_method,
@@ -137,6 +141,19 @@ void setAssocTest_GlobalVarsInCPP(std::string t_impute_method,
   g_outputFilePrefixSingle = t_outputFilePrefix;
   g_MACCutoffforER = t_MACCutoffforER;
 }
+
+
+// [[Rcpp::export]]
+void setAssocTest_GlobalVarsInCPP_GbyE(
+                                arma::fmat & t_emat,
+                                bool t_isgxe)
+{
+	g_emat_f=t_emat;
+	g_emat = arma::conv_to< arma::mat >::from(g_emat_f);
+	g_isgxe=t_isgxe;
+}
+
+
 // [[Rcpp::export]]
 void setMarker_GlobalVarsInCPP(
 			       bool t_isOutputMoreDetails,
@@ -218,6 +235,16 @@ void mainMarkerInCPP(
   std::vector<double> varT_cVec(q, arma::datum::nan);
   std::vector<double> pvalNA_cVec(q, arma::datum::nan);
   //}
+
+  std::vector<std::string> Beta_ge_cStrVec(q, "NA");         // beta value for ALT allele
+  std::vector<std::string> seBeta_ge_cStrVec(q, "NA");
+  std::vector<std::string> pval_ge_cStrVec(q, "NA");
+  std::vector<std::string> pval_noSPA_ge_cStrVec(q, "NA"); 
+  //std::vector<std::string> Tstat_ge_cStrVec(q, arma::datum::nan);
+  //std::vector<std::string> varT_ge_cStrVec(q, arma::datum::nan);
+
+
+
   arma::rowvec G1tilde_P_G2tilde_Vec(ptr_gSAIGEobj->m_numMarker_cond);
 
   std::vector<bool>  isSPAConvergeVec(q);
@@ -544,7 +571,6 @@ void mainMarkerInCPP(
 
 
 
-
      if(MAC > g_MACCutoffforER || t_traitType != "binary"){
 
       Unified_getMarkerPval(
@@ -565,10 +591,6 @@ void mainMarkerInCPP(
  
      }     
      }
-
-
-//std::cout << "pval_noSPA " << pval_noSPA << std::endl;
-//std::cout << "pval " << pval << std::endl;
 
 
    if(t_traitType == "binary"){
@@ -638,7 +660,127 @@ void mainMarkerInCPP(
       N_Vec.at(i) = n;
     }
 
-    
+   
+//G x E
+    unsigned int ne = g_emat.n_cols;
+    std::vector<std::string> Beta_c_ge_vec(ne);
+    std::vector<std::string> seBeta_c_ge_vec(ne);
+    std::vector<std::string> pval_noSPA_c_ge_vec(ne);
+    std::vector<std::string> pval_c_ge_vec(ne);
+    arma::vec evec;
+    if(g_isgxe && pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
+
+    unsigned int q = 1;
+    unsigned int nrow_e = g_emat.n_rows;
+    arma::mat P2Mat_g(nrow_e, q);
+    arma::mat VarInvMat_g(q, q);
+    arma::mat VarMat_g(q, q);
+    arma::vec TstatVec_g(q);
+    arma::vec pVec_g(q);
+    arma::vec MAFVec_g(q);
+    arma::vec w0G2_cond_Vec_g(q);
+    arma::vec gsumVec(nrow_e, arma::fill::zeros);
+    arma::vec gyVec_g(q);
+    gyVec_g(0) = gy; 	
+    double qsum_g = arma::accu(gyVec_g);
+    std::string Beta_c_ge_str;
+    std::string seBeta_c_ge_str;
+    std::string pval_noSPA_c_ge_str;
+    std::string pval_c_ge_str;
+    arma::vec t_GVec1;
+
+	w0G2_cond_Vec_g(0) = 1;
+     	TstatVec_g(0) = Tstat;
+     	pVec_g(0) = pval;
+	MAFVec_g(0) = MAF;
+	//t_P2Vec.print("t_P2Vec");
+	if((ptr_gSAIGEobj->g_I_longl_mat.n_cols != ptr_gSAIGEobj->g_I_longl_mat.n_rows) && (t_GVec.n_elem < ptr_gSAIGEobj->m_y.n_elem)){
+	        t_GVec1 = ptr_gSAIGEobj->g_I_longl_mat * t_GVec;
+		indexNonZeroVec_arma = arma::find(t_GVec1 > 0.0);
+		indexZeroVec_arma = arma::find(t_GVec1 == 0.0);
+  		if(!is_gtilde){
+                	ptr_gSAIGEobj->getadjG(t_GVec1, gtildeVec);
+        	}
+	 }else{
+  		if(!is_gtilde){
+                	ptr_gSAIGEobj->getadjG(t_GVec, gtildeVec);
+        	}
+		 t_GVec1 = t_GVec;
+
+	 }
+
+	if(t_P2Vec.n_elem == 0){
+ 		if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
+      			t_P2Vec = gtildeVec % (ptr_gSAIGEobj->m_mu2) *((ptr_gSAIGEobj->m_tauvec)[0]);
+    		}else{
+        		t_P2Vec = ptr_gSAIGEobj->getSigma_G_V(gtildeVec, 500, 1e-5);
+     		}
+    	}
+
+	P2Mat_g.col(0) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec;
+	VarMat_g = sqrt(ptr_gSAIGEobj->m_varRatioVal)*gtildeVec.t() * P2Mat_g;
+	VarInvMat_g = VarMat_g.i();	
+
+  	ptr_gSAIGEobj->assignConditionFactors(
+                                        P2Mat_g,
+                                        VarInvMat_g,
+                                        VarMat_g,
+                                        TstatVec_g,
+                                        w0G2_cond_Vec_g,
+                                        MAFVec_g,
+                                        qsum_g,
+                                        gtildeVec,
+                                        pVec_g);
+	double Beta_ge, seBeta_ge, pval_ge, Tstat_ge, varT_ge, pval_noSPA_ge, Beta_c_ge, seBeta_c_ge, pval_c_ge, Tstat_c_ge, varT_c_ge, pval_noSPA_c_ge, gy_ge, altFreq_ge;
+	arma::vec gtildeVec_ge, t_P2Vec_ge, t_GEVec;
+	arma::rowvec G1tilde_P_G2tilde_Vec_ge;
+	bool isSPAConverge_ge, is_gtilde_ge, is_region_ge, is_Firth_ge, is_FirthConverge_ge;
+	//(ptr_gSAIGEobj->m_varRatio_null_eg).print("ptr_gSAIGEobj->m_varRatio_null_eg");
+
+    	for(int k = 0; k < ne; k++){
+	    evec = g_emat.col(k);
+	    t_GEVec = t_GVec1 % evec;
+	    altFreq_ge = arma::mean(t_GEVec)/2;
+	    is_gtilde_ge = false;
+	    gtildeVec_ge.clear();
+	    t_P2Vec_ge.clear();
+	    G1tilde_P_G2tilde_Vec_ge.clear();
+	    if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
+	    	ptr_gSAIGEobj->m_varRatioVal = ptr_gSAIGEobj->m_varRatio_null_eg(k);
+	    }else{
+		ptr_gSAIGEobj->m_varRatioVal = ptr_gSAIGEobj->m_varRatio_sparse_eg(k);
+	    }
+	    Unified_getMarkerPval(
+                    t_GEVec,
+                          false, // bool t_isOnlyOutputNonZero,
+                          indexNonZeroVec_arma, indexZeroVec_arma, Beta_ge, seBeta_ge, pval_ge, pval_noSPA_ge, Tstat_ge, gy_ge, varT_ge, altFreq_ge, isSPAConverge_ge, gtildeVec_ge, is_gtilde_ge, is_region_ge, t_P2Vec_ge, true, Beta_c_ge, seBeta_c_ge, pval_c_ge, pval_noSPA_c_ge, Tstat_c_ge, varT_c_ge, G1tilde_P_G2tilde_Vec_ge, is_Firth_ge, is_FirthConverge_ge, false, false, false);
+
+			Beta_c_ge_vec.at(k) = std::to_string(Beta_c_ge);
+			seBeta_c_ge_vec.at(k) = std::to_string(seBeta_c_ge);
+			pval_c_ge_vec.at(k) = std::to_string(pval_c_ge);
+			pval_noSPA_c_ge_vec.at(k) = std::to_string(pval_noSPA_c_ge);
+
+        }
+	if(ne > 1){     
+            Beta_c_ge_str = join(Beta_c_ge_vec, ",");
+            seBeta_c_ge_str = join(seBeta_c_ge_vec, ",");
+            pval_c_ge_str = join(pval_c_ge_vec, ",");
+            pval_noSPA_c_ge_str = join(pval_noSPA_c_ge_vec, ",");
+	}else{
+	    Beta_c_ge_str = Beta_c_ge_vec.at(0);
+	    seBeta_c_ge_str = seBeta_c_ge_vec.at(0);
+	    pval_c_ge_str = pval_c_ge_vec.at(0);
+	    pval_noSPA_c_ge_str = pval_noSPA_c_ge_vec.at(0);
+	}
+
+	Beta_ge_cStrVec.at(i) = Beta_c_ge_str;
+	seBeta_ge_cStrVec.at(i) = seBeta_c_ge_str;
+	pval_ge_cStrVec.at(i) = pval_c_ge_str;
+	pval_noSPA_ge_cStrVec.at(i) = pval_noSPA_c_ge_str;
+
+    }//if(g_isgxe){
+
+
    } //    if((missingRate > g_missingRate_cutoff) || (MAF < g_marker_minMAF_cutoff) || (MAC < g_marker_minMAC_cutoff || imputeInfo < g_marker_minINFO_cutoff)){
  
   
@@ -684,7 +826,13 @@ void mainMarkerInCPP(
   N_ctrl_hetVec,
   N_case_hetVec,
   N_ctrl_homVec,
-  N_Vec);
+  N_Vec,
+  g_isgxe,
+Beta_ge_cStrVec,
+seBeta_ge_cStrVec,
+pval_ge_cStrVec,
+pval_noSPA_ge_cStrVec
+);
 
 }
 
@@ -892,6 +1040,8 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::vec & t_varRatio_sparse,
         arma::vec & t_varRatio_null,
         arma::vec & t_varRatio_null_noXadj,
+        arma::vec & t_varRatio_null_eg,
+        arma::vec & t_varRatio_sparse_eg,
 	arma::vec & t_cateVarRatioMinMACVecExclude,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,
@@ -935,6 +1085,8 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
 	t_varRatio_sparse,
         t_varRatio_null,
 	t_varRatio_null_noXadj,
+	t_varRatio_null_eg,
+	t_varRatio_sparse_eg,
 	t_cateVarRatioMinMACVecExclude,
 	t_cateVarRatioMaxMACVecInclude,
         t_SPA_Cutoff,
@@ -2548,7 +2700,7 @@ bool openOutfile_singleinGroup(std::string t_traitType, bool t_isImputation, boo
 
 
 // [[Rcpp::export]]
-bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isappend, bool t_isMoreOutput){
+bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isappend, bool t_isMoreOutput,  bool t_isGbyE){
       bool isopen;
       if(!isappend){
         OutFile_single.open(g_outputFilePrefixSingle.c_str());
@@ -2580,13 +2732,21 @@ bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isapp
 			if(t_isMoreOutput){	
 				OutFile_single << "\tN_case_hom\tN_case_het\tN_ctrl_hom\tN_ctrl_het";
 			}
-			OutFile_single << "\n";
+			//OutFile_single << "\n";
 
                 }else if(t_traitType == "quantitative" || t_traitType == "count" || t_traitType == "count_nb"){
-                        OutFile_single << "N\n";
+                        OutFile_single << "N";
 
                 }
 
+		if(t_isGbyE){
+
+                        OutFile_single << "\tBeta_ge\tseBeta_ge\tpval_ge\tpval_noSPA_ge";
+                }
+
+                OutFile_single << "\n";
+
+	
         }
      }else{
         OutFile_single.open(g_outputFilePrefixSingle.c_str(), std::ofstream::out | std::ofstream::app);
@@ -2634,8 +2794,12 @@ void writeOutfile_single(bool t_isMoreOutput,
                         std::vector<double>  & N_ctrl_hetVec,
                         std::vector<double>  & N_case_hetVec,
                         std::vector<double>  & N_ctrl_homVec,
-                        std::vector<uint32_t> & N_Vec
-
+                        std::vector<uint32_t> & N_Vec,
+			bool is_GbyE,
+			std::vector<std::string> & Beta_ge_cStrVec,
+			std::vector<std::string> & seBeta_ge_cStrVec,
+			std::vector<std::string> & pval_ge_cStrVec,
+			std::vector<std::string> & pval_noSPA_ge_cStrVec
 ){
   int numtest = 0;
   for(unsigned int k = 0; k < pvalVec.size(); k++){
@@ -2716,12 +2880,28 @@ void writeOutfile_single(bool t_isMoreOutput,
                                 OutFile_single << "\t";
                                 OutFile_single << N_ctrl_hetVec.at(k);
                         }
-                        OutFile_single << "\n";
+                        //OutFile_single << "\n";
                 }else if(t_traitType == "quantitative" || t_traitType == "count" || t_traitType == "count_nb"){
                         OutFile_single << N_Vec.at(k);
-                        OutFile_single << "\n";
+                        //OutFile_single << "\n";
 
                 }
+
+
+		if(is_GbyE){
+
+			OutFile_single << "\t";
+			OutFile_single << Beta_ge_cStrVec.at(k);
+			OutFile_single << "\t";
+			OutFile_single << seBeta_ge_cStrVec.at(k);
+			OutFile_single << "\t";
+			OutFile_single << pval_ge_cStrVec.at(k);
+			OutFile_single << "\t";
+			OutFile_single << pval_noSPA_ge_cStrVec.at(k);
+		}
+
+		OutFile_single << "\n";
+
         }
   }
   std::cout << numtest << " markers were tested." << std::endl;
@@ -5254,7 +5434,6 @@ void set_Vmat_vec_longlVar(){
           //spGRM_longl = arma::conv_to< arma::sp_fmat >::from(spGRM_longl_0);
           //Kmat_vec.push_back(spGRM_longl);
           Kmat_vec.push_back(spGRM_longl_0);
-          std::cout << "x here" << std::endl;
           //spGRM_longl_0.clear();
           spGRM_longl.clear();
         }
@@ -6026,4 +6205,14 @@ void  get_indexinAnotherVector(std::vector<uint> & nonzeroInd_orig, arma::uvec &
 // [[Rcpp::export]]
 arma::sp_fmat get_sp_Sigma_to_R(){
 	return(g_spSigma);
+}
+
+
+
+std::string join(std::vector<std::string> const &strings, std::string delim)
+{
+    std::stringstream ss;
+    std::copy(strings.begin(), strings.end(),
+        std::ostream_iterator<std::string>(ss, delim.c_str()));
+    return ss.str();
 }	

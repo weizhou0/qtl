@@ -6,7 +6,8 @@
 #' @param traitType character. e.g. "binary" or "quantitative". By default, "binary"
 #' @param invNormalize logical. Whether to perform the inverse normalization for the phentoype or not. e.g. TRUE or FALSE. By default, FALSE
 #' @param covarColList vector of characters. Covariates to be used in the null model. e.g c("Sex", "Age")
-#' @param qCovarCol vector of characters. Categorical covariates to be used in the null model. All categorical covariates listed in qCovarCol must be also in covarColList,  e,g c("Sex"). 
+#' @param qCovarCol vector of characters. Categorical covariates to be used in the null model. All categorical covariates listed in qCovarCol must be also in covarColList,  e,g c("Sex").
+#' @param eCovarCol vector of characters. Covariates of environmental factors/cell context to be used in the null model. All covariates listed in eCovarCol must be also in covarColList,  e,g c("cellType").
 #' @param sampleIDColinphenoFile character. Column name for the sample IDs in the phenotype file e.g. "IID".  
 #' @param tol numeric. The tolerance for fitting the null model to converge. By default, 0.02.
 #' @param maxiter integer. The maximum number of iterations used to fit the null GLMMM. By default, 20.
@@ -57,6 +58,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 invNormalize = FALSE,
                 covarColList = NULL,
                 qCovarCol = NULL,
+		eCovarCol = NULL,
 		offsetCol = NULL,
 		varWeightsCol = NULL,
 		longlCol = "",
@@ -341,6 +343,12 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	    }
 	}
 
+	if(length(eCovarCol) > 0){
+	    cat(eCovarCol, "are environmental covariates\n")
+	    if(!all(eCovarCol %in% covarColList)){
+		stop("ERROR! all covariates in eCovarCol must be in covarColList\n")
+	    }
+	}
 
         if (FemaleOnly | MaleOnly) {
             if (!sexCol %in% colnames(data)) {
@@ -393,7 +401,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		coln = coln + 1
 	}	
 
-	  if(length(varWeightsCol) > 0){
+	if(length(varWeightsCol) > 0){
 		mmat = cbind(mmat,  data[, which(colnames(data) == varWeightsCol), drop=F])
 		colnames(mmat)[ncol(mmat)] = varWeightsCol
 
@@ -419,7 +427,6 @@ fitNULLGLMM_multiV = function(plinkFile = "",
         mmat_nomissing$IndexPheno = seq(1, nrow(mmat_nomissing), 
             by = 1)
         cat(nrow(mmat_nomissing), " samples have non-missing phenotypes\n")
-
 
 	if(length(varWeightsCol) > 0){
 		varWeights = mmat_nomissing[,which(colnames(mmat_nomissing)  == varWeightsCol)]
@@ -977,6 +984,11 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	    }	
 	}
        
+        if(length(eCovarCol) > 0){
+            cat(eCovarCol, "are environmental covariates\n")
+	    modglmm$eMat = data.new[,which(colnames(data.new) %in%eCovarCol), drop=F]
+        }
+
 
 	print("CHECK HERE")
 
@@ -1387,6 +1399,14 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
       varRatio_NULL_vec = NULL
       varRatio_NULL_noXadj_vec = NULL
 
+	
+      if(!is.null(obj.glmm.null$eMat)){	
+          varRatio_NULL_eg_mat = NULL
+	  varRatio_NULL_eg_vec = NULL
+          varRatio_sparse_eg_mat = NULL
+	  varRatio_sparse_eg_vec = NULL
+      }
+
       indexInMarkerList = 1
       numTestedMarker = 0
       ratioCV = ratioCVcutoff + 0.1
@@ -1457,21 +1477,60 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
 
           Sigma_iG = getSigma_G_multiV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
-
 	  Sigma_iX = Sigma_iX_noLOCO
 
-          #var1a = t(G)%*%Sigma_iG - t(G)%*%Sigma_iX%*%(solve(t(X)%*%Sigma_iX))%*%t(X)%*%Sigma_iG
           var1 = t(G)%*%Sigma_iG - t(G)%*%Sigma_iX%*%(solve(t(X)%*%Sigma_iX))%*%t(X)%*%Sigma_iG
-          #var1 = var1a/AC
 	  cat("AC ", AC, "\n")	
-          #m1 = innerProduct(mu * sqrt(var_weights),g)
-	  #S = q-m1
 	  S = innerProduct(G , obj.glmm.null$residuals*var_weights)
           cat("S is ", S, "\n")
-	#if(obj.glmm.null$traitType == "count_nb"){
-	#	gs = g * (mu.eta/obj.glm.null$family$variance(mu))	
-	#	S = innerProduct(gs,y) - innerProduct(mu,gs) 
-	#}	
+   	  p_exact = pchisq(S^2/var1, df=1, lower.tail=F)
+   	  cat("p_exact ", p_exact, "\n")
+	  
+	  if(!is.null(obj.glmm.null$eMat)){
+	  	var1GE_vec = NULL
+		var2sparseGE_vec = NULL
+		getildeMat = NULL
+		for(ne in 1:ncol(obj.glmm.null$eMat)){
+			evec = obj.glmm.null$eMat[,ne]
+			print("evec[1:100]")
+			print(evec[1:100])
+			GE = G0 * evec
+			GE_tilde = GE  -  obj.noK$XXVX_inv %*%  (obj.noK$XV %*% GE)
+			#obj.glmm.null$eMat[,ne] = GE_tilde
+			getildeMat = cbind(getildeMat, GE_tilde)
+			Sigma_iGE = getSigma_G_multiV(W, tauVecNew, GE_tilde, maxiterPCG, tolPCG, LOCO=FALSE)
+			var1GE = t(GE_tilde)%*%Sigma_iGE- t(GE_tilde)%*%Sigma_iX%*%(solve(t(X)%*%Sigma_iX))%*%t(X)%*%Sigma_iGE
+			var1GE_vec = c(var1GE_vec, var1GE)
+			S_GE = innerProduct(GE_tilde , obj.glmm.null$residuals*var_weights)
+			p_exact_GE = pchisq(S_GE^2/var1GE, df=1, lower.tail=F)
+			cat("p_exact_GE ", p_exact_GE, "\n")
+			cat("S_GE ", S_GE, "\n")
+			cat("var1GE ", var1GE, "\n")
+
+			if(useSparseGRMforVarRatio){
+				set_isSparseGRM(useSparseGRMforVarRatio)
+				Sigma_iGE_sparse = getSigma_G_noV(W, tauVecNew, GE_tilde, maxiterPCG, tolPCG, LOCO=FALSE)
+				var2_a_GE = t(GE_tilde) %*% Sigma_iGE_sparse
+				var2sparseGRM_GE = var2_a_GE[1,1]
+				var2sparseGE_vec = c(var2sparseGE_vec, var2sparseGRM_GE)
+			}else{
+     				if(any(duplicated(obj.glmm.null$sampleID))){
+                			if(useGRMtoFitNULL){
+                        			tauVal = tauVecNew[3]
+                			}else{
+                        			tauVal = tauVecNew[2]
+                			}
+        				Sigma_iGE_sparse = getSigma_G_V(W, tauVal, tauVecNew[1], GE_tilde, maxiterPCG, tolPCG)
+        				var2_a_GE = t(GE_tilde) %*% Sigma_iGE_sparse
+					var2sparseGRM_GE = var2_a_GE[1,1]
+					var2sparseGE_vec = c(var2sparseGE_vec, var2sparseGRM_GE)
+       				}else{
+					var2sparseGE_vec = c(var2sparseGE_vec, var1GE)
+       				}
+
+			}
+		}
+	  }
 
    G_noXadj = G0 - 2*AF 
    if(useSparseGRMforVarRatio){
@@ -1499,22 +1558,53 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
        }	       
   }	
    
-   p_exact = pchisq(S^2/var1, df=1, lower.tail=F)
 
 
 
     if(obj.glmm.null$traitType == "binary"){
          var2null = innerProduct(mu*(1-mu)*var_weights, G*G)
          var2null_noXadj = innerProduct(mu*(1-mu)*var_weights, G_noXadj*G_noXadj)
+	 var2nullGE_vec = NULL
+	 if(!is.null(obj.glmm.null$eMat)){
+		for(ne in 1:ncol(obj.glmm.null$eMat)){
+			GE_tilde = getildeMat[,ne]
+                        var22nullGE = innerProduct(mu*(1-mu)*var_weights, GE_tilde*GE_tilde)
+                        var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
+		}
+	 }	
     }else if(obj.glmm.null$traitType == "quantitative"){
          var2null = innerProduct(G, G*var_weights)
          var2null_noXadj = innerProduct(G_noXadj, G_noXadj*var_weights)
+	 var2nullGE_vec = NULL
+	 if(!is.null(obj.glmm.null$eMat)){
+		for(ne in 1:ncol(obj.glmm.null$eMat)){
+			GE_tilde = getildeMat[,ne]
+                        var22nullGE = innerProduct(GE_tilde, GE_tilde*var_weights)
+                        var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
+		}
+	 }	
     }else if(obj.glmm.null$traitType == "count"){
          var2null = innerProduct(mu*var_weights, G*G)
          var2null_noXadj = innerProduct(mu*var_weights, G_noXadj*G_noXadj)
+	 var2nullGE_vec = NULL
+	 if(!is.null(obj.glmm.null$eMat)){
+		for(ne in 1:ncol(obj.glmm.null$eMat)){
+			GE_tilde = getildeMat[,ne]
+                        var22nullGE = innerProduct(mu*var_weights, GE_tilde*GE_tilde)
+                        var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
+		}
+	 }	
     }else if(obj.glmm.null$traitType == "count_nb"){
 	 var2null = innerProduct(W, G*G) ##To update
          var2null_noXadj = innerProduct(W, G_noXadj*G_noXadj)
+	 var2nullGE_vec = NULL
+	 if(!is.null(obj.glmm.null$eMat)){
+		for(ne in 1:ncol(obj.glmm.null$eMat)){
+			GE_tilde = getildeMat[,ne]
+                        var22nullGE = innerProduct(W, GE_tilde*GE_tilde)
+                        var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
+		}
+	 }	
     }	    
 
   cat("mu\n")
@@ -1524,12 +1614,16 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
    cat("var1 ", var1, "\n")
    cat("var2null ", var2null, "\n")
    cat("var2null_noXadj ", var2null_noXadj, "\n")
-    cat("p_exact ", p_exact, "\n")
    # cat("p_approx ", p_approx, "\n")
    # cat("p_approx_true ", p_approx_true, "\n")
     varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
     varRatio_NULL_noXadj_vec = c(varRatio_NULL_noXadj_vec, var1/var2null_noXadj)
+    varRatio_NULL_eg_mat = rbind(varRatio_NULL_eg_mat, var1GE_vec/var2nullGE_vec)
+    varRatio_sparse_eg_mat = rbind(varRatio_sparse_eg_mat, var1GE_vec/var2sparseGE_vec)
 
+   if(!is.null(obj.glmm.null$eMat)){
+	
+   }
     #indexInMarkerList = indexInMarkerList + 1
     numTestedMarker = numTestedMarker + 1
 
@@ -1581,10 +1675,23 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   varRatio_null_noXadj = mean(varRatio_NULL_noXadj_vec)
   cat("varRatio_null_noXadj", varRatio_null_noXadj, "\n")
 
+ if(!is.null(obj.glmm.null$eMat)){
+	varRatio_NULL_eg_vec = as.vector(colMeans(varRatio_NULL_eg_mat))
+	varRatio_sparse_eg_vec = as.vector(colMeans(varRatio_sparse_eg_mat))
+      for(ne in 1:ncol(obj.glmm.null$eMat)){
+      	varRatioTable = rbind(varRatioTable, c(varRatio_NULL_eg_vec[ne], "null", 0))
+      	varRatioTable = rbind(varRatioTable, c(varRatio_sparse_eg_vec[ne], "sparse", 0))
+      }	
+ } 
+print(varRatio_NULL_eg_vec)
+print(varRatio_NULL_eg_mat)
+
   varRatioTable = rbind(varRatioTable, c(varRatio_null, "null", k))
   varRatioTable = rbind(varRatioTable, c(varRatio_null_noXadj, "null_noXadj", k))
+
+
   #varRatioTable = rbind(varRatioTable, c(varRatio_null_noXadj, "null", k))
-  }else{# if(cateVarRatioVec[k] == 1)
+}else{# if(cateVarRatioVec[k] == 1)
     varRatioTable = rbind(varRatioTable, c(1, "null", k))
     varRatioTable = rbind(varRatioTable, c(1, "null_noXadj", k))
     if(length(varRatio_sparseGRM_vec) > 0){

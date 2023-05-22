@@ -40,6 +40,8 @@ class SAIGEClass
       arma::vec m_varRatio_sparse;
       arma::vec m_varRatio_null;
       arma::vec m_varRatio_null_noXadj;
+      arma::vec m_varRatio_null_eg;
+      arma::vec m_varRatio_sparse_eg;
       arma::vec m_y;
 
       bool m_isOutputAFinCaseCtrl;
@@ -116,6 +118,8 @@ SAIGEClass(
         arma::vec & t_varRatio_sparse,
         arma::vec & t_varRatio_null,
 	arma::vec & t_varRatio_null_noXadj,
+	arma::vec & t_varRatio_null_eg,
+	arma::vec & t_varRatio_sparse_eg,
         arma::vec & t_cateVarRatioMinMACVecExclude,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,

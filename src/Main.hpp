@@ -16,11 +16,21 @@ void setAssocTest_GlobalVarsInCPP(std::string t_impute_method,
                                double t_dosage_zerod_cutoff,
                                double t_dosage_zerod_MAC_cutoff,
                                arma::vec & t_weights_beta,
-			       std::string t_outputFilePrefix);
+			       std::string t_outputFilePrefix,
+			        double t_MACCutoffforER);
+
+
+
+void setAssocTest_GlobalVarsInCPP_GbyE(
+				arma::fmat & t_emat,
+				bool t_isgxe
+					);
+
 
 void setMarker_GlobalVarsInCPP(
                                bool t_isOutputMoreDetails,
-                               int t_marker_chunksize
+                               int t_marker_chunksize,
+			       arma::mat & t_emat,	                                bool t_isgxe
                                );
 
 
@@ -148,6 +158,8 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::vec & t_varRatio_sparse,
         arma::vec & t_varRatio_null,
 	arma::vec & t_varRatio_null_noXadj,
+	arma::vec & t_varRatio_null_eg,
+	arma::vec & t_varRatio_sparse_eg,
         arma::vec & t_cateVarRatioMinMACVecExclude,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,
@@ -214,7 +226,7 @@ bool openOutfile(std::string t_traitType, bool isappend);
 
 bool openOutfile_singleinGroup(std::string t_traitType, bool t_isImputation, bool isappend, bool t_isMoreOutput);
 
-bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isappend, bool t_isMoreOutput);
+bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isappend, bool t_isMoreOutput, bool t_isGbyE);
 
 void writeOutfile_single(bool t_isMoreOutput,
       bool t_isImputation,
@@ -253,7 +265,12 @@ void writeOutfile_single(bool t_isMoreOutput,
                         std::vector<double>  & N_ctrl_hetVec,
                         std::vector<double>  & N_case_hetVec,
                         std::vector<double>  & N_ctrl_homVec,
-                        std::vector<uint32_t> & N_Vec);
+                        std::vector<uint32_t> & N_Vec,
+   			bool is_GbyE,
+                        std::vector<std::string> & Beta_ge_cStrVec,
+                        std::vector<std::string> & seBeta_ge_cStrVec,
+                        std::vector<std::string> & pval_ge_cStrVec,
+                        std::vector<std::string> & pval_noSPA_ge_cStrVec);
 
 
 
@@ -560,4 +577,6 @@ void set_I_longl_mat_SAIGEtest(arma::sp_mat & t_Ilongmat, arma::vec & t_I_longl_
 void  get_indexinAnotherVector(std::vector<uint> & nonzeroInd_orig, arma::uvec & dupInd, arma::uvec &  nonzeroInd_new_arma);
 
 arma::sp_fmat get_sp_Sigma_to_R();
+
+std::string join(std::vector<std::string> const &strings, std::string delim);
 #endif
