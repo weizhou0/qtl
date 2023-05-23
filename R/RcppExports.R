@@ -465,6 +465,10 @@ get_sp_Sigma_to_R <- function() {
     .Call('_SAIGE_get_sp_Sigma_to_R', PACKAGE = 'SAIGE')
 }
 
+get_SKAT_pvalue_Rcpp <- function(Score, Phi, r_corr) {
+    .Call('_SAIGE_get_SKAT_pvalue_Rcpp', PACKAGE = 'SAIGE', Score, Phi, r_corr)
+}
+
 SPA <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge) {
     invisible(.Call('_SAIGE_SPA', PACKAGE = 'SAIGE', mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge))
 }

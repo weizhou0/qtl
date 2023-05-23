@@ -270,7 +270,8 @@ void writeOutfile_single(bool t_isMoreOutput,
                         std::vector<std::string> & Beta_ge_cStrVec,
                         std::vector<std::string> & seBeta_ge_cStrVec,
                         std::vector<std::string> & pval_ge_cStrVec,
-                        std::vector<std::string> & pval_noSPA_ge_cStrVec);
+                        std::vector<std::string> & pval_noSPA_ge_cStrVec,
+                        std::vector<double>  & pval_SKATO_ge_cVec);
 
 
 
@@ -579,4 +580,7 @@ void  get_indexinAnotherVector(std::vector<uint> & nonzeroInd_orig, arma::uvec &
 arma::sp_fmat get_sp_Sigma_to_R();
 
 std::string join(std::vector<std::string> const &strings, std::string delim);
+
+Rcpp::List get_SKAT_pvalue_Rcpp(arma::vec & Score, arma::mat &  Phi, arma::vec & r_corr);
+
 #endif

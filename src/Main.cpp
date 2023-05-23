@@ -23,6 +23,7 @@
 #include "UTIL.hpp"
 #include "CCT.hpp"
 #include "GENO_null.hpp"
+#include "SKATO.hpp"
 
 
 #include <Rcpp.h>
@@ -240,6 +241,7 @@ void mainMarkerInCPP(
   std::vector<std::string> seBeta_ge_cStrVec(q, "NA");
   std::vector<std::string> pval_ge_cStrVec(q, "NA");
   std::vector<std::string> pval_noSPA_ge_cStrVec(q, "NA"); 
+  std::vector<double> pval_SKATO_ge_cVec(q, arma::datum::nan);
   //std::vector<std::string> Tstat_ge_cStrVec(q, arma::datum::nan);
   //std::vector<std::string> varT_ge_cStrVec(q, arma::datum::nan);
 
@@ -688,6 +690,11 @@ void mainMarkerInCPP(
     std::string pval_noSPA_c_ge_str;
     std::string pval_c_ge_str;
     arma::vec t_GVec1;
+    arma::mat P1Matge(3, nrow_e);
+    arma::mat P2Matge(nrow_e, 3);	
+    arma::mat VarMatge;
+    arma::vec Score_c_ge_vec(ne);
+	std::cout << "HEREa0" << std::endl;
 
 	w0G2_cond_Vec_g(0) = 1;
      	TstatVec_g(0) = Tstat;
@@ -759,8 +766,31 @@ void mainMarkerInCPP(
 			seBeta_c_ge_vec.at(k) = std::to_string(seBeta_c_ge);
 			pval_c_ge_vec.at(k) = std::to_string(pval_c_ge);
 			pval_noSPA_c_ge_vec.at(k) = std::to_string(pval_noSPA_c_ge);
+	std::cout << "HEREa" << std::endl;
+			Score_c_ge_vec(k) = Tstat_c_ge;
+	std::cout << "HERE0" << std::endl;
 
+	     P1Matge.row(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*(gtildeVec_ge.t());
+	std::cout << "HERE0a" << std::endl;
+
+      if(t_P2Vec_ge.n_elem == 0){
+                if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
+                        t_P2Vec_ge = gtildeVec_ge % (ptr_gSAIGEobj->m_mu2) *((ptr_gSAIGEobj->m_tauvec)[0]);
+                }else{
+                        t_P2Vec_ge = ptr_gSAIGEobj->getSigma_G_V(gtildeVec_ge, 500, 1e-5);
+                }
         }
+
+
+
+	     P2Matge.col(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec_ge;
+        }
+
+	std::cout << "HERE1" << std::endl;
+	VarMatge = P1Matge * P2Matge;
+	std::cout << "HERE2" << std::endl;
+	arma::vec r_corr = {0.00, 0.01, 0.04, 0.09, 0.25, 0.50, 1.00 };
+	Rcpp::List groupOutListge = get_SKAT_pvalue_Rcpp(Score_c_ge_vec, VarMatge, r_corr);	
 	if(ne > 1){     
             Beta_c_ge_str = join(Beta_c_ge_vec, ",");
             seBeta_c_ge_str = join(seBeta_c_ge_vec, ",");
@@ -777,6 +807,8 @@ void mainMarkerInCPP(
 	seBeta_ge_cStrVec.at(i) = seBeta_c_ge_str;
 	pval_ge_cStrVec.at(i) = pval_c_ge_str;
 	pval_noSPA_ge_cStrVec.at(i) = pval_noSPA_c_ge_str;
+	pval_SKATO_ge_cVec.at(i) = Rcpp::as<double>(groupOutListge["Pvalue_SKATO"]);
+
 
     }//if(g_isgxe){
 
@@ -831,7 +863,8 @@ void mainMarkerInCPP(
 Beta_ge_cStrVec,
 seBeta_ge_cStrVec,
 pval_ge_cStrVec,
-pval_noSPA_ge_cStrVec
+pval_noSPA_ge_cStrVec,
+pval_SKATO_ge_cVec
 );
 
 }
@@ -2545,7 +2578,7 @@ arma::vec fast_logistf_fit(arma::mat & x,
   int iter = 0;
   arma::vec pi_0 = -x * beta - offset; 
   pi_0 = arma::exp(pi_0) + 1;
-  arma::vec pi = 1/pi_0;
+  arma::vec pi_1 = 1/pi_0;
   int evals = 1;
   arma::vec beta_old;
   arma::mat oneVec(k, 1 , arma::fill::ones);
@@ -2553,7 +2586,7 @@ arma::vec fast_logistf_fit(arma::mat & x,
   isfirthconverge = false;
   while(iter <= maxit){
 	beta_old = beta;
-	arma::vec wpi = weight % pi % (1 - pi);
+	arma::vec wpi = weight % pi_1 % (1 - pi_1);
 	arma::vec wpi_sqrt = arma::sqrt(wpi);
 	arma::vec W2 = weight % wpi_sqrt;
 	arma::mat XW2(n, k, arma::fill::zeros);
@@ -2568,9 +2601,9 @@ arma::vec fast_logistf_fit(arma::mat & x,
 	arma::vec U_star(2, arma::fill::zeros);
 	arma::vec ypih;
 	if(firth){
-		ypih = (weight % (y - pi)) + (h % (0.5 - pi));
+		ypih = (weight % (y - pi_1)) + (h % (0.5 - pi_1));
 	}else{
-		ypih = (weight % (y - pi));
+		ypih = (weight % (y - pi_1));
 	}
 	//ypih.print();
 	arma::vec xcol(n, arma::fill::zeros);
@@ -2599,7 +2632,7 @@ arma::vec fast_logistf_fit(arma::mat & x,
 	beta = beta + delta;
 	pi_0 = -x * beta - offset;
   	pi_0 = arma::exp(pi_0) + 1;
-  	pi = 1/pi_0;
+  	pi_1 = 1/pi_0;
 	if((iter == maxit) || ( (arma::max(arma::abs(delta)) <= xconv) & (abs(U_star).is_zero(gconv)))){
 		isfirthconverge = true;
 		break;
@@ -2799,7 +2832,8 @@ void writeOutfile_single(bool t_isMoreOutput,
 			std::vector<std::string> & Beta_ge_cStrVec,
 			std::vector<std::string> & seBeta_ge_cStrVec,
 			std::vector<std::string> & pval_ge_cStrVec,
-			std::vector<std::string> & pval_noSPA_ge_cStrVec
+			std::vector<std::string> & pval_noSPA_ge_cStrVec,
+			std::vector<double> & pval_SKATO_ge_cVec
 ){
   int numtest = 0;
   for(unsigned int k = 0; k < pvalVec.size(); k++){
@@ -2898,6 +2932,8 @@ void writeOutfile_single(bool t_isMoreOutput,
 			OutFile_single << pval_ge_cStrVec.at(k);
 			OutFile_single << "\t";
 			OutFile_single << pval_noSPA_ge_cStrVec.at(k);
+			OutFile_single << "\t";
+			OutFile_single << pval_SKATO_ge_cVec.at(k);
 		}
 
 		OutFile_single << "\n";
@@ -6215,4 +6251,67 @@ std::string join(std::vector<std::string> const &strings, std::string delim)
     std::copy(strings.begin(), strings.end(),
         std::ostream_iterator<std::string>(ss, delim.c_str()));
     return ss.str();
-}	
+}
+
+
+
+// [[Rcpp::export]]
+Rcpp::List get_SKAT_pvalue_Rcpp(arma::vec & Score, arma::mat &  Phi, arma::vec & r_corr) {
+  std::cout << "get_SKAT_pvalue_Rcpp0" << std::endl;
+  
+  // Call SKAT:::Met_SKAT_Get_Pvalue with specified arguments
+  Rcpp::List out_SKAT_List;
+  arma::vec Pvalue(3); 
+
+
+std::string method = "optimal.adj";
+std::cout << "get_SKAT_pvalue_Rcpp2a0" << std::endl;
+arma::mat Score_Resampling;
+out_SKAT_List = Met_SKAT_Get_Pvalue_Rcpp(Score, Phi, r_corr, method, Score_Resampling);
+
+
+//    out_SKAT_List = skatGetPvalue(_["Score"] = Score,
+//                                  _["Phi"] = Phi,
+ //                                 _["r.corr"] = r_corr,
+ //                                 _["method"] = "optimal.adj",
+ //                                 _["Score.Resampling"] = R_NilValue);
+std::cout << "get_SKAT_pvalue_Rcpp2a" << std::endl;
+//  } catch (std::exception& e) {
+
+//std::cout << "get_SKAT_pvalue_Rcpp2b" << std::endl;
+
+//    Pvalue[0] = arma::datum::nan;
+//    Pvalue[1] = arma::datum::nan;
+//    Pvalue[2] = arma::datum::nan;
+//    return List::create(Named("Pvalue_SKATO") = Pvalue[0],
+//                      Named("Pvalue_Burden") = Pvalue[2],
+//                      Named("Pvalue_SKAT") = Pvalue[1]);
+//  }
+
+  Rcpp::List paramList = out_SKAT_List["param"];
+  arma::vec rho = Rcpp::as<arma::vec>(paramList["rho"]);
+  Rcpp::List pvaleachList = paramList["p.val.each"];
+  arma::vec pvalueout = Rcpp::as<arma::vec>(out_SKAT_List["p.value"]); 
+
+  pvalueout.print("pvalueout");
+  rho.print("rho");
+
+  if(!(any(rho == 0.0)) && !(any(rho == 1.0)) && !arma::is_finite(pvalueout)){
+      Pvalue[0] = pvalueout[0];
+      Pvalue[1] = pvalueout[0];
+      Pvalue[2] = pvalueout[0];
+      int error_code = 0;
+  }else{
+      
+      arma::uvec pos00 = arma::find(rho == 0.0);
+      arma::uvec pos01 = arma::find(rho == 1.0);
+      Pvalue[0] = out_SKAT_List["p.value"];
+      Pvalue[1] = pvaleachList[pos00[0]];
+      Pvalue[2] = pvaleachList[pos01[0]];
+  }
+
+  return Rcpp::List::create(Named("Pvalue_SKATO") = Pvalue[0],
+                      Named("Pvalue_Burden") = Pvalue[2],
+                      Named("Pvalue_SKAT") = Pvalue[1]);
+}
+

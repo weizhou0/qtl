@@ -1458,6 +1458,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_SKAT_pvalue_Rcpp
+List get_SKAT_pvalue_Rcpp(arma::vec& Score, arma::mat& Phi, arma::mat& r_corr);
+RcppExport SEXP _SAIGE_get_SKAT_pvalue_Rcpp(SEXP ScoreSEXP, SEXP PhiSEXP, SEXP r_corrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type Score(ScoreSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Phi(PhiSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type r_corr(r_corrSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_SKAT_pvalue_Rcpp(Score, Phi, r_corr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SPA
 void SPA(arma::vec& mu, arma::vec& g, double q, double qinv, double pval_noadj, double tol, bool logp, std::string traitType, double& pval, bool& isSPAConverge);
 RcppExport SEXP _SAIGE_SPA(SEXP muSEXP, SEXP gSEXP, SEXP qSEXP, SEXP qinvSEXP, SEXP pval_noadjSEXP, SEXP tolSEXP, SEXP logpSEXP, SEXP traitTypeSEXP, SEXP pvalSEXP, SEXP isSPAConvergeSEXP) {
@@ -2114,6 +2127,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_Get_OneSNP_StdGeno", (DL_FUNC) &_SAIGE_Get_OneSNP_StdGeno, 1},
     {"_SAIGE_print_g_n_unique", (DL_FUNC) &_SAIGE_print_g_n_unique, 0},
     {"_SAIGE_get_sp_Sigma_to_R", (DL_FUNC) &_SAIGE_get_sp_Sigma_to_R, 0},
+    {"_SAIGE_get_SKAT_pvalue_Rcpp", (DL_FUNC) &_SAIGE_get_SKAT_pvalue_Rcpp, 3},
     {"_SAIGE_SPA", (DL_FUNC) &_SAIGE_SPA, 10},
     {"_SAIGE_SPA_fast", (DL_FUNC) &_SAIGE_SPA_fast, 16},
     {"_SAIGE_Korg_Binom", (DL_FUNC) &_SAIGE_Korg_Binom, 3},
