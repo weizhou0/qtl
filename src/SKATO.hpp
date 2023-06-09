@@ -24,10 +24,10 @@ arma::vec SKAT_Optimal_Integrate_Func_Davies_Rcpp(const arma::vec& x, const arma
 double SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(double x, arma::vec& pmin_q, arma::vec& tau, double MuQ, arma::vec& lambda, double VarQ, double VarRemain, arma::vec& r_all);
 
 
-double SKAT_Optimal_PValue_Davies_Rcpp(arma::vec& pmin_q, arma::vec& tau, double MuQ, arma::vec& lambda, double VarQ, double VarRemain, const arma::vec& r_all, double pmin);
+double SKAT_Optimal_PValue_Davies_Rcpp(arma::vec& pmin_q, arma::vec& tau, double MuQ, arma::vec& lambda, double VarQ, double VarRemain, arma::vec& r_all, double pmin);
 
 
-Rcpp::List SKAT_META_Optimal_Get_Pvalue_Rcpp(const arma::mat& Q_all, const arma::mat& Phi, const arma::vec& r_all, const std::string& method, bool isFast);
+Rcpp::List SKAT_META_Optimal_Get_Pvalue_Rcpp(const arma::mat& Q_all, const arma::mat& Phi, arma::vec& r_all, const std::string& method, bool isFast);
 
 Rcpp::List SKAT_Optimal_Get_Pvalue_Rcpp(const arma::mat& Q_all, const arma::mat& Z1, const arma::vec& r_all, const std::string& method);
 

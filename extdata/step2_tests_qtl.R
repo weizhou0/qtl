@@ -129,6 +129,8 @@ mean, p-value based on traditional score test is returned. Default value is 2.")
     help="Whether to use the sparse GRM"),
   make_option("--pval_cutoff_for_fastTest", type="numeric", default=0.05,
     help="p-value cutoff for using sparse V in Step 2"),
+  make_option("--pval_cutoff_for_gxe", type="numeric", default=0.001,
+    help="p-value cutoff for testing gxe in Step 2"),
   make_option("--max_MAC_for_ER", type="numeric", default=4,
     help="p-values of genetic variants with MAC <= max_MAC_for_ER will be calculated via efficient resampling. [default=4]"),
   make_option("--is_EmpSPA", type="logical", default=FALSE,
@@ -244,6 +246,7 @@ SPAGMMATtest(vcfFile=opt$vcfFile,
 	     is_noadjCov = opt$is_noadjCov, 
 	     is_sparseGRM = opt$is_sparseGRM,
              pval_cutoff_for_fastTest = opt$pval_cutoff_for_fastTest,
+	     pval_cutoff_for_gxe = opt$pval_cutoff_for_gxe,
              max_MAC_use_ER = opt$max_MAC_for_ER,
 	     is_EmpSPA = opt$is_EmpSPA
 )

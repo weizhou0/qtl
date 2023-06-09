@@ -1,6 +1,8 @@
 // [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(RcppNumerical)]]
 #include <RcppArmadillo.h>
-#include <Rcpp.h>
+#include <RcppNumerical.h>
 #include <cmath>
 #include <R.h>
 #include "SKATO.hpp"
@@ -9,6 +11,30 @@
 #include <boost/math/quadrature/gauss_kronrod.hpp>
 #include <boost/math/distributions.hpp>
 #include <boost/math/distributions/non_central_chi_squared.hpp>
+
+//double SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(double x, arma::vec& pmin_q, arma::vec& tau, double MuQ, arma::vec& lambda, double VarQ, double VarRemain, arma::vec& r_all);
+
+using namespace Numer;
+
+class IntDavies: public Func
+{
+private:
+    arma::vec & pmin_q;
+    arma::vec & tau;
+    double MuQ;
+    arma::vec & lambda;
+    double VarQ;
+    double VarRemain;
+    arma::vec & r_all;
+
+public:
+    IntDavies(arma::vec & pmin_q_, arma::vec & tau_, double MuQ_, arma::vec & lambda_, double  VarQ_, double  VarRemain_, arma::vec & r_all_) : pmin_q(pmin_q_), tau(tau_), MuQ(MuQ_), lambda(lambda_), VarQ(VarQ_), VarRemain(VarRemain_), r_all(r_all_) {} 
+
+    double operator()(const double& x) const
+    {
+        return SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all);
+    }
+};
 
 
 
@@ -19,7 +45,7 @@ Rcpp::List SKAT_META_Optimal_Get_Q_Rcpp(const arma::vec& Score, const arma::vec&
   
   for (int i = 0; i < n_r; i++) {
     double r_corr = r_all(i);
-    Q_r(i) = (1 - r_corr) * arma::sum(Score % Score) + r_corr * std::pow(arma::sum(Score), 2);
+    Q_r(i) = (1 - r_corr) * arma::accu(Score % Score) + r_corr * std::pow(arma::accu(Score), 2);
   }
   
   Q_r /= 2.0;
@@ -141,17 +167,17 @@ Rcpp::List SKAT_Optimal_Each_Q_Rcpp(const arma::mat& Q_all, const arma::vec& r_a
   arma::mat pmin_q(n_q, n_r, arma::fill::zeros);
   
   arma::mat param_mat;
-  
+  //std::cout << "SKAT_Optimal_Each_Q_Rcpp 1" << std::endl; 
   for (int i = 0; i < n_r; i++) {
     arma::vec Q = Q_all.col(i);
     double r_corr = r_all(i);
     arma::vec lambda_temp = lambda_all[i];
-    
+    lambda_temp.print("lambda_temp") ;
     c1[0] = arma::accu(lambda_temp);
     c1[1] = arma::accu(arma::pow(lambda_temp, 2));
     c1[2] = arma::accu(arma::pow(lambda_temp, 3));
     c1[3] = arma::accu(arma::pow(lambda_temp, 4));
-    
+    c1.print("c1");
     Rcpp::List param_temp = Get_Liu_Params_Mod_Rcpp(c1);
     
     double muQ = param_temp["muQ"];
@@ -163,7 +189,9 @@ Rcpp::List SKAT_Optimal_Each_Q_Rcpp(const arma::mat& Q_all, const arma::vec& r_a
     arma::vec Q_Norm = (Q - muQ) / std::sqrt(varQ) * std::sqrt(2 * df) + df;
 
 
-
+  //std::cout << "SKAT_Optimal_Each_Q_Rcpp 2" << std::endl; 
+  //Q_Norm.print("Q_Norm");
+  //std::cout << "df " << df << std::endl;
     double pval0;
     boost::math::chi_squared_distribution<> dist(df);
     for (int j = 0; j < Q_Norm.n_elem; j++) {
@@ -171,7 +199,7 @@ Rcpp::List SKAT_Optimal_Each_Q_Rcpp(const arma::mat& Q_all, const arma::vec& r_a
 	pval(j, i) = 1 - pval0;
     }
     arma::vec df1; 
-      if (method == "optimal.mod" || method == "optimal.adj" || method == "optimal.moment.adj") {
+     if (method == "optimal.mod" || method == "optimal.adj" || method == "optimal.moment.adj") {
         Rcpp::List pvalue_lambda = Get_PValue_Lambda_Rcpp(lambda_temp, Q, df1);
 	arma::vec pvalvec = pvalue_lambda["p.value"];
         pval.col(i) = pvalvec;
@@ -179,34 +207,39 @@ Rcpp::List SKAT_Optimal_Each_Q_Rcpp(const arma::mat& Q_all, const arma::vec& r_a
     
     param_mat = arma::join_vert(param_mat, arma::rowvec({muQ, varQ, df}));
   }
-  
+  //pval.print("pval");
+  //param_mat.print("param_mat");
+  //std::cout << "SKAT_Optimal_Each_Q_Rcpp 3" << std::endl; 
   arma::vec pmin = arma::min(pval, 1);
-  
+  //pmin.print("pmin");
   for (int i = 0; i < n_r; i++) {
     double muQ = param_mat(i, 0);
     double varQ = param_mat(i, 1);
     double df = param_mat(i, 2);
     
+    //std::cout << "SKAT_Optimal_Each_Q_Rcpp 4" << std::endl; 
      //df, nc 
      arma::vec q_org(pmin.n_elem);
      double nc = 0;
-     int df0 = static_cast<int>(df);
-     boost::math::chi_squared_distribution<double> chiSqDist(df0);
+     //int df0 = static_cast<int>(df);
+     boost::math::chi_squared_distribution<double> chiSqDist(df);
      for (int j = 0; j < pmin.n_elem; j++) {
            q_org[j] = boost::math::quantile(chiSqDist, 1-pmin[j]);
      } 
 
+    //std::cout << "SKAT_Optimal_Each_Q_Rcpp 4a " << i << std::endl;	
+    //q_org.print("q_org");
 
      arma::vec q_q = (q_org - df) / std::sqrt(2 * df) * std::sqrt(varQ) + muQ;
      pmin_q.col(i) = q_q;
   }
   
-  Rcpp::List out;
-  out["pmin"] = pmin;
-  out["pval"] = pval;
-  out["pmin.q"] = pmin_q;
-  
-  return out;
+  //std::cout << "SKAT_Optimal_Each_Q_Rcpp 5" << std::endl; 
+   return Rcpp::List::create(
+    Rcpp::Named("pmin") = pmin,
+    Rcpp::Named("pval") = pval,
+    Rcpp::Named("pmin_q") = pmin_q
+  ); 
 }
 
 // [[Rcpp::export]]
@@ -262,11 +295,11 @@ Rcpp::List SKAT_davies_Rcpp(double q, arma::vec& lambda, arma::ivec& h, arma::ve
   double result = 0;
   std::vector<int> hi = arma::conv_to < std::vector<int> >::from(h);
 
-  
+  //lim = 10000000000000; 
 //double* lb1, double* nc1, int* n1, int *r1, double *sigma, double *c1, int *lim1, double *acc, double* trace, int* ifault, double *res
   qfc_1(&lambda[0], &delta[0], &hi[0], &r, &sigma, &q, &lim, &acc, &trace[0], &ifault, &result);
   result = 1 - result;
-
+  //std::cout << "ifault " << ifault << std::endl;
   return Rcpp::List::create(
     Rcpp::Named("trace") = trace,
     Rcpp::Named("ifault") = ifault,
@@ -300,16 +333,20 @@ arma::vec SKAT_Optimal_Integrate_Func_Davies_Rcpp(const arma::vec& x, const arma
   for (int i = 0; i < n_x; ++i) {
     double min1 = temp_min(i);
     double temp_value = 0.0;
-    if (min1 <= arma::sum(lambda) * 10e4) {
+    if (min1 <= arma::accu(lambda) * 10e4) {
       double min1_temp = min1 - MuQ;
       double sd1 = std::sqrt(VarQ - VarRemain) / std::sqrt(VarQ);
       double min1_st = min1_temp * sd1 + MuQ;
       
       Rcpp::List dav_re = SKAT_davies_Rcpp(min1_st, lambda, h, delta, sigma, lim, acc);
       temp_value = dav_re["Qq"];
-      if (dav_re["ifault"] != 0) {
+      
+      //int ifault0 = dav_re["ifault"];
+      //std::cout << "ifault0 " << ifault0 << std::endl;
+      /*if (dav_re["ifault"] != 0) {
         Rcpp::stop("dav_re$ifault is not 0");
       }
+      */
     }
     
     if (temp_value > 1.0) {
@@ -333,11 +370,13 @@ double SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(double x, arma::vec& pmin_
   int n_x = 1;
   arma::vec xvec(1);
   xvec[0] = x;
-  arma::mat temp1 = arma::kron(tau, xvec.t());
-
-  arma::mat temp = (pmin_q - temp1) / (1 - r_all);
-  arma::rowvec temp_min = arma::min(temp, 1);
-
+  arma::mat temp1 = arma::kron(tau, xvec);
+  //temp1.print("temp1");
+  arma::vec temp = (pmin_q - temp1.col(0)) / (1 - r_all);
+  //temp.print("temp");
+  double temp_min = temp.min();
+  //std::cout << "temp_min " << temp_min << std::endl;
+  
   arma::ivec h(lambda.n_elem);
   h.ones();
   arma::vec delta(lambda.n_elem);
@@ -345,22 +384,25 @@ double SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(double x, arma::vec& pmin_
   double sigma = 0;
   int lim = 10000;
   double acc = 0.000001;
-
-
   arma::vec result(n_x);
   for (int i = 0; i < n_x; ++i) {
-    double min1 = temp_min(i);
+    double min1 = temp_min;
     double temp_value = 0.0;
-    if (min1 <= arma::sum(lambda) * 10e4) {
+    if (min1 <= arma::accu(lambda) * 10e4) {
       double min1_temp = min1 - MuQ;
       double sd1 = std::sqrt(VarQ - VarRemain) / std::sqrt(VarQ);
       double min1_st = min1_temp * sd1 + MuQ;
 
       Rcpp::List dav_re = SKAT_davies_Rcpp(min1_st, lambda, h, delta, sigma, lim, acc);
       temp_value = dav_re["Qq"];
-      if (dav_re["ifault"] != 0) {
+      //int ifault0 = dav_re["ifault"];
+      //std::cout << "ifault0 " << ifault0 << std::endl;
+      //std::cout << "temp " << temp_value << std::endl;
+      /*if (ifault0 != 0) {
         Rcpp::stop("dav_re$ifault is not 0");
-      }
+      }*/
+    }else{
+         temp_value = 1.0;
     }
 
     if (temp_value > 1.0) {
@@ -378,18 +420,29 @@ double SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(double x, arma::vec& pmin_
 // Function for calculating SKAT p-value using Davies method
 double SKAT_Optimal_PValue_Davies_Rcpp(arma::vec& pmin_q, arma::vec& tau, double MuQ, arma::vec& lambda, double VarQ, double VarRemain, arma::vec& r_all, double pmin) {
 
-  using namespace boost::math::quadrature;
+  //using namespace boost::math::quadrature;
   int n_r = r_all.n_elem;
+  using namespace Numer;
 
   // Numerical integration using Davies method
+  //std::cout << "SKAT_Optimal_PValue_Davies_Rcpp 1" << std::endl;
+  //double xtest = 0.5;
+  //double testx = SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(xtest,  pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all);
+  //std::cout << "testx " << testx << std::endl;
 
-  auto integrand = [pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all](double x) mutable { return SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all); };  // Lambda function with additional parameters
+  IntDavies f(pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all);
+  const double lower = 0.0, upper = 40.0;
+  double err_est;
+  int err_code;
+  double integral = Numer::integrate(f, lower, upper, err_est, err_code);
 
+  //auto integrand = [pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all](double x) mutable { return SKAT_Optimal_Integrate_Func_single_Davies_Rcpp(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all); };  // Lambda function with additional parameters
+  //std::cout << "SKAT_Optimal_PValue_Davies_Rcpp 2" << std::endl;
 
-
-  //double integral, error;
-  double integral = gauss<double, 25>::integrate(integrand, 0.0, 40.0);
-
+  //double result, error;
+  //double integral = gauss<double, 10000>::integrate(integrand, 0.0, 40.0);
+  //std::cout << "SKAT_Optimal_PValue_Davies_Rcpp 3" << std::endl;
+  //std::cout << "integral " << integral << std::endl;
 
   double p_value = 1.0 - integral;
   if (pmin != R_NegInf) {
@@ -506,18 +559,33 @@ Rcpp::List SKAT_META_Optimal_Rcpp(const arma::mat& Score, const arma::mat& Phi, 
 
   int p_m = Phi.n_cols;
   int n_r = r_all.n_elem;
-
+ //std::cout << "Score_Resampling_t1_1" << std::endl;
   Rcpp::List out_Q = SKAT_META_Optimal_Get_Q_Rcpp(Score, r_all);
-  Rcpp::List out_Q_res;
+arma::vec Q_r = out_Q["Qr"];
+//Q_r.print("Q_r");
+ //std::cout << "Score_Resampling_t1_a" << std::endl;
+  arma::mat Q_all;
+  arma::mat Q_res;
   if (Score_Resampling.size() > 0) {
-    out_Q_res = SKAT_META_Optimal_Get_Q_Res_Rcpp(Score_Resampling, r_all);
+    Rcpp::List out_Q_res = SKAT_META_Optimal_Get_Q_Res_Rcpp(Score_Resampling, r_all);
+    Rcpp::NumericVector Q_res_vec0 = out_Q_res["Qr"];
+    arma::vec Q_res_vec1 = Rcpp::as< arma::vec >(Q_res_vec0);
+    //arma::vec Q_res_vec1 = arma::conv_to < arma::vec >::from(Q_res_vec0);
+    Q_res.set_size(1, Q_res_vec1.n_elem);
+    Q_res.row(0) = Q_res_vec1;	
+    Q_all = arma::join_vert(Q_r, Q_res);
+  }else{
+// std::cout << "Score_Resampling_t1_b" << std::endl;
+    Q_all.set_size(1, Q_r.n_elem);
+    Q_all.row(0) = Q_r.t();   
   }
-  arma::vec Q_r = out_Q["Qr"];
-  arma::mat Q_res = out_Q_res["Qr"];
-  arma::mat Q_all = arma::join_vert(Q_r, Q_res);
-  bool isFast = false;
-  Rcpp::List out = SKAT_META_Optimal_Get_Pvalue_Rcpp(Q_all, Phi / 2, r_all, method, isFast);
 
+ //std::cout << "Score_Resampling_t1_2" << std::endl;
+  bool isFast = false;
+  arma::mat Phi2 = Phi / 2;
+  Rcpp::List out = SKAT_META_Optimal_Get_Pvalue_Rcpp(Q_all, Phi2, r_all, method, isFast);
+
+ //std::cout << "Score_Resampling_t1_3" << std::endl;
   Rcpp::List param;
   arma::mat p_val_each_mat = out["p_val_each"];
   param["p_val_each"] = p_val_each_mat.row(0);
@@ -544,55 +612,81 @@ Rcpp::List SKAT_META_Optimal_Rcpp(const arma::mat& Score, const arma::mat& Phi, 
     p_value_resampling = p_value_vec.subvec(1, p_value_vec.n_elem - 1);   
   }
 
-  Rcpp::List re;
+  //std::cout << "p_value " << p_value << std::endl; 
+  //p_val_each_vec.print("p_val_each_vec");
+  //arma::vec q_val_each_vec = param["q_val_each"];
+  //q_val_each_vec.print("q_val_each_vec");
+  //r_all.print("rho");
+
+Rcpp::List re;
   re["p_value"] = p_value;
   re["param"] = param;
   re["p_value_resampling"] = p_value_resampling;
+   
+  //std::cout << "Score_Resampling_t1_4" << std::endl;
 
   return re;
 }
 
 
 // Function to compute p-values for each variant (DONE)
-Rcpp::List SKAT_META_Optimal_Get_Pvalue_Rcpp(const arma::mat& Q_all, const arma::mat& Phi, const arma::vec& r_all, const std::string& method, bool isFast) {
+Rcpp::List SKAT_META_Optimal_Get_Pvalue_Rcpp(const arma::mat& Q_all, const arma::mat& Phi, arma::vec& r_all, const std::string& method, bool isFast) {
   int n_r = r_all.n_elem;
   int n_q = Q_all.n_rows;
   int p_m = Phi.n_cols;
 
+  //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp 0" << std::endl;
   Rcpp::List lambda_all(n_r);
-  for (int i = 0; i < n_r; ++i) {
+  arma::vec lambdavec;
+  //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp " << std::endl;
+  //r_all.print("r_all");
+for (int i = 0; i < n_r; ++i) {
     double r_corr = r_all[i];
     arma::mat R_M = arma::diagmat(arma::vec(p_m, arma::fill::ones) * (1 - r_corr)) + arma::mat(p_m, p_m, arma::fill::ones) * r_corr;
-    arma::mat L = arma::chol(R_M, "lower");
+    R_M.print("R_M");
+    arma::mat L = arma::chol(R_M, "upper");
     arma::mat Phi_rho = L * (Phi * L.t());
     int maxK = 100;
-    lambda_all[i] = Get_Lambda_Rcpp(Phi_rho, isFast, maxK);
+    lambdavec.clear();
+    //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp ite " << i << std::endl;
+    //Phi_rho.print("Phi_rho");
+    lambdavec = Get_Lambda_Rcpp(Phi_rho, isFast, maxK);
+    Rcpp::NumericVector lambda_vec(lambdavec.begin(), lambdavec.end()); // Convert arma::vec to NumericVector
+    Rcpp::CharacterVector element_name = Rcpp::CharacterVector::create("element_" + std::to_string(i + 1));
+    lambda_vec.attr("names") = element_name; // Set the names attribute of the NumericVector
+    lambda_all[i] = lambda_vec;
   }
 
+  //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp 2" << std::endl;
   Rcpp::List param_m = SKAT_META_Optimal_Param_Rcpp(Phi, r_all);
   Rcpp::List Each_Info = SKAT_Optimal_Each_Q_Rcpp(Q_all, r_all, lambda_all, method);
-  arma::mat pmin_q = Each_Info["pmin.q"];
+  //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp 2a" << std::endl;
+  arma::mat pmin_q = Each_Info["pmin_q"];
+  //pmin_q.print("pmin_q");
+  //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp 2b" << std::endl;
   arma::mat pval(n_q, 1, arma::fill::zeros);
 
   // added
   arma::vec pmin = Each_Info["pmin"];
+  //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp 2c" << std::endl;
 
   if (method == "davies" || method == "optimal" || method == "optimal.mod" || method=="optimal.adj") {
     for (int i = 0; i < n_q; ++i) {
 	arma::vec pmin_q_vec = pmin_q.row(i).t();
 	arma::vec tau =  param_m["tau"];
-	double muQ = param_m["muQ"];
+	double muQ = param_m["MuQ"];
 	arma::vec lambda = param_m["lambda"];
 	double VarQ = param_m["VarQ"];
 	double VarRemain = param_m["VarRemain"];
 	double pminval =  pmin(i);
+  //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp 2d" << std::endl;
 	pval(i) = SKAT_Optimal_PValue_Davies_Rcpp(pmin_q_vec, tau, muQ, lambda, VarQ, VarRemain, r_all, pminval);
 
+  //std::cout << "SKAT_META_Optimal_Get_Pvalue_Rcpp 2e" << std::endl;
 
 	//pval(i) = SKAT_Optimal_PValue_Davies_Rcpp(pmin_q_vec, param_m["tau"], param_m["muQ"], param_m["lambda"], param_m["VarQ"], param_m["VarRemain"],  r_all, pmin(i));
     }
-  } 
-  else {
+  }else {
     Rcpp::stop("Invalid Method:", method);
   }
   /*
@@ -602,6 +696,10 @@ Rcpp::List SKAT_META_Optimal_Get_Pvalue_Rcpp(const arma::mat& Q_all, const arma:
     }
   }
   */
+  
+
+//pval.print("pval");
+
 
   // Check the pval
   // Since SKAT-O is between burden and SKAT, SKAT-O p-value should be <= min(p-values) * 2
@@ -627,7 +725,7 @@ Rcpp::List SKAT_META_Optimal_Get_Pvalue_Rcpp(const arma::mat& Q_all, const arma:
     }
   }
 
-  return Rcpp::List::create(Rcpp::Named("p.value") = pval, Rcpp::Named("p.val.each") = Each_Info["pval"]);
+  return Rcpp::List::create(Rcpp::Named("p_value") = pval, Rcpp::Named("p_val_each") = Each_Info["pval"]);
 }
 
 
@@ -644,7 +742,7 @@ Rcpp::List Get_Liu_Params_Mod_Lambda_Rcpp(const arma::vec& lambda, arma::vec& df
 
   arma::vec c1(4, arma::fill::zeros);
   for (int i = 0; i < 4; i++) {
-    c1[i] = arma::sum(arma::pow(lambda, i + 1) % df1);
+    c1[i] = arma::accu(arma::pow(lambda, i + 1) % df1);
   }
 
   double muQ = c1[0];
@@ -716,10 +814,13 @@ std::string Get_Liu_PVal_MOD_Lambda_Zero_Rcpp(double Q, double muQ, double muX, 
 // Function to calculate the p-value using arma::vec and pow()
 // [[Rcpp::export]]
 arma::vec Get_Liu_PVal_MOD_Lambda_Rcpp(const arma::vec& Q_all, const arma::vec& lambda, arma::vec& df1, bool log_p) {
-  int n = Q_all.size();
+  int n = Q_all.n_elem;
   arma::vec p_value(n);
 
     // Calculate parameters
+    
+	lambda.print("lambda");
+	df1.print("df1");
     Rcpp::List  param = Get_Liu_Params_Mod_Lambda_Rcpp(lambda, df1);
     double muQ = param["muQ"];
     double muX = param["muX"];
@@ -727,7 +828,8 @@ arma::vec Get_Liu_PVal_MOD_Lambda_Rcpp(const arma::vec& Q_all, const arma::vec& 
     double sigmaX = param["sigmaX"];
     double l = param["l"];
     double d = param["d"];
-
+    //std::cout << muQ << " " << muX << " " << sigmaQ << " " << sigmaX << " " << l << " " << d << std::endl;
+  //Q_all.print("Q_all");
   for (int i = 0; i < n; i++) {
     // Compute normalized values
     double Q_Norm = (Q_all(i) - muQ) / sigmaQ;
@@ -740,12 +842,16 @@ arma::vec Get_Liu_PVal_MOD_Lambda_Rcpp(const arma::vec& Q_all, const arma::vec& 
     boost::math::non_central_chi_squared_distribution<double> dist(l, d);
 
 
+    //std::cout << "Q_Norm1 " << Q_Norm1 << std::endl;
+  if(Q_Norm1 > 0){  
     if(!log_p){
         pval = boost::math::cdf(complement(dist, Q_Norm1)); //lower.tail=FALSE
     }else{
-        pval  = boost::math::log1p( boost::math::cdf(complement(dist, Q_Norm1)));
+        pval = boost::math::log1p( boost::math::cdf(complement(dist, Q_Norm1)));
     }
-
+  }else{
+    pval = 1.0;  
+  }
      p_value(i) = pval;
   }
 
@@ -791,10 +897,10 @@ Rcpp::List Get_PValue_Lambda_Rcpp(arma::vec lambda, arma::vec Q, arma::vec df1) 
     // pValueLiu(i) = SKAT_liu(Q[i], lambda);
 
     isConverge(i) = 1;
-
+    int ifault0 = out["ifault"];
     if (lambda.n_elem == 1) {
       pValue(i) = pValueLiu(i);
-    } else if (out["ifault"] != 0) {
+    } else if (ifault0 != 0) {
       isConverge(i) = 0;
     }
 
@@ -812,8 +918,8 @@ Rcpp::List Get_PValue_Lambda_Rcpp(arma::vec lambda, arma::vec Q, arma::vec df1) 
     pValueMsg = Get_Liu_PVal_MOD_Lambda_Zero_Rcpp(Q(0), param["muQ"], param["muX"], param["sigmaQ"], param["sigmaX"], param["l"], param["d"]);
     arma::vec Q0(1);
     Q0(0) = Q(0);
-    arma::vec df1 = arma::vec();
-    bool logp=true;
+    df1.clear();
+    bool logp=false;
     pValueLog = Get_Liu_PVal_MOD_Lambda_Rcpp(Q0, lambda, df1, logp);
   }
 
@@ -830,7 +936,7 @@ arma::vec Get_Lambda_Approx_Rcpp(const arma::mat& K, int maxK = 100) {
   int p1 = K.n_cols;
   arma::vec lambda(p1, arma::fill::zeros);
   
-  double lambda_sum = arma::sum(K.diag());
+  double lambda_sum = arma::accu(K.diag());
   double lambda2_sum = arma::accu(K % K);
     
   int k1 = std::min(p1 / 10, maxK);
@@ -904,12 +1010,15 @@ Rcpp::List Get_Davies_PVal_Rcpp(const arma::mat& Q_mat, const arma::mat& W_mat, 
   
   arma::vec Q_all;
   if (!Q_resampling_mat.is_empty()) {
-    Q_all = arma::join_cols(Q_mat, Q_resampling_mat);
+    arma::mat Q_mat2  = arma::join_cols(Q_mat, Q_resampling_mat);
+    Q_all = arma::vectorise(Q_mat2);
   } else {
-    Q_all = Q_mat;
+    Q_all = arma::vectorise(Q_mat);
   }
-  
+  //std::cout << "Get_Davies_PVal_Rcpp 1" << std::endl; 
+  //Q_all.print("Q_all");
   Rcpp::List re = Get_PValue_Rcpp(K, Q_all, isFast);
+  //std::cout << "Get_Davies_PVal_Rcpp 2" << std::endl; 
   Rcpp::List param;
  
   double liu_pval;
@@ -920,6 +1029,9 @@ Rcpp::List Get_Davies_PVal_Rcpp(const arma::mat& Q_mat, const arma::mat& W_mat, 
 
 
   param["liu_pval"] = liu_pval ;
+
+  //std::cout << "liu_pval " << liu_pval << std::endl;
+
   param["Is_Converged"] = is_converge;
   
   arma::vec p_value_resampling;
@@ -936,7 +1048,7 @@ Rcpp::List Get_Davies_PVal_Rcpp(const arma::mat& Q_mat, const arma::mat& W_mat, 
     is_converged_resampling = is_converged_resampling0.subvec(1, is_converged_resampling0.n_elem - 1);
   }  
   arma::vec pvaluevec = re["p.value"];
-  re["p.value"] = pvaluevec[0];
+  re["p_value"] = pvaluevec[0];
   re["param"] = param;
   re["p.value.resampling"] = p_value_resampling;
   re["liu_pval.resampling"] = liu_pval_resampling;
@@ -954,7 +1066,7 @@ Rcpp::List Met_SKAT_Get_Pvalue_Rcpp(const arma::vec& Score, const arma::mat& Phi
   if (arma::accu(arma::abs(Phi)) == 0) {
     Rcpp::warning("No polymorphic SNPs!");
     return Rcpp::List::create(
-      Rcpp::Named("p.value") = 1,
+      Rcpp::Named("p_value") = 1,
       Rcpp::Named("p.value.resampling") = R_NilValue,
       Rcpp::Named("pval.zero.msg") = R_NilValue
     );
@@ -965,7 +1077,7 @@ Rcpp::List Met_SKAT_Get_Pvalue_Rcpp(const arma::vec& Score, const arma::mat& Phi
   if (!Score_Resampling.is_empty()) {
     Score_Resampling_t = Score_Resampling.t();
   }
-
+  //std::cout << "Score_Resampling_t1" << std::endl;
   if (Phi.n_cols <= 1 && Phi.n_rows <= 1) {
     r_corr.set_size(1);
     r_corr[0] = 0;
@@ -982,23 +1094,26 @@ Rcpp::List Met_SKAT_Get_Pvalue_Rcpp(const arma::vec& Score, const arma::mat& Phi
     Rcpp::List re = SKAT_META_Optimal_Rcpp(Score, Phi, r_corr, method, Score_Resampling);
     return re;
   }
+  //std::cout << "Score_Resampling_t2" << std::endl;
 
   Rcpp::List QL;
   arma::vec Q_1;
   arma::mat Q_res_1;
   arma::mat Phi_in = Phi;
   if (r_corr[0] == 0) {
-    arma::vec Q = arma::sum(arma::pow(Score, 2.0), 1) / 2.0;
-    Q_1 = Q;
+    Q_1.set_size(1);
+    Q_1(0) = arma::accu(arma::pow(Score, 2.0)) / 2.0;
     if (!Score_Resampling.is_empty()) {
       arma::mat Q_res = arma::sum(arma::square(Score_Resampling_t), 1) / 2.0;
             Q_res_1 = Q_res;
     }
-
+  //std::cout << "Score_Resampling_t2 1a SKAT" << std::endl;
   } else if (r_corr[0] == 1) {
     QL = SKAT_META_Optimal_Get_Q_Rcpp(Score, r_corr);
     arma::vec Q = QL["Qr"];
     Q_1 = Q;
+    
+  //std::cout << "Score_Resampling_t2 1a" << std::endl;
 
     if (!Score_Resampling.is_empty()) {
 
@@ -1009,9 +1124,12 @@ Rcpp::List Met_SKAT_Get_Pvalue_Rcpp(const arma::vec& Score, const arma::mat& Phi
 
     arma::mat a(1,1);
     a(0,0) = arma::accu(Phi);
+   //std::cout << "Score_Resampling_t2 1a1" << std::endl;
     Rcpp::List re = Get_Liu_PVal_Rcpp(Q_1, a, Q_res_1);
+   //std::cout << "Score_Resampling_t2 1b" << std::endl;
     return re;
   } else {
+   //std::cout << "Score_Resampling_t2 1c" << std::endl;
     QL = SKAT_META_Optimal_Get_Q_Rcpp(Score, r_corr);
     arma::vec Q = QL["Qr"];
     Q_1 = Q;
@@ -1026,11 +1144,18 @@ Rcpp::List Met_SKAT_Get_Pvalue_Rcpp(const arma::vec& Score, const arma::mat& Phi
     arma::mat L = arma::chol(R_M, "lower");
     Phi_in = L * (Phi * L.t());
   }
- 
+   //std::cout << "Score_Resampling_t3" << std::endl;
+   //Q_1.print("Q");
+   //Phi_in.print("Phi");
+
+
   Rcpp::List re = Get_Davies_PVal_Rcpp(Q_1, Phi_in, Q_res_1);
+   //std::cout << "Score_Resampling_t4" << std::endl; 
   if (r_corr.n_elem == 1) {
     re["Q"] = Q_1;
   }
+
+
 
   return re;
 }
@@ -1049,6 +1174,7 @@ Rcpp::List Get_Liu_PVal_Rcpp(const arma::mat& Q, const arma::mat& W, const arma:
   c1(1) = arma::accu(arma::diagmat(A2));
   c1(2) = arma::accu(A1 % arma::trans(A2));
   c1(3) = arma::accu(A2 % arma::trans(A2));
+  //std::cout << "Get_Liu_PVal_Rcpp 0" << std::endl;
 
   Rcpp::List param = Get_Liu_Params_Rcpp(c1);
   double muQ = param["muQ"];
@@ -1061,18 +1187,31 @@ Rcpp::List Get_Liu_PVal_Rcpp(const arma::mat& Q, const arma::mat& W, const arma:
  
   double l = param["l"];
   double d = param["d"];
+  //std::cout << "Get_Liu_PVal_Rcpp 1" << std::endl;
   boost::math::non_central_chi_squared_distribution<double> dist(l, d);
 
-   arma::vec p_value;
+   arma::vec p_value(Q_Norm1.n_elem);
   for (int i = 0; i < Q_Norm1.n_elem; ++i) {
-      p_value[i] = 1 - boost::math::cdf(dist, Q_Norm1[i]);
+  double Q_Norm1_in = Q_Norm1[i];
+  if(Q_Norm1_in > 0){
+  //std::cout << "Q_Norm1_in " << Q_Norm1_in << std::endl;
+      p_value[i] = 1 - boost::math::cdf(dist, Q_Norm1_in);
+  }else{
+     p_value[i] = 1.0; 	
+
   }
+}
+  std::cout << "Get_Liu_PVal_Rcpp 2" << std::endl;
+
+
   arma::vec p_value_resampling;
   if (Q_resampling.n_elem > 0) {
     p_value_resampling = p_value.subvec(1, p_value.n_elem - 1);
   }
 
-  return Rcpp::List::create(Rcpp::Named("p.value") = p_value(0),
+  return Rcpp::List::create(
+  			Rcpp::Named("p_value") = p_value(0),
+  			Rcpp::Named("p.value") = p_value(0),
                       Rcpp::Named("param") = param,
                       Rcpp::Named("p.value.resampling") = p_value_resampling);
 }

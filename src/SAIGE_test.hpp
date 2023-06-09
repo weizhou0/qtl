@@ -62,7 +62,7 @@ class SAIGEClass
       bool m_isnoadjCov;      
       bool m_is_EmpSPA;
 
-      double m_pval_cutoff_for_fastTest; 
+      double m_pval_cutoff_for_fastTest;
       double m_SPA_Cutoff;
       arma::umat m_locationMat;
       arma::vec m_valueVec;

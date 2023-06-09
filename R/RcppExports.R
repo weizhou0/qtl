@@ -25,8 +25,8 @@ setAssocTest_GlobalVarsInCPP <- function(t_impute_method, t_missing_cutoff, t_mi
     invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP', PACKAGE = 'SAIGE', t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_weights_beta, t_outputFilePrefix, t_MACCutoffforER))
 }
 
-setAssocTest_GlobalVarsInCPP_GbyE <- function(t_emat, t_isgxe) {
-    invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE', PACKAGE = 'SAIGE', t_emat, t_isgxe))
+setAssocTest_GlobalVarsInCPP_GbyE <- function(t_emat, t_isgxe, t_pval_cutoff_for_gxe) {
+    invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE', PACKAGE = 'SAIGE', t_emat, t_isgxe, t_pval_cutoff_for_gxe))
 }
 
 setMarker_GlobalVarsInCPP <- function(t_isOutputMoreDetails, t_marker_chunksize) {
@@ -467,6 +467,62 @@ get_sp_Sigma_to_R <- function() {
 
 get_SKAT_pvalue_Rcpp <- function(Score, Phi, r_corr) {
     .Call('_SAIGE_get_SKAT_pvalue_Rcpp', PACKAGE = 'SAIGE', Score, Phi, r_corr)
+}
+
+SKAT_META_Optimal_Get_Q_Rcpp <- function(Score, r_all) {
+    .Call('_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp', PACKAGE = 'SAIGE', Score, r_all)
+}
+
+SKAT_META_Optimal_Get_Q_Res_Rcpp <- function(Score_res, r_all) {
+    .Call('_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp', PACKAGE = 'SAIGE', Score_res, r_all)
+}
+
+Get_Lambda_Rcpp <- function(K, isFast, maxK) {
+    .Call('_SAIGE_Get_Lambda_Rcpp', PACKAGE = 'SAIGE', K, isFast, maxK)
+}
+
+SKAT_META_Optimal_Param_Rcpp <- function(Phi, r_all) {
+    .Call('_SAIGE_SKAT_META_Optimal_Param_Rcpp', PACKAGE = 'SAIGE', Phi, r_all)
+}
+
+SKAT_Optimal_Each_Q_Rcpp <- function(Q_all, r_all, lambda_all, method) {
+    .Call('_SAIGE_SKAT_Optimal_Each_Q_Rcpp', PACKAGE = 'SAIGE', Q_all, r_all, lambda_all, method)
+}
+
+Get_Liu_Params_Mod_Rcpp <- function(c1) {
+    .Call('_SAIGE_Get_Liu_Params_Mod_Rcpp', PACKAGE = 'SAIGE', c1)
+}
+
+SKAT_Optimal_Integrate_Func_Davies_Rcpp <- function(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all) {
+    .Call('_SAIGE_SKAT_Optimal_Integrate_Func_Davies_Rcpp', PACKAGE = 'SAIGE', x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all)
+}
+
+SKAT_Optimal_Integrate_Func_single_Davies_Rcpp <- function(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all) {
+    .Call('_SAIGE_SKAT_Optimal_Integrate_Func_single_Davies_Rcpp', PACKAGE = 'SAIGE', x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all)
+}
+
+Get_Liu_Params_Mod_Lambda_Rcpp <- function(lambda, df1) {
+    .Call('_SAIGE_Get_Liu_Params_Mod_Lambda_Rcpp', PACKAGE = 'SAIGE', lambda, df1)
+}
+
+Get_Liu_PVal_MOD_Lambda_Zero_Rcpp <- function(Q, muQ, muX, sigmaQ, sigmaX, l, d) {
+    .Call('_SAIGE_Get_Liu_PVal_MOD_Lambda_Zero_Rcpp', PACKAGE = 'SAIGE', Q, muQ, muX, sigmaQ, sigmaX, l, d)
+}
+
+Get_Liu_PVal_MOD_Lambda_Rcpp <- function(Q_all, lambda, df1, log_p) {
+    .Call('_SAIGE_Get_Liu_PVal_MOD_Lambda_Rcpp', PACKAGE = 'SAIGE', Q_all, lambda, df1, log_p)
+}
+
+Get_PValue_Lambda_Rcpp <- function(lambda, Q, df1) {
+    .Call('_SAIGE_Get_PValue_Lambda_Rcpp', PACKAGE = 'SAIGE', lambda, Q, df1)
+}
+
+Get_Liu_PVal_Rcpp <- function(Q, W, Q_resampling) {
+    .Call('_SAIGE_Get_Liu_PVal_Rcpp', PACKAGE = 'SAIGE', Q, W, Q_resampling)
+}
+
+Get_Liu_Params_Rcpp <- function(c1) {
+    .Call('_SAIGE_Get_Liu_Params_Rcpp', PACKAGE = 'SAIGE', c1)
 }
 
 SPA <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge) {

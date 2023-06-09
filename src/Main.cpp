@@ -114,7 +114,7 @@ std::string g_outputFilePrefixSingle;
 arma::mat g_emat;
 arma::fmat g_emat_f;
 bool g_isgxe;
-
+double g_pval_cutoff_for_gxe;
 
 // [[Rcpp::export]]
 void setAssocTest_GlobalVarsInCPP(std::string t_impute_method,
@@ -147,11 +147,13 @@ void setAssocTest_GlobalVarsInCPP(std::string t_impute_method,
 // [[Rcpp::export]]
 void setAssocTest_GlobalVarsInCPP_GbyE(
                                 arma::fmat & t_emat,
-                                bool t_isgxe)
+                                bool t_isgxe, 
+				double t_pval_cutoff_for_gxe)
 {
 	g_emat_f=t_emat;
 	g_emat = arma::conv_to< arma::mat >::from(g_emat_f);
 	g_isgxe=t_isgxe;
+	g_pval_cutoff_for_gxe = t_pval_cutoff_for_gxe;
 }
 
 
@@ -242,6 +244,7 @@ void mainMarkerInCPP(
   std::vector<std::string> pval_ge_cStrVec(q, "NA");
   std::vector<std::string> pval_noSPA_ge_cStrVec(q, "NA"); 
   std::vector<double> pval_SKATO_ge_cVec(q, arma::datum::nan);
+  std::vector<double> pval_SKAT_ge_cVec(q, arma::datum::nan);
   //std::vector<std::string> Tstat_ge_cStrVec(q, arma::datum::nan);
   //std::vector<std::string> varT_ge_cStrVec(q, arma::datum::nan);
 
@@ -670,7 +673,7 @@ void mainMarkerInCPP(
     std::vector<std::string> pval_noSPA_c_ge_vec(ne);
     std::vector<std::string> pval_c_ge_vec(ne);
     arma::vec evec;
-    if(g_isgxe && pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
+    if(g_isgxe && pval < g_pval_cutoff_for_gxe){
 
     unsigned int q = 1;
     unsigned int nrow_e = g_emat.n_rows;
@@ -694,7 +697,7 @@ void mainMarkerInCPP(
     arma::mat P2Matge(nrow_e, 3);	
     arma::mat VarMatge;
     arma::vec Score_c_ge_vec(ne);
-	std::cout << "HEREa0" << std::endl;
+	//std::cout << "HEREa0" << std::endl;
 
 	w0G2_cond_Vec_g(0) = 1;
      	TstatVec_g(0) = Tstat;
@@ -766,12 +769,9 @@ void mainMarkerInCPP(
 			seBeta_c_ge_vec.at(k) = std::to_string(seBeta_c_ge);
 			pval_c_ge_vec.at(k) = std::to_string(pval_c_ge);
 			pval_noSPA_c_ge_vec.at(k) = std::to_string(pval_noSPA_c_ge);
-	std::cout << "HEREa" << std::endl;
 			Score_c_ge_vec(k) = Tstat_c_ge;
-	std::cout << "HERE0" << std::endl;
 
-	     P1Matge.row(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*(gtildeVec_ge.t());
-	std::cout << "HERE0a" << std::endl;
+	     		P1Matge.row(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*(gtildeVec_ge.t());
 
       if(t_P2Vec_ge.n_elem == 0){
                 if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
@@ -786,11 +786,14 @@ void mainMarkerInCPP(
 	     P2Matge.col(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec_ge;
         }
 
-	std::cout << "HERE1" << std::endl;
 	VarMatge = P1Matge * P2Matge;
-	std::cout << "HERE2" << std::endl;
-	arma::vec r_corr = {0.00, 0.01, 0.04, 0.09, 0.25, 0.50, 1.00 };
-	Rcpp::List groupOutListge = get_SKAT_pvalue_Rcpp(Score_c_ge_vec, VarMatge, r_corr);	
+	//arma::vec r_corr = {0.0000, 0.0100, 0.0400, 0.0900, 0.2500, 0.5000, 1.0000};
+	arma::vec r_corr = {0.000}; //SKAT test
+	//arma::vec r_corr = {1.000};
+
+	Score_c_ge_vec.save("/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step2/score_example.txt", arma::csv_ascii);
+	VarMatge.save("/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step2/VarMat_example.txt", arma::csv_ascii);
+	Rcpp::List groupOutListge = get_SKAT_pvalue_Rcpp(Score_c_ge_vec, VarMatge, r_corr);
 	if(ne > 1){     
             Beta_c_ge_str = join(Beta_c_ge_vec, ",");
             seBeta_c_ge_str = join(seBeta_c_ge_vec, ",");
@@ -807,7 +810,8 @@ void mainMarkerInCPP(
 	seBeta_ge_cStrVec.at(i) = seBeta_c_ge_str;
 	pval_ge_cStrVec.at(i) = pval_c_ge_str;
 	pval_noSPA_ge_cStrVec.at(i) = pval_noSPA_c_ge_str;
-	pval_SKATO_ge_cVec.at(i) = Rcpp::as<double>(groupOutListge["Pvalue_SKATO"]);
+	//pval_SKATO_ge_cVec.at(i) = Rcpp::as<double>(groupOutListge["Pvalue_SKATO"]);
+	pval_SKAT_ge_cVec.at(i) = Rcpp::as<double>(groupOutListge["Pvalue_SKAT"]);
 
 
     }//if(g_isgxe){
@@ -864,7 +868,7 @@ Beta_ge_cStrVec,
 seBeta_ge_cStrVec,
 pval_ge_cStrVec,
 pval_noSPA_ge_cStrVec,
-pval_SKATO_ge_cVec
+pval_SKAT_ge_cVec
 );
 
 }
@@ -2774,7 +2778,7 @@ bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isapp
 
 		if(t_isGbyE){
 
-                        OutFile_single << "\tBeta_ge\tseBeta_ge\tpval_ge\tpval_noSPA_ge";
+                        OutFile_single << "\tBeta_ge\tseBeta_ge\tpval_ge\tpval_noSPA_ge\tpval_ge_SKAT";
                 }
 
                 OutFile_single << "\n";
@@ -2833,7 +2837,7 @@ void writeOutfile_single(bool t_isMoreOutput,
 			std::vector<std::string> & seBeta_ge_cStrVec,
 			std::vector<std::string> & pval_ge_cStrVec,
 			std::vector<std::string> & pval_noSPA_ge_cStrVec,
-			std::vector<double> & pval_SKATO_ge_cVec
+			std::vector<double> & pval_SKAT_ge_cVec
 ){
   int numtest = 0;
   for(unsigned int k = 0; k < pvalVec.size(); k++){
@@ -2933,7 +2937,7 @@ void writeOutfile_single(bool t_isMoreOutput,
 			OutFile_single << "\t";
 			OutFile_single << pval_noSPA_ge_cStrVec.at(k);
 			OutFile_single << "\t";
-			OutFile_single << pval_SKATO_ge_cVec.at(k);
+			OutFile_single << pval_SKAT_ge_cVec.at(k);
 		}
 
 		OutFile_single << "\n";
@@ -6257,7 +6261,7 @@ std::string join(std::vector<std::string> const &strings, std::string delim)
 
 // [[Rcpp::export]]
 Rcpp::List get_SKAT_pvalue_Rcpp(arma::vec & Score, arma::mat &  Phi, arma::vec & r_corr) {
-  std::cout << "get_SKAT_pvalue_Rcpp0" << std::endl;
+  //std::cout << "get_SKAT_pvalue_Rcpp0" << std::endl;
   
   // Call SKAT:::Met_SKAT_Get_Pvalue with specified arguments
   Rcpp::List out_SKAT_List;
@@ -6265,7 +6269,7 @@ Rcpp::List get_SKAT_pvalue_Rcpp(arma::vec & Score, arma::mat &  Phi, arma::vec &
 
 
 std::string method = "optimal.adj";
-std::cout << "get_SKAT_pvalue_Rcpp2a0" << std::endl;
+//std::cout << "get_SKAT_pvalue_Rcpp2a0" << std::endl;
 arma::mat Score_Resampling;
 out_SKAT_List = Met_SKAT_Get_Pvalue_Rcpp(Score, Phi, r_corr, method, Score_Resampling);
 
@@ -6275,7 +6279,7 @@ out_SKAT_List = Met_SKAT_Get_Pvalue_Rcpp(Score, Phi, r_corr, method, Score_Resam
  //                                 _["r.corr"] = r_corr,
  //                                 _["method"] = "optimal.adj",
  //                                 _["Score.Resampling"] = R_NilValue);
-std::cout << "get_SKAT_pvalue_Rcpp2a" << std::endl;
+//std::cout << "get_SKAT_pvalue_Rcpp2a" << std::endl;
 //  } catch (std::exception& e) {
 
 //std::cout << "get_SKAT_pvalue_Rcpp2b" << std::endl;
@@ -6289,25 +6293,42 @@ std::cout << "get_SKAT_pvalue_Rcpp2a" << std::endl;
 //  }
 
   Rcpp::List paramList = out_SKAT_List["param"];
-  arma::vec rho = Rcpp::as<arma::vec>(paramList["rho"]);
-  Rcpp::List pvaleachList = paramList["p.val.each"];
-  arma::vec pvalueout = Rcpp::as<arma::vec>(out_SKAT_List["p.value"]); 
+  //std::cout << "get_SKAT_pvalue_Rcpp2b" << std::endl;
+  arma::vec rho;
+  if(paramList.containsElementNamed("rho")){
+      rho = Rcpp::as<arma::vec>(paramList["rho"]);
+  }else{
+      rho = r_corr;
+  }
 
-  pvalueout.print("pvalueout");
-  rho.print("rho");
-
+  //rho.print("rho");
+  //std::cout << "get_SKAT_pvalue_Rcpp2c" << std::endl;
+  arma::vec pvalueout = Rcpp::as<arma::vec>(out_SKAT_List["p_value"]); 
+  //pvalueout.print("pvalueout");
+  Rcpp::List pvaleachList;
+  if(paramList.containsElementNamed("p_val_each")){
+	pvaleachList = paramList["p_val_each"];
+  }
+  
   if(!(any(rho == 0.0)) && !(any(rho == 1.0)) && !arma::is_finite(pvalueout)){
       Pvalue[0] = pvalueout[0];
       Pvalue[1] = pvalueout[0];
       Pvalue[2] = pvalueout[0];
       int error_code = 0;
-  }else{
-      
+  }else{    
       arma::uvec pos00 = arma::find(rho == 0.0);
       arma::uvec pos01 = arma::find(rho == 1.0);
-      Pvalue[0] = out_SKAT_List["p.value"];
+      Pvalue[0] = out_SKAT_List["p_value"];
+     if(pos00.n_elem > 0 && paramList.containsElementNamed("p_val_each")){
       Pvalue[1] = pvaleachList[pos00[0]];
+     }else{
+	Pvalue[1] = out_SKAT_List["p_value"];
+     }
+     if(pos01.n_elem > 0 && paramList.containsElementNamed("p_val_each")){
       Pvalue[2] = pvaleachList[pos01[0]];
+     }else{
+	Pvalue[2]  = out_SKAT_List["p_value"];
+     }
   }
 
   return Rcpp::List::create(Named("Pvalue_SKATO") = Pvalue[0],

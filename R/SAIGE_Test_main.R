@@ -115,6 +115,7 @@ SPAGMMATtest = function(bgenFile = "",
 		 is_no_weight_in_groupTest = FALSE,
 		 is_output_markerList_in_groupTest = FALSE,
 		 pval_cutoff_for_fastTest = 0.05,
+		 pval_cutoff_for_gxe = 0.001,
 		 is_noadjCov = TRUE,
 		 is_sparseGRM = TRUE, 
 		 max_MAC_use_ER = 4,
@@ -227,7 +228,7 @@ SPAGMMATtest = function(bgenFile = "",
     
     obj.model = ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt=9999, espa_range=c(-20,20)) #readInGLMM.R8
 
-    setAssocTest_GlobalVarsInCPP_GbyE(obj.model$eMat, obj.model$isgxe);	
+    setAssocTest_GlobalVarsInCPP_GbyE(obj.model$eMat, obj.model$isgxe, pval_cutoff_for_gxe);	
 
 
 

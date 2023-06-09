@@ -271,7 +271,7 @@ void writeOutfile_single(bool t_isMoreOutput,
                         std::vector<std::string> & seBeta_ge_cStrVec,
                         std::vector<std::string> & pval_ge_cStrVec,
                         std::vector<std::string> & pval_noSPA_ge_cStrVec,
-                        std::vector<double>  & pval_SKATO_ge_cVec);
+                        std::vector<double>  & pval_SKAT_ge_cVec);
 
 
 
