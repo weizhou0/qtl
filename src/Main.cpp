@@ -204,7 +204,7 @@ void mainMarkerInCPP(
 			   bool & t_isFirth) 
 {
 
-  //std::cout << "Here1 mainMarkerInCPP" << std::endl;
+  std::cout << "Here1 mainMarkerInCPP" << std::endl;
   //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
   //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM " << ptr_gSAIGEobj->m_flagSparseGRM << std::endl;
 
@@ -343,9 +343,9 @@ void mainMarkerInCPP(
    indexForMissing.clear();
    //t_GVec0.clear();
    //t_GVec.clear();
-   //std::cout << "Unified_getOneMarker " << std::endl;
-   //std::cout << "n " << n << std::endl;
-   //std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
+   std::cout << "Unified_getOneMarker " << std::endl;
+   std::cout << "n " << n << std::endl;
+   std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
 
    //t_GVec.set_size(n);
    bool isReadMarker = Unified_getOneMarker(t_genoType, gIndex_prev, gIndex, ref, alt, marker, pd, chr, altFreq, altCounts, missingRate, imputeInfo,
@@ -410,7 +410,7 @@ void mainMarkerInCPP(
     int nG = t_GVec.n_elem;
     double MAC = MAF * n * (1 - missingRate) *2;
    
-   /*
+   
    std::cout << "MAC " << MAC << std::endl;
    std::cout << "MAF " << MAF << std::endl;
    std::cout << "n " << n << std::endl;
@@ -422,7 +422,7 @@ void mainMarkerInCPP(
    std::cout << "MAC " << MAC << std::endl;
    std::cout << "altFreq " << altFreq << std::endl;
    std::cout << "n " << n << std::endl;
-   */
+   
 
 
     // Quality Control (QC) based on missing rate, MAF, and MAC

@@ -221,15 +221,15 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     }
 
     var2 = var2m(0,0);
-    //std::cout << "var2 " << var2 << std::endl;
-    //std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
+    std::cout << "var2 " << var2 << std::endl;
+    std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
     //double var1 = var2 * m_varRatioVal;
     double var1 = var2 * varRatioVal_var2;
-    //std::cout << "var1 " << var1 << std::endl;
+    std::cout << "var1 " << var1 << std::endl;
     double stat = S*S/var1;
     double t_pval;
-    //std::cout << "S " << S << std::endl;    
-    //std::cout << "var1 " << var1 << std::endl;    
+    std::cout << "S " << S << std::endl;    
+    std::cout << "var1 " << var1 << std::endl;    
 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
@@ -312,6 +312,11 @@ void SAIGEClass::scoreTestFast(arma::vec & t_GVec,
 
     double stat = S*S/var1;
     double t_pval;
+
+    std::cout << "S FastTest " << S << std::endl;
+        std::cout << "var1 " << var1 << std::endl;
+        std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
+
 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
@@ -517,7 +522,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 {
 
 
-
+std::cout << "herehrere" << std::endl;
   t_isFirth = false;
   std::string t_pval_str;
   double t_var2, t_SPApval;
@@ -542,7 +547,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
  if(t_isSparseGRM){
  	t_isnoadjCov = false;
  }
-
+std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
 
 if(!t_isnoadjCov){
 	//std::cout << "scoreTest " << std::endl;  
