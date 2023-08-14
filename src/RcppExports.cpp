@@ -1473,6 +1473,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mainMarkerInCPP_multi
+void mainMarkerInCPP_multi(std::string& t_genoType, std::string& t_traitType, std::vector<std::string>& t_genoIndex_prev, std::vector<std::string>& t_genoIndex, bool& t_isMoreOutput, bool& t_isImputation, bool& t_isFirth);
+RcppExport SEXP _SAIGE_mainMarkerInCPP_multi(SEXP t_genoTypeSEXP, SEXP t_traitTypeSEXP, SEXP t_genoIndex_prevSEXP, SEXP t_genoIndexSEXP, SEXP t_isMoreOutputSEXP, SEXP t_isImputationSEXP, SEXP t_isFirthSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string& >::type t_genoType(t_genoTypeSEXP);
+    Rcpp::traits::input_parameter< std::string& >::type t_traitType(t_traitTypeSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_genoIndex_prev(t_genoIndex_prevSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_genoIndex(t_genoIndexSEXP);
+    Rcpp::traits::input_parameter< bool& >::type t_isMoreOutput(t_isMoreOutputSEXP);
+    Rcpp::traits::input_parameter< bool& >::type t_isImputation(t_isImputationSEXP);
+    Rcpp::traits::input_parameter< bool& >::type t_isFirth(t_isFirthSEXP);
+    mainMarkerInCPP_multi(t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth);
+    return R_NilValue;
+END_RCPP
+}
 // SKAT_META_Optimal_Get_Q_Rcpp
 Rcpp::List SKAT_META_Optimal_Get_Q_Rcpp(const arma::vec& Score, const arma::vec& r_all);
 RcppExport SEXP _SAIGE_SKAT_META_Optimal_Get_Q_Rcpp(SEXP ScoreSEXP, SEXP r_allSEXP) {
@@ -2320,6 +2336,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_print_g_n_unique", (DL_FUNC) &_SAIGE_print_g_n_unique, 0},
     {"_SAIGE_get_sp_Sigma_to_R", (DL_FUNC) &_SAIGE_get_sp_Sigma_to_R, 0},
     {"_SAIGE_get_SKAT_pvalue_Rcpp", (DL_FUNC) &_SAIGE_get_SKAT_pvalue_Rcpp, 3},
+    {"_SAIGE_mainMarkerInCPP_multi", (DL_FUNC) &_SAIGE_mainMarkerInCPP_multi, 7},
     {"_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp, 2},
     {"_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp, 2},
     {"_SAIGE_Get_Lambda_Rcpp", (DL_FUNC) &_SAIGE_Get_Lambda_Rcpp, 3},

@@ -583,4 +583,15 @@ std::string join(std::vector<std::string> const &strings, std::string delim);
 
 Rcpp::List get_SKAT_pvalue_Rcpp(arma::vec & Score, arma::mat &  Phi, arma::vec & r_corr);
 
+
+
+void mainMarkerInCPP_multi(
+                           std::string & t_genoType,     // "PLINK", "BGEN"
+                           std::string & t_traitType,
+                           std::vector<std::string> & t_genoIndex_prev,
+                           std::vector<std::string> & t_genoIndex,
+                           bool & t_isMoreOutput,
+                           bool & t_isImputation,
+                           bool & t_isFirth);
+
 #endif

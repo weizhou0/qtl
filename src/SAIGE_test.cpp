@@ -20,6 +20,10 @@
 #include <boost/date_time.hpp>
 #include <boost/math/distributions/normal.hpp>
 #include <boost/math/distributions/chi_squared.hpp>
+#include <R.h>
+#include <Rmath.h>
+
+
 
 namespace SAIGE {
 
@@ -363,11 +367,13 @@ void SAIGEClass::scoreTestFast_noadjCov(arma::vec & t_GVec,
                      double &t_var1,
                      double &t_var2){
 
+
+/*
     arma::vec g1 = t_GVec.elem(t_indexForNonZero);
-    arma::vec m_varWeightsvec_new = m_varWeightsvec.elem(t_indexForNonZero);
+    //arma::vec m_varWeightsvec_new = m_varWeightsvec.elem(t_indexForNonZero);
     arma::vec mu21;
     arma::vec res1 = m_res_sample.elem(t_indexForNonZero);
-    res1 = res1 % m_varWeightsvec_new;
+    //res1 = res1 % m_varWeightsvec_new;
     double g1mu2, mu2f, mu2fg, altFreq2;
     altFreq2 = t_altFreq * 2;
     mu2f = arma::sum(m_mu2_sample * pow(altFreq2,2));
@@ -381,14 +387,24 @@ void SAIGEClass::scoreTestFast_noadjCov(arma::vec & t_GVec,
     if(m_traitType == "quantitative" || m_traitType == "count_nb"){
       var2 = var2 * m_tauvec[0];
     }
-
-
+*/
+    double altFreq2 = t_altFreq * 2;
+    arma::vec t_GVec_center = t_GVec-altFreq2;
+    double var2 = dot(m_mu2_sample, pow(t_GVec_center,2));
+    //std::cout << "var2 " << var2 << std::endl;
+    //std::cout << "var2new " << var2new << std::endl;
     double var1 = var2 * m_varRatioVal;
+
+/*
     double S1 = dot(res1, g1);
     double S2 = arma::sum(m_res * altFreq2);
     double S = S1 - S2;
-    S = S/m_tauvec[0];
+*/
 
+    double S = dot(m_res_sample, t_GVec_center);
+    S = S/m_tauvec[0];
+    //std::cout << "S " << S << std::endl;
+    //std::cout << "Snew " << Snew << std::endl;
 
     double stat = S*S/var1;
     double t_pval;
@@ -397,8 +413,9 @@ void SAIGEClass::scoreTestFast_noadjCov(arma::vec & t_GVec,
     if (var1 <= std::numeric_limits<double>::min()){
         t_pval = 1;
     } else{
-      boost::math::chi_squared chisq_dist(1);
-      t_pval = boost::math::cdf(complement(chisq_dist, stat));
+      //boost::math::chi_squared chisq_dist(1);
+      //t_pval = boost::math::cdf(complement(chisq_dist, stat));
+                                                           t_pval = Rf_pchisq(S*S/var1, 1.0, 0, 0);
     }
 
 
@@ -522,7 +539,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 {
 
 
-std::cout << "herehrere" << std::endl;
+  //std::cout << "herehrere" << std::endl;
   t_isFirth = false;
   std::string t_pval_str;
   double t_var2, t_SPApval;
@@ -547,7 +564,7 @@ std::cout << "herehrere" << std::endl;
  if(t_isSparseGRM){
  	t_isnoadjCov = false;
  }
-std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
+//std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
 
 if(!t_isnoadjCov){
 	//std::cout << "scoreTest " << std::endl;  
@@ -593,18 +610,9 @@ if(!t_isnoadjCov){
   
  //arma::vec timeoutput3_a = getTime();
   double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
-
   //arma::uvec iIndexComVec = arma::find(t_GVec == 0);
   //arma::uvec iIndexVec = arma::find(t_GVec != 0);
- 
-  
-  unsigned int iIndexComVecSize = iIndexComVec.n_elem;
-  unsigned int iIndexSize = iIndex.n_elem; 
-  arma::vec gNB(iIndexSize, arma::fill::none);
-  arma::vec gNA(iIndexComVecSize, arma::fill::none);
-  arma::vec muNB(iIndexSize, arma::fill::none);
-  arma::vec muNA(iIndexComVecSize, arma::fill::none);
-
+  arma::vec gNB, gNA, muNB, muNA;
   /*
     std::cout << "iIndexComVecSize " << iIndexComVecSize << std::endl;
     std::cout << "iIndexSize " << iIndexSize << std::endl;
@@ -622,6 +630,17 @@ if(!t_isER){
 
   //if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
   if(StdStat > m_SPA_Cutoff && m_traitType == "binary"){
+  
+  unsigned int iIndexComVecSize = iIndexComVec.n_elem;
+  unsigned int iIndexSize = iIndex.n_elem;
+  gNB.set_size(iIndexSize);
+  gNA.set_size(iIndexComVecSize);
+  muNB.set_size(iIndexSize);
+  muNA.set_size(iIndexComVecSize);
+  //arma::vec gNB(iIndexSize, arma::fill::none);
+  //arma::vec gNA(iIndexComVecSize, arma::fill::none);
+  //arma::vec muNB(iIndexSize, arma::fill::none);
+  //arma::vec muNA(iIndexComVecSize, arma::fill::none);
 
        if(!is_gtilde){
           t_gtilde.resize(m_n);
@@ -1488,6 +1507,98 @@ double SAIGEClass::EmpSPA_getMarkerPval(arma::vec & t_g,
 
     return pval;
   }
+
+
+void SAIGEClass::getMarkerPval_multi(arma::mat & t_GMat_center,
+                               std::vector <double> & t_Beta,
+                               std::vector <double> & t_seBeta,
+                               std::vector <double> & t_pval,
+                               std::vector <double> & t_pval_noSPA,
+                               std::vector <double> & t_Tstat,
+                               std::vector <double> & t_var1, 
+			       std::vector <std::string> & t_pval_str_vec)
+{
+  arma::vec t_Beta_vec, t_seBeta_vec, t_Tstat_vec, t_var1_vec, t_var2_vec, t_pval_noadj_vec;
+  arma::uvec t_skipSPAind_vec;
+ std::cout << "t_GMat here2a " << std::endl; 
+
+  scoreTestFast_noadjCov_multi(t_GMat_center, t_Beta_vec, t_seBeta_vec, t_pval_str_vec, t_Tstat_vec, t_var1_vec, t_var2_vec, t_skipSPAind_vec, t_pval_noadj_vec);
+ std::cout << "t_GMat here2b " << std::endl; 
+  t_Beta = arma::conv_to < std::vector<double> >::from(t_Beta_vec);
+  t_seBeta = arma::conv_to < std::vector<double> >::from(t_seBeta_vec);
+  t_Tstat = arma::conv_to < std::vector<double> >::from(t_Tstat_vec);
+  t_var1 = arma::conv_to < std::vector<double> >::from(t_var1_vec);
+  t_pval = arma::conv_to < std::vector<double> >::from(t_pval_noadj_vec);
+  t_pval_noSPA = t_pval;
+}
+
+void SAIGEClass::scoreTestFast_noadjCov_multi(arma::mat & t_GMat_centered,
+                     arma::vec & t_Beta,
+                     arma::vec & t_seBeta,
+                     std::vector <std::string> & t_pval_str,
+                     arma::vec &t_Tstat,
+                     arma::vec &t_var1,
+                     arma::vec &t_var2,
+                     arma::uvec & t_skipSPAind_vec,
+                     arma::vec & t_pval_noadj_vec) 
+{
+t_Tstat = t_GMat_centered.t() * m_res_sample / (m_tauvec[0]);
+//arma::mat mu2Mat = arma::diag(m_mu2_sample);
+ std::cout << "t_GMat here2c " << std::endl;
+arma::mat t_GMat_centered_weight = (t_GMat_centered.each_col()) % m_mu2_sample;
+ std::cout << "t_GMat here2d " << std::endl;
+t_GMat_centered_weight = t_GMat_centered_weight % t_GMat_centered;
+ std::cout << "t_GMat here2e " << std::endl;
+t_var2 = (arma::sum(t_GMat_centered_weight, 0).t());
+std::cout << "t_GMat here2f " << std::endl;
+t_var1 = t_var2 * m_varRatioVal;
+ std::cout << "t_GMat here2g " << std::endl;
+arma::vec stat_vec = arma::pow(t_Tstat, 2) / t_var1;
+double pval, stat;
+std::cout << "t_GMat here2h " << std::endl;
+
+int numMarkers = t_var1.n_elem;
+
+std::cout << "numMarkers " << numMarkers << std::endl;
+t_pval_noadj_vec.set_size(numMarkers);
+
+for(int i = 0; i < numMarkers; i++){
+        if (t_var1(i) <= std::numeric_limits<double>::min()){
+                pval = 1;
+                stat = 0;
+        }else{
+                stat = stat_vec(i);
+                pval = Rf_pchisq(stat, 1.0, 0, 0);
+        }
+std::cout << "t_GMat here2h0 " << std::endl;
+        char pValueBuf[100];
+        if (pval != 0){
+                sprintf(pValueBuf, "%.6E", pval);
+        }else {
+                double log10p = log10(2.0) - M_LOG10E*stat/2 - 0.5*log10(stat*2*M_PI);
+                int exponent = floor(log10p);
+                double fraction = pow(10.0, log10p - exponent);
+                if (fraction >= 9.95) {
+                        fraction = 1;
+                         exponent++;
+                }
+                sprintf(pValueBuf, "%.1fE%d", fraction, exponent);
+        }
+std::cout << "t_GMat here2h1 " << std::endl;
+        std::string buffAsStdStr = pValueBuf;
+        t_pval_str.push_back(buffAsStdStr);
+        t_pval_noadj_vec(i) = pval;
+}
+std::cout << "t_GMat here2f " << std::endl;
+t_Beta = t_Tstat/t_var1;
+t_seBeta = arma::abs(t_Beta) / sqrt(arma::abs(stat_vec));
+
+arma::vec StdStat_vec = arma::abs(t_Tstat) / arma::sqrt(t_var1);
+//t_skipSPAind_vec.elem( find(StdStat_vec > m_SPA_Cutoff) ).zeros();
+
+t_skipSPAind_vec = arma::find(StdStat_vec > m_SPA_Cutoff);
+
+}
 
 
 }

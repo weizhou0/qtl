@@ -314,6 +314,28 @@ SAIGEClass(
 		       double g_altFreq_new,
                        int g_N);
 
+     void getMarkerPval_multi(arma::mat & t_GMat_center,
+                               std::vector <double> & t_Beta,
+                               std::vector <double> & t_seBeta,
+                               std::vector <double> & t_pval,
+                               std::vector <double> & t_pval_noSPA,
+                               std::vector <double> & t_Tstat,
+                               std::vector <double> & t_var1,
+                               std::vector <std::string> & t_pval_str_vec);
+
+
+     void scoreTestFast_noadjCov_multi(arma::mat & t_GMat_centered,
+                     arma::vec & t_Beta,
+                     arma::vec & t_seBeta,
+                     std::vector <std::string> & t_pval_str,
+                     arma::vec &t_Tstat,
+                     arma::vec &t_var1,
+                     arma::vec &t_var2,
+                     arma::uvec & t_skipSPAind_vec,
+                     arma::vec & t_pval_noadj_vec); 
+
+
+
 };
 }
 #endif
