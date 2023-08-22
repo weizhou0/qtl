@@ -132,6 +132,20 @@ void SPA_fast(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_
 
         Rcpp::List getSaddle;
         Rcpp::List getSaddle2;
+
+
+        double outuni1root = outuni1["root"];
+        double outuni2root = outuni2["root"];
+        bool Isconverge1 = outuni1["Isconverge"];
+        bool Isconverge2 = outuni2["Isconverge"];
+
+/*
+        std::cout << "outuni1root" << outuni1root << std::endl;
+        std::cout << "outuni2root" << outuni2root << std::endl;
+        std::cout << "Isconverge1" << Isconverge1 << std::endl;
+        std::cout << "Isconverge2" << Isconverge2 << std::endl;
+*/
+
         if(outuni1["Isconverge"]  && outuni2["Isconverge"])
         {
           if( traitType == "binary"){
@@ -172,9 +186,7 @@ void SPA_fast(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_
                         pval = add_logp(p1,p2);
                 }else {
                         pval = std::abs(p1)+std::abs(p2);
-                        //std::cout << "p1 " << p1 << "p2 " << p2 << std::endl;
                 }
-		//std::cout << "pval " << pval << std::endl;
 
                 Isconverge=true;
         }else{

@@ -20,6 +20,7 @@ class SAIGEClass
       arma::vec m_res_sample;
       arma::vec m_resout;
       arma::vec m_mu;
+      arma::vec m_mu_sample;
       arma::vec  m_S_a;
       std::string m_traitType; 
       std::string m_impute_method;
@@ -161,7 +162,8 @@ SAIGEClass(
                      arma::vec & t_P2Vec,
 		     double& t_gy,
                      bool t_is_region,
-		     arma::uvec & t_indexForNonZero);
+		     arma::uvec & t_indexForNonZero,
+		     double & t_pval);
 
     void scoreTestFast(arma::vec & t_GVec,
                      arma::uvec & t_indexForNonZero,
@@ -171,7 +173,8 @@ SAIGEClass(
                      double t_altFreq,
                      double &t_Tstat,
                      double &t_var1,
-                     double &t_var2);
+                     double &t_var2,
+		     double & t_pval);
 
     void scoreTestFast_noadjCov(arma::vec & t_GVec,
                      arma::uvec & t_indexForNonZero,
@@ -314,7 +317,11 @@ SAIGEClass(
 		       double g_altFreq_new,
                        int g_N);
 
+    arma::vec assignVarianceRatioi_multi(arma::vec & MACvec, bool issparseforVR, bool isnoXadj);
+
      void getMarkerPval_multi(arma::mat & t_GMat_center,
+			      arma::vec & t_MAF_vec,
+			      arma::vec & t_MAC_vec,
                                std::vector <double> & t_Beta,
                                std::vector <double> & t_seBeta,
                                std::vector <double> & t_pval,
@@ -324,16 +331,32 @@ SAIGEClass(
                                std::vector <std::string> & t_pval_str_vec);
 
 
-     void scoreTestFast_noadjCov_multi(arma::mat & t_GMat_centered,
+     void scoreTestFast_noadjCov_multi(arma::mat & t_GMat,
+         arma::vec & t_MAFvec,
                      arma::vec & t_Beta,
                      arma::vec & t_seBeta,
                      std::vector <std::string> & t_pval_str,
                      arma::vec &t_Tstat,
                      arma::vec &t_var1,
                      arma::vec &t_var2,
-                     arma::uvec & t_skipSPAind_vec,
-                     arma::vec & t_pval_noadj_vec); 
+                     arma::vec & t_pval_noadj_vec, 
+		     arma::vec & t_varRatio_multi_vec); 
 
+     void getadjGFast_multi(arma::mat & t_GMat, arma::mat & t_GMat_tilde);
+
+
+     void scoreTest_multi(arma::mat & t_GMat_tilde,
+                     arma::vec & t_Beta_vec,
+                     arma::vec & t_seBeta_vec,
+                     std::vector <std::string> & t_pval_str_vec,
+                     arma::vec & t_pval_vec,
+                     arma::vec & t_Tstat_vec,
+                     arma::vec & t_var1_vec,
+                     arma::vec & t_var2_vec,
+                     arma::mat & t_P2Mat,
+                     arma::vec & t_gy_vec,
+                     arma::vec & t_varRatio_vec,
+                     bool t_is_region);
 
 
 };

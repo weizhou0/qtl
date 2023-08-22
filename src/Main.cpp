@@ -490,9 +490,9 @@ void mainMarkerInCPP(
       //get_indexinAnotherVector(indexZeroVec, g_dup_sample_Index,indexZeroVec_arma);
       //std::cout << "indexNonZeroVec_arma.n_elem " << indexNonZeroVec_arma.n_elem << std::endl;
       //std::cout << "indexZeroVec_arma.n_elem " << indexZeroVec_arma.n_elem << std::endl;
-      gtildeVec.set_size(t_GVec_cell.n_elem);
+      //gtildeVec.set_size(t_GVec_cell.n_elem);
     }
-*/   
+  */ 
 
     indexZeroVec.clear();
     indexNonZeroVec.clear();
@@ -2329,14 +2329,13 @@ if(iswriteOutput){
  OutList.push_back(numofUR, "numofUR");
 }
 
-OutList.push_back(iswriteOutput, "iswriteOutput");
+ OutList.push_back(iswriteOutput, "iswriteOutput");
 
  if(t_isOutputMarkerList){
 	OutList.push_back(indicatorVec, "markerIndcatorVec");
  }
 
-  
-
+ 
   OutList.push_back(NumRare_GroupVec, "NumRare_GroupVec");
   OutList.push_back(NumUltraRare_GroupVec, "NumUltraRare_GroupVec");
 
@@ -6349,7 +6348,6 @@ void mainMarkerInCPP_multi(
                            bool & t_isFirth)
 {
 
-  std::cout << "Here1 mainMarkerInCPP" << std::endl;
   //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
   //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM " << ptr_gSAIGEobj->m_flagSparseGRM << std::endl;
 
@@ -6364,6 +6362,10 @@ void mainMarkerInCPP_multi(
 
   std::vector<std::string> infoVec(q);    // marker information: CHR:POS:REF:ALT
   std::vector<double> altFreqVec(q);      // allele frequencies of ALT allele, this is not always < 0.5.
+  arma::vec mafVec(q);
+  arma::vec macVec(q);
+  arma::vec meanGVec(q);
+
   std::vector<double> altCountsVec(q);    // allele counts of ALT allele.
   std::vector<double> imputationInfoVec(q);    // imputation info of ALT allele.
   std::vector<double> missingRateVec(q);
@@ -6426,13 +6428,16 @@ void mainMarkerInCPP_multi(
 
   //int n = ptr_gSAIGEobj->m_n;
   int n = ptr_gSAIGEobj->m_n;
+  arma::vec t_GVec_cell(n);
+
+  
 
   if(g_n_unique > 0){
     n = g_n_unique;
   }
-
   arma::vec t_GVec(n);
   arma::mat t_GMat(n, q);
+
   arma::ivec t_skipScoreIdx(q);
   t_skipScoreIdx.zeros();
   
@@ -6461,7 +6466,6 @@ void mainMarkerInCPP_multi(
   int passj = 0;
 
 
-std::cout << "herehrehrherererere" << std::endl;
   for(int i = 0; i < q; i++){
     if((i+1) % g_marker_chunksize == 0){
       std::cout << "Completed " << (i+1) << "/" << q << " markers in the chunk." << std::endl;
@@ -6521,7 +6525,6 @@ std::cout << "herehrehrherererere" << std::endl;
     double MAF = std::min(altFreq, 1 - altFreq);
     int nG = t_GVec.n_elem;
     double MAC = MAF * n * (1 - missingRate) *2;
-
     // Quality Control (QC) based on missing rate, MAF, and MAC
     if((missingRate > g_missingRate_cutoff) || (MAF < g_marker_minMAF_cutoff) || (MAC < g_marker_minMAC_cutoff || imputeInfo < g_marker_minINFO_cutoff)){
       t_skipScoreIdx(i) = 1;
@@ -6558,11 +6561,23 @@ std::cout << "herehrehrherererere" << std::endl;
     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
 
     bool isSPAConverge, is_gtilde, is_Firth, is_FirthConverge;
-    t_GMat.col(passj) = t_GVec - arma::mean(t_GVec);
+    //t_GMat.col(passj) = t_GVec;
+
+    //if(g_n_unique >  0){
+//	t_GVec_cell = g_I_longl_mat * t_GVec;
+//	meanGVec(passj) = arma::mean(t_GVec_cell);
+//    }else{
+	meanGVec(passj) = arma::mean(t_GVec);
+//    }
    
+    //std::cout << "hererere" << t_GVec_cell.n_elem << " " << t_GMat.n_rows << std::endl;
 
-std::cout << "t_GMat here1 " << std::endl;
+    t_GMat.col(passj) = t_GVec;
 
+    mafVec(passj) = MAF;
+    macVec(passj) = MAC;
+    //meanGVec(passj) = arma::mean(t_GVec);
+    //std::cout << "t_GMat here1 " << std::endl;
     arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
     indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
     indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
@@ -6572,23 +6587,37 @@ std::cout << "t_GMat here1 " << std::endl;
    }
 
 }
-std::cout << "t_GMat here2 " << std::endl;
-std::cout << "t_GMat(0,0) " << t_GMat(0,0) << std::endl;
-ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
-double MACforvr = 20.5;
-    if(isSingleVarianceRatio){
-       ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
-    }else{
-       hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MACforvr, ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
-    }
+
+    t_GMat.resize(n, passj);
+    mafVec.resize(passj);     
+    macVec.resize(passj);     
+    BetaVec.resize(passj);     
+    seBetaVec.resize(passj);     
+    pvalVec.resize(passj);     
+    pvalNAVec.resize(passj);     
+    TstatVec.resize(passj);     
+    varTVec.resize(passj);     
+    meanGVec.resize(passj);
+
+    //std::cout << "t_GMat here2 " << std::endl;
+    //std::cout << "t_GMat(0,0) " << t_GMat(0,0) << std::endl;
+    ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
+    //double MACforvr = 20.5;
+    //if(isSingleVarianceRatio){
+    //   ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
+    //}else{
+    //   hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MACforvr, ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
+    //}
 
     std::vector <std::string> t_pval_str_vec;
-    ptr_gSAIGEobj->getMarkerPval_multi(t_GMat, BetaVec, seBetaVec, pvalVec, pvalNAVec, TstatVec, varTVec, t_pval_str_vec);
+    
+    ptr_gSAIGEobj->getMarkerPval_multi(t_GMat, meanGVec, macVec, BetaVec, seBetaVec, pvalVec, pvalNAVec, TstatVec, varTVec, t_pval_str_vec);
 
-std::cout << "t_GMat here3 " << std::endl;
+    
+    //std::cout << "t_GMat here3 " << std::endl;
 
-  //output
-  writeOutfile_single(t_isMoreOutput,
+    //output
+    writeOutfile_single(t_isMoreOutput,
       t_isImputation,
       isCondition,
       t_isFirth,
@@ -6627,11 +6656,11 @@ std::cout << "t_GMat here3 " << std::endl;
   N_ctrl_homVec,
   N_Vec,
   g_isgxe,
-Beta_ge_cStrVec,
-seBeta_ge_cStrVec,
-pval_ge_cStrVec,
-pval_noSPA_ge_cStrVec,
-pval_SKAT_ge_cVec
+  Beta_ge_cStrVec,
+  seBeta_ge_cStrVec,
+  pval_ge_cStrVec,
+  pval_noSPA_ge_cStrVec,
+  pval_SKAT_ge_cVec
 );
 
 }
