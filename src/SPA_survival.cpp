@@ -49,7 +49,7 @@ double K2_Poi(double t1, arma::vec & mu, arma::vec & g)
 		
 	temp0 = arma::exp(g * t1);
 	temp1 = arma::pow(g,2);
-        temp2 = mu % temp1 + temp0;
+        temp2 = mu % temp1 % temp0;
         double out = sum_arma1(temp2);
         return(out);
 }
@@ -68,10 +68,14 @@ Rcpp::List getroot_K1_Poi(double init, arma::vec & mu, arma::vec & g, double q, 
 	
 	t = init;
 	K1_eval = K1_adj_Poi(t,mu,g,q);
+        //std::cout << "K1_eval  " << K1_eval << std::endl;	
 	prevJump = std::numeric_limits<double>::infinity();
 	bool conv = true;
 	while(rep <= maxiter){
 		K2_eval = K2_Poi(t,mu,g);
+
+        //	std::cout << "rep " << rep << " K2_eval  " << K2_eval << " t " << t << std::endl;
+
 		tnew = t-K1_eval/K2_eval;
 		if(tnew == NA_REAL){
 			conv = false;
@@ -317,10 +321,12 @@ Rcpp::List getroot_K1_fast_Poi(double init, arma::vec & mu, arma::vec & g, doubl
 
 	t = init;
 	K1_eval = K1_adj_fast_Poi(t,mu,g,q,gNA,gNB,muNA,muNB,NAmu, NAsigma);
+	//std::cout << "K1_eval fast " << K1_eval << std::endl;
 	prevJump = std::numeric_limits<double>::infinity();
 	bool conv = true;
 	while(rep <= maxiter){
 		K2_eval = K2_fast_Poi(t,mu,g, gNA,gNB,muNA,muNB,NAmu, NAsigma);
+		//std::cout << "rep " << rep << " K2_eval fast " << K2_eval << " t " << t << std::endl;
 		tnew = t-K1_eval/K2_eval;
 		if(tnew == NA_REAL){
 			conv = false;

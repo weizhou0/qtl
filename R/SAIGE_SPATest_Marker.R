@@ -145,8 +145,9 @@ SAIGE.Marker = function(traitType,
    #resMarker = resMarker[which(!is.na(resMarker$BETA)), ]
 
   mainMarkerInCPP(genoType, traitType, genoIndex_prev, genoIndex, isMoreOutput, isImputation, isFirth)
+  #mainMarkerInCPP_multi(genoType, traitType, genoIndex_prev, genoIndex, isMoreOutput, isImputation, isFirth)
 
-    #timeoutput=system.time({writeOutputFile(Output = list(resMarker),
+  #timeoutput=system.time({writeOutputFile(Output = list(resMarker),
   #if(nrow(resMarker) > 0){
 
   if(genoType == "vcf"){

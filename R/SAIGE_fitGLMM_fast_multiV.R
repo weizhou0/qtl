@@ -59,6 +59,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
                 covarColList = NULL,
                 qCovarCol = NULL,
 		eCovarCol = NULL,
+		sampleCovarCol = NULL,
 		offsetCol = NULL,
 		varWeightsCol = NULL,
 		longlCol = "",
@@ -349,6 +350,14 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		stop("ERROR! all covariates in eCovarCol must be in covarColList\n")
 	    }
 	}
+
+
+        if(length(sampleCovarCol) > 0){
+	    cat(sampleCovarCol, "are sample-level covariates\n")
+	    if(!all(sampleCovarCol %in% covarColList)){
+	        stop("ERROR! all covariates in sampleCovarCol must be in covarColList\n")
+            }
+        }
 
         if (FemaleOnly | MaleOnly) {
             if (!sexCol %in% colnames(data)) {
@@ -989,9 +998,19 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	    modglmm$eMat = data.new[,which(colnames(data.new) %in%eCovarCol), drop=F]
         }
 
+	if(length(sampleCovarCol) > 0){
+	    cat(sampleCovarCol, "are sample-level covariates\n")	
+	    modglmm$sampleXMat = modglmm$X[,which(colnames(modglmm$X) %in% sampleCovarCol), drop=F]
+	    modglmm$sampleXMat = cbind(modglmm$X[,1], modglmm$sampleXMat)
+
+	    uniqsampleind = which(!duplicated(modglmm$sampleID))
+	    modglmm$sampleXMat = modglmm$sampleXMat[uniqsampleind,]
+
+
+
+	}
 
 	print("CHECK HERE")
-
 
         #if((skipVarianceRatioEstimation & useSparseGRMtoFitNULL)){
                 family = fit0$family
@@ -1157,7 +1176,11 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		print(subSampleInGeno[1:1000])
 		print(head(dataMerge_sort))
   		print("HEREHRE")
-  		setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+
+		subSampleInGeno_unique = subSampleInGeno[!duplicated(subSampleInGeno)]
+
+  		#setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+  		setgeno(bedFile, bimFile, famFile, subSampleInGeno_unique, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
   	}	
 
 
@@ -1172,6 +1195,7 @@ fitNULLGLMM_multiV = function(plinkFile = "",
            modglmm$LOCO = FALSE
         }
 
+	#need check
         setgeno(bedFile, bimFile, famFile, dataMerge_sort$IndexGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
         tau = modglmm$theta	    
         #setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
@@ -1267,8 +1291,13 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   #  sqrtW = mu.eta/sqrt(family$variance(mu))
   #}
 
+
+  print("mu[1:20]")
+  print(mu[1:20])
   W = sqrtW^2   ##(mu*(1-mu) for binary)
   W = W * var_weights
+  print("mu[1:20]")
+  print(W[1:20])
   tauVecNew = obj.glmm.null$theta
 
   isStoreSigma=FALSE
@@ -1386,6 +1415,12 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
   }# if(!isCateVarianceRatio){
 
+
+	
+  b = as.numeric(factor(obj.glmm.null$sampleID, levels =  unique(obj.glmm.null$sampleID)))
+  I_mat = Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
+  I_mat = 1.0 * I_mat
+
   freqVec = getAlleleFreqVec()
   Nnomissing = length(mu)
   varRatioTable = NULL
@@ -1424,15 +1459,27 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
                 G0 = Get_OneSNP_Geno_forVarRatio(i-1)
           }
 
+	#if(sum(duplicated(obj.glmm.null$sampleID)) > 0){
+	  G0sample  = G0
+	  #print("length(G0)   aaaaa")
+	  #print(length(G0))
+          #cat("G0", G0[1:10], "\n")
+	  G0 = as.numeric(I_mat %*% G0sample)
+	 #} 
+	  #print("length(G0)   bbbb")
+          #print(length(G0))
 
           cat("G0", G0[1:10], "\n")
-          CHR = bimPlink[Indexvector_forVarRatio[i]+1,1]
+   
+   	  CHR = bimPlink[Indexvector_forVarRatio[i]+1,1]
 	  cat("CHR ", CHR, "\n")
           print(bimPlink[Indexvector_forVarRatio[i]+1,])
           #if(sum(G0)/(2*Nnomissing) > 0.5){
           if(sum(G0)/(2*length(G0)) > 0.5){
             G0 = 2-G0
           }
+	  print("length(G0)")
+	  print(length(G0))
           #if(any(duplicated(obj.glmm.null$sampleID))){
 	  #	G0 = G0[dupSampleIndex]		
           #}		   
@@ -1452,7 +1499,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
           G = G0  -  obj.noK$XXVX_inv %*%  (obj.noK$XV %*% G0) # G1 is X adjusted
           #g = G/sqrt(AC)
           #q = innerProduct(g * sqrt(var_weights),y)
-          q = innerProduct(G,y)
+          #q = innerProduct(G,y)
           #eta = obj.glmm.null$linear.predictors
           #mu = obj.glmm.null$fitted.values
           #mu.eta = family$mu.eta(eta)
@@ -1485,7 +1532,8 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
           cat("S is ", S, "\n")
    	  p_exact = pchisq(S^2/var1, df=1, lower.tail=F)
    	  cat("p_exact ", p_exact, "\n")
-	  
+	  #res_sample = as.vector(obj.glmm.null$residuals %*% I_mat)
+
 	  if(!is.null(obj.glmm.null$eMat)){
 	  	var1GE_vec = NULL
 		var2sparseGE_vec = NULL
@@ -1506,7 +1554,6 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 			cat("p_exact_GE ", p_exact_GE, "\n")
 			cat("S_GE ", S_GE, "\n")
 			cat("var1GE ", var1GE, "\n")
-
 			if(useSparseGRMforVarRatio){
 				set_isSparseGRM(useSparseGRMforVarRatio)
 				Sigma_iGE_sparse = getSigma_G_noV(W, tauVecNew, GE_tilde, maxiterPCG, tolPCG, LOCO=FALSE)
@@ -1532,7 +1579,9 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 		}
 	  }
 
-   G_noXadj = G0 - 2*AF 
+
+   G_noXadj = as.vector(G0sample - mean(G0sample))
+   
    if(useSparseGRMforVarRatio){
 	set_isSparseGRM(useSparseGRMforVarRatio)
 	Sigma_iG = getSigma_G_noV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
@@ -1563,7 +1612,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
     if(obj.glmm.null$traitType == "binary"){
          var2null = innerProduct(mu*(1-mu)*var_weights, G*G)
-         var2null_noXadj = innerProduct(mu*(1-mu)*var_weights, G_noXadj*G_noXadj)
+         var2null_noXadj = innerProduct(as.vector(t(mu*(1-mu)*var_weights) %*% I_mat), G_noXadj*G_noXadj)
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
@@ -1574,7 +1623,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 }	
     }else if(obj.glmm.null$traitType == "quantitative"){
          var2null = innerProduct(G, G*var_weights)
-         var2null_noXadj = innerProduct(G_noXadj, G_noXadj*var_weights)
+         var2null_noXadj = innerProduct(G_noXadj, G_noXadj*as.vector(t(var_weights) %*% I_mat))
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
@@ -1585,7 +1634,8 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 }	
     }else if(obj.glmm.null$traitType == "count"){
          var2null = innerProduct(mu*var_weights, G*G)
-         var2null_noXadj = innerProduct(mu*var_weights, G_noXadj*G_noXadj)
+	 muI = as.vector(t(mu) %*% I_mat)*as.vector(var_weights)
+         var2null_noXadj = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G_noXadj*G_noXadj)
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
@@ -1596,7 +1646,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 }	
     }else if(obj.glmm.null$traitType == "count_nb"){
 	 var2null = innerProduct(W, G*G) ##To update
-         var2null_noXadj = innerProduct(W, G_noXadj*G_noXadj)
+         var2null_noXadj = innerProduct(as.vector(t(W) %*% I_mat), G_noXadj*G_noXadj)
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
@@ -1618,10 +1668,9 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
    # cat("p_approx_true ", p_approx_true, "\n")
     varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
     varRatio_NULL_noXadj_vec = c(varRatio_NULL_noXadj_vec, var1/var2null_noXadj)
+ if(!is.null(obj.glmm.null$eMat)){
     varRatio_NULL_eg_mat = rbind(varRatio_NULL_eg_mat, var1GE_vec/var2nullGE_vec)
     varRatio_sparse_eg_mat = rbind(varRatio_sparse_eg_mat, var1GE_vec/var2sparseGE_vec)
-
-   if(!is.null(obj.glmm.null$eMat)){
 	
    }
     #indexInMarkerList = indexInMarkerList + 1
@@ -1682,9 +1731,9 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
       	varRatioTable = rbind(varRatioTable, c(varRatio_NULL_eg_vec[ne], "null", 0))
       	varRatioTable = rbind(varRatioTable, c(varRatio_sparse_eg_vec[ne], "sparse", 0))
       }	
- } 
 print(varRatio_NULL_eg_vec)
 print(varRatio_NULL_eg_mat)
+ } 
 
   varRatioTable = rbind(varRatioTable, c(varRatio_null, "null", k))
   varRatioTable = rbind(varRatioTable, c(varRatio_null_noXadj, "null_noXadj", k))

@@ -469,6 +469,14 @@ get_SKAT_pvalue_Rcpp <- function(Score, Phi, r_corr) {
     .Call('_SAIGE_get_SKAT_pvalue_Rcpp', PACKAGE = 'SAIGE', Score, Phi, r_corr)
 }
 
+mainMarkerInCPP_multi <- function(t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth) {
+    invisible(.Call('_SAIGE_mainMarkerInCPP_multi', PACKAGE = 'SAIGE', t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth))
+}
+
+getOneMarkerID_VCF <- function(t_ref, t_alt, t_marker, t_pd, t_chr) {
+    .Call('_SAIGE_getOneMarkerID_VCF', PACKAGE = 'SAIGE', t_ref, t_alt, t_marker, t_pd, t_chr)
+}
+
 SKAT_META_Optimal_Get_Q_Rcpp <- function(Score, r_all) {
     .Call('_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp', PACKAGE = 'SAIGE', Score, r_all)
 }

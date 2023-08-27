@@ -115,6 +115,7 @@ SPAGMMATtest = function(bgenFile = "",
 		 is_no_weight_in_groupTest = FALSE,
 		 is_output_markerList_in_groupTest = FALSE,
 		 pval_cutoff_for_fastTest = 0.05,
+		 is_fastTest = FALSE,
 		 pval_cutoff_for_gxe = 0.001,
 		 is_noadjCov = TRUE,
 		 is_sparseGRM = TRUE, 
@@ -286,12 +287,15 @@ SPAGMMATtest = function(bgenFile = "",
 	SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))
     }	    
 
-    is_fastTest = TRUE
+    #is_fastTest = TRUE
     if(is_fastTest){
       if(!file.exists(varianceRatioFile)){
          is_fastTest = FALSE
 	 cat("No variance ratio file is specified, so is_fastTest is not working.\n")
       }
+    }else{
+      pval_cutoff_for_fastTest = 0
+
     }
 
 
@@ -312,7 +316,10 @@ SPAGMMATtest = function(bgenFile = "",
       }
     }
 
-    nsample = length(obj.model$y)
+    if(!is_fastTest){
+      pval_cutoff_for_fastTest = 0
+    }
+    nsample = length(unique(obj.model$sampleID))
     cateVarRatioMaxMACVecInclude = c(cateVarRatioMaxMACVecInclude, nsample)	
    
   #print("setSAIGEobjInCPP -1b")
@@ -379,11 +386,102 @@ SPAGMMATtest = function(bgenFile = "",
                T_longl_mat = I_mat * (obj.model$T_longl_vec)
     }	       
 
+    print("sum(!duplicated(obj.model$X))") 
+    print(sum(!duplicated(obj.model$X)))
+    print("length(unique(obj.model$sampleID))")
+    print(length(unique(obj.model$sampleID)))
+
+
+#if(FALSE){
+
+   if(sum(duplicated(obj.model$sampleID)) > 0){
+#    if(sum(!duplicated(obj.model$X)) == length(unique(obj.model$sampleID))){
+	Xsample = obj.model$sampleXMat
+	print(dim(I_mat))
+	print(length(obj.model$obj.noK$V))
+
+
+	Vsample = as.vector(t(obj.model$obj.noK$V) %*% I_mat)
+
+
+#SAIGE_fitGLMM_fast_multiV.R:	 muI = as.vector(t(mu) %*% I_mat)*as.vector(var_weights)
+
+
+	print(dim(Xsample))
+	print(length(Vsample))
+
+	XVsample = t(Xsample * Vsample)
+	XVXsample = t(Xsample) %*% (t(XVsample))
+	XVXsample_inv = solve(XVXsample)
+	XXVXsample_inv = Xsample %*% XVXsample_inv
+	XVX_inv_XVsample = XXVXsample_inv * Vsample
+	res_sample = as.vector(t(I_mat) %*% (obj.model$residuals))
+	mu_sample = as.vector(t(I_mat) %*% (obj.model$mu))
+	mu2_sample = as.vector(t(I_mat) %*% (obj.model$mu2))
+	S_a = rowSums(t(Xsample) * res_sample)
+        uniqsampleind = which(!duplicated(obj.model$sampleID))
+
+	varWeights_sample = obj.model$varWeights[uniqsampleind]
+  }
+
+
+if(sum(duplicated(obj.model$sampleID)) > 0){
+
+	print("S_a")
+	print(S_a)
+    setSAIGEobjInCPP(t_XVX=XVXsample,
+                     t_XXVX_inv=XXVXsample_inv,
+                     t_XV=XVsample,
+                     t_XVX_inv_XV=XVX_inv_XVsample,
+                     t_Sigma_iXXSigma_iX=obj.model$Sigma_iXXSigma_iX,
+                     t_X=Xsample,
+                     t_S_a=S_a,
+                     t_res=res_sample,
+                     t_mu2=mu2_sample,
+                     t_mu=mu_sample,
+                     t_varRatio_sparse = as.vector(ratioVecList$ratioVec_sparse),
+                     t_varRatio_null = as.vector(ratioVecList$ratioVec_null),
+                     t_varRatio_null_noXadj = as.vector(ratioVecList$ratioVec_null_noXadj),
+                     t_varRatio_null_eg = as.vector(ratioVecList$ratioVec_null_eg),
+                     t_varRatio_sparse_eg = as.vector(ratioVecList$ratioVec_sparse_eg),
+                     t_cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
+                     t_cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
+                     t_SPA_Cutoff = SPAcutoff,
+                     t_tauvec = obj.model$theta,
+                     t_varWeightsvec = varWeights_sample,
+                     t_traitType = obj.model$traitType,
+                     t_y = obj.model$y,
+                     t_impute_method = impute_method,
+                     t_flagSparseGRM = isSparseGRM,
+                     t_isnoadjCov = is_noadjCov,
+                     t_pval_cutoff_for_fastTest = pval_cutoff_for_fastTest,
+                     t_isCondition = isCondition,
+                     t_condition_genoIndex = condition_genoIndex,
+                     t_is_Firth_beta = is_Firth_beta,
+                     t_pCutoffforFirth = pCutoffforFirth,
+                     t_offset = obj.model$offset,
+                     t_resout = obj.model$obj_cc$res.out,
+                     t_SigmaMat_sp = SigmaMat_sp,
+                     t_tauVal_sp = obj.model$tauVal_sp,
+                     t_Ilongmat = I_mat,
+                     t_I_longl_vec = b-1,
+                     t_Tlongmat = T_longl_mat,
+                     t_T_longl_vec = obj.model$T_longl_vec,
+                     t_is_EmpSPA = is_EmpSPA,
+                     t_cumul = obj.model$cumul)
+
+
+
+
   #print("setSAIGEobjInCPP 0")
   #print_g_n_unique()
 
 print("ratioVecList")
 print(ratioVecList)
+
+}else{
+#}
+
 
     setSAIGEobjInCPP(t_XVX=obj.model$obj.noK$XVX,
 		     t_XXVX_inv=obj.model$obj.noK$XXVX_inv,
@@ -425,6 +523,8 @@ print(ratioVecList)
 		     t_T_longl_vec = obj.model$T_longl_vec,
 		     t_is_EmpSPA = is_EmpSPA,
 		     t_cumul = obj.model$cumul)
+
+}
 
   #if(any(duplicated(obj.model$sampleID))){
   #	b = as.numeric(factor(obj.model$sampleID, levels =  unique(obj.model$sampleID)))
@@ -474,7 +574,7 @@ print(ratioVecList)
     }	    
 
     traitType = obj.model$traitType
-    mu = obj.model$mu
+    mu = as.vector(t(I_mat) %*% (obj.model$mu))
     isgxe = obj.model$isgxe 
     rm(obj.model)
     gc()

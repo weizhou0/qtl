@@ -594,4 +594,12 @@ void mainMarkerInCPP_multi(
                            bool & t_isImputation,
                            bool & t_isFirth);
 
+Rcpp::List  getOneMarkerID_VCF(
+                               std::string & t_ref,       // REF allele
+                               std::string & t_alt,       // ALT allele (should probably be minor allele, otherwise, computation time will increase)
+                               std::string & t_marker,    // marker ID extracted from genotype file
+                               uint32_t & t_pd,           // base position
+                               std::string & t_chr       // chromosome
+                               );
+
 #endif

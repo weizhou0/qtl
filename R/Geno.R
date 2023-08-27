@@ -32,9 +32,9 @@ checkGenoInput = function(bgenFile = "",
                  famFile="", 
 		 sampleInModel = NULL){
    
-    if(is.null(sampleInModel)){
-    	stop("sampleInModel is not specified.")
-    }	    
+    #if(is.null(sampleInModel)){
+    #	stop("sampleInModel is not specified.")
+    #}	    
     # genotype data
     if (bgenFile != "") {
         Check_File_Exist(bgenFile, "bgenFile")

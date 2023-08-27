@@ -1489,6 +1489,21 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// getOneMarkerID_VCF
+Rcpp::List getOneMarkerID_VCF(std::string& t_ref, std::string& t_alt, std::string& t_marker, uint32_t& t_pd, std::string& t_chr);
+RcppExport SEXP _SAIGE_getOneMarkerID_VCF(SEXP t_refSEXP, SEXP t_altSEXP, SEXP t_markerSEXP, SEXP t_pdSEXP, SEXP t_chrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string& >::type t_ref(t_refSEXP);
+    Rcpp::traits::input_parameter< std::string& >::type t_alt(t_altSEXP);
+    Rcpp::traits::input_parameter< std::string& >::type t_marker(t_markerSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type t_pd(t_pdSEXP);
+    Rcpp::traits::input_parameter< std::string& >::type t_chr(t_chrSEXP);
+    rcpp_result_gen = Rcpp::wrap(getOneMarkerID_VCF(t_ref, t_alt, t_marker, t_pd, t_chr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SKAT_META_Optimal_Get_Q_Rcpp
 Rcpp::List SKAT_META_Optimal_Get_Q_Rcpp(const arma::vec& Score, const arma::vec& r_all);
 RcppExport SEXP _SAIGE_SKAT_META_Optimal_Get_Q_Rcpp(SEXP ScoreSEXP, SEXP r_allSEXP) {
@@ -2337,6 +2352,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_get_sp_Sigma_to_R", (DL_FUNC) &_SAIGE_get_sp_Sigma_to_R, 0},
     {"_SAIGE_get_SKAT_pvalue_Rcpp", (DL_FUNC) &_SAIGE_get_SKAT_pvalue_Rcpp, 3},
     {"_SAIGE_mainMarkerInCPP_multi", (DL_FUNC) &_SAIGE_mainMarkerInCPP_multi, 7},
+    {"_SAIGE_getOneMarkerID_VCF", (DL_FUNC) &_SAIGE_getOneMarkerID_VCF, 5},
     {"_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp, 2},
     {"_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp, 2},
     {"_SAIGE_Get_Lambda_Rcpp", (DL_FUNC) &_SAIGE_Get_Lambda_Rcpp, 3},

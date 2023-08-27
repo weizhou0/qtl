@@ -253,4 +253,29 @@ void VcfClass::getSampleIDlist_vcfMatrix(){
   m_SampleInVcf = sampleIDList;
 }
 
+bool VcfClass::getOneMarker_ID(std::string& t_ref,       // REF allele
+                                  std::string& t_alt,       // ALT allele (should probably be minor allele, otherwise, computation time will increase)
+                                  std::string& t_marker,    // marker ID extracted from genotype file
+                                  uint32_t& t_pd,           // base position
+                                  std::string& t_chr){
+     variant_group_iterator end{};
+     bool isReadVariant = true;
+
+     if(m_it_ != end){
+       if (m_it_->alts().size() != 1)
+       {
+         std::cerr << "Warning: skipping multiallelic variant" << std::endl;
+       }else{
+         t_chr = m_it_->chromosome();
+         t_pd = m_it_->position();
+         t_ref = m_it_->ref();
+         t_alt = m_it_->alts()[0];
+         t_marker = m_it_->id();
+       }
+    }else{
+	isReadVariant = false;
+    }
+    return(isReadVariant);
+}
+
 }

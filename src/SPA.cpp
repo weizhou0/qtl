@@ -32,16 +32,17 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
           outuni2 = getroot_K1_Poi(0, mu, g, qinv, tol);
         }
 
+/*
         double outuni1root = outuni1["root"];
         double outuni2root = outuni2["root"];
         bool Isconverge1 = outuni1["Isconverge"];
         bool Isconverge2 = outuni2["Isconverge"];
 
-        std::cout << "outuni1root" << outuni1root << std::endl;
-        std::cout << "outuni2root" << outuni2root << std::endl;
-        std::cout << "Isconverge1" << Isconverge1 << std::endl;
-        std::cout << "Isconverge2" << Isconverge2 << std::endl;
-
+        std::cout << "outuni1root " << outuni1root << std::endl;
+        std::cout << "outuni2root " << outuni2root << std::endl;
+        std::cout << "Isconverge1 " << Isconverge1 << std::endl;
+        std::cout << "Isconverge2 " << Isconverge2 << std::endl;
+*/
 
         Rcpp::List getSaddle;
         Rcpp::List getSaddle2;
@@ -134,18 +135,17 @@ void SPA_fast(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_
         Rcpp::List getSaddle2;
 
 
+/*
         double outuni1root = outuni1["root"];
         double outuni2root = outuni2["root"];
         bool Isconverge1 = outuni1["Isconverge"];
         bool Isconverge2 = outuni2["Isconverge"];
 
-/*
-        std::cout << "outuni1root" << outuni1root << std::endl;
-        std::cout << "outuni2root" << outuni2root << std::endl;
-        std::cout << "Isconverge1" << Isconverge1 << std::endl;
-        std::cout << "Isconverge2" << Isconverge2 << std::endl;
+        std::cout << "outuni1root_fast " << outuni1root << std::endl;
+        std::cout << "outuni2root_fast " << outuni2root << std::endl;
+	std::cout << "Isconverge1_fast " << Isconverge1 << std::endl;
+        std::cout << "Isconverge2_fast " << Isconverge2 << std::endl;
 */
-
         if(outuni1["Isconverge"]  && outuni2["Isconverge"])
         {
           if( traitType == "binary"){

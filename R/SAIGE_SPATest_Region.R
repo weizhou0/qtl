@@ -1135,9 +1135,6 @@ if(nrow(RegionData) != 0){
 }
 
 
-
-
-
 mainRegionURV = function(NullModelClass = "SAIGE_NULL_Model",
                          genoType,
                          genoIndex,

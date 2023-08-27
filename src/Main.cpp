@@ -534,9 +534,6 @@ void mainMarkerInCPP(
     }
 */
 
-//if(g_n_unique == 0){
-
-
     if(MAC > g_MACCutoffforER){
       //std::cout << "Here" << std::endl;
       Unified_getMarkerPval( 
@@ -552,6 +549,9 @@ void mainMarkerInCPP(
 			  altFreq, isSPAConverge, gtildeVec, is_gtilde, is_region, t_P2Vec, isCondition, Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c, G1tilde_P_G2tilde_Vec, is_Firth, is_FirthConverge, true, false, false);
     }
 
+
+
+    //std::cout << "ptr_gSAIGEobj->m_pval_cutoff_for_fastTest " << ptr_gSAIGEobj->m_pval_cutoff_for_fastTest << std::endl;
 
     if(pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
        //ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
@@ -1435,6 +1435,9 @@ Rcpp::List mainRegionInCPP(
     
     indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
     indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
+
+
+/*
     if(g_n_unique == 0){
       t_GVec0 = GVec;
       indexNonZeroVec_arma0 = indexNonZeroVec_arma;
@@ -1453,7 +1456,7 @@ Rcpp::List mainRegionInCPP(
       altCounts = arma::accu(t_GVec0);
       altFreq = altCounts/(2*double(t_n));
     }
-
+*/
 
     //int GVecn = GVec.n_elem;
     //std::cout << "GVecn " << GVecn << std::endl;
@@ -1473,8 +1476,8 @@ Rcpp::List mainRegionInCPP(
     MAFVec.at(i) = MAF;
     imputationInfoVec.at(i) = imputeInfo;
 
-
-//arma::vec timeoutput3a = getTime();
+    std::cout << "HEREREREREE" << std::endl;
+    //arma::vec timeoutput3a = getTime();
     //printTime(timeoutput2a, timeoutput3a, "Unified_getOneMarker 2");
    if((missingRate > g_missingRate_cutoff) || (MAF > g_maxMAFLimit) || (MAF < g_marker_minMAF_cutoff) || (MAC < g_marker_minMAC_cutoff) || (imputeInfo < g_marker_minINFO_cutoff)){
       continue;
@@ -1512,11 +1515,17 @@ Rcpp::List mainRegionInCPP(
 
         //set_varianceRatio(MAC, isSingleVarianceRatio);
         if(MAC > g_MACCutoffforER || t_traitType != "binary"){
+	  //is region
+	  //no ER
           Unified_getMarkerPval(
                     GVec,
                     false, // bool t_isOnlyOutputNonZero,
           indexNonZeroVec_arma, indexZeroVec_arma, Beta, seBeta, pval, pval_noSPA, Tstat, gy, varT, altFreq, isSPAConverge, gtildeVec, is_gtilde, true, P2Vec, isCondition, Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c, G1tilde_P_G2tilde_Vec, is_Firth, is_FirthConverge, false, ptr_gSAIGEobj->m_isnoadjCov, ptr_gSAIGEobj->m_flagSparseGRM_cur);
 
+	  std::cout << "HEREREREREE 2" << std::endl;
+
+
+/*
 	if(pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
 	  ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
 	  if(!is_gtilde){
@@ -1536,7 +1545,7 @@ Rcpp::List mainRegionInCPP(
                     false, // bool t_isOnlyOutputNonZero,
           indexNonZeroVec_arma, indexZeroVec_arma, Beta, seBeta, pval, pval_noSPA, Tstat, gy, varT, altFreq, isSPAConverge, gtildeVec, is_gtilde, true, P2Vec, isCondition, Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c, G1tilde_P_G2tilde_Vec, is_Firth, is_FirthConverge, false, false, true);
 	}
-
+*/
 
 	}else{	
           Unified_getMarkerPval(
@@ -1567,10 +1576,13 @@ Rcpp::List mainRegionInCPP(
 	  G1tilde_P_G2tilde_Weighted_Mat.row(i) = G1tilde_P_G2tilde_Vec % w0G2Vec_cond.t() * w0;	
         }
 
-
+std::cout << "HEREREREREE 2a" << std::endl;
+std::cout << "gtildeVec.t " << gtildeVec.n_elem << std::endl;
+std::cout << "P2Vec " << P2Vec.n_elem << std::endl;
         if(t_regionTestType != "BURDEN"){
           P1Mat.row(i1InChunk) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*gtildeVec.t();
           P2Mat.col(i1InChunk) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*P2Vec;
+std::cout << "HEREREREREE 2b" << std::endl;
 	}
      }//if(t_regionTestType != "BURDEN" || t_isSingleinGroupTest){ 
 
@@ -1591,11 +1603,13 @@ Rcpp::List mainRegionInCPP(
       MAFIndicatorVec.zeros();
       MAFIndicatorVec.elem( find(maxMAFVec >= MAF) ).ones();	
       annoMAFIndicatorVec.zeros();
+std::cout << "HEREREREREE 2c" << std::endl;
       for(unsigned int j = 0; j < q_anno; j++){
         if(annoIndicatorMat(i,j) == 1){
 		maxMAFperAnno(j) = std::max(maxMAFperAnno(j), MAF);
 		for(unsigned int m = 0; m < q_maf; m++){
 			if(MAFIndicatorVec(m) == 1){
+			std::cout << "q_maf " << q_maf << std::endl;
   				//arma::vec timeoutput3ab0 = getTime();
 				jm = j*q_maf + m;	
 				annoMAFIndicatorVec(jm) = 1;
@@ -1606,11 +1620,22 @@ Rcpp::List mainRegionInCPP(
 					MACControl_GroupVec(jm) = MACControl_GroupVec(jm) + MACcontrolgroup;
 					//genoSumMat.col(jm) = genoSumMat.col(jm) + w0*GVec;
 				}
-				for(unsigned int k = 0; k < nNonZero; k++){	
-					genoSumMat(indexNonZeroVec_arma(k), jm) = genoSumMat(indexNonZeroVec_arma(k), jm) + w0*t_GVec0(indexNonZeroVec_arma0(k));
+				for(unsigned int k = 0; k < nNonZero; k++){
 
-					genoSumcount_noweight(jm) = genoSumcount_noweight(jm) + t_GVec0(indexNonZeroVec_arma0(k));
+					//std::cout << "genoSumMat.n_rows " << genoSumMat.n_rows << std::endl;
+					//std::cout << "genoSumMat.n_cols " << genoSumMat.n_cols << std::endl;
+					//indexNonZeroVec_arma0.print("indexNonZeroVec_arma0");
+					//std::cout << "t_GVec0.n_elem " << t_GVec0.n_elem << std::endl;
+
+
+					//genoSumMat(indexNonZeroVec_arma(k), jm) = genoSumMat(indexNonZeroVec_arma(k), jm) + w0*t_GVec0(indexNonZeroVec_arma0(k));
+					genoSumMat(indexNonZeroVec_arma(k), jm) = genoSumMat(indexNonZeroVec_arma(k), jm) + w0*GVec(indexNonZeroVec_arma(k));
+					//std::cout << "genoSumcount_noweight.n_elem " << genoSumcount_noweight.n_elem << std::endl;
+
+					//genoSumcount_noweight(jm) = genoSumcount_noweight(jm) + t_GVec0(indexNonZeroVec_arma0(k));
+					genoSumcount_noweight(jm) = genoSumcount_noweight(jm) + GVec(indexNonZeroVec_arma(k));
 				}
+			//std::cout << "jm " << jm << std::endl;
 	
   //arma::vec timeoutput3ab2 = getTime();
    //      printTime(timeoutput3ab1, timeoutput3ab2, "Unified_getOneMarker 3b2");
@@ -1620,6 +1645,8 @@ Rcpp::List mainRegionInCPP(
 		}	
         }
       }
+
+      std::cout << "HEREREREREE 2d" << std::endl;
   //arma::vec timeoutput3ac = getTime();
    //    printTime(timeoutput3ab, timeoutput3ac, "Unified_getOneMarker 3c");
      annoMAFIndicatorMat.row(i) = annoMAFIndicatorVec.t();
@@ -1698,6 +1725,7 @@ Rcpp::List mainRegionInCPP(
     }
  }//else if((missingRate > g_missingRate_cutoff) || (MAF > g_maxMAFLimit) || (MAF < g_marker_minMAF_cutoff) || (MAC < g_marker_minMAC_cutoff) || (imputeInfo < g_marker_minINFO_cutoff)){
 //
+      std::cout << "HEREREREREE 2e" << std::endl;
     
     if(i1InChunk == m1 ){
       std::cout << "In chunks 0-" << ichunk << ", " << i2 << " markers are ultra-rare and " << i1 << " markers are not ultra-rare." << std::endl;
@@ -1734,7 +1762,7 @@ Rcpp::List mainRegionInCPP(
     i1InChunk = 0;
   }
 
-
+std::cout << "HEREREREREE 3" << std::endl;
 //for all UR variants
 if(i2 > 0){
   int m1new = std::max(m1, q_anno_maf);
@@ -6663,4 +6691,31 @@ void mainMarkerInCPP_multi(
   pval_SKAT_ge_cVec
 );
 
+}
+
+
+
+
+// [[Rcpp::export]]
+Rcpp::List  getOneMarkerID_VCF(
+                               std::string & t_ref,       // REF allele
+                               std::string & t_alt,       // ALT allele (should probably be minor allele, otherwise, computation time will increase)
+                               std::string & t_marker,    // marker ID extracted from genotype file
+                               uint32_t & t_pd,           // base position
+                               std::string & t_chr       // chromosome
+                               )     // the index of non-zero genotype in the all subjects. Only valid if t_isOnlyOutputNonZero == true.
+{
+     
+    bool isReadVariant = ptr_gVCFobj->getOneMarker_ID(t_ref, t_alt, t_marker, t_pd, t_chr);
+    ptr_gVCFobj->move_forward_iterator(1);
+    Rcpp::List OutList = Rcpp::List::create(Rcpp::Named("REF") = t_ref,
+                                          Rcpp::Named("ALT") = t_alt,
+                                          Rcpp::Named("ID") = t_marker, 
+                                          Rcpp::Named("POS") = t_pd,
+                                          Rcpp::Named("CHROM") = t_chr,
+					  Rcpp::Named("isReadVariant") = isReadVariant
+                                          );
+
+
+    return(OutList);
 }
