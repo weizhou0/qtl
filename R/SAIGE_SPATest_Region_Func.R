@@ -80,6 +80,7 @@ checkGroupFile<-function(groupFile){
   is_weight_included = FALSE
   a = 2
   marker_group_line = readLines(gf, n = 1)
+  numberofWeightlists = 0
   if(length(marker_group_line) == 1){
     if (length(marker_group_line) == 0) {
       line = line - 1
@@ -92,10 +93,55 @@ checkGroupFile<-function(groupFile){
     }
     geneID = marker_group_line_list[1]
     type = marker_group_line_list[2]
+    weightname = NULL	
+
     if(type == "weight"){
         is_weight_included = TRUE
         print("weights are included for markers")
         a = 3
+	numberofWeightlists = 1
+	weightname = c(weightname, "WEIGHT")
+    }else{
+	typename = unlist(strsplit(type, split=":"))[[1]]	
+	if(typename == "weight"){
+		is_weight_included = TRUE
+		numberofWeightlists = numberofWeightlists + 1
+		isweight = TRUE
+		a = 3
+		weightname = c(weightname, unlist(strsplit(type, split=":"))[[1]][2])
+        	while(isweight){
+			marker_group_line = readLines(gf, n = 1)
+			line = line + 1
+			if(length(marker_group_line) == 1){
+			    if (length(marker_group_line) == 0) {
+      				line = line - 1
+      				stop("Error, group file has emply lines\n")
+    			    }	
+			    marker_group_line_list = strsplit(marker_group_line, split="[\ \t]+")[[1]]
+
+			   if (length(marker_group_line_list) < 3) {
+      			   	check_close(gf)
+      				stop("Error, group file line:",line ,"Each line should have a region name and a catergory (var, anno or weight) \n")
+    			   }
+
+			   geneID_new = marker_group_line_list[1]
+    			   type_new = marker_group_line_list[2]
+			   if(geneID_new != geneID){
+				break	
+			   }else{
+				typename = unlist(strsplit(type_new, split=":"))[[1]]
+				isweight = TRUE
+				numberofWeightlists = numberofWeightlists + 1
+				a = a + 1
+				weightname = c(weightname, unlist(strsplit(type_new, split=":"))[[1]][2])
+			   }
+			}
+		}
+	}else{
+		if(typename != "var"){
+			stop("Error, group file line:", line, ". This line should have a region name or a wegiht\n")	
+		}
+	}
     }
   }
 
@@ -158,13 +204,17 @@ checkGroupFile<-function(groupFile){
 
     if(is_weight_included){
 
-   	marker_group_line_list = strsplit(marker_group_line[3], split="[\ \t]+")[[1]]
+      for(i in 3:(a)){
+
+
+   	marker_group_line_list = strsplit(marker_group_line[i], split="[\ \t]+")[[1]]
         line = line + 1
 	if (length(marker_group_line_list) < 3) {
         	stop("Error, group file line:",line ," is incomplete.\n")
     	}
 	geneID = marker_group_line_list[1]
-    	type = marker_group_line_list[2]
+    	type0 = marker_group_line_list[2]
+	type = unlist(strsplit(type0, split=":"))[2]	
 	if(type != "weight"){
         	stop("Error! No weight is specified for ", geneID, "\n")
     	}
@@ -173,8 +223,10 @@ checkGroupFile<-function(groupFile){
     	}
 	numWeights = length(marker_group_line_list) - 2
         if(numWeights != numMarkers){
-                stop("The length of weights for markers in region ", geneID, " is not equal to the length of marker IDs\n")
+                stop("The length of ", type0, " for markers in region ", geneID, " is not equal to the length of marker IDs\n")
         }
+
+      }
     }
    nregion = nregion + 1
    }    
@@ -184,7 +236,7 @@ checkGroupFile<-function(groupFile){
     #group_info_list[[geneID]][[type]] = marker_group_line_list[-c(1:2)]
 
   close(gf)	
-  return(list(nRegions = nregion, is_weight_included = is_weight_included))
+  return(list(nRegions = nregion, is_weight_included = is_weight_included, numberofWeightlists = numberofWeightlists, nameofWeightlists = weightname))
 }	
 
 SPA_ER_kernel_related_Phiadj_fast_new<-function(p.new, Score, Phi, p.value_burden, regionTestType){ 
@@ -316,12 +368,62 @@ get_SKAT_pvalue = function(Score, Phi, r.corr, regionTestType){
 
 }
 
-get_CCT_pvalue = function(pvalue){
+
+get_SKAT_pvalue_Burden_SKAT_ACATV = function(Score, Phi, Pval, Weight){
+
+	        #BURDEN	
+                out_BURDEN_List = try(SKAT:::Met_SKAT_Get_Pvalue(Score = Score,
+                                                         Phi = Phi,
+                                                         r.corr = 1,
+                                                         Score.Resampling = NULL), silent = TRUE)
+		print("out_BURDEN_List")
+		print(out_BURDEN_List)
+
+		if(class(out_BURDEN_List) == "try-error"){
+			Pvalue_BURDEN = NA
+			error.code = 2
+			BETA_BURDEN = NA
+			SE_BURDEN = NA	
+		}else{
+			#pos01 = which(out_BURDEN_List$param$rho == 1)
+			#Pvalue_BURDEN = out_BURDEN_List$param$p.val.each[pos01]
+			Pvalue_BURDEN = out_BURDEN_List$p.value
+			BETA_BURDEN = sum(Score)/(sum(diag(Phi)))
+			error.code = 0
+                        SE_BURDEN = abs(BETA_BURDEN/qnorm(Pvalue_BURDEN)/2)			
+		}
+
+	       	##SKAT
+                out_SKAT_List = try(SKAT:::Met_SKAT_Get_Pvalue(Score = Score,
+                                                         Phi = Phi,
+                                                         r.corr = 0,
+                                                         Score.Resampling = NULL), silent = TRUE)
+	        if(class(out_SKAT_List) == "try-error"){
+                        Pvalue_SKAT = NA
+                        error.code = 2
+                        BETA_SKAT = NA
+                        SE_SKAT = NA
+                }else{
+                        #pos00 = which(out_BURDEN_List$param$rho == 0)
+                        Pvalue_SKAT = out_SKAT_List$p.value
+                        error.code = 0
+                }	
+
+	        Pvalue_ACATV = get_CCT_pvalue(Pval, Weight)
+		
+
+
+                return(list(Pvalue_ACATV = Pvalue_ACATV, Pvalue_Burden = Pvalue_BURDEN, Pvalue_SKAT = Pvalue_SKAT, BETA_Burden = BETA_BURDEN, SE_Burden = SE_BURDEN))
+
+}
+
+
+get_CCT_pvalue = function(pvalue, weights=NULL){
    pvals = pvalue
    notna = which(!is.na(pvals))
    if(length(notna) > 0){
      pvals = pvals[!is.na(pvals)]
-     cctpval = CCT(pvals)
+     cctpval = CCT(pvals, weights=weights)
    }else{
      cctpval = NA
    }

@@ -98,6 +98,7 @@ SAIGE.Region = function(mu,
 			r.corr,
 			isOverWriteOutput,
 			is_single_in_groupTest,
+			BetaDist_weight_mat, 
 			is_no_weight_in_groupTest,
 			is_output_markerList_in_groupTest,
 			chrom, 
@@ -172,16 +173,30 @@ SAIGE.Region = function(mu,
   region_list = checkGroupFile(groupFile)
   nRegions = region_list$nRegions
   is_weight_included = region_list$is_weight_included
-  if(is_no_weight_in_groupTest & is_weight_included){
-    stop("is_no_weight_in_groupTest = TRUE but weights are found in the group file.\n")
+  numberofWeightlists = region_list$numberofWeightlists
+  nameofWeightlists = region_list$nameofWeightlists
+  weightlist = nameofWeightlists
+  #if(is_no_weight_in_groupTest & is_weight_included){
+  #  stop("is_no_weight_in_groupTest = TRUE but weights are found in the group file.\n")
+  #}
+
+  if(sum(BetaDist_weight_mat) > 0){
+	for(i in 1:nrow(BetaDist_weight_mat)){
+		weightlist = c(weightlist, paste0("Beta_", BetaDist_weight_mat[i,1], "_", BetaDist_weight_mat[i,2]))
+	}
   }
 
   if(is_no_weight_in_groupTest){
      cat("No weights are used in the group test\n")
+     weightlist = c(weightlist, "No_Weights")
   }
 
+  
+
+
+
   if(is_weight_included){
-    nline_per_gene = 3
+    nline_per_gene = nline_per_gene + numberofWeightlists
   }else{
     nline_per_gene = 2
   }	  
@@ -193,8 +208,8 @@ SAIGE.Region = function(mu,
   skipline = indexChunk*nline_per_gene
   if(indexChunk > 0 & indexChunk < nRegions){
     for(k in 1:skipline){
-    marker_group_line_temp = readLines(gf, n = 1) 
-    rm(marker_group_line_temp)
+        marker_group_line_temp = readLines(gf, n = 1) 
+        rm(marker_group_line_temp)
     }
   }
 
@@ -221,6 +236,11 @@ SAIGE.Region = function(mu,
   cth_chunk_to_output=1
 
   i = indexChunk+1
+
+
+  cat("nRegions " , nRegions, "\n")
+
+
   while(i <= nRegions){
   #for(i in (indexChunk+1):nRegions){
    if(mth ==  numberRegionsInChunk){
@@ -231,7 +251,7 @@ SAIGE.Region = function(mu,
       }
       nlinetoread = nregions_ro_read * nline_per_gene
       marker_group_line = readLines(gf, n = nlinetoread)
-      RegionList = SAIGE.getRegionList_new(marker_group_line, nline_per_gene, annolist, markerInfo, chrom)
+      RegionList = SAIGE.getRegionList_new(marker_group_line, nline_per_gene, annolist, markerInfo, chrom, nameofWeightlists)
       #print(RegionList)
       cat("Read in ", nregions_ro_read, " region(s) from the group file.\n")
       mth = 0
@@ -272,11 +292,18 @@ SAIGE.Region = function(mu,
     	}	
       }
 
-      if(is_no_weight_in_groupTest){
-	WEIGHT = rep(1, length(SNP))
-      }else{	      
-        WEIGHT = as.numeric(region$WEIGHT)
-      }
+      	
+
+      #if(is_no_weight_in_groupTest){
+	#WEIGHT = rep(1, length(SNP))
+      #}else{	      
+      #  WEIGHT = as.numeric(region$WEIGHT)
+      #}
+	if(is_weight_included){
+		WEIGHT = as.numeric(region$WEIGHT)		
+	}else{
+		WEIGHT = matrix(c(0,0), ncol=1)
+	}
 
       annoIndicatorMat = region$annoIndicatorMat
 
@@ -290,16 +317,13 @@ SAIGE.Region = function(mu,
       }else{
         set_flagSparseGRM_cur_SAIGE(FALSE)
       }
-      outList = mainRegionInCPP(genoType, region$genoIndex_prev, region$genoIndex, annoIndicatorMat, maxMAFlist, OutputFile, traitType, n, P1Mat, P2Mat, regionTestType, isImputation, WEIGHT, weight_cond, is_single_in_groupTest, is_output_markerList_in_groupTest, annolistsub, regionName, is_fastTest, is_output_moreDetails)	
-
-        #print("outList$VarMat 1 ")
-        #print(outList$VarMat)
+      outList = mainRegionInCPP(genoType, region$genoIndex_prev, region$genoIndex, annoIndicatorMat, weightlist, maxMAFlist,  OutputFile, traitType, n, P1Mat, P2Mat, regionTestType, isImputation, BetaDist_weight_mat, WEIGHT, weight_cond, is_no_weight_in_groupTest, is_single_in_groupTest, is_output_markerList_in_groupTest, annolistsub, regionName, is_fastTest, is_output_moreDetails)	
 
       if(regionTestType == "BURDEN" & is_fastTest){
 	if(!is.null(outList$iswriteOutput)){
 	  if(!(outList$iswriteOutput)){	
             set_flagSparseGRM_cur_SAIGE(TRUE)
-	    outList = mainRegionInCPP(genoType, region$genoIndex_prev, region$genoIndex, annoIndicatorMat, maxMAFlist, OutputFile, traitType, n, P1Mat, P2Mat, regionTestType, isImputation, WEIGHT, weight_cond, is_single_in_groupTest, is_output_markerList_in_groupTest, annolistsub, regionName, is_fastTest, is_output_moreDetails)
+	    outList = mainRegionInCPP(genoType, region$genoIndex_prev, region$genoIndex, annoIndicatorMat, weightlist,maxMAFlist, OutputFile, traitType, n, P1Mat, P2Mat, regionTestType, isImputation, BetaDist_weight_mat, WEIGHT, weight_cond, is_no_weight_in_groupTest, is_single_in_groupTest, is_output_markerList_in_groupTest, annolistsub, regionName, is_fastTest, is_output_moreDetails)
           }
 	}
       }	
@@ -358,28 +382,61 @@ SAIGE.Region = function(mu,
        MAFVec = outList$MAFVec[noNAIndices]
        #AnnoWeights = dbeta(MAFVec,1,25)
 
-       if(sum(WEIGHT) > 0){
- 	 #AnnoWeights = AnnoWeights[varTestedIndices] 
- 	 AnnoWeights = AnnoWeights[noNAIndices] 
-       }else{
-         AnnoWeights = dbeta(MAFVec,1,25)
-       }
-       weightMat = AnnoWeights %*% t(AnnoWeights)
+       #if(sum(WEIGHT) > 0){
+ #	 AnnoWeights = AnnoWeights[noNAIndices] 
+ #      }else{
+ #        AnnoWeights = dbeta(MAFVec,1,25)
+ #      }
 
+ #       weightMat = AnnoWeights %*% t(AnnoWeights)
 
+ print("WEIGHT")
+ print(WEIGHT)
+	if(sum(WEIGHT) > 0){
+		AnnoWeightsMat = WEIGHT[noNAIndices,]
+	}else{
+		AnnoWeightsMat = NULL
+	}
+
+  	if(sum(BetaDist_weight_mat) > 0){
+        	for(beta in 1:nrow(BetaDist_weight_mat)){
+			AnnoWeightsMat = cbind(AnnoWeightsMat, dbeta(MAFVec,BetaDist_weight_mat[beta,1], BetaDist_weight_mat[beta,2]))			
+        	}
+  	}
+	if(is_no_weight_in_groupTest){
+		AnnoWeightsMat = cbind(AnnoWeightsMat, rep(1, nrow(AnnoWeightsMat)))
+
+	}
+
+	weightMat_G1_G2_Mat = list()
+	wStatMat = NULL
+	wadjVarSMat_list = list()
+	wStatVec_cond_Mat = NULL
+	wadjVarSMat_cond_list = list()
        if(isCondition){    
-    	 weightMat_G1_G2 = AnnoWeights %*% t(outList$G2_Weight_cond)
-       }	
-       wStatVec = StatVec * AnnoWeights
+    	 #weightMat_G1_G2 = AnnoWeights %*% t(outList$G2_Weight_cond)
+	for(ia in 1:ncol(AnnoWeightsMat)){
+    	 	weightMat_G1_G2_Mat[[ia]] = AnnoWeightsMat[,ia] %*% t(outList$G2_Weight_cond)
+	 }
+       }
+	for(ia in 1:ncol(AnnoWeightsMat)){	
+                AnnoWeights = AnnoWeightsMat[,ia]
+                wStatVec = StatVec * AnnoWeights
+		weightMat = AnnoWeights %*% t(AnnoWeights)
+                wadjVarSMat = outList$VarMat * weightMat
 
-      wadjVarSMat = outList$VarMat * weightMat
+                wStatMat = cbind(wStatMat, wStatVec)
+                wadjVarSMat_list[[ia]] = wadjVarSMat
+		if(isCondition){
+	  		wStatVec_cond = wStatVec - outList$TstatAdjCond
+          		wadjVarSMat_cond = wadjVarSMat - outList$VarMatAdjCond
+			wStatVec_cond_Mat = cbind(wStatVec_cond_Mat, wStatVec_cond)
+			wadjVarSMat_cond_list[[ia]] = wadjVarSMat_cond	
+     		}
+	}	
       #print("outList$VarMat")
       #print(outList$VarMat)
 
-	if(isCondition){
-	  wStatVec_cond = wStatVec - outList$TstatAdjCond
-          wadjVarSMat_cond = wadjVarSMat - outList$VarMatAdjCond	
-      }
 
     #gc()
 
@@ -390,63 +447,87 @@ SAIGE.Region = function(mu,
 	maxMAF0 = outList$q_maf_for_annoVec[j]
 	isPolyRegion = TRUE
 	for(m in 1:length(maxMAFlist)){
-		jm = (j-1)*(length(maxMAFlist)) + m
-		maxMAFName = maxMAFlist[m]
+	  jm = (j-1)*(length(maxMAFlist)) + m
+	  maxMAFName = maxMAFlist[m]
+	  for(r in 1:length(weightlist)){
 	    if(m <= maxMAF0){
 		tempPos = which(annoMAFIndicatorMat[,jm] == 1)
 	       if(length(tempPos) > 0){
 	       isPolyRegion = TRUE
 		annoMAFIndVec = c(annoMAFIndVec, jm)
-		Phi = wadjVarSMat[tempPos, tempPos, drop=F]
-		Score = wStatVec[tempPos]
-		#if(traitType == "binary" | traitType == "count"){
-		if(traitType == "binary"){
+			jmr = (j-1)*(length(maxMAFlist)) * (length(weightlist)) + (m-1) * (length(maxMAFlist)) + r
+			weightName = weightlist[r]
+			wadjVarSMat = wadjVarSMat_list[[r]] 
+			wStatVec = wStatMat[,r] 
+			AnnoWeights = AnnoWeightsMat[,r] 
+			Phi = wadjVarSMat[tempPos, tempPos, drop=F]
+			Score = wStatVec[tempPos]
 			p.new = adjPVec[tempPos]
-			g.sum = outList$genoSumMat[,jm]
-			q.sum<-sum(outList$gyVec[tempPos] * AnnoWeights[tempPos])
-			mu.a = mu
 
-			re_phi = get_newPhi_scaleFactor(q.sum, mu.a, g.sum, p.new, Score, Phi, regionTestType)
-		        Phi = re_phi$val
-                }
+		#if(traitType == "binary" | traitType == "count"){
+			if(traitType == "binary"){
+				g.sum = outList$genoSumMat[,jmr]
+				q.sum<-sum(outList$gyVec[tempPos] * AnnoWeights[tempPos])
+				mu.a = mu
+
+				re_phi = get_newPhi_scaleFactor(q.sum, mu.a, g.sum, p.new, Score, Phi, regionTestType)
+		        	Phi = re_phi$val
+                	}
 		
-		groupOutList = get_SKAT_pvalue(Score, Phi, r.corr, regionTestType)
-		resultDF = data.frame(Region = regionName,
+		#groupOutList = get_SKAT_pvalue(Score, Phi, r.corr, regionTestType)
+			groupOutList = get_SKAT_pvalue_Burden_SKAT_ACATV(Score, Phi, p.new, AnnoWeights[tempPos])
+			print("weightName")	
+			print(weightName)
+			print("regionName")
+			print(regionName)
+			print("groupOutList")
+			print(groupOutList)
+
+			Pvalue_ACATO = get_CCT_pvalue(c(groupOutList$Pvalue_ACATV, groupOutList$Pvalue_Burden, groupOutList$Pvalue_SKAT)) 
+			resultDF = data.frame(Region = regionName,
                                                     Group = AnnoName,
                                                     max_MAF = maxMAFName,
-                                                    Pvalue = groupOutList$Pvalue_SKATO,
+						    Weight = weightName,
+						    Pvalue_ACATO = Pvalue_ACATO,
+                                                    Pvalue_ACATV = groupOutList$Pvalue_ACATV,
                                                     Pvalue_Burden = groupOutList$Pvalue_Burden,
                                                     Pvalue_SKAT = groupOutList$Pvalue_SKAT,
                                                     BETA_Burden = groupOutList$BETA_Burden,
                                                     SE_Burden = groupOutList$SE_Burden)
-	      if(isCondition){
-		if(traitType == "binary"){
-			G1tilde_P_G2tilde_Mat_scaled = t(t((outList$G1tilde_P_G2tilde_Weighted_Mat[tempPos,,drop=F]) * sqrt(as.vector(re_phi$scaleFactor))) * sqrt(as.vector(outList$scalefactor_G2_cond)))
+	      	     if(isCondition){
+			if(traitType == "binary"){
+				G1tilde_P_G2tilde_Mat_scaled = t(t((outList$G1tilde_P_G2tilde_Weighted_Mat[tempPos,,drop=F]) * sqrt(as.vector(re_phi$scaleFactor))) * sqrt(as.vector(outList$scalefactor_G2_cond)))
 #t(t(b * sqrt(a1)) * sqrt(a2))
-		        adjCondTemp = G1tilde_P_G2tilde_Mat_scaled %*% outList$VarInvMat_G2_cond_scaled	
-			VarMatAdjCond = adjCondTemp %*% t(G1tilde_P_G2tilde_Mat_scaled)
-			TstatAdjCond = adjCondTemp %*% (outList$Tstat_G2_cond * outList$G2_Weight_cond)
-			Phi_cond = re_phi$val - diag(VarMatAdjCond)
-			Score_cond = Score - TstatAdjCond
+		        	adjCondTemp = G1tilde_P_G2tilde_Mat_scaled %*% outList$VarInvMat_G2_cond_scaled	
+				VarMatAdjCond = adjCondTemp %*% t(G1tilde_P_G2tilde_Mat_scaled)
+				TstatAdjCond = adjCondTemp %*% (outList$Tstat_G2_cond * outList$G2_Weight_cond)
+				Phi_cond = re_phi$val - diag(VarMatAdjCond)
+				Score_cond = Score - TstatAdjCond
 			
-		}else{
-			Score_cond = wStatVec_cond[tempPos]
-			Phi_cond = wadjVarSMat_cond[tempPos, tempPos]
-		}
+			}else{
+				wStatVec_cond = wStatVec_cond_Mat[,r]
+				wadjVarSMat_cond = wadjVarSMat_cond_list[[r]]
+				Score_cond = wStatVec_cond[tempPos]
+				Phi_cond = wadjVarSMat_cond[tempPos, tempPos]
+			}
+			P_cond = pchisq(Score_cond^2/diag(Phi_cond), df=1, lower.tail=F)
+			#groupOutList_cond = get_SKAT_pvalue(Score_cond, Phi_cond, r.corr, regionTestType)
+			groupOutList_cond = get_SKAT_pvalue_Burden_SKAT_ACATV(Score_cond, Phi_cond, P_cond, AnnoWeights)
 
-		groupOutList_cond = get_SKAT_pvalue(Score_cond, Phi_cond, r.corr, regionTestType)
-
-		resultDF$Pvalue_cond = groupOutList_cond$Pvalue_SKATO
-		resultDF$Pvalue_Burden_cond = groupOutList_cond$Pvalue_Burden
-		resultDF$Pvalue_SKAT_cond = groupOutList_cond$Pvalue_SKAT
-		resultDF$BETA_Burden_cond = groupOutList_cond$BETA_Burden
-		resultDF$SE_Burden_cond = groupOutList_cond$SE_Burden
-	     }#if(isCondition){
+		#resultDF$Pvalue_cond = groupOutList_cond$Pvalue_SKATO
+			resultDF$Pvalue_ACATV_cond = groupOutList_cond$Pvalue_ACATV
+			resultDF$Pvalue_Burden_cond = groupOutList_cond$Pvalue_Burden
+			resultDF$Pvalue_SKAT_cond = groupOutList_cond$Pvalue_SKAT
+			resultDF$BETA_Burden_cond = groupOutList_cond$BETA_Burden
+			resultDF$SE_Burden_cond = groupOutList_cond$SE_Burden
+	     	}#if(isCondition){
+		
 		pval.Region = rbind.data.frame(pval.Region, resultDF)
 
 	   }else{#if(length(tempPos) > 0){
 		isPolyRegion = FALSE
 	   }	
+		
 
 	}else{ #if(m <= maxMAF0){
 	   if(isPolyRegion){
@@ -454,10 +535,16 @@ SAIGE.Region = function(mu,
 		resultDF$Region = regionName
 		resultDF$Group = AnnoName
 		resultDF$max_MAF = maxMAFName	
+		resultDF$Weight = weightName	
 		pval.Region = rbind.data.frame(pval.Region, resultDF)
 		#pval.Region_temp = rbind.data.frame(pval.Region_temp, resultDF)
-	   }			   
+	   }
+	
+		   
 	}#if(m <= maxMAF0){
+	
+
+	}#for(r in 1:length(weightlist)){
 
     }#for(m in 1:length(maxMAFlist)){
 }#for(j in 1:length(annolist)){
@@ -465,7 +552,8 @@ SAIGE.Region = function(mu,
 
 gc()
 #}
-
+print("pval.Region")
+print(pval.Region)
 
 
 #if(regionTestType != "BURDEN"){
@@ -480,13 +568,16 @@ gc()
       pval.Region$Number_ultra_rare = outList$NumUltraRare_GroupVec[annoMAFIndVec]
     }
 
-if(length(annolistsub) > 1 | length(maxMAFlist) > 1){
+if(length(annolistsub) > 1 | length(maxMAFlist) > 1 | length(weightlist) > 1){
    cctpval_Burden = get_CCT_pvalue(pval.Region$Pvalue_Burden)
    if(regionTestType != "BURDEN"){
-     #print(pval.Region$Pvalue)
-     cctpval = get_CCT_pvalue(pval.Region$Pvalue)
+     #cctpval = get_CCT_pvalue(pval.Region$Pvalue)
+     cctpval = get_CCT_pvalue(c(pval.Region$Pvalue_Burden, pval.Region$Pvalue_SKAT, pval.Region$Pvalue_ACATV))
      cctpval_SKAT = get_CCT_pvalue(pval.Region$Pvalue_SKAT)
-     cctVec = c(regionName, "Cauchy", NA, cctpval, cctpval_Burden, cctpval_SKAT, NA, NA)
+     cctpval_Burden = get_CCT_pvalue(pval.Region$Pvalue_Burden)
+     cctpval_ACATV = get_CCT_pvalue(pval.Region$Pvalue_ACATV)
+     #cctVec = c(regionName, "Cauchy", NA, cctpval, cctpval_Burden, cctpval_SKAT, NA, NA)
+     cctVec = c(regionName, "Cauchy", NA, NA, cctpval, cctpval_Burden, cctpval_SKAT, cctpval_ACATV, NA, NA)
    }else{
 	cctVec = c(regionName, "Cauchy", NA, cctpval_Burden, NA, NA)
    } 	   
@@ -494,9 +585,10 @@ if(length(annolistsub) > 1 | length(maxMAFlist) > 1){
    	cctpval_Burden = get_CCT_pvalue(pval.Region$Pvalue_Burden_cond)
 
    	if(regionTestType != "BURDEN"){
-	  cctpval = get_CCT_pvalue(pval.Region$Pvalue_cond)
+	  cctpval = get_CCT_pvalue(c(pval.Region$Pvalue_Burden_cond, pval.Region$Pvalue_SKAT_cond, pval.Region$Pvalue_ACATV_cond))
 	  cctpval_SKAT = get_CCT_pvalue(pval.Region$Pvalue_SKAT_cond)
-	  cctVec = c(cctVec, cctpval, cctpval_Burden, cctpval_SKAT, NA, NA)
+	  cctpval_ACATV = get_CCT_pvalue(pval.Region$Pvalue_ACATV_cond)
+	  cctVec = c(cctVec, cctpval, cctpval_Burden, cctpval_SKAT, cctpval_ACATV, NA, NA)
 	}else{
 	  cctVec = c(cctVec, cctpval_Burden, NA, NA)
 
@@ -519,13 +611,17 @@ if(length(annolistsub) > 1 | length(maxMAFlist) > 1){
 #print(ta1 - ta0)
 
 
+
+.f = function() {
+
+
 if(is_fastTest){
   if(cctpval < pval_cutoff_for_fastTest){
 #if(cctpval < 0.1 & is_fastTest){
       pval.Region = NULL
       cat("Non-fast test is performed\n")
       set_flagSparseGRM_cur_SAIGE(TRUE)
-      outList = mainRegionInCPP(genoType, region$genoIndex_prev, region$genoIndex, annoIndicatorMat, maxMAFlist, OutputFile, traitType, n, P1Mat, P2Mat, regionTestType, isImputation, WEIGHT, weight_cond, is_single_in_groupTest, is_output_markerList_in_groupTest, annolistsub, regionName, is_fastTest, is_output_moreDetails)
+      outList = mainRegionInCPP(genoType, region$genoIndex_prev, region$genoIndex, annoIndicatorMat, weightlist,maxMAFlist, OutputFile, traitType, n, P1Mat, P2Mat, regionTestType, isImputation, BetaDist_weight_mat, WEIGHT, weight_cond, is_no_weight_in_groupTest, is_single_in_groupTest, is_output_markerList_in_groupTest, annolistsub, regionName, is_fastTest, is_output_moreDetails)
   if(is_single_in_groupTest){
       #OutList = as.data.frame(outList$OUT_DF)
       noNAIndices = which(!is.na(outList$pvalVec))
@@ -567,6 +663,9 @@ if(is_fastTest){
        annoMAFIndicatorMat = annoMAFIndicatorMat[noNAIndices, , drop=F]
        MAFVec = outList$MAFVec[noNAIndices]
        #AnnoWeights = dbeta(MAFVec,1,25)
+
+	print("AnnoWeights")
+	print(AnnoWeights)
 
        if(sum(WEIGHT) > 0){
  	 #AnnoWeights = AnnoWeights[varTestedIndices] 
@@ -722,7 +821,7 @@ gc()
 }
 }#if(is_fastTest){
 
-
+}#.f = function() {
 
 }#if(regionTestType != "BURDEN"){
 
@@ -897,10 +996,11 @@ gc()
 
 
 SAIGE.getRegionList_new = function(marker_group_line,
-			nline_per_gene,	   
+			 nline_per_gene,	   
                          annoVec, #c("lof","lof;missense"
                          markerInfo, 
-			 chrom="")
+			 chrom="", 
+			 nameofWeightlists = NULL)
 {
   chrom_nochr = gsub("CHR", "", chrom, ignore.case = T)
   # read group file
@@ -914,11 +1014,17 @@ SAIGE.getRegionList_new = function(marker_group_line,
           var=marker_group_line_list[3:length(marker_group_line_list)]
           marker_group_line_list_anno = strsplit(marker_group_line[2+(i-1)*nline_per_gene], split="[\ \t]+")[[1]]
 	  anno=marker_group_line_list_anno[3:length(marker_group_line_list_anno)]
-	  if(nline_per_gene == 3){
-              marker_group_line_list_weight = strsplit(marker_group_line[3+(i-1)*nline_per_gene], split="[\ \t]+")[[1]]
-              weight=marker_group_line_list_weight[3:length(marker_group_line_list_weight)]
-	      RegionData = rbind(RegionData, cbind(rep(gene, length(var)), var, anno, weight))
-          }else if(nline_per_gene == 2){
+  	  geneData = cbind(rep(gene, length(var)), var, anno) 
+	  if(nline_per_gene > 2){
+	      for(j in 1:(nline_per_gene-2)){
+              	marker_group_line_list_weight = strsplit(marker_group_line[2+j+(i-1)*nline_per_gene], split="[\ \t]+")[[1]]
+              	weight = marker_group_line_list_weight[3:length(marker_group_line_list_weight)]
+		geneData = cbind(geneData, weight)
+	      }	
+	      
+	      
+	      RegionData = rbind(RegionData, geneData)
+	  }else if(nline_per_gene == 2){
 	      RegionData = rbind(RegionData, cbind(rep(gene, length(var)), var, anno))
 	  }
 
@@ -932,7 +1038,15 @@ SAIGE.getRegionList_new = function(marker_group_line,
     	colnames(RegionData) = c("REGION", "SNP", "ANNO")
     }else if(nline_per_gene == 3){
 	colnames(RegionData) = c("REGION", "SNP", "ANNO", "WEIGHT")
-    }	    
+    }else{
+	if(is.null(nameofWeightlists)){
+		stop("nameofWeightlists is empty\n")
+	}else if(length(nameofWeightlists) != (nline_per_gene-2)){
+		stop("The length of nameofWeightlists is not equal to nline_per_gene-2\n")
+	}else{
+		colnames(RegionData) = c("REGION", "SNP", "ANNO", nameofWeightlists)
+	}
+    }
     RegionData = as.data.frame(RegionData)
     setDT(RegionData)
     uRegion0 = unique(RegionData$REGION)    
@@ -1019,8 +1133,11 @@ if(nrow(RegionData) != 0){
        SNP = RegionData$SNP[posSNP]
 
        if(nline_per_gene == 3){	
-         WEIGHT = RegionData$WEIGHT[posSNP]
+         WEIGHT = RegionData[posSNP, 4, drop=F]
+       }else if(nline_per_gene > 3){
+	 WEIGHT = RegionData[posSNP, 4:(nline_per_gene+1), drop=F]
        }
+
 
       if(any(duplicated(SNP)))
         stop("Please check RegionFile: in region ", r,": duplicated SNPs exist.")
@@ -1072,8 +1189,8 @@ if(nrow(RegionData) != 0){
   if(length(annoIndicatorMat_rmind) > 0){
     SNP = SNP[-annoIndicatorMat_rmind]
 
-    if(nline_per_gene == 3){
-      WEIGHT = WEIGHT[-annoIndicatorMat_rmind]
+    if(nline_per_gene >= 3){
+      WEIGHT = WEIGHT[-annoIndicatorMat_rmind,,drop=F]
     }
 
     annoIndicatorMat = annoIndicatorMat[-annoIndicatorMat_rmind,,drop=F]
@@ -1086,7 +1203,7 @@ if(nrow(RegionData) != 0){
     }
   }
 
-  if(nline_per_gene != 3){
+  if(nline_per_gene < 3){
 	WEIGHT = c(0)
   }	  
 
@@ -1109,8 +1226,8 @@ if(nrow(RegionData) != 0){
         orderposind = order(as.numeric(tstrsplit(SNP, ":")[[2]]))
         SNP = SNP[orderposind]
         annoIndicatorMat = annoIndicatorMat[orderposind,, drop=F]
-        if(length(WEIGHT) == length(orderposind)){
-            WEIGHT = WEIGHT[orderposind]
+        if(nrow(WEIGHT) == length(orderposind)){
+            WEIGHT = WEIGHT[orderposind,,drop=F]
         }
     }    
     RegionList[[r]] = list(SNP = SNP,
