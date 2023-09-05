@@ -49,7 +49,7 @@
 #' @param dosage_zerod_cutoff numeric. If is_imputed_data = TRUE, For variants with MAC <= dosage_zerod_MAC_cutoff, dosages <= dosageZerodCutoff with be set to 0. By derault, 0.2
 #' @param dosage_zerod_MAC_cutoff numeric. If is_imputed_data = TRUE, For variants with MAC <= dosage_zerod_MAC_cutoff, dosages <= dosageZerodCutoff with be set to 0. By derault, 10
 #' @param is_single_in_groupTest logical.  Whether to output single-variant assoc test results when perform group tests. Note, single-variant assoc test results will always be output when SKAT and SKAT-O tests are conducted with r.corr=0. This parameter should only be used when only Burden tests are condcuted with r.corr=1. By default, TRUE
-#' @param is_no_weight_in_groupTest logical. Whether no weights are used in group Test. If FALSE, weights will be calcuated based on MAF from the Beta distribution with paraemters weights.beta or weights will be extracted from the group File if available. By default, FALSE
+#' @param is_equal_weight_in_groupTest logical. Whether equal weights are used in group Test. If TRUE, equal weights will be included in the group test. By default, FALSE
 #' @param is_output_markerList_in_groupTest logical. Whether to output the marker lists included in the set-based tests for each mask. By default, FALSE
 #' @param is_Firth_beta logical. Whether to estimate effect sizes using approx Firth, only for binary traits. By default, FALSE
 #' @param pCutoffforFirth numeric. p-value cutoff to use approx Firth to estiamte the effect sizes. Only for binary traits. The effect sizes of markers with p-value <= pCutoffforFirth will be estimated using approx Firth. By default, 0.01.
@@ -106,13 +106,16 @@ SPAGMMATtest = function(bgenFile = "",
                  MACCutoff_to_CollapseUltraRare = 10,
                  annotation_in_groupTest =c("lof","missense;lof","missense;lof;synonymous"),  #new
 		 maxMAF_in_groupTest = c(0.01),
+		 minMAF_in_groupTest_Exclude = NULL,
 		 maxMAC_in_groupTest = c(0),
+		 minMAC_in_groupTest_Exclude = NULL,
 		 minGroupMAC_in_BurdenTest = 5,
 		 is_Firth_beta = FALSE,
 		 pCutoffforFirth = 0.01,
 		 is_overwrite_output = TRUE,
 		 is_single_in_groupTest = TRUE,
-		 is_no_weight_in_groupTest = FALSE,
+		 is_SKATO = FALSE,
+		 is_equal_weight_in_groupTest = FALSE,
 		 is_output_markerList_in_groupTest = FALSE,
 		 pval_cutoff_for_fastTest = 0.05,
 		 is_fastTest = FALSE,
@@ -162,7 +165,14 @@ SPAGMMATtest = function(bgenFile = "",
     if(is.null(OutputFileIndex))
     OutputFileIndex = paste0(OutputFile, ".index") 
 
-    ##check the variance ratio file and extract the variance ratio vector
+  
+    if(!is.null(minMAF_in_groupTest_Exclude)) {
+	min_MAF = min(min_MAF, min(minMAF_in_groupTest_Exclude))
+    }
+    if(!is.null(minMAC_in_groupTest_Exclude)) {
+        min_MAC = min(min_MAF, min(minMAC_in_groupTest_Exclude))
+    }
+
     setAssocTest_GlobalVarsInCPP(impute_method,
                             max_missing,
                             min_MAF,
@@ -188,14 +198,20 @@ SPAGMMATtest = function(bgenFile = "",
       cat("group-based test will be performed\n")
       #checkArgsList_for_Region(method_to_CollapseUltraRare,
       #order the max MAF from lowest to highest
-      maxMAF_in_groupTest = maxMAF_in_groupTest[order(maxMAF_in_groupTest)]
-      maxMAC_in_groupTest = maxMAC_in_groupTest[order(maxMAC_in_groupTest)]
+      #maxMAF_in_groupTest = maxMAF_in_groupTest[order(maxMAF_in_groupTest)]
+      #maxMAC_in_groupTest = maxMAC_in_groupTest[order(maxMAC_in_groupTest)]
+
+cat("maxMAF_in_groupTest ", maxMAF_in_groupTest, "\n")
+cat("minMAF_in_groupTest_Exclude ", minMAF_in_groupTest_Exclude, "\n")
+
 
       checkArgsList_for_Region(
                                     MACCutoff_to_CollapseUltraRare,
                                     #DosageCutoff_for_UltraRarePresence,
                                     maxMAF_in_groupTest = maxMAF_in_groupTest,
+				    minMAF_in_groupTest_Exclude = minMAF_in_groupTest_Exclude,		
 				    maxMAC_in_groupTest = maxMAC_in_groupTest,
+				    minMAC_in_groupTest_Exclude = minMAC_in_groupTest_Exclude,
 				    markers_per_chunk_in_groupTest = markers_per_chunk_in_groupTest)
 
 
@@ -385,30 +401,20 @@ SPAGMMATtest = function(bgenFile = "",
                T_longl_mat = I_mat * (obj.model$T_longl_vec)
     }	       
 
-    print("sum(!duplicated(obj.model$X))") 
-    print(sum(!duplicated(obj.model$X)))
-    print("length(unique(obj.model$sampleID))")
-    print(length(unique(obj.model$sampleID)))
+    #print("sum(!duplicated(obj.model$X))") 
+    #print(sum(!duplicated(obj.model$X)))
+    #print("length(unique(obj.model$sampleID))")
+    #print(length(unique(obj.model$sampleID)))
 
 
-#if(FALSE){
-
+   ##Set up the sample level summary statistics. This is specifically for data sets with repeated measurements
    if(sum(duplicated(obj.model$sampleID)) > 0){
-#    if(sum(!duplicated(obj.model$X)) == length(unique(obj.model$sampleID))){
-	Xsample = obj.model$sampleXMat
-	print(dim(I_mat))
-	print(length(obj.model$obj.noK$V))
-
-
+	Xsample = obj.model$sampleXMat  ##from step 1
+	#print(dim(I_mat))
+	#print(length(obj.model$obj.noK$V))
 	Vsample = as.vector(t(obj.model$obj.noK$V) %*% I_mat)
-
-
-#SAIGE_fitGLMM_fast_multiV.R:	 muI = as.vector(t(mu) %*% I_mat)*as.vector(var_weights)
-
-
-	print(dim(Xsample))
-	print(length(Vsample))
-
+	#print(dim(Xsample))
+	#print(length(Vsample))
 	XVsample = t(Xsample * Vsample)
 	XVXsample = t(Xsample) %*% (t(XVsample))
 	XVXsample_inv = solve(XVXsample)
@@ -417,24 +423,21 @@ SPAGMMATtest = function(bgenFile = "",
 	res_sample = as.vector(t(I_mat) %*% (obj.model$residuals))
 	mu_sample = as.vector(t(I_mat) %*% (obj.model$mu))
 	mu2_sample = as.vector(t(I_mat) %*% (obj.model$mu2))
-	S_a = rowSums(t(Xsample) * res_sample)
+	S_a_sample = rowSums(t(Xsample) * res_sample)
         uniqsampleind = which(!duplicated(obj.model$sampleID))
-
 	varWeights_sample = obj.model$varWeights[uniqsampleind]
   }
 
 
 if(sum(duplicated(obj.model$sampleID)) > 0){
 
-	print("S_a")
-	print(S_a)
     setSAIGEobjInCPP(t_XVX=XVXsample,
                      t_XXVX_inv=XXVXsample_inv,
                      t_XV=XVsample,
                      t_XVX_inv_XV=XVX_inv_XVsample,
-                     t_Sigma_iXXSigma_iX=obj.model$Sigma_iXXSigma_iX,
+                     t_Sigma_iXXSigma_iX=obj.model$Sigma_iXXSigma_iX,  ##specifically for sparse V, check later
                      t_X=Xsample,
-                     t_S_a=S_a,
+                     t_S_a=S_a_sample,
                      t_res=res_sample,
                      t_mu2=mu2_sample,
                      t_mu=mu_sample,
@@ -458,8 +461,8 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
                      t_condition_genoIndex = condition_genoIndex,
                      t_is_Firth_beta = is_Firth_beta,
                      t_pCutoffforFirth = pCutoffforFirth,
-                     t_offset = obj.model$offset,
-                     t_resout = obj.model$obj_cc$res.out,
+                     t_offset = obj.model$offset,  ##check later
+                     t_resout = obj.model$obj_cc$res.out,  ##for ER, check later
                      t_SigmaMat_sp = SigmaMat_sp,
                      t_tauVal_sp = obj.model$tauVal_sp,
                      t_Ilongmat = I_mat,
@@ -585,11 +588,11 @@ print(ratioVecList)
     #cat("Number of markers in each chunk:\t", numLinesOutput, "\n")
     #cat("Number of chunks for all markers:\t", nChunks, "\n")
     #}
-  #print("SAIGE.Marker -1")
-  #print_g_n_unique()
+    #print("SAIGE.Marker -1")
+    #print_g_n_unique()
 
     if(!isGroupTest){
-    OutputFile = SAIGEOutputFile
+       OutputFile = SAIGEOutputFile
 
     #if(file.exists(SAIGEOutputFile)) {print("ok 2 file exist")}
     if(!is.null(objGeno$markerInfo$CHROM)){
@@ -614,17 +617,59 @@ print(ratioVecList)
 		   objGeno$anyInclude,
 		   isgxe)
     }else{
+
+      MAFlimitMat = NULL
+      if(is.null(minMAF_in_groupTest_Exclude)){
+		minMAF_in_groupTest = rep(0, length(maxMAF_in_groupTest))
+      }else{
+		minMAF_in_groupTest = minMAF_in_groupTest_Exclude
+      }
+      MAFlimitMat = cbind(minMAF_in_groupTest, maxMAF_in_groupTest)	
+      if(length(maxMAF_in_groupTest) == 1){
+		MAFlimitMat = matrix(c(minMAF_in_groupTest, maxMAF_in_groupTest), ncol=2, nrow = 1)
+
+      }
+
+
+cat("maxMAF_in_groupTest b ", maxMAF_in_groupTest, "\n")
+cat("minMAF_in_groupTest b ", minMAF_in_groupTest, "\n")
+cat("MAFlimitMat ", MAFlimitMat, "\n")
+
       maxMACbinind = which(maxMAC_in_groupTest > 0)	
       if(length(maxMACbinind) > 0){ 
-	 maxMAC_in_groupTest_to_MAF = (maxMAC_in_groupTest[maxMACbinind])/(2*length(mu))
+	 maxMAC_in_groupTest_to_MAF = (maxMAC_in_groupTest)/(2*length(mu))
 	 cat("maxMAC_in_groupTest: ", maxMAC_in_groupTest, " is specified, corresponding to max MAF ", maxMAC_in_groupTest_to_MAF,"\n")
 	 for(i in 1:length(maxMACbinind)){
 	    checkArgNumeric(maxMAC_in_groupTest_to_MAF[i], deparse(substitute(maxMAC_in_groupTest_to_MAF[i])), 0, 0.5, FALSE, TRUE)
-	}
-        maxMAF_in_groupTest = unique(c(maxMAF_in_groupTest, maxMAC_in_groupTest_to_MAF))
-	maxMAF_in_groupTest = maxMAF_in_groupTest[order(maxMAF_in_groupTest)]
-	cat("max MAF cutoff ", maxMAF_in_groupTest, "will be applied\n")
+	 }
+        #maxMAF_in_groupTest = unique(c(maxMAF_in_groupTest, maxMAC_in_groupTest_to_MAF))
+	#maxMAF_in_groupTest = maxMAF_in_groupTest[order(maxMAF_in_groupTest)]
+	#cat("max MAF cutoff ", maxMAF_in_groupTest, "will be applied\n")
+      
+	
+      if(is.null(minMAC_in_groupTest_Exclude)){	
+	minMAC_in_groupTest = rep(0, length(maxMAC_in_groupTest))
+      }else{
+        minMAC_in_groupTest = minMAC_in_groupTest_Exclude
+	minMAC_in_groupTest_to_MAF = minMAC_in_groupTest/(2*length(mu))	
+	cat("minMAC_in_groupTest: ", minMAC_in_groupTest, " is specified, corresponding to min MAF ", minMAC_in_groupTest_to_MAF,"\n") 
       }
+      MAFlimitMat = rbind(MAFlimitMat, cbind(minMAC_in_groupTest_to_MAF, maxMAC_in_groupTest_to_MAF))
+      } #if(length(maxMACbinind) > 0){
+
+      print(MAFlimitMat)
+      MAFlimitMat = MAFlimitMat[!duplicated(MAFlimitMat),, drop=F]
+      print(MAFlimitMat)
+      MAFlimitMat = MAFlimitMat[order(MAFlimitMat[,2], MAFlimitMat[,1]), , drop=F]	
+      minMAF_in_groupTest = MAFlimitMat[,1]
+      maxMAF_in_groupTest = MAFlimitMat[,2]
+      cat("max MAF cutoff ", maxMAF_in_groupTest, "will be applied\n")
+      cat("corresponding min MAF cutoff (exclude) ", minMAF_in_groupTest, "will be applied\n")
+
+
+cat("MAFlimitMat b ", MAFlimitMat, "\n")
+
+
 		    #method_to_CollapseUltraRare,
                      #DosageCutoff_for_UltraRarePresence,
         if(r.corr == 0 & is_Firth_beta){
@@ -655,6 +700,7 @@ print(ratioVecList)
                      groupFile,
                      annotation_in_groupTest,
                      maxMAF_in_groupTest,
+		     minMAF_in_groupTest,
                      markers_per_chunk_in_groupTest,
                      genoType,
                      objGeno$markerInfo,
@@ -667,8 +713,9 @@ print(ratioVecList)
 		     is_overwrite_output,
 		     is_single_in_groupTest,
 		     BetaDist_weight_mat,
-		     is_no_weight_in_groupTest,
+		     is_equal_weight_in_groupTest,
 		     is_output_markerList_in_groupTest,
+		     is_SKATO,
 		     chrom,
 		     is_fastTest,
 		     pval_cutoff_for_fastTest,

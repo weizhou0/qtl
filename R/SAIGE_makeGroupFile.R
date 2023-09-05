@@ -171,8 +171,8 @@ makeGroupFileforRegions = function(bgenFile = "",
 extractRegions = function(regionFile){
 
 	regionData = data.table::fread(regionFile, header=F, data.table=F)
-	if(ncol(regionData) != 3){
-		stop("regionFile does not contain three columns\n")
+	if(ncol(regionData) != 3 & ncol(regionData) != 4){
+		stop("regionFile contains three or four columns\n")
 	}
 	return(regionData)
 }
@@ -181,25 +181,33 @@ makeGroupFilewithRegionData = function(markerInfo, regionData, outputPrefix){
      
       chromList = unique(regionData[,1])
       for(chr in chromList){
-
-        outfile=paste0(outputPrefix, "_", chr)
+	outfile=outputPrefix
+        #outfile=paste0(outputPrefix, "_", chr)
         if(file.exists(outfile)){
                 file.remove(outfile)
         }
       }
 
 	for(i in 1:nrow(regionData)){
+	    if(ncol(regionData) == 3){
 		 chrom = regionData[i,1]
 		 start = regionData[i,2]
 		 end = regionData[i,3]
 		 regionid = paste0(chrom, "_", start, "_", end)
+	    }else{
+		 chrom = regionData[i,2]
+                 start = regionData[i,3]
+                 end = regionData[i,4]
+		regionid = regionData[i,1]		
+	    }
 		         cat("regionid ", regionid, "\n")
 		 IDList = markerInfo$ID2[which(markerInfo$CHROM == chrom & markerInfo$POS <= end & markerInfo$POS >= start)]
 		 if(!is.null(IDList)){
 		 IDstring = c(regionid, "var", IDList)
 		 annostring = c(regionid, "anno", rep("null", length(IDList)))
 		 groupData = rbind(IDstring, annostring)
-		 write.table(groupData, paste0(outputPrefix, "_", chrom), sep=" ", quote=F, col.names=F, row.names=F, append=T)
+		 #write.table(groupData, paste0(outputPrefix, "_", chrom), sep=" ", quote=F, col.names=F, row.names=F, append=T)
+		 write.table(groupData, outputPrefix, sep=" ", quote=F, col.names=F, row.names=F, append=T)
 		 }else{
 			warning("No markers are in the region ", regionid, "\n")
 		 }

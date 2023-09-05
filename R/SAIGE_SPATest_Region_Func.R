@@ -75,12 +75,19 @@ checkGroupFile<-function(groupFile){
   cat("Start extracting marker-level information from 'groupFile' of", groupFile, "....\n")	
   Check_File_Exist(groupFile, "RegionFile")	
   gf = file(groupFile, "r")
+  line = 0
   marker_group_line = readLines(gf, n = 1)
+  line = line + 1
   marker_group_line = readLines(gf, n = 1)
+  line = line + 1
   is_weight_included = FALSE
   a = 2
   marker_group_line = readLines(gf, n = 1)
+  line = line + 1
   numberofWeightlists = 0
+  print("marker_group_line")
+  print(marker_group_line)
+  weightname = NULL	
   if(length(marker_group_line) == 1){
     if (length(marker_group_line) == 0) {
       line = line - 1
@@ -93,8 +100,7 @@ checkGroupFile<-function(groupFile){
     }
     geneID = marker_group_line_list[1]
     type = marker_group_line_list[2]
-    weightname = NULL	
-
+    cat("type ", type, "\n")
     if(type == "weight"){
         is_weight_included = TRUE
         print("weights are included for markers")
@@ -102,13 +108,15 @@ checkGroupFile<-function(groupFile){
 	numberofWeightlists = 1
 	weightname = c(weightname, "WEIGHT")
     }else{
-	typename = unlist(strsplit(type, split=":"))[[1]]	
+	typename = unlist(strsplit(type, split=":"))[1]	
 	if(typename == "weight"){
 		is_weight_included = TRUE
 		numberofWeightlists = numberofWeightlists + 1
 		isweight = TRUE
 		a = 3
-		weightname = c(weightname, unlist(strsplit(type, split=":"))[[1]][2])
+		weightname = c(weightname, unlist(strsplit(type, split=":"))[2])
+		cat("weightname\n")
+		print(weightname)
         	while(isweight){
 			marker_group_line = readLines(gf, n = 1)
 			line = line + 1
@@ -129,14 +137,16 @@ checkGroupFile<-function(groupFile){
 			   if(geneID_new != geneID){
 				break	
 			   }else{
-				typename = unlist(strsplit(type_new, split=":"))[[1]]
+				typename = unlist(strsplit(type_new, split=":"))[1]
 				isweight = TRUE
 				numberofWeightlists = numberofWeightlists + 1
 				a = a + 1
-				weightname = c(weightname, unlist(strsplit(type_new, split=":"))[[1]][2])
+				weightname = c(weightname, unlist(strsplit(type_new, split=":"))[2])
 			   }
 			}
 		}
+		           cat("weightname b\n")
+			                   print(weightname)
 	}else{
 		if(typename != "var"){
 			stop("Error, group file line:", line, ". This line should have a region name or a wegiht\n")	
@@ -214,7 +224,7 @@ checkGroupFile<-function(groupFile){
     	}
 	geneID = marker_group_line_list[1]
     	type0 = marker_group_line_list[2]
-	type = unlist(strsplit(type0, split=":"))[2]	
+	type = unlist(strsplit(type0, split=":"))[1]	
 	if(type != "weight"){
         	stop("Error! No weight is specified for ", geneID, "\n")
     	}
@@ -369,7 +379,7 @@ get_SKAT_pvalue = function(Score, Phi, r.corr, regionTestType){
 }
 
 
-get_SKAT_pvalue_Burden_SKAT_ACATV = function(Score, Phi, Pval, Weight){
+get_SKAT_pvalue_Burden_SKAT = function(Score, Phi){
 
 	        #BURDEN	
                 out_BURDEN_List = try(SKAT:::Met_SKAT_Get_Pvalue(Score = Score,
@@ -409,11 +419,10 @@ get_SKAT_pvalue_Burden_SKAT_ACATV = function(Score, Phi, Pval, Weight){
                         error.code = 0
                 }	
 
-	        Pvalue_ACATV = get_CCT_pvalue(Pval, Weight)
 		
 
 
-                return(list(Pvalue_ACATV = Pvalue_ACATV, Pvalue_Burden = Pvalue_BURDEN, Pvalue_SKAT = Pvalue_SKAT, BETA_Burden = BETA_BURDEN, SE_Burden = SE_BURDEN))
+                return(list(Pvalue_Burden = Pvalue_BURDEN, Pvalue_SKAT = Pvalue_SKAT, BETA_Burden = BETA_BURDEN, SE_Burden = SE_BURDEN))
 
 }
 

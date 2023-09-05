@@ -512,7 +512,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
 {
 
 
-  std::cout << "herehrere" << std::endl;
+  //std::cout << "herehrere" << std::endl;
   t_isFirth = false;
   std::string t_pval_str;
   double t_var2, t_SPApval;
@@ -540,7 +540,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
  if(t_isSparseGRM){
  	t_isnoadjCov = false;
  }
-std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
+//std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
 
 if(!t_isnoadjCov){
 	unsigned int nonzero = indexNonZeroVec0_arma.n_elem;
@@ -584,8 +584,8 @@ if(!t_isnoadjCov){
   arma::vec gNB, gNA, muNB, muNA;
   double gmuNB;
 
-  std::cout << "t_isER " << t_isER << std::endl;
-  std::cout << "t_pval_str from scoreTestFast_noadjCov " << t_pval_str << std::endl;
+  //std::cout << "t_isER " << t_isER << std::endl;
+  //std::cout << "t_pval_str from scoreTestFast_noadjCov " << t_pval_str << std::endl;
   if(!t_isER){
 
 
@@ -608,7 +608,7 @@ if(!t_isnoadjCov){
           }
 	  is_gtilde = true;
 	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);
-	  std::cout << "t_pval from scoreTest " << t_pval << std::endl;
+//	  std::cout << "t_pval from scoreTest " << t_pval << std::endl;
 	  try {
         	pval_noadj = std::stod(t_pval_str);
  	   } catch (const std::invalid_argument&) {
@@ -631,7 +631,7 @@ if(!t_isnoadjCov){
           getadjGFast(t_GVec, t_gtilde, iIndex);
 	  is_gtilde = true;
       }
-      std::cout << "is_gtilde before SPA " << is_gtilde << std::endl;
+      //std::cout << "is_gtilde before SPA " << is_gtilde << std::endl;
     if(!m_is_EmpSPA){
 
 	//int t_gtilden = t_gtilde.n_elem;
@@ -775,7 +775,6 @@ if(!t_isnoadjCov){
 
 
 
-std::cout << "pval_noadj b " << pval_noadj << std::endl;
 
    if(m_traitType == "binary" & m_is_Firth_beta & t_pval <= m_pCutoffforFirth){
 	t_isFirth = true;
@@ -912,7 +911,7 @@ std::cout << "pval_noadj b " << pval_noadj << std::endl;
     gNB.clear();
 
 
-std::cout << "is_region " << is_region << std::endl;
+   //std::cout << "is_region " << is_region << std::endl;
     if(is_region && !is_gtilde){
 	    //arma::vec t_GVec0 = g_I_longl_mat * t_GVec;
 	    //arma::uvec iIndex0 = arma::find(t_GVec0 > 0.0);
@@ -1522,6 +1521,7 @@ double SAIGEClass::EmpSPA_getMarkerPval(arma::vec & t_g,
     //arma::vec adjGVecNorm = t_g / sqrt(VarS);
     arma::vec adjGVecNorm = t_g / sqrt(sum(adjGVec2));
     double pval_noEmpSPA = arma::normcdf(-1*std::abs(t_zScore))*2;
+    
     std::cout << "pval_noEmpSPA " << pval_noEmpSPA << std::endl;
     std::cout << "t_Tstat " << t_Tstat << std::endl;
     std::cout << "VarS " << VarS << std::endl;
@@ -1721,7 +1721,7 @@ std::cout << "t_GMatraw.n_elem " << t_GMatraw.n_elem << std::endl;
 		//}
 	}
     //std::cout << "hererer" << std::endl; 
-    std::cout << "t_SPAind_vec.n_elem " << t_SPAind_vec.n_elem << std::endl; 
+    //std::cout << "t_SPAind_vec.n_elem " << t_SPAind_vec.n_elem << std::endl; 
     for(int i = 0; i < t_SPAind_vec.n_elem; i++){
       unsigned int j = t_SPAind_vec(i);
 
@@ -1789,6 +1789,8 @@ std::cout << "t_GMatraw.n_elem " << t_GMatraw.n_elem << std::endl;
 
   //std::cout << "q " << q << std::endl;
         //m_mu.print("m_mu");
+	//
+/*
 	        std::cout << "iIndex.n_elem " << iIndex.n_elem << std::endl;
 	arma::uvec v = { 0, 1, 2, 3, 4 };
         //t_gtilde.print("t_gtilde");
@@ -1801,6 +1803,7 @@ std::cout << "t_GMatraw.n_elem " << t_GMatraw.n_elem << std::endl;
         std::cout << "pval_noadj " << pval_noadj << std::endl;
         std::cout << "t_SPApval " << t_SPApval << std::endl;
 	}
+*/	
 	//}else{
  //               std::cout << "SPA" << std::endl;
         //        SPA(m_mu, t_GVec, q, qinv, pval_noadj, tol1, logp, m_traitType, t_SPApval, t_isSPAConverge);

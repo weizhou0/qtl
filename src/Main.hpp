@@ -111,6 +111,7 @@ Rcpp::List mainRegionInCPP(
                            arma::mat & annoIndicatorMat,
 			   std::vector<std::string> & t_weightlistvec,
                            arma::vec & maxMAFVec,
+                           arma::vec & minMAFVec,
                            std::string t_outputFile,
                            std::string t_traitType,
                            unsigned int t_n,           // sample size

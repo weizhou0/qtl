@@ -3,8 +3,8 @@
 options(stringsAsFactors=F)
 
 ## load R libraries
-#library(SAIGE, lib.loc="../../install_0.93")
-library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test")
+library(SAIGE)
+#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test2")
 require(optparse) #install.packages("optparse")
 
 print(sessionInfo())
@@ -37,7 +37,7 @@ option_list <- list(
   make_option("--AlleleOrder", type="character",default="alt-first",
     help="alt-first or ref-first for bgen or PLINK files"), 
   make_option("--regionFile", type="character",default="",
-    help="Path to a file containing genome regions to extract genetic markers for making group files"),
+    help="Path to a file containing genome regions to extract genetic markers for making group files, it contains 3 or 4 columns (genename chr start end). genename column is optional"),
   make_option("--outputPrefix", type="character", default="~/",
     help="path and prefix to the output files [default='~/']"))
 

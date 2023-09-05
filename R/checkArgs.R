@@ -94,7 +94,9 @@ checkArgsListBool = function(is_imputed_data,
 checkArgsList_for_Region = function( 
 				    MACCutoff_to_CollapseUltraRare,
 				    maxMAF_in_groupTest,
+ 				    minMAF_in_groupTest_Exclude,
 				    maxMAC_in_groupTest,
+                                    minMAC_in_groupTest_Exclude,
 				    markers_per_chunk_in_groupTest){
 
 
@@ -136,14 +138,35 @@ checkArgsList_for_Region = function(
       } 
     }
 
+    if(!is.null(minMAF_in_groupTest_Exclude)){
+    
+    	if(length(minMAF_in_groupTest_Exclude) != length(maxMAF_in_groupTest)){
+      		stop("minMAF_in_groupTest_Exclude should have the same length as maxMAF_in_groupTest\n")
+    	}else{
+		for(i in 1:length(minMAF_in_groupTest_Exclude)){
+			checkArgNumeric(minMAF_in_groupTest_Exclude[i], deparse(substitute(minMAF_in_groupTest_Exclude[i])), 0, maxMAF_in_groupTest[i], TRUE, FALSE) 
+		}
+	}
+    }
+
     
     if(length(maxMAC_in_groupTest) < 1){
-      stop("maxMAC_in_groupTest should contain at least one numeric value >= 0\n")
+	stop("maxMAC_in_groupTest should contain at least one numeric value > 0\n")
     }else{	    
       for(i in 1:length(maxMAC_in_groupTest)){
         checkArgNumeric(maxMAC_in_groupTest[i], deparse(substitute(maxMAC_in_groupTest[i])),  minVal=0)
       } 
     }
+
+    if(!is.null(minMAC_in_groupTest_Exclude)){
+	if(length(minMAC_in_groupTest_Exclude) != length(maxMAC_in_groupTest)){
+		stop("minMAC_in_groupTest_Exclude should have the same length as maxMAC_in_groupTest\n")
+	}else{
+		for(i in 1:length(minMAC_in_groupTest_Exclude)){
+			checkArgNumeric(minMAC_in_groupTest_Exclude[i], deparse(substitute(minMAC_in_groupTest_Exclude[i])), 0, maxMAC_in_groupTest[i], TRUE, FALSE)
+		}
+	}
+    }	
 
     checkArgNumeric(markers_per_chunk_in_groupTest, deparse(substitute(markers_per_chunk_in_groupTest)), 1, 10000, TRUE, TRUE)
 }
