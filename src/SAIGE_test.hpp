@@ -26,17 +26,18 @@ class SAIGEClass
       std::string m_impute_method;
       std::vector<uint32_t> m_condition_genoIndex;
 
- 
-
-
     public:
       arma::vec m_mu2;
       arma::vec m_mu2_sample;
       arma::vec m_tauvec;
+      int m_tauvec_each_length;
       arma::vec m_varWeightsvec; 
       arma::mat m_XXVX_inv;
       arma::mat m_XV;
       int m_n, m_p; //MAIN Dimensions: sample size, number of covariates
+		
+      unsigned int m_itrait, m_startip, m_startin, m_endip, m_endin;
+
       double m_varRatioVal;
       arma::vec m_varRatio_sparse;
       arma::vec m_varRatio_null;
@@ -44,10 +45,10 @@ class SAIGEClass
       arma::vec m_varRatio_null_eg;
       arma::vec m_varRatio_sparse_eg;
       arma::vec m_y;
-
       bool m_isOutputAFinCaseCtrl;
       bool m_isOutputNinCaseCtrl;
       bool m_isOutputHetHomCountsinCaseCtrl;
+      std::vector<std::string> m_traitType_vec; 
       arma::uvec m_case_indices;
       arma::uvec m_ctrl_indices;
       arma::uvec m_case_hom_indices;
@@ -89,6 +90,7 @@ class SAIGEClass
      arma::vec  m_offset;	
       bool m_isVarPsadj;
 
+     int m_number_of_traits;
       arma::vec m_sigmainvG_noV;	
       arma::sp_mat m_SigmaMat_sp;
       arma::sp_mat g_I_longl_mat;
@@ -104,30 +106,51 @@ class SAIGEClass
       approxfun::approxfunClass m_K_2_emp;
       arma::mat m_cumul;
       double m_varResid;
+arma::mat    m_XVX_mt;
+arma::mat    m_XV_mt;
+arma::mat    m_XXVX_inv_mt;
+arma::mat    m_XVX_inv_XV_mt;
+arma::mat    m_Sigma_iXXSigma_iX_mt;
+arma::mat    m_X_mt;
+arma::mat    m_S_a_mt;
+arma::mat    m_res_mt;
+arma::mat    m_resout_mt;
+arma::mat    m_mu2_mt;
+arma::mat    m_mu_mt;
+arma::mat    m_varRatio_sparse_mt;
+arma::mat    m_varRatio_null_mt;
+arma::mat    m_varRatio_null_noXadj_mt;
+arma::mat    m_varRatio_null_eg_mt;
+arma::mat    m_varRatio_sparse_eg_mt;
+arma::mat    m_tauvec_mt;
+arma::mat    m_varWeightsvec_mt;
+arma::mat    m_y_mt;
+arma::mat    m_offset_mt;
 
-SAIGEClass(
+
+    SAIGEClass(
         arma::mat & t_XVX,
-        arma::mat t_XXVX_inv,
+        arma::mat & t_XXVX_inv,
         arma::mat & t_XV,
         arma::mat & t_XVX_inv_XV,
         arma::mat & t_Sigma_iXXSigma_iX,
         arma::mat & t_X,
-        arma::vec &  t_S_a,
-        arma::vec & t_res,
-        arma::vec & t_mu2,
-        arma::vec & t_mu,
-        arma::vec & t_varRatio_sparse,
-        arma::vec & t_varRatio_null,
-	arma::vec & t_varRatio_null_noXadj,
-	arma::vec & t_varRatio_null_eg,
-	arma::vec & t_varRatio_sparse_eg,
+        arma::mat &  t_S_a,
+        arma::mat & t_res,
+        arma::mat & t_mu2,
+        arma::mat & t_mu,
+        arma::mat & t_varRatio_sparse,
+        arma::mat & t_varRatio_null,
+        arma::mat & t_varRatio_null_noXadj,
+        arma::mat & t_varRatio_null_eg,
+        arma::mat & t_varRatio_sparse_eg,
         arma::vec & t_cateVarRatioMinMACVecExclude,
         arma::vec & t_cateVarRatioMaxMACVecInclude,
         double t_SPA_Cutoff,
-        arma::vec & t_tauvec,
-        arma::vec & t_varWeightsvec,
-        std::string t_traitType,
-        arma::vec & t_y,
+        arma::mat & t_tauvec,
+        arma::mat & t_varWeightsvec,
+        std::vector<std::string> & t_traitType,
+        arma::mat & t_y,
         std::string t_impute_method,
         bool t_flagSparseGRM,
         bool t_isnoadjCov,
@@ -136,8 +159,8 @@ SAIGEClass(
         std::vector<uint32_t> & t_condition_genoIndex,
         bool t_is_Firth_beta,
         double t_pCutoffforFirth,
-        arma::vec & t_offset,
-        arma::vec & t_resout,
+        arma::mat & t_offset,
+        arma::mat & t_resout,
         arma::sp_mat & t_SigmaMat_sp,
         float t_tauVal_sp,
          arma::sp_mat & t_Ilongmat,
@@ -233,7 +256,7 @@ SAIGEClass(
     arma::sp_mat gen_sp_SigmaMat();
 
 
-    bool assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj);
+    bool assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj, unsigned int itrait);
 
     void assignSingleVarianceRatio(bool issparseforVR, bool isnoXadj);
 
@@ -330,17 +353,25 @@ SAIGEClass(
                                std::vector <double> & t_var1,
                                std::vector <std::string> & t_pval_str_vec);
 
-
      void scoreTestFast_noadjCov_multi(arma::mat & t_GMat,
-         arma::vec & t_MAFvec,
+                     arma::vec & t_MAFvec,
                      arma::vec & t_Beta,
                      arma::vec & t_seBeta,
                      std::vector <std::string> & t_pval_str,
                      arma::vec &t_Tstat,
                      arma::vec &t_var1,
                      arma::vec &t_var2,
-                     arma::vec & t_pval_noadj_vec, 
-		     arma::vec & t_varRatio_multi_vec); 
+                     arma::vec & t_pval_noadj_vec,
+                     arma::vec & t_varRatio_multi_vec);
+	void scoreTestFast_noadjCov_multiTrait(arma::vec & t_GVec,
+                     arma::uvec & t_indexForNonZero,
+                     double& t_Beta,
+                     double& t_seBeta,
+                     std::string& t_pval_str,
+                     double t_altFreq,
+                     double &t_Tstat,
+                     double &t_var1,
+                     double &t_var2);
 
      void getadjGFast_multi(arma::mat & t_GMat, arma::mat & t_GMat_tilde);
 
@@ -358,7 +389,9 @@ SAIGEClass(
                      arma::vec & t_varRatio_vec,
                      bool t_is_region);
 
-
+     void assign_for_trait_i(unsigned int itrait);
+     void assign_for_trait_i_2(unsigned int itrait);
+     void assign_for_itrait(unsigned int t_itrait);
 };
 }
 #endif

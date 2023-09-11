@@ -136,12 +136,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // mainMarkerInCPP
-void mainMarkerInCPP(std::string& t_genoType, std::string& t_traitType, std::vector<std::string>& t_genoIndex_prev, std::vector<std::string>& t_genoIndex, bool& t_isMoreOutput, bool& t_isImputation, bool& t_isFirth);
+void mainMarkerInCPP(std::string& t_genoType, std::vector<std::string>& t_traitType, std::vector<std::string>& t_genoIndex_prev, std::vector<std::string>& t_genoIndex, bool& t_isMoreOutput, bool& t_isImputation, bool& t_isFirth);
 RcppExport SEXP _SAIGE_mainMarkerInCPP(SEXP t_genoTypeSEXP, SEXP t_traitTypeSEXP, SEXP t_genoIndex_prevSEXP, SEXP t_genoIndexSEXP, SEXP t_isMoreOutputSEXP, SEXP t_isImputationSEXP, SEXP t_isFirthSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string& >::type t_genoType(t_genoTypeSEXP);
-    Rcpp::traits::input_parameter< std::string& >::type t_traitType(t_traitTypeSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_traitType(t_traitTypeSEXP);
     Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_genoIndex_prev(t_genoIndex_prevSEXP);
     Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_genoIndex(t_genoIndexSEXP);
     Rcpp::traits::input_parameter< bool& >::type t_isMoreOutput(t_isMoreOutputSEXP);
@@ -215,7 +215,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // setSAIGEobjInCPP
-void setSAIGEobjInCPP(arma::mat& t_XVX, arma::mat& t_XXVX_inv, arma::mat& t_XV, arma::mat& t_XVX_inv_XV, arma::mat& t_Sigma_iXXSigma_iX, arma::mat& t_X, arma::vec& t_S_a, arma::vec& t_res, arma::vec& t_mu2, arma::vec& t_mu, arma::vec& t_varRatio_sparse, arma::vec& t_varRatio_null, arma::vec& t_varRatio_null_noXadj, arma::vec& t_varRatio_null_eg, arma::vec& t_varRatio_sparse_eg, arma::vec& t_cateVarRatioMinMACVecExclude, arma::vec& t_cateVarRatioMaxMACVecInclude, double t_SPA_Cutoff, arma::vec& t_tauvec, arma::vec& t_varWeightsvec, std::string t_traitType, arma::vec& t_y, std::string t_impute_method, bool t_flagSparseGRM, bool t_isnoadjCov, double t_pval_cutoff_for_fastTest, bool t_isCondition, std::vector<uint32_t>& t_condition_genoIndex, bool t_is_Firth_beta, double t_pCutoffforFirth, arma::vec& t_offset, arma::vec& t_resout, arma::sp_mat& t_SigmaMat_sp, float t_tauVal_sp, arma::sp_mat& t_Ilongmat, arma::vec& t_I_longl_vec, arma::sp_mat& t_Tlongmat, arma::vec& t_T_longl_vec, bool t_is_EmpSPA, arma::mat& t_cumul);
+void setSAIGEobjInCPP(arma::mat& t_XVX, arma::mat& t_XXVX_inv, arma::mat& t_XV, arma::mat& t_XVX_inv_XV, arma::mat& t_Sigma_iXXSigma_iX, arma::mat& t_X, arma::mat& t_S_a, arma::mat& t_res, arma::mat& t_mu2, arma::mat& t_mu, arma::mat& t_varRatio_sparse, arma::mat& t_varRatio_null, arma::mat& t_varRatio_null_noXadj, arma::mat& t_varRatio_null_eg, arma::mat& t_varRatio_sparse_eg, arma::vec& t_cateVarRatioMinMACVecExclude, arma::vec& t_cateVarRatioMaxMACVecInclude, double t_SPA_Cutoff, arma::mat& t_tauvec, arma::mat& t_varWeightsvec, std::vector<std::string>& t_traitType, arma::mat& t_y, std::string t_impute_method, bool t_flagSparseGRM, bool t_isnoadjCov, double t_pval_cutoff_for_fastTest, bool t_isCondition, std::vector<uint32_t>& t_condition_genoIndex, bool t_is_Firth_beta, double t_pCutoffforFirth, arma::mat& t_offset, arma::mat& t_resout, arma::sp_mat& t_SigmaMat_sp, float t_tauVal_sp, arma::sp_mat& t_Ilongmat, arma::vec& t_I_longl_vec, arma::sp_mat& t_Tlongmat, arma::vec& t_T_longl_vec, bool t_is_EmpSPA, arma::mat& t_cumul);
 RcppExport SEXP _SAIGE_setSAIGEobjInCPP(SEXP t_XVXSEXP, SEXP t_XXVX_invSEXP, SEXP t_XVSEXP, SEXP t_XVX_inv_XVSEXP, SEXP t_Sigma_iXXSigma_iXSEXP, SEXP t_XSEXP, SEXP t_S_aSEXP, SEXP t_resSEXP, SEXP t_mu2SEXP, SEXP t_muSEXP, SEXP t_varRatio_sparseSEXP, SEXP t_varRatio_nullSEXP, SEXP t_varRatio_null_noXadjSEXP, SEXP t_varRatio_null_egSEXP, SEXP t_varRatio_sparse_egSEXP, SEXP t_cateVarRatioMinMACVecExcludeSEXP, SEXP t_cateVarRatioMaxMACVecIncludeSEXP, SEXP t_SPA_CutoffSEXP, SEXP t_tauvecSEXP, SEXP t_varWeightsvecSEXP, SEXP t_traitTypeSEXP, SEXP t_ySEXP, SEXP t_impute_methodSEXP, SEXP t_flagSparseGRMSEXP, SEXP t_isnoadjCovSEXP, SEXP t_pval_cutoff_for_fastTestSEXP, SEXP t_isConditionSEXP, SEXP t_condition_genoIndexSEXP, SEXP t_is_Firth_betaSEXP, SEXP t_pCutoffforFirthSEXP, SEXP t_offsetSEXP, SEXP t_resoutSEXP, SEXP t_SigmaMat_spSEXP, SEXP t_tauVal_spSEXP, SEXP t_IlongmatSEXP, SEXP t_I_longl_vecSEXP, SEXP t_TlongmatSEXP, SEXP t_T_longl_vecSEXP, SEXP t_is_EmpSPASEXP, SEXP t_cumulSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -225,22 +225,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type t_XVX_inv_XV(t_XVX_inv_XVSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type t_Sigma_iXXSigma_iX(t_Sigma_iXXSigma_iXSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type t_X(t_XSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_S_a(t_S_aSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_res(t_resSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_mu2(t_mu2SEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_mu(t_muSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_varRatio_sparse(t_varRatio_sparseSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_varRatio_null(t_varRatio_nullSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_varRatio_null_noXadj(t_varRatio_null_noXadjSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_varRatio_null_eg(t_varRatio_null_egSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_varRatio_sparse_eg(t_varRatio_sparse_egSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_S_a(t_S_aSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_res(t_resSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_mu2(t_mu2SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_mu(t_muSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_varRatio_sparse(t_varRatio_sparseSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_varRatio_null(t_varRatio_nullSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_varRatio_null_noXadj(t_varRatio_null_noXadjSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_varRatio_null_eg(t_varRatio_null_egSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_varRatio_sparse_eg(t_varRatio_sparse_egSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type t_cateVarRatioMinMACVecExclude(t_cateVarRatioMinMACVecExcludeSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type t_cateVarRatioMaxMACVecInclude(t_cateVarRatioMaxMACVecIncludeSEXP);
     Rcpp::traits::input_parameter< double >::type t_SPA_Cutoff(t_SPA_CutoffSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_tauvec(t_tauvecSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_varWeightsvec(t_varWeightsvecSEXP);
-    Rcpp::traits::input_parameter< std::string >::type t_traitType(t_traitTypeSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_y(t_ySEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_tauvec(t_tauvecSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_varWeightsvec(t_varWeightsvecSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_traitType(t_traitTypeSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_y(t_ySEXP);
     Rcpp::traits::input_parameter< std::string >::type t_impute_method(t_impute_methodSEXP);
     Rcpp::traits::input_parameter< bool >::type t_flagSparseGRM(t_flagSparseGRMSEXP);
     Rcpp::traits::input_parameter< bool >::type t_isnoadjCov(t_isnoadjCovSEXP);
@@ -249,8 +249,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<uint32_t>& >::type t_condition_genoIndex(t_condition_genoIndexSEXP);
     Rcpp::traits::input_parameter< bool >::type t_is_Firth_beta(t_is_Firth_betaSEXP);
     Rcpp::traits::input_parameter< double >::type t_pCutoffforFirth(t_pCutoffforFirthSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_offset(t_offsetSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type t_resout(t_resoutSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_offset(t_offsetSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_resout(t_resoutSEXP);
     Rcpp::traits::input_parameter< arma::sp_mat& >::type t_SigmaMat_sp(t_SigmaMat_spSEXP);
     Rcpp::traits::input_parameter< float >::type t_tauVal_sp(t_tauVal_spSEXP);
     Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Ilongmat(t_IlongmatSEXP);
@@ -1477,12 +1477,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // mainMarkerInCPP_multi
-void mainMarkerInCPP_multi(std::string& t_genoType, std::string& t_traitType, std::vector<std::string>& t_genoIndex_prev, std::vector<std::string>& t_genoIndex, bool& t_isMoreOutput, bool& t_isImputation, bool& t_isFirth);
+void mainMarkerInCPP_multi(std::string& t_genoType, std::vector<std::string>& t_traitType, std::vector<std::string>& t_genoIndex_prev, std::vector<std::string>& t_genoIndex, bool& t_isMoreOutput, bool& t_isImputation, bool& t_isFirth);
 RcppExport SEXP _SAIGE_mainMarkerInCPP_multi(SEXP t_genoTypeSEXP, SEXP t_traitTypeSEXP, SEXP t_genoIndex_prevSEXP, SEXP t_genoIndexSEXP, SEXP t_isMoreOutputSEXP, SEXP t_isImputationSEXP, SEXP t_isFirthSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string& >::type t_genoType(t_genoTypeSEXP);
-    Rcpp::traits::input_parameter< std::string& >::type t_traitType(t_traitTypeSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_traitType(t_traitTypeSEXP);
     Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_genoIndex_prev(t_genoIndex_prevSEXP);
     Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_genoIndex(t_genoIndexSEXP);
     Rcpp::traits::input_parameter< bool& >::type t_isMoreOutput(t_isMoreOutputSEXP);

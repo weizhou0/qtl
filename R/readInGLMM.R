@@ -343,3 +343,40 @@ Get_Variance_Ratio<-function(varianceRatioFile, cateVarRatioMinMACVecExclude, ca
 }
 
 
+ReadModel_multiTrait = function(GMMATmodelFileList = "", chrom="", LOCO=TRUE, is_Firth_beta=FALSE, is_EmpSPA=FALSE, espa_nt=9999, espa_range=c(-20,20)){
+  # Check file existence
+  GMMATmodelFileVec = unlist(strsplit(GMMATmodelFileList, split=","))
+  modglmmList = list()
+  for(gm in 1:length(GMMATmodelFileVec)){
+     GMMATmodelFile = GMMATmodelFileVec[gm] 
+     modglmmList[[gm]] = ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt, espa_range)  
+  }
+ 
+  return(modglmmList)
+}
+
+
+
+
+Get_Variance_Ratio_multiTrait<-function(varianceRatioFileList, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM, useSparseGRMtoFitNULL){
+   varianceRatioFileVec = unlist(strsplit(varianceRatioFileList, split=","))
+   #varianceRatioList = list()
+   ratioVec_sparse = NULL
+   ratioVec_null = NULL
+   ratioVec_null_noXadj = NULL
+   ratioVec_null_eg = NULL
+   ratioVec_sparse_eg = NULL
+   for(vrl in 1:length(varianceRatioFileVec)){
+	varianceRatioFile = varianceRatioFileVec[vrl]
+	ratioVecList = Get_Variance_Ratio(varianceRatioFile, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM)
+	print(ratioVecList)
+	ratioVec_sparse = cbind(ratioVec_sparse, ratioVecList$ratioVec_sparse)
+	ratioVec_null = cbind(ratioVec_null, ratioVecList$ratioVec_null)
+	ratioVec_null_noXadj = cbind(ratioVec_null_noXadj, ratioVecList$ratioVec_null_noXadj)
+	ratioVec_null_eg = cbind(ratioVec_null_eg, ratioVecList$ratioVec_null_eg)
+	ratioVec_sparse_eg = cbind(ratioVec_sparse_eg, ratioVecList$ratioVec_sparse_eg)
+   }
+   return(list(ratioVec_sparse = ratioVec_sparse, ratioVec_null = ratioVec_null, ratioVec_null_noXadj = ratioVec_null_noXadj, ratioVec_null_eg = ratioVec_null_eg, ratioVec_sparse_eg=ratioVec_sparse_eg))
+}
+
+
