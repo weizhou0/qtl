@@ -2206,6 +2206,7 @@ if(t_regionTestType != "BURDEN"){
   VarMat.resize(i1, i1*t_traitType.size());
   VarMatsub.resize(i1, i1);
   for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
+
   //VarMatsub.clear();
   if(nchunks_vec(i_mt) == 1){
     arma::vec VarMat_sub = P1Mat.rows(i_mt*i1, (i_mt+1)*i1-1) * P2Mat.cols(i_mt*i1, (i_mt+1)*i1-1);

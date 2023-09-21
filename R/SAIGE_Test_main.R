@@ -24,6 +24,7 @@
 #' @param LOCO logical. Whether to apply the leave-one-chromosome-out option. If TRUE, --chrom is required. By default, TRUE
 #' @param GMMATmodelFile character. Path to the input file containing the glmm model, which is output from previous step. Will be used by load()
 #' @param varianceRatioFile character. Path to the input file containing the variance ratio, which is output from the previous step
+#' @param GMMATmodel_varianceRatio_multiTraits_File character. Path to the input file containing 3 columns: phenotype name, model file, and variance ratio file. Each line is for one phenotype. This file is used when multiple phenotypes are analyzed simutaneously
 #' @param SAIGEOutputFile character. Prefix of the output files containing assoc test results
 #' @param markers_per_chunk character. Number of markers to be tested and output in each chunk in the single-variant assoc tests. By default, 10000
 #' @param groups_per_chunk character. Number of groups/sets to be read in and tested in each chunk in the set-based assoc tests. By default, 100
@@ -83,6 +84,7 @@ SPAGMMATtest = function(bgenFile = "",
                  GMMATmodelFile = "",
                  LOCO=TRUE,
                  varianceRatioFile = "",
+		 GMMATmodel_varianceRatio_multiTraits_File = "",
                  cateVarRatioMinMACVecExclude=c(10.5,20.5),
                  cateVarRatioMaxMACVecInclude=c(20.5),
                  SPAcutoff=2,
@@ -241,7 +243,26 @@ SPAGMMATtest = function(bgenFile = "",
     }
   #print("setSAIGEobjInCPP -2")
   #print_g_n_unique()
-    
+   if(GMMATmodel_varianceRatio_multiTraits_File != ""){
+	if(GMMATmodelFile != "" | varianceRatioFile != ""){
+		stop("GMMATmodel_varianceRatio_multiTraits_File is specified while varianceRatioFile and/or GMMATmodelFile are also specified. Please check\n")
+	}else{
+		modelvrfile_data = data.table::fread(GMMATmodel_varianceRatio_multiTraits_File, header=F, data.table=F)
+		if(ncol(modelvrfile_data) != 3){
+			stop("GMMATmodel_varianceRatio_multiTraits_File needs to have 3 columns: phenotype name, model file, and variance ratio file\n")
+		}else{
+			GMMATmodelFile_vec = modelvrfile_data[,2]
+			GMMATmodelFile = paste(GMMATmodelFile_vec, collapse=",")
+			varianceRatioFile_vec = modelvrfile_data[,3]
+			varianceRatioFile = paste(varianceRatioFile_vec, collapse=",")
+			phenotype_name_vec =as.character( modelvrfile_data[,1])
+		}
+	}
+   }else{
+	GMMATmodelFile_vec = unlist(strsplit(GMMATmodelFile, split=","))
+	phenotype_name_vec = as.character(seq(1,length(GMMATmodelFile_vec)))
+   }	
+
     obj.model.List = ReadModel_multiTrait(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt=9999, espa_range=c(-20,20)) #readInGLMM.R8
 
     setAssocTest_GlobalVarsInCPP_GbyE(obj.model.List[[1]]$eMat, obj.model.List[[1]]$isgxe, pval_cutoff_for_gxe);	
@@ -688,6 +709,7 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
     }
 
         SAIGE.Marker(traitType,
+		phenotype_name_vec,	
 		   genoType,
                    objGeno$markerInfo$genoIndex_prev,
                    objGeno$markerInfo$genoIndex,
@@ -793,6 +815,7 @@ cat("MAFlimitMat b ", MAFlimitMat, "\n")
                      genoType,
                      objGeno$markerInfo,
 		     traitType,
+		     phenotype_name_vec,
 		     is_imputed_data,
 		     isCondition,
 		     condition_weights,

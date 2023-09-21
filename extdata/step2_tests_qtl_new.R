@@ -3,7 +3,7 @@
 #options(stringsAsFactors=F, scipen = 999)
 options(stringsAsFactors=F)
 library(SAIGE)
-#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test2/")
+#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test/")
 BLASctl_installed <- require(RhpcBLASctl)
 library(optparse)
 library(data.table)
@@ -64,6 +64,8 @@ option_list <- list(
     help="Path to the input file containing the glmm model, which is output from previous step. Will be used by load()"),
   make_option("--varianceRatioFile", type="character",default="",
     help="Path to the input file containing the variance ratio, which is output from the previous step"),
+  make_option("--GMMATmodel_varianceRatio_multiTraits_File", type="character",default="",
+    help="Path to the input file containing 3 columns: phenotype name, model file, and variance ratio file. Each line is for one phenotype. This file is used when multiple phenotypes are analyzed simutaneously"), 
   make_option("--SAIGEOutputFile", type="character", default="",
     help="Path to the output file containing assoc test results"),
   make_option("--markers_per_chunk", type="numeric",default=10000,
@@ -131,7 +133,7 @@ mean, p-value based on traditional score test is returned. Default value is 2.")
     help="p-value cutoff to use approx Firth to estiamte the effect sizes. Only for binary traits. The effect sizes of markers with p-value <= pCutoffforFirth will be estimated using approx Firth [default=0.01]"),
   make_option("--is_fastTest", type="logical", default=FALSE,
     help="Whether to use the fast mode for tests"),
-  make_option("--is_noadjCov", type="logical", default=FALSE,
+  make_option("--is_noadjCov", type="logical", default=TRUE,
     help="Whether to regress out covariates from genotype"),
   make_option("--is_sparseGRM", type="logical", default=FALSE,
     help="Whether to use the sparse GRM"),
@@ -247,6 +249,7 @@ SPAGMMATtest(vcfFile=opt$vcfFile,
              LOCO=opt$LOCO,
              GMMATmodelFile=opt$GMMATmodelFile,
              varianceRatioFile=opt$varianceRatioFile,
+	     GMMATmodel_varianceRatio_multiTraits_File=opt$GMMATmodel_varianceRatio_multiTraits_File,
              SAIGEOutputFile=opt$SAIGEOutputFile,
              markers_per_chunk=opt$markers_per_chunk,
              groups_per_chunk=opt$groups_per_chunk,

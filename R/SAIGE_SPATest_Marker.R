@@ -1,4 +1,5 @@
 SAIGE.Marker = function(traitType,
+phenotype_name_vec,
 			genoType,
 			genoIndex_prev,
                         genoIndex,
@@ -34,7 +35,7 @@ SAIGE.Marker = function(traitType,
   assign_g_outputFilePrefix0(OutputFile)
   for(itt in 1:length(traitType)){
      if(length(traitType) > 1){
-	OutputFile_itt = paste0(OutputFile, "_", itt)
+	OutputFile_itt = paste0(OutputFile, "_", phenotype_name_vec[itt])
      }else{
 	OutputFile_itt = OutputFile
      }
@@ -217,7 +218,7 @@ if(length(traitType) == 1){
 }else{
   output = "Analysis done! The results have been saved to"
   for(tt in 1:length(traitType)){
-    OutputFile_tt = paste0(OutputFile, "_", tt)
+    OutputFile_tt = paste0(OutputFile, "_", phenotype_name_vec[tt])
     output = paste0(output, "'", OutputFile_tt, "',")
   }
 

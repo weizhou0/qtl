@@ -17,11 +17,12 @@ geneLocationFile=/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1
 #step1outpath=/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step1/output/
 #step1prefix=${step1outpath}${genename}_${cellType}_${traitType}_uncond_test2
 
+#sampleCovarColList is to specify which covariates are donor level instead of cell level
+
+
 step1prefix=${outpath}${genename}_${cellType}_${traitType}_step1
 
 #: '
-
-
 Rscript /humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step1_fitNULLGLMM_qtl_new.R    \
         --useSparseGRMtoFitNULL=FALSE  \
         --useGRMtoFitNULL=FALSE \
@@ -91,8 +92,7 @@ Rscript /humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuo
         --is_single_in_groupTest=FALSE  \
         --is_equal_weight_in_groupTest=FALSE	\
 	--groups_per_chunk=1    \
-        --weights.beta="1;25,1;1"   \
-        --is_SKAT=FALSE
+        --weights.beta="1;25" 
 
 
 #        --outputPrefix=/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step2/trans_region_list/bychr_grpfile/dose.filtered.R2_0.8.GRCh37_hg19_region_chr${i}_grpfile

@@ -92,6 +92,7 @@ SAIGE.Region = function(mu,
 			genoType, 
 			markerInfo,
 			traitType,
+			phenotype_name_vec,
 			isImputation,
 			isCondition,
 			weight_cond,
@@ -161,7 +162,7 @@ cat("minMAFlist ", minMAFlist, "\n")
       if(length(traitType) == 1){
 	OutputFile_itt = OutputFile
       }else{
-	OutputFile_itt = paste0(OutputFile, "_", itt)
+	OutputFile_itt = paste0(OutputFile, "_", phenotype_name_vec[itt])
       }
         assign_g_outputFilePrefix(OutputFile_itt)
         isOpenOutFile = openOutfile(traitType[itt],isappend)
@@ -184,7 +185,7 @@ cat("minMAFlist ", minMAFlist, "\n")
       if(length(traitType) == 1){
 	OutputFile_itt = OutputFile
       }else{
-        OutputFile_itt = paste0(OutputFile, "_", itt)
+        OutputFile_itt = paste0(OutputFile, "_", phenotype_name_vec[itt])
       } 
        assign_g_outputFilePrefix(OutputFile_itt)
        isOpenOutFile_singleinGroup = openOutfile_singleinGroup(traitType[itt], isImputation, isappend, is_output_moreDetails)
@@ -1237,7 +1238,7 @@ for(tt in 1:length(traitType)){
   if(length(traitType) == 1){
 	OutputFile_tt = OutputFile
   }else{
-  	OutputFile_tt = paste0(OutputFile, "_", tt)
+  	OutputFile_tt = paste0(OutputFile, "_", phenotype_name_vec[tt])
   }
   if(regionTestType != "BURDEN"){
       if(Start){
@@ -1312,7 +1313,7 @@ for(itt in 1:length(traitType)){
   if(length(traitType) == 1){
        OutputFile_itt = OutputFile
   }else{
-       OutputFile_itt = paste0(OutputFile, "_", itt)
+       OutputFile_itt = paste0(OutputFile, "_", phenotype_name_vec[itt])
   } 
 
 
@@ -1336,7 +1337,7 @@ if(length(traitType) > 1){
      if(length(traitType) == 1){
 	OutputFile_itt = OutputFile
      }else{
-       OutputFile_itt = paste0(OutputFile, "_", itt)
+       OutputFile_itt = paste0(OutputFile, "_", phenotype_name_vec[itt])
      }	
        assign_g_outputFilePrefix(OutputFile_itt)
        removeOutfile_singleinGroup_temp()
