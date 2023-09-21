@@ -201,8 +201,8 @@ SPAGMMATtest = function(bgenFile = "",
       #maxMAF_in_groupTest = maxMAF_in_groupTest[order(maxMAF_in_groupTest)]
       #maxMAC_in_groupTest = maxMAC_in_groupTest[order(maxMAC_in_groupTest)]
 
-cat("maxMAF_in_groupTest ", maxMAF_in_groupTest, "\n")
-cat("minMAF_in_groupTest_Exclude ", minMAF_in_groupTest_Exclude, "\n")
+      cat("maxMAF_in_groupTest ", maxMAF_in_groupTest, "\n")
+      cat("minMAF_in_groupTest_Exclude ", minMAF_in_groupTest_Exclude, "\n")
 
 
       checkArgsList_for_Region(
@@ -397,18 +397,18 @@ cat("minMAF_in_groupTest_Exclude ", minMAF_in_groupTest_Exclude, "\n")
 	Sigma_iXXSigma_iX0 = obj.model$Sigma_iXXSigma_iX
 	Sigma_iXXSigma_iX = rbind(Sigma_iXXSigma_iX, Sigma_iXXSigma_iX0)
 
-print("dim(XVXsample)")
-print(dim(XVXsample))
-print("dim(XXVXsample_inv)")
-print(dim(XXVXsample_inv))
-print("dim(XVsample)")
-print(dim(XVsample))
-print("dim(XVX_inv_XVsample)")
-print(dim(XVX_inv_XVsample))
-print("dim(Sigma_iXXSigma_iX)")
-print(dim(Sigma_iXXSigma_iX))
-print("dim(Xsample)")
-print(dim(Xsample))
+#print("dim(XVXsample)")
+#print(dim(XVXsample))
+#print("dim(XXVXsample_inv)")
+#print(dim(XXVXsample_inv))
+#print("dim(XVsample)")
+#print(dim(XVsample))
+#print("dim(XVX_inv_XVsample)")
+#print(dim(XVX_inv_XVsample))
+#print("dim(Sigma_iXXSigma_iX)")
+#print(dim(Sigma_iXXSigma_iX))
+#print("dim(Xsample)")
+#print(dim(Xsample))
 
 	res_sample0 = as.vector(t(I_mat) %*% (obj.model$residuals))
 	mu_sample0 = as.vector(t(I_mat) %*% (obj.model$mu))
@@ -420,14 +420,14 @@ print(dim(Xsample))
 	mu2_sample = cbind(mu2_sample, mu2_sample0)
 	S_a_sample = cbind(S_a_sample, S_a_sample0)
 
-print("dim(S_a_sample)")
-print(dim(S_a_sample))
-print("dim(res_sample)")
-print(dim(res_sample))
-print("dim(mu2_sample)")
-print(dim(mu2_sample))
-print("dim(mu_sample)")
-print(dim(mu_sample))
+#print("dim(S_a_sample)")
+#print(dim(S_a_sample))
+#print("dim(res_sample)")
+#print(dim(res_sample))
+#print("dim(mu2_sample)")
+#print(dim(mu2_sample))
+#print("dim(mu_sample)")
+#print(dim(mu_sample))
         uniqsampleind = which(!duplicated(obj.model$sampleID))
 	varWeights_sample = cbind(varWeights_sample,obj.model$varWeights[uniqsampleind])
 
@@ -441,31 +441,31 @@ print(dim(mu_sample))
   }
 
 
-print("dim(ratioVecList$ratioVec_sparse)")
-print(dim(ratioVecList$ratioVec_sparse))
-print(ratioVecList)
-print(SPAcutoff)
-print(theta)
-print(dim(varWeights_sample))
-print(traitType)
-print(dim(y))
-print(is_noadjCov)
-print(pval_cutoff_for_fastTest)
-print(condition_genoIndex)
-print(is_Firth_beta)
-print(pCutoffforFirth)
+#print("dim(ratioVecList$ratioVec_sparse)")
+#print(dim(ratioVecList$ratioVec_sparse))
+#print(ratioVecList)
+#print(SPAcutoff)
+#print(theta)
+#print(dim(varWeights_sample))
+#print(traitType)
+#print(dim(y))
+#print(is_noadjCov)
+#print(pval_cutoff_for_fastTest)
+#print(condition_genoIndex)
+#print(is_Firth_beta)
+#print(pCutoffforFirth)
 
-print(dim(offset))
-print(dim(obj_cc_res.out))
-print(dim(SigmaMat_sp))
-print(obj.model$tauVal_sp)
-print(dim(I_mat))
+#print(dim(offset))
+#print(dim(obj_cc_res.out))
+#print(dim(SigmaMat_sp))
+#print(obj.model$tauVal_sp)
+#print(dim(I_mat))
 #print(b-1)
-print(dim(T_longl_mat))
-print(length(obj.model$T_longl_vec))
-print(obj.model$T_longl_vec)
-print("ok")
-print(obj.model$cumul)
+#print(dim(T_longl_mat))
+#print(length(obj.model$T_longl_vec))
+#print(obj.model$T_longl_vec)
+#print("ok")
+#print(obj.model$cumul)
 
 #print("XXVXsample_inv")
 #print(XXVXsample_inv)
@@ -518,8 +518,8 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
   #print("setSAIGEobjInCPP 0")
   #print_g_n_unique()
 
-print("ratioVecList")
-print(ratioVecList)
+#print("ratioVecList")
+#print(ratioVecList)
 
 }else{
 #}
@@ -561,6 +561,8 @@ print(ratioVecList)
         tauVal_sp = cbind(tauVal_sp, obj.model$tauVal_sp)
 	varWeights = cbind(varWeights, obj.model$varWeights)
      }
+
+	mu_sample = mu
 
 
     setSAIGEobjInCPP(t_XVX=XVX,
@@ -641,13 +643,21 @@ print(ratioVecList)
 	condition_genoIndex_a = as.character(format(condition_genoIndex$cond_genoIndex, scientific = FALSE))
 	condition_genoIndex_prev_a = as.character(format(condition_genoIndex$cond_genoIndex_prev, scientific = FALSE)) 
 	assign_conditionMarkers_factors(genoType, condition_genoIndex_prev_a, condition_genoIndex_a,  n, condition_weights)
-	if(obj.model$traitType == "binary" & isGroupTest){
+	if(obj.model$traitType[1] == "binary" & isGroupTest){
 	  outG2cond = RegionSetUpConditional_binary_InCPP(condition_weights)
-	  G2condList = get_newPhi_scaleFactor(q.sum = outG2cond$qsum_G2_cond, mu.a = obj.model$mu, g.sum = outG2cond$gsum_G2_cond, p.new = outG2cond$pval_G2_cond, Score = outG2cond$Score_G2_cond, Phi = outG2cond$VarMat_G2_cond, "SKAT-O")
-	#print(G2condList)
+	G2condList_list = NULL
+	 for(oml in 1:length(obj.model.List)){
+	startcond = (oml-1)*length(condition_genoIndex$cond_genoIndex) + 1
+	endcond = oml*length(condition_genoIndex$cond_genoIndex)
+
+	  G2condList = get_newPhi_scaleFactor(q.sum = outG2cond$qsum_G2_cond[oml], mu.a = mu_sample[,oml], g.sum = outG2cond$gsum_G2_cond[,oml], p.new = outG2cond$pval_G2_cond[startcond:endcond], Score = outG2cond$Score_G2_cond[startcond:endcond], Phi = outG2cond$VarMat_G2_cond[,startcond:endcond], "SKAT-O")
 	  scaleFactorVec = as.vector(G2condList$scaleFactor)
+	  G2condList$scaleFactorVec = scaleFactorVec
+	  G2condList_list[[oml]] = G2condList
+	  assign_conditionMarkers_factors_binary_region_multiTrait(scaleFactorVec, oml-1)
+	}  
+	#print(G2condList)
 	#print(scaleFactorVec)
-	  assign_conditionMarkers_factors_binary_region(scaleFactorVec)
 	}	
     }else{
 	condition_weights = c(0)

@@ -134,7 +134,7 @@ ReadModel = function(GMMATmodelFile = "", chrom="", LOCO=TRUE, is_Firth_beta=FAL
  #if(FALSE){
 
   modglmm$obj_cc = list(res.out = NULL)
-  print("check")
+  #print("check")
   if(!is.null(modglmm$obj_cc$res.out)){
                modglmm$obj_cc$res.out<-cbind(modglmm$obj_cc$res,
 modglmm$obj_cc$res.out)

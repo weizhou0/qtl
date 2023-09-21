@@ -455,7 +455,7 @@ checkOutputFile = function(OutputFile,
   if(OutputFile == "")
     stop("Argument of 'OutputFile' is required.")
 
-if(isOverwriteOutput){
+  if(isOverwriteOutput){
     Check_OutputFile_Create(OutputFile)
     #Check_OutputFile_Create(OutputFileIndex) 
     Start = TRUE;

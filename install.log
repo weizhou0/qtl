@@ -1,0 +1,1206 @@
+* installing *source* package 'SAIGE' ...
+staged installation is only possible with locking
+** using non-staged installation
+** libs
+x86_64-conda-linux-gnu-c++ -std=gnu++11 -I"/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/include" -DNDEBUG -I ../thirdParty/cget/include -I ../thirdParty/cget/lib -I ../thirdParty/cget/lib64 -D SQLITE_ENABLE_COLUMN_METADATA -O3 -fpic -Wall -Wextra -pedantic  -DARMA_64BIT_WORD=1 -D__STDC_FORMAT_MACROS -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppParallel/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/data.table/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/SPAtest/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Matrix/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/methods/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/optparse/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/SKAT/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/MetaSKAT/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/qlcMatrix/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RhpcBLASctl/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RSQLite/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/dplyr/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/nlme/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/MASS/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppNumerical/include' -DNDEBUG -D_FORTIFY_SOURCE=2 -O2 -isystem /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/include -I/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/include -Wl,-rpath-link,/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib   -fpic  -fvisibility-inlines-hidden  -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1648745733215/work=/usr/local/src/conda/r-base-4.1.3 -fdebug-prefix-map=/stanley/genetics/users/wzhou/.conda/envs/RSAIGE=/usr/local/src/conda-prefix  -c RcppExports.cpp -o RcppExports.o
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:127,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from RcppExports.cpp:4:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'const char* Rcpp::type2name(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'const char* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:86:26: note: in expansion of macro 'GET_CALLABLE'
+   86 |         static Fun fun = GET_CALLABLE("type2name");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'long unsigned int Rcpp::internal::enterRNGScope()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'long unsigned int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:93:30: note: in expansion of macro 'GET_CALLABLE'
+   93 |             static Fun fun = GET_CALLABLE("enterRNGScope");
+      |                              ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'long unsigned int Rcpp::internal::exitRNGScope()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'long unsigned int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:99:30: note: in expansion of macro 'GET_CALLABLE'
+   99 |             static Fun fun = GET_CALLABLE("exitRNGScope");
+      |                              ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'long unsigned int Rcpp::internal::beginSuspendRNGSynchronization()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'long unsigned int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:105:30: note: in expansion of macro 'GET_CALLABLE'
+  105 |             static Fun fun = GET_CALLABLE("beginSuspendRNGSynchronization");
+      |                              ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'long unsigned int Rcpp::internal::endSuspendRNGSynchronization()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'long unsigned int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:111:30: note: in expansion of macro 'GET_CALLABLE'
+  111 |             static Fun fun = GET_CALLABLE("endSuspendRNGSynchronization");
+      |                              ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'double Rcpp::mktime00(tm&)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'double (*)(tm&)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:132:26: note: in expansion of macro 'GET_CALLABLE'
+  132 |         static Fun fun = GET_CALLABLE("mktime00");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'tm* Rcpp::gmtime_(const time_t*)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'tm* (*)(const long int*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:138:27: note: in expansion of macro 'GET_CALLABLE'
+  138 |         static Fun fun =  GET_CALLABLE("gmtime_");
+      |                           ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* Rcpp::Rcpp_precious_preserve(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:154:26: note: in expansion of macro 'GET_CALLABLE'
+  154 |         static Fun fun = GET_CALLABLE("Rcpp_precious_preserve");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void Rcpp::Rcpp_precious_remove(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:159:26: note: in expansion of macro 'GET_CALLABLE'
+  159 |         static Fun fun = GET_CALLABLE("Rcpp_precious_remove");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'Rcpp::Rostream<true>& Rcpp::Rcpp_cout_get()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'Rcpp::Rostream<true>& (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:165:26: note: in expansion of macro 'GET_CALLABLE'
+  165 |         static Fun fun = GET_CALLABLE("Rcpp_cout_get");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'Rcpp::Rostream<false>& Rcpp::Rcpp_cerr_get()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'Rcpp::Rostream<false>& (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:170:26: note: in expansion of macro 'GET_CALLABLE'
+  170 |         static Fun fun = GET_CALLABLE("Rcpp_cerr_get");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* rcpp_set_stack_trace(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:188:23: note: in expansion of macro 'GET_CALLABLE'
+  188 |     static Fun fun =  GET_CALLABLE("rcpp_set_stack_trace");
+      |                       ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'std::string demangle(const string&)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'std::__cxx11::basic_string<char> (*)(const std::__cxx11::basic_string<char>&)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:194:22: note: in expansion of macro 'GET_CALLABLE'
+  194 |     static Fun fun = GET_CALLABLE("demangle");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'const char* short_file_name(const char*)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'const char* (*)(const char*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:200:22: note: in expansion of macro 'GET_CALLABLE'
+  200 |     static Fun fun = GET_CALLABLE("short_file_name");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* stack_trace(const char*, int)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(const char*, int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:206:22: note: in expansion of macro 'GET_CALLABLE'
+  206 |     static Fun fun = GET_CALLABLE("stack_trace");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* get_string_elt(SEXP, R_xlen_t)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(SEXPREC*, long int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:212:22: note: in expansion of macro 'GET_CALLABLE'
+  212 |     static Fun fun = GET_CALLABLE("get_string_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'const char* char_get_string_elt(SEXP, R_xlen_t)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'const char* (*)(SEXPREC*, long int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:218:22: note: in expansion of macro 'GET_CALLABLE'
+  218 |     static Fun fun = GET_CALLABLE("char_get_string_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void set_string_elt(SEXP, R_xlen_t, SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(SEXPREC*, long int, SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:224:22: note: in expansion of macro 'GET_CALLABLE'
+  224 |     static Fun fun = GET_CALLABLE("set_string_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void char_set_string_elt(SEXP, R_xlen_t, const char*)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(SEXPREC*, long int, const char*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:230:22: note: in expansion of macro 'GET_CALLABLE'
+  230 |     static Fun fun = GET_CALLABLE("char_set_string_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC** get_string_ptr(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC** (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:236:22: note: in expansion of macro 'GET_CALLABLE'
+  236 |     static Fun fun = GET_CALLABLE("get_string_ptr");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* get_vector_elt(SEXP, R_xlen_t)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(SEXPREC*, long int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:242:22: note: in expansion of macro 'GET_CALLABLE'
+  242 |     static Fun fun = GET_CALLABLE("get_vector_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void set_vector_elt(SEXP, R_xlen_t, SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(SEXPREC*, long int, SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:248:22: note: in expansion of macro 'GET_CALLABLE'
+  248 |     static Fun fun = GET_CALLABLE("set_vector_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC** get_vector_ptr(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC** (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:254:22: note: in expansion of macro 'GET_CALLABLE'
+  254 |     static Fun fun = GET_CALLABLE("get_vector_ptr");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'const char* char_nocheck(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'const char* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:260:22: note: in expansion of macro 'GET_CALLABLE'
+  260 |     static Fun fun = GET_CALLABLE("char_nocheck");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void* dataptr(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:266:22: note: in expansion of macro 'GET_CALLABLE'
+  266 |     static Fun fun = GET_CALLABLE("dataptr");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void setCurrentScope(Rcpp::Module*)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(Rcpp::Module*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:278:22: note: in expansion of macro 'GET_CALLABLE'
+  278 |     static Fun fun = GET_CALLABLE("setCurrentScope");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'int* get_cache(int)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'int* (*)(int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:284:22: note: in expansion of macro 'GET_CALLABLE'
+  284 |     static Fun fun = GET_CALLABLE("get_cache");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'int error_occured()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:296:22: note: in expansion of macro 'GET_CALLABLE'
+  296 |     static Fun fun = GET_CALLABLE("error_occured");
+      |                      ^~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:29,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_dense* as_cholmod_dense(CHM_DN, SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:38:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_dense* (*)(CHM_DN, SEXP)' {aka 'cholmod_dense_struct* (*)(cholmod_dense_struct*, SEXPREC*)'} [-Wcast-function-type]
+   38 |  fun = (CHM_DN(*)(CHM_DN,SEXP))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+   39 |      R_GetCCallable("Matrix", "as_cholmod_dense");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_factor* as_cholmod_factor(CHM_FR, SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:47:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_factor* (*)(CHM_FR, SEXP)' {aka 'cholmod_factor_struct* (*)(cholmod_factor_struct*, SEXPREC*)'} [-Wcast-function-type]
+   47 |  fun = (CHM_FR(*)(CHM_FR,SEXP))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+   48 |      R_GetCCallable("Matrix", "as_cholmod_factor");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* as_cholmod_sparse(CHM_SP, SEXP, Rboolean, Rboolean)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:56:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(CHM_SP, SEXP, Rboolean, Rboolean)' {aka 'cholmod_sparse_struct* (*)(cholmod_sparse_struct*, SEXPREC*, Rboolean, Rboolean)'} [-Wcast-function-type]
+   56 |  fun = (CHM_SP(*)(CHM_SP,SEXP,Rboolean,Rboolean))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   57 |      R_GetCCallable("Matrix", "as_cholmod_sparse");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_triplet* as_cholmod_triplet(CHM_TR, SEXP, Rboolean)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:65:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_triplet* (*)(CHM_TR, SEXP, Rboolean)' {aka 'cholmod_triplet_struct* (*)(cholmod_triplet_struct*, SEXPREC*, Rboolean)'} [-Wcast-function-type]
+   65 |  fun = (CHM_TR(*)(CHM_TR,SEXP,Rboolean))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   66 |      R_GetCCallable("Matrix", "as_cholmod_triplet");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'SEXPREC* Csparse_diagU2N(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:74:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} [-Wcast-function-type]
+   74 |  fun = (SEXP(*)(SEXP))
+      |        ^~~~~~~~~~~~~~~
+   75 |      R_GetCCallable("Matrix", "Csparse_diagU2N");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'SEXPREC* M_chm_factor_to_SEXP(const_CHM_FR, int)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:84:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'SEXPREC* (*)(const_CHM_FR, int)' {aka 'SEXPREC* (*)(const cholmod_factor_struct*, int)'} [-Wcast-function-type]
+   84 |  fun = (SEXP(*)(const_CHM_FR,int))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   85 |      R_GetCCallable("Matrix", "chm_factor_to_SEXP");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'double M_chm_factor_ldetL2(const_CHM_FR)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:94:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'double (*)(const_CHM_FR)' {aka 'double (*)(const cholmod_factor_struct*)'} [-Wcast-function-type]
+   94 |  fun = (double(*)(const_CHM_FR))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~
+   95 |      R_GetCCallable("Matrix", "chm_factor_ldetL2");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_factor* M_chm_factor_update(CHM_FR, const_CHM_SP, double)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:104:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_factor* (*)(CHM_FR, const_CHM_SP, double)' {aka 'cholmod_factor_struct* (*)(cholmod_factor_struct*, const cholmod_sparse_struct*, double)'} [-Wcast-function-type]
+  104 |  fun = (CHM_FR(*)(CHM_FR,const_CHM_SP,double))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  105 |      R_GetCCallable("Matrix", "chm_factor_update");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'SEXPREC* M_chm_sparse_to_SEXP(const_CHM_SP, int, int, int, const char*, SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:115:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'SEXPREC* (*)(const_CHM_SP, int, int, int, const char*, SEXP)' {aka 'SEXPREC* (*)(const cholmod_sparse_struct*, int, int, int, const char*, SEXPREC*)'} [-Wcast-function-type]
+  115 |  fun = (SEXP(*)(const_CHM_SP,int,int,int,const char*,SEXP))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  116 |      R_GetCCallable("Matrix", "chm_sparse_to_SEXP");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'SEXPREC* M_chm_triplet_to_SEXP(CHM_TR, int, int, int, const char*, SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:126:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'SEXPREC* (*)(CHM_TR, int, int, int, const char*, SEXP)' {aka 'SEXPREC* (*)(cholmod_triplet_struct*, int, int, int, const char*, SEXPREC*)'} [-Wcast-function-type]
+  126 |  fun = (SEXP(*)(const CHM_TR,int,int,int,const char*,SEXP))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  127 |      R_GetCCallable("Matrix", "chm_triplet_to_SEXP");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_aat(const_CHM_SP, int*, size_t, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:138:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_SP, int*, size_t, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_sparse_struct*, int*, long unsigned int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  138 |  fun = (CHM_SP(*)(const_CHM_SP,int*,size_t,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  139 |     int,CHM_CM))
+      |     ~~~~~~~~~~~~
+  140 |      R_GetCCallable("Matrix", "cholmod_aat");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int M_cholmod_band_inplace(CHM_SP, int, int, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:150:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(CHM_SP, int, int, int, CHM_CM)' {aka 'int (*)(cholmod_sparse_struct*, int, int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  150 |  fun = (int(*)(CHM_SP,int,int,int,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  151 |      R_GetCCallable("Matrix", "cholmod_band_inplace");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_add(const_CHM_SP, const_CHM_SP, double*, double*, int, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:164:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_SP, const_CHM_SP, double*, double*, int, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_sparse_struct*, const cholmod_sparse_struct*, double*, double*, int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  164 |  fun = (CHM_SP(*)(const_CHM_SP,const_CHM_SP,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  165 |     double*,double*,int,int,
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~
+  166 |     CHM_CM))
+      |     ~~~~~~~~
+  167 |      R_GetCCallable("Matrix", "cholmod_add");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_dense* cholmod_allocate_dense(size_t, size_t, size_t, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:178:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_dense* (*)(size_t, size_t, size_t, int, CHM_CM)' {aka 'cholmod_dense_struct* (*)(long unsigned int, long unsigned int, long unsigned int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  178 |  fun = (CHM_DN(*)(size_t,size_t,size_t,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  179 |     int,CHM_CM))
+      |     ~~~~~~~~~~~~
+  180 |      R_GetCCallable("Matrix", "cholmod_allocate_dense");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_allocate_sparse(size_t, size_t, size_t, int, int, int, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:192:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(size_t, size_t, size_t, int, int, int, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(long unsigned int, long unsigned int, long unsigned int, int, int, int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  192 |  fun = (CHM_SP(*)
+      |        ^~~~~~~~~~
+  193 |         (size_t,size_t,size_t,int,int,int,int,CHM_CM))
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  194 |      R_GetCCallable("Matrix", "cholmod_allocate_sparse");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_triplet* cholmod_allocate_triplet(size_t, size_t, size_t, int, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:204:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_triplet* (*)(size_t, size_t, size_t, int, int, CHM_CM)' {aka 'cholmod_triplet_struct* (*)(long unsigned int, long unsigned int, long unsigned int, int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  204 |  fun = (CHM_TR(*)(size_t,size_t,size_t,int,int,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  205 |      R_GetCCallable("Matrix", "cholmod_allocate_triplet");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_triplet_to_sparse(const cholmod_triplet*, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:215:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const cholmod_triplet*, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_triplet_struct*, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  215 |  fun = (CHM_SP(*)(const cholmod_triplet*,int,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  216 |      R_GetCCallable("Matrix", "cholmod_triplet_to_sparse");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_triplet* cholmod_sparse_to_triplet(const_CHM_SP, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:225:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_triplet* (*)(const_CHM_SP, CHM_CM)' {aka 'cholmod_triplet_struct* (*)(const cholmod_sparse_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  225 |  fun = (CHM_TR(*)(const_CHM_SP,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  226 |      R_GetCCallable("Matrix", "cholmod_sparse_to_triplet");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_dense* cholmod_sparse_to_dense(const_CHM_SP, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:235:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_dense* (*)(const_CHM_SP, CHM_CM)' {aka 'cholmod_dense_struct* (*)(const cholmod_sparse_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  235 |  fun = (CHM_DN(*)(const_CHM_SP,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  236 |      R_GetCCallable("Matrix", "cholmod_sparse_to_dense");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_factor* cholmod_analyze(const_CHM_SP, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:245:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_factor* (*)(const_CHM_SP, CHM_CM)' {aka 'cholmod_factor_struct* (*)(const cholmod_sparse_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  245 |  fun = (CHM_FR(*)(const_CHM_SP,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  246 |      R_GetCCallable("Matrix", "cholmod_analyze");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_factor* cholmod_analyze_p(const_CHM_SP, int*, int*, size_t, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:256:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_factor* (*)(const_CHM_SP, int*, int*, size_t, CHM_CM)' {aka 'cholmod_factor_struct* (*)(const cholmod_sparse_struct*, int*, int*, long unsigned int, cholmod_common_struct*)'} [-Wcast-function-type]
+  256 |  fun = (CHM_FR(*)(const_CHM_SP,int*,int*,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  257 |     size_t,CHM_CM))
+      |     ~~~~~~~~~~~~~~~
+  258 |      R_GetCCallable("Matrix", "cholmod_analyze_p");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_copy(const_CHM_SP, int, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:268:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_SP, int, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_sparse_struct*, int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  268 |  fun = (CHM_SP(*)(const_CHM_SP,int,int,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  269 |      R_GetCCallable("Matrix", "cholmod_copy");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_dense* cholmod_copy_dense(const_CHM_DN, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:278:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_dense* (*)(const_CHM_DN, CHM_CM)' {aka 'cholmod_dense_struct* (*)(const cholmod_dense_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  278 |  fun = (CHM_DN(*)(const_CHM_DN,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  279 |      R_GetCCallable("Matrix", "cholmod_copy_dense");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_factor* cholmod_copy_factor(const_CHM_FR, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:288:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_factor* (*)(const_CHM_FR, CHM_CM)' {aka 'cholmod_factor_struct* (*)(const cholmod_factor_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  288 |  fun = (CHM_FR(*)(const_CHM_FR,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  289 |      R_GetCCallable("Matrix", "cholmod_copy_factor");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_change_factor(int, int, int, int, int, CHM_FR, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:299:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(int, int, int, int, int, CHM_FR, CHM_CM)' {aka 'int (*)(int, int, int, int, int, cholmod_factor_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  299 |  fun = (int(*)(int,int,int,int,int,CHM_FR,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  300 |      R_GetCCallable("Matrix", "cholmod_change_factor");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_copy_sparse(const_CHM_SP, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:309:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_SP, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_sparse_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  309 |  fun = (CHM_SP(*)(const_CHM_SP,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  310 |      R_GetCCallable("Matrix", "cholmod_copy_sparse");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_factor_to_sparse(const_CHM_FR, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:319:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_FR, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_factor_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  319 |  fun = (CHM_SP(*)(const_CHM_FR,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  320 |      R_GetCCallable("Matrix", "cholmod_factor_to_sparse");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_submatrix(const_CHM_SP, int*, int, int*, int, int, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:331:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_SP, int*, int, int*, int, int, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_sparse_struct*, int*, int, int*, int, int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  331 |  fun = (CHM_SP(*)(const_CHM_SP,int*,int,int*,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  332 |     int,int,int,CHM_CM))
+      |     ~~~~~~~~~~~~~~~~~~~~
+  333 |      R_GetCCallable("Matrix", "cholmod_submatrix");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_dense_to_sparse(const_CHM_DN, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:342:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_DN, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_dense_struct*, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  342 |  fun = (CHM_SP(*)(const_CHM_DN,int,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  343 |      R_GetCCallable("Matrix", "cholmod_dense_to_sparse");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_factorize(const_CHM_SP, CHM_FR, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:352:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(const_CHM_SP, CHM_FR, CHM_CM)' {aka 'int (*)(const cholmod_sparse_struct*, cholmod_factor_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  352 |  fun = (int(*)(const_CHM_SP,CHM_FR,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  353 |      R_GetCCallable("Matrix", "cholmod_factorize");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_factorize_p(const_CHM_SP, double*, int*, size_t, CHM_FR, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:365:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(const_CHM_SP, double*, int*, size_t, CHM_FR, CHM_CM)' {aka 'int (*)(const cholmod_sparse_struct*, double*, int*, long unsigned int, cholmod_factor_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  365 |  fun = (int(*)(const_CHM_SP,double*,int*,size_t,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  366 |         CHM_FR,CHM_CM))
+      |         ~~~~~~~~~~~~~~~
+  367 |      R_GetCCallable("Matrix", "cholmod_factorize_p");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_finish(CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:377:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(CHM_CM)' {aka 'int (*)(cholmod_common_struct*)'} [-Wcast-function-type]
+  377 |  fun = (int(*)(CHM_CM))
+      |        ^~~~~~~~~~~~~~~~
+  378 |      R_GetCCallable("Matrix", "cholmod_finish");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_sort(CHM_SP, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:387:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(CHM_SP, CHM_CM)' {aka 'int (*)(cholmod_sparse_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  387 |  fun = (int(*)(CHM_SP,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+  388 |      R_GetCCallable("Matrix", "cholmod_sort");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_free_dense(cholmod_dense**, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:397:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(cholmod_dense**, CHM_CM)' {aka 'int (*)(cholmod_dense_struct**, cholmod_common_struct*)'} [-Wcast-function-type]
+  397 |  fun = (int(*)(CHM_DN*,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+  398 |      R_GetCCallable("Matrix", "cholmod_free_dense");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_free_factor(cholmod_factor**, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:407:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(cholmod_factor**, CHM_CM)' {aka 'int (*)(cholmod_factor_struct**, cholmod_common_struct*)'} [-Wcast-function-type]
+  407 |  fun = (int(*)(CHM_FR*,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+  408 |      R_GetCCallable("Matrix", "cholmod_free_factor");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_free_sparse(cholmod_sparse**, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:417:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(cholmod_sparse**, CHM_CM)' {aka 'int (*)(cholmod_sparse_struct**, cholmod_common_struct*)'} [-Wcast-function-type]
+  417 |  fun = (int(*)(CHM_SP*,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+  418 |      R_GetCCallable("Matrix", "cholmod_free_sparse");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_free_triplet(cholmod_triplet**, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:427:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(cholmod_triplet**, CHM_CM)' {aka 'int (*)(cholmod_triplet_struct**, cholmod_common_struct*)'} [-Wcast-function-type]
+  427 |  fun = (int(*)(cholmod_triplet**,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  428 |      R_GetCCallable("Matrix", "cholmod_free_triplet");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'long int cholmod_nnz(const_CHM_SP, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:436:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'long int (*)(const_CHM_SP, CHM_CM)' {aka 'long int (*)(const cholmod_sparse_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  436 |  fun = (long(*)(const_CHM_SP,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  437 |      R_GetCCallable("Matrix", "cholmod_nnz");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_sdmult(const_CHM_SP, int, const double*, const double*, const_CHM_DN, CHM_DN, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:451:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(const_CHM_SP, int, const double*, const double*, const_CHM_DN, CHM_DN, CHM_CM)' {aka 'int (*)(const cholmod_sparse_struct*, int, const double*, const double*, const cholmod_dense_struct*, cholmod_dense_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  451 |  fun = (int(*)(const_CHM_SP,int,const double*,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  452 |         const double*, const_CHM_DN,
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  453 |         CHM_DN,CHM_CM))
+      |         ~~~~~~~~~~~~~~~
+  454 |      R_GetCCallable("Matrix", "cholmod_sdmult");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_ssmult(const_CHM_SP, const_CHM_SP, int, int, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:464:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_SP, const_CHM_SP, int, int, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_sparse_struct*, const cholmod_sparse_struct*, int, int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  464 |  fun = (CHM_SP(*)(const_CHM_SP,const_CHM_SP,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  465 |     int,int,int,CHM_CM))
+      |     ~~~~~~~~~~~~~~~~~~~~
+  466 |      R_GetCCallable("Matrix", "cholmod_ssmult");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_dense* cholmod_solve(int, const_CHM_FR, const_CHM_DN, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:475:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_dense* (*)(int, const_CHM_FR, const_CHM_DN, CHM_CM)' {aka 'cholmod_dense_struct* (*)(int, const cholmod_factor_struct*, const cholmod_dense_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  475 |  fun = (CHM_DN(*)(int,const_CHM_FR,const_CHM_DN,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  476 |     CHM_CM))
+      |     ~~~~~~~~
+  477 |      R_GetCCallable("Matrix", "cholmod_solve");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_speye(size_t, size_t, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:487:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(size_t, size_t, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(long unsigned int, long unsigned int, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  487 |  fun = (CHM_SP(*)(size_t,size_t,int,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  488 |      R_GetCCallable("Matrix", "cholmod_speye");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_spsolve(int, const_CHM_FR, const_CHM_SP, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:499:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(int, const_CHM_FR, const_CHM_SP, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(int, const cholmod_factor_struct*, const cholmod_sparse_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  499 |  fun = (CHM_SP(*)(int,const_CHM_FR,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  500 |     const_CHM_SP, CHM_CM))
+      |     ~~~~~~~~~~~~~~~~~~~~~~
+  501 |      R_GetCCallable("Matrix", "cholmod_spsolve");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_defaults(CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:510:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(CHM_CM)' {aka 'int (*)(cholmod_common_struct*)'} [-Wcast-function-type]
+  510 |  fun = (int(*)(CHM_CM))
+      |        ^~~~~~~~~~~~~~~~
+  511 |      R_GetCCallable("Matrix", "cholmod_defaults");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_start(CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:541:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(CHM_CM)' {aka 'int (*)(cholmod_common_struct*)'} [-Wcast-function-type]
+  541 |  fun = (int(*)(CHM_CM))
+      |        ^~~~~~~~~~~~~~~~
+  542 |      R_GetCCallable("Matrix", "cholmod_start");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_transpose(const_CHM_SP, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:557:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_SP, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_sparse_struct*, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  557 |  fun = (CHM_SP(*)(const_CHM_SP,int,CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  558 |      R_GetCCallable("Matrix", "cholmod_transpose");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'cholmod_sparse* cholmod_vertcat(const_CHM_SP, const_CHM_SP, int, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:567:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'cholmod_sparse* (*)(const_CHM_SP, const_CHM_SP, int, CHM_CM)' {aka 'cholmod_sparse_struct* (*)(const cholmod_sparse_struct*, const cholmod_sparse_struct*, int, cholmod_common_struct*)'} [-Wcast-function-type]
+  567 |  fun = (CHM_SP(*)(const_CHM_SP,const_CHM_SP, int, CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  568 |      R_GetCCallable("Matrix", "cholmod_vertcat");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h: In function 'int cholmod_scale(const_CHM_DN, int, CHM_SP, CHM_CM)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenStubs.h:578:8: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'int (*)(const_CHM_DN, int, CHM_SP, CHM_CM)' {aka 'int (*)(const cholmod_dense_struct*, int, cholmod_sparse_struct*, cholmod_common_struct*)'} [-Wcast-function-type]
+  578 |  fun = (int(*)(const_CHM_DN,int,CHM_SP, CHM_CM))
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  579 |      R_GetCCallable("Matrix", "cholmod_scale");
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Core:397,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Dense:1,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h: At global scope:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:60:39: warning: ignoring attributes on template argument '__m128' [-Wignored-attributes]
+   60 | template<> struct is_arithmetic<__m128>  { enum { value = true }; };
+      |                                       ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:61:40: warning: ignoring attributes on template argument '__m128i' [-Wignored-attributes]
+   61 | template<> struct is_arithmetic<__m128i> { enum { value = true }; };
+      |                                        ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:62:40: warning: ignoring attributes on template argument '__m128d' [-Wignored-attributes]
+   62 | template<> struct is_arithmetic<__m128d> { enum { value = true }; };
+      |                                        ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:161:43: warning: ignoring attributes on template argument 'Eigen::internal::Packet4f' {aka '__m128'} [-Wignored-attributes]
+  161 | template<> struct unpacket_traits<Packet4f> { typedef float  type; enum {size=4, alignment=Aligned16}; typedef Packet4f half; };
+      |                                           ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:162:43: warning: ignoring attributes on template argument 'Eigen::internal::Packet2d' {aka '__m128d'} [-Wignored-attributes]
+  162 | template<> struct unpacket_traits<Packet2d> { typedef double type; enum {size=2, alignment=Aligned16}; typedef Packet2d half; };
+      |                                           ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:163:43: warning: ignoring attributes on template argument 'Eigen::internal::Packet4i' {aka '__m128i'} [-Wignored-attributes]
+  163 | template<> struct unpacket_traits<Packet4i> { typedef int    type; enum {size=4, alignment=Aligned16}; typedef Packet4i half; };
+      |                                           ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:718:35: warning: ignoring attributes on template argument 'Eigen::internal::Packet4f' {aka '__m128'} [-Wignored-attributes]
+  718 | struct palign_impl<Offset,Packet4f>
+      |                                   ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:741:35: warning: ignoring attributes on template argument 'Eigen::internal::Packet4i' {aka '__m128i'} [-Wignored-attributes]
+  741 | struct palign_impl<Offset,Packet4i>
+      |                                   ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:764:35: warning: ignoring attributes on template argument 'Eigen::internal::Packet2d' {aka '__m128d'} [-Wignored-attributes]
+  764 | struct palign_impl<Offset,Packet2d>
+      |                                   ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:778:34: warning: ignoring attributes on template argument 'Eigen::internal::Packet4f' {aka '__m128'} [-Wignored-attributes]
+  778 | ptranspose(PacketBlock<Packet4f,4>& kernel) {
+      |                                  ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:783:34: warning: ignoring attributes on template argument 'Eigen::internal::Packet2d' {aka '__m128d'} [-Wignored-attributes]
+  783 | ptranspose(PacketBlock<Packet2d,2>& kernel) {
+      |                                  ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/PacketMath.h:790:34: warning: ignoring attributes on template argument 'Eigen::internal::Packet4i' {aka '__m128i'} [-Wignored-attributes]
+  790 | ptranspose(PacketBlock<Packet4i,4>& kernel) {
+      |                                  ^
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Core:377,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Dense:1,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/Default/ConjHelper.h:15:70: warning: ignoring attributes on template argument 'Eigen::internal::Packet4f' {aka '__m128'} [-Wignored-attributes]
+   15 |   template<> struct conj_helper<PACKET_REAL, PACKET_CPLX, false,false> {                                          \
+      |                                                                      ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/Complex.h:232:1: note: in expansion of macro 'EIGEN_MAKE_CONJ_HELPER_CPLX_REAL'
+  232 | EIGEN_MAKE_CONJ_HELPER_CPLX_REAL(Packet2cf,Packet4f)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/Default/ConjHelper.h:22:70: warning: ignoring attributes on template argument 'Eigen::internal::Packet4f' {aka '__m128'} [-Wignored-attributes]
+   22 |   template<> struct conj_helper<PACKET_CPLX, PACKET_REAL, false,false> {                                          \
+      |                                                                      ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/Complex.h:232:1: note: in expansion of macro 'EIGEN_MAKE_CONJ_HELPER_CPLX_REAL'
+  232 | EIGEN_MAKE_CONJ_HELPER_CPLX_REAL(Packet2cf,Packet4f)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/Default/ConjHelper.h:15:70: warning: ignoring attributes on template argument 'Eigen::internal::Packet2d' {aka '__m128d'} [-Wignored-attributes]
+   15 |   template<> struct conj_helper<PACKET_REAL, PACKET_CPLX, false,false> {                                          \
+      |                                                                      ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/Complex.h:417:1: note: in expansion of macro 'EIGEN_MAKE_CONJ_HELPER_CPLX_REAL'
+  417 | EIGEN_MAKE_CONJ_HELPER_CPLX_REAL(Packet1cd,Packet2d)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/Default/ConjHelper.h:22:70: warning: ignoring attributes on template argument 'Eigen::internal::Packet2d' {aka '__m128d'} [-Wignored-attributes]
+   22 |   template<> struct conj_helper<PACKET_CPLX, PACKET_REAL, false,false> {                                          \
+      |                                                                      ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/arch/SSE/Complex.h:417:1: note: in expansion of macro 'EIGEN_MAKE_CONJ_HELPER_CPLX_REAL'
+  417 | EIGEN_MAKE_CONJ_HELPER_CPLX_REAL(Packet1cd,Packet2d)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Core:370,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Dense:1,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h: In instantiation of 'struct Eigen::internal::find_best_packet<float, 4>':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Matrix.h:22:57:   required from 'struct Eigen::internal::traits<Eigen::Matrix<float, 4, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/Quaternion.h:243:49:   required from 'struct Eigen::internal::traits<Eigen::Quaternion<float> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/arch/Geometry_SSE.h:24:46:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:44: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<float>::type' {aka '__m128'} [-Wignored-attributes]
+  187 |          bool Stop = Size==Dynamic || (Size%unpacket_traits<PacketType>::size)==0 || is_same<PacketType,typename unpacket_traits<PacketType>::half>::value>
+      |                                       ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<float>::type' {aka '__m128'} [-Wignored-attributes]
+  187 |          bool Stop = Size==Dynamic || (Size%unpacket_traits<PacketType>::size)==0 || is_same<PacketType,typename unpacket_traits<PacketType>::half>::value>
+      |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<float>::type' {aka '__m128'} [-Wignored-attributes]
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::unpacket_traits<__vector(4) float>::half' {aka '__m128'} [-Wignored-attributes]
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:205:88: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<float>::type' {aka '__m128'} [-Wignored-attributes]
+  205 |   typedef typename find_best_packet_helper<Size,typename packet_traits<T>::type>::type type;
+      |                                                                                        ^~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Core:439,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Dense:1,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h: In instantiation of 'class Eigen::DenseCoeffsBase<Eigen::Matrix<float, 4, 1>, 0>':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:300:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Matrix<float, 4, 1>, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:551:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Matrix<float, 4, 1>, 3>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseBase.h:41:34:   required from 'class Eigen::DenseBase<Eigen::Matrix<float, 4, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/MatrixBase.h:48:34:   required from 'class Eigen::MatrixBase<Eigen::Matrix<float, 4, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/PlainObjectBase.h:98:7:   required from 'class Eigen::PlainObjectBase<Eigen::Matrix<float, 4, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Matrix.h:178:7:   required from 'class Eigen::Matrix<float, 4, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/Quaternion.h:46:50:   required from 'class Eigen::QuaternionBase<Eigen::Quaternion<float> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/Quaternion.h:250:7:   required from 'class Eigen::Quaternion<float>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/arch/Geometry_SSE.h:27:3:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<float>::type' {aka '__m128'} [-Wignored-attributes]
+   55 |                      >::type PacketReturnType;
+      |                              ^~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Core:370,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Dense:1,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h: In instantiation of 'struct Eigen::internal::find_best_packet<double, 4>':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Matrix.h:22:57:   required from 'struct Eigen::internal::traits<Eigen::Matrix<double, 4, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/Quaternion.h:243:49:   required from 'struct Eigen::internal::traits<Eigen::Quaternion<double> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/arch/Geometry_SSE.h:88:47:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:44: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<double>::type' {aka '__m128d'} [-Wignored-attributes]
+  187 |          bool Stop = Size==Dynamic || (Size%unpacket_traits<PacketType>::size)==0 || is_same<PacketType,typename unpacket_traits<PacketType>::half>::value>
+      |                                       ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<double>::type' {aka '__m128d'} [-Wignored-attributes]
+  187 |          bool Stop = Size==Dynamic || (Size%unpacket_traits<PacketType>::size)==0 || is_same<PacketType,typename unpacket_traits<PacketType>::half>::value>
+      |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<double>::type' {aka '__m128d'} [-Wignored-attributes]
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::unpacket_traits<__vector(2) double>::half' {aka '__m128d'} [-Wignored-attributes]
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:205:88: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<double>::type' {aka '__m128d'} [-Wignored-attributes]
+  205 |   typedef typename find_best_packet_helper<Size,typename packet_traits<T>::type>::type type;
+      |                                                                                        ^~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Core:439,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Dense:1,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h: In instantiation of 'class Eigen::DenseCoeffsBase<Eigen::Matrix<double, 4, 1>, 0>':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:300:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Matrix<double, 4, 1>, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:551:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Matrix<double, 4, 1>, 3>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseBase.h:41:34:   required from 'class Eigen::DenseBase<Eigen::Matrix<double, 4, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/MatrixBase.h:48:34:   required from 'class Eigen::MatrixBase<Eigen::Matrix<double, 4, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/PlainObjectBase.h:98:7:   required from 'class Eigen::PlainObjectBase<Eigen::Matrix<double, 4, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Matrix.h:178:7:   required from 'class Eigen::Matrix<double, 4, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/Quaternion.h:46:50:   required from 'class Eigen::QuaternionBase<Eigen::Quaternion<double> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/Quaternion.h:250:7:   required from 'class Eigen::Quaternion<double>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Geometry/arch/Geometry_SSE.h:92:3:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<double>::type' {aka '__m128d'} [-Wignored-attributes]
+   55 |                      >::type PacketReturnType;
+      |                              ^~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/SparseCore:37,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Sparse:26,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:31,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/SparseCore/SparseMatrixBase.h: In instantiation of 'class Eigen::SparseMatrixBase<Eigen::SparseMatrix<double, 0, int> >':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/SparseCore/SparseCompressedBase.h:36:7:   required from 'class Eigen::SparseCompressedBase<Eigen::SparseMatrix<double, 0, int> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/SparseCore/SparseMatrix.h:96:7:   required from 'class Eigen::SparseMatrix<double, 0, int>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/unsupported/Eigen/src/IterativeSolvers/ConstrainedConjGrad.h:61:25:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/SparseCore/SparseMatrixBase.h:47:30: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<double>::type' {aka '__m128d'} [-Wignored-attributes]
+   47 |                      >::type PacketReturnType;
+      |                              ^~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Core:370,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Dense:1,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h: In instantiation of 'struct Eigen::internal::find_best_packet<int, -1>':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Matrix.h:22:57:   required from 'struct Eigen::internal::traits<Eigen::Matrix<int, -1, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/PlainObjectBase.h:98:7:   required from 'class Eigen::PlainObjectBase<Eigen::Matrix<int, -1, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Matrix.h:178:7:   required from 'class Eigen::Matrix<int, -1, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h:168:29:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:44: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<int>::type' {aka '__m128i'} [-Wignored-attributes]
+  187 |          bool Stop = Size==Dynamic || (Size%unpacket_traits<PacketType>::size)==0 || is_same<PacketType,typename unpacket_traits<PacketType>::half>::value>
+      |                                       ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<int>::type' {aka '__m128i'} [-Wignored-attributes]
+  187 |          bool Stop = Size==Dynamic || (Size%unpacket_traits<PacketType>::size)==0 || is_same<PacketType,typename unpacket_traits<PacketType>::half>::value>
+      |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<int>::type' {aka '__m128i'} [-Wignored-attributes]
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:187:83: warning: ignoring attributes on template argument 'Eigen::internal::unpacket_traits<__vector(2) long long int>::half' {aka '__m128i'} [-Wignored-attributes]
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/util/XprHelper.h:205:88: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<int>::type' {aka '__m128i'} [-Wignored-attributes]
+  205 |   typedef typename find_best_packet_helper<Size,typename packet_traits<T>::type>::type type;
+      |                                                                                        ^~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Core:439,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/Dense:1,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigenForward.h:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/RcppEigen.h:25,
+                 from RcppExports.cpp:5:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h: In instantiation of 'class Eigen::DenseCoeffsBase<Eigen::Matrix<int, -1, 1>, 0>':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:300:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Matrix<int, -1, 1>, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:551:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Matrix<int, -1, 1>, 3>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseBase.h:41:34:   required from 'class Eigen::DenseBase<Eigen::Matrix<int, -1, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/MatrixBase.h:48:34:   required from 'class Eigen::MatrixBase<Eigen::Matrix<int, -1, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/PlainObjectBase.h:98:7:   required from 'class Eigen::PlainObjectBase<Eigen::Matrix<int, -1, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Matrix.h:178:7:   required from 'class Eigen::Matrix<int, -1, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h:168:29:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<int>::type' {aka '__m128i'} [-Wignored-attributes]
+   55 |                      >::type PacketReturnType;
+      |                              ^~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h: In instantiation of 'class Eigen::DenseCoeffsBase<Eigen::Transpose<Eigen::Matrix<int, -1, 1> >, 0>':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:300:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Transpose<Eigen::Matrix<int, -1, 1> >, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:551:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Transpose<Eigen::Matrix<int, -1, 1> >, 3>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseBase.h:41:34:   required from 'class Eigen::DenseBase<Eigen::Transpose<Eigen::Matrix<int, -1, 1> > >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/MatrixBase.h:48:34:   required from 'class Eigen::MatrixBase<Eigen::Transpose<Eigen::Matrix<int, -1, 1> > >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Transpose.h:115:37:   required from 'class Eigen::TransposeImpl<Eigen::Matrix<int, -1, 1>, Eigen::Dense>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Transpose.h:52:37:   required from 'class Eigen::Transpose<Eigen::Matrix<int, -1, 1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h:178:72:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<int>::type' {aka '__m128i'} [-Wignored-attributes]
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h: In instantiation of 'class Eigen::DenseCoeffsBase<Eigen::Matrix<int, -1, -1>, 0>':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:300:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Matrix<int, -1, -1>, 1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:551:7:   required from 'class Eigen::DenseCoeffsBase<Eigen::Matrix<int, -1, -1>, 3>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseBase.h:41:34:   required from 'class Eigen::DenseBase<Eigen::Matrix<int, -1, -1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/MatrixBase.h:48:34:   required from 'class Eigen::MatrixBase<Eigen::Matrix<int, -1, -1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/PlainObjectBase.h:98:7:   required from 'class Eigen::PlainObjectBase<Eigen::Matrix<int, -1, -1> >'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/Matrix.h:178:7:   required from 'class Eigen::Matrix<int, -1, -1>'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h:179:36:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument 'Eigen::internal::packet_traits<int>::type' {aka '__m128i'} [-Wignored-attributes]
+RcppExports.cpp:2270:24: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2270 |     {"_SAIGE_CCT_cpp", (DL_FUNC) &_SAIGE_CCT_cpp, 1},
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2271:41: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2271 |     {"_SAIGE_setGlobalVarsInCPP_LDmat", (DL_FUNC) &_SAIGE_setGlobalVarsInCPP_LDmat, 10},
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2272:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2272 |     {"_SAIGE_LDmatRegionInCPP", (DL_FUNC) &_SAIGE_LDmatRegionInCPP, 9},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2273:41: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2273 |     {"_SAIGE_openOutfile_single_LDmat", (DL_FUNC) &_SAIGE_openOutfile_single_LDmat, 1},
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2275:45: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2275 |     {"_SAIGE_setAssocTest_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setAssocTest_GlobalVarsInCPP, 9},
+      |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2276:50: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2276 |     {"_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE", (DL_FUNC) &_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE, 3},
+      |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2277:42: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2277 |     {"_SAIGE_setMarker_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setMarker_GlobalVarsInCPP, 2},
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2278:42: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2278 |     {"_SAIGE_setRegion_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setRegion_GlobalVarsInCPP, 4},
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2279:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2279 |     {"_SAIGE_mainMarkerInCPP", (DL_FUNC) &_SAIGE_mainMarkerInCPP, 7},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2280:44: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2280 |     {"_SAIGE_Unified_getSampleSizeinGeno", (DL_FUNC) &_SAIGE_Unified_getSampleSizeinGeno, 1},
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2281:48: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2281 |     {"_SAIGE_Unified_getSampleSizeinAnalysis", (DL_FUNC) &_SAIGE_Unified_getSampleSizeinAnalysis, 1},
+      |                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2282:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2282 |     {"_SAIGE_setPLINKobjInCPP", (DL_FUNC) &_SAIGE_setPLINKobjInCPP, 5},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2283:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2283 |     {"_SAIGE_setBGENobjInCPP", (DL_FUNC) &_SAIGE_setBGENobjInCPP, 5},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2284:31: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2284 |     {"_SAIGE_setVCFobjInCPP", (DL_FUNC) &_SAIGE_setVCFobjInCPP, 4},
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2285:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2285 |     {"_SAIGE_setSAIGEobjInCPP", (DL_FUNC) &_SAIGE_setSAIGEobjInCPP, 40},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2286:52: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2286 |     {"_SAIGE_RegionSetUpConditional_binary_InCPP", (DL_FUNC) &_SAIGE_RegionSetUpConditional_binary_InCPP, 1},
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2287:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2287 |     {"_SAIGE_mainRegionInCPP", (DL_FUNC) &_SAIGE_mainRegionInCPP, 24},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2288:48: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2288 |     {"_SAIGE_assign_conditionMarkers_factors", (DL_FUNC) &_SAIGE_assign_conditionMarkers_factors, 5},
+      |                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2289:62: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2289 |     {"_SAIGE_assign_conditionMarkers_factors_binary_region", (DL_FUNC) &_SAIGE_assign_conditionMarkers_factors_binary_region, 1},
+      |                                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2290:35: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2290 |     {"_SAIGE_set_iterator_inVcf", (DL_FUNC) &_SAIGE_set_iterator_inVcf, 4},
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2292:42: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2292 |     {"_SAIGE_move_forward_iterator_Vcf", (DL_FUNC) &_SAIGE_move_forward_iterator_Vcf, 1},
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2293:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2293 |     {"_SAIGE_fast_logistf_fit", (DL_FUNC) &_SAIGE_fast_logistf_fit, 14},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2294:30: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2294 |     {"_SAIGE_closeGenoFile", (DL_FUNC) &_SAIGE_closeGenoFile, 1},
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2295:28: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2295 |     {"_SAIGE_openOutfile", (DL_FUNC) &_SAIGE_openOutfile, 2},
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2296:42: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2296 |     {"_SAIGE_openOutfile_singleinGroup", (DL_FUNC) &_SAIGE_openOutfile_singleinGroup, 4},
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2297:35: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2297 |     {"_SAIGE_openOutfile_single", (DL_FUNC) &_SAIGE_openOutfile_single, 5},
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2298:44: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2298 |     {"_SAIGE_set_flagSparseGRM_cur_SAIGE", (DL_FUNC) &_SAIGE_set_flagSparseGRM_cur_SAIGE, 1},
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2301:37: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2301 |     {"_SAIGE_set_dup_sample_index", (DL_FUNC) &_SAIGE_set_dup_sample_index, 1},
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2302:35: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2302 |     {"_SAIGE_setupSparseGRM_new", (DL_FUNC) &_SAIGE_setupSparseGRM_new, 1},
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2304:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2304 |     {"_SAIGE_set_I_longl_mat", (DL_FUNC) &_SAIGE_set_I_longl_mat, 2},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2305:42: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2305 |     {"_SAIGE_set_I_longl_mat_SAIGEtest", (DL_FUNC) &_SAIGE_set_I_longl_mat_SAIGEtest, 2},
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2306:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2306 |     {"_SAIGE_set_T_longl_mat", (DL_FUNC) &_SAIGE_set_T_longl_mat, 2},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2307:42: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2307 |     {"_SAIGE_set_T_longl_mat_SAIGEtest", (DL_FUNC) &_SAIGE_set_T_longl_mat_SAIGEtest, 2},
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2308:38: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2308 |     {"_SAIGE_getCrossprodMatAndKin", (DL_FUNC) &_SAIGE_getCrossprodMatAndKin, 2},
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2309:36: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2309 |     {"_SAIGE_getCrossprod_multiV", (DL_FUNC) &_SAIGE_getCrossprod_multiV, 4},
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2310:38: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2310 |     {"_SAIGE_getDiagOfSigma_multiV", (DL_FUNC) &_SAIGE_getDiagOfSigma_multiV, 3},
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2311:36: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2311 |     {"_SAIGE_gen_sp_Sigma_multiV", (DL_FUNC) &_SAIGE_gen_sp_Sigma_multiV, 2},
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2312:47: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2312 |     {"_SAIGE_getPCG1ofSigmaAndVector_multiV", (DL_FUNC) &_SAIGE_getPCG1ofSigmaAndVector_multiV, 6},
+      |                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2313:25: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2313 |     {"_SAIGE_set_seed", (DL_FUNC) &_SAIGE_set_seed, 1},
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2314:19: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2314 |     {"_SAIGE_nb", (DL_FUNC) &_SAIGE_nb, 1},
+      |                   ^~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2315:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2315 |     {"_SAIGE_setStartEndIndex", (DL_FUNC) &_SAIGE_setStartEndIndex, 3},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2316:36: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2316 |     {"_SAIGE_setStartEndIndexVec", (DL_FUNC) &_SAIGE_setStartEndIndexVec, 2},
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2317:22: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2317 |     {"_SAIGE_calCV", (DL_FUNC) &_SAIGE_calCV, 1},
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2318:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2318 |     {"_SAIGE_getSigma_X_multiV", (DL_FUNC) &_SAIGE_getSigma_X_multiV, 6},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2319:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2319 |     {"_SAIGE_getSigma_G_multiV", (DL_FUNC) &_SAIGE_getSigma_G_multiV, 6},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2320:37: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2320 |     {"_SAIGE_fitglmmaiRPCG_multiV", (DL_FUNC) &_SAIGE_fitglmmaiRPCG_multiV, 14},
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2321:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2321 |     {"_SAIGE_getMeanDiagofKmat", (DL_FUNC) &_SAIGE_getMeanDiagofKmat, 1},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2322:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2322 |     {"_SAIGE_getAIScore_multiV", (DL_FUNC) &_SAIGE_getAIScore_multiV, 13},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2323:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2323 |     {"_SAIGE_GetTrace_multiV", (DL_FUNC) &_SAIGE_GetTrace_multiV, 11},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2324:39: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2324 |     {"_SAIGE_getCoefficients_multiV", (DL_FUNC) &_SAIGE_getCoefficients_multiV, 7},
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2325:40: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2325 |     {"_SAIGE_setminMAC_VarianceRatio", (DL_FUNC) &_SAIGE_setminMAC_VarianceRatio, 3},
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2327:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2327 |     {"_SAIGE_setminMAFforGRM", (DL_FUNC) &_SAIGE_setminMAFforGRM, 1},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2328:40: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2328 |     {"_SAIGE_setmaxMissingRateforGRM", (DL_FUNC) &_SAIGE_setmaxMissingRateforGRM, 1},
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2331:49: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2331 |     {"_SAIGE_parallelCrossProd_usingSubMarker", (DL_FUNC) &_SAIGE_parallelCrossProd_usingSubMarker, 1},
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2332:53: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2332 |     {"_SAIGE_getCrossprodMatAndKin_usingSubMarker", (DL_FUNC) &_SAIGE_getCrossprodMatAndKin_usingSubMarker, 1},
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2333:37: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2333 |     {"_SAIGE_parallelInnerProduct", (DL_FUNC) &_SAIGE_parallelInnerProduct, 2},
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2334:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2334 |     {"_SAIGE_createSparseKin", (DL_FUNC) &_SAIGE_createSparseKin, 4},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2335:26: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2335 |     {"_SAIGE_refineKin", (DL_FUNC) &_SAIGE_refineKin, 1},
+      |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2336:49: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2336 |     {"_SAIGE_getColfromStdGenoMultiMarkersMat", (DL_FUNC) &_SAIGE_getColfromStdGenoMultiMarkersMat, 1},
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2339:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2339 |     {"_SAIGE_setSubMarkerIndex", (DL_FUNC) &_SAIGE_setSubMarkerIndex, 1},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2340:37: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2340 |     {"_SAIGE_setRelatednessCutoff", (DL_FUNC) &_SAIGE_setRelatednessCutoff, 1},
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2341:29: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2341 |     {"_SAIGE_innerProduct", (DL_FUNC) &_SAIGE_innerProduct, 2},
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2342:35: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2342 |     {"_SAIGE_getDiagOfSigma_noV", (DL_FUNC) &_SAIGE_getDiagOfSigma_noV, 3},
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2343:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2343 |     {"_SAIGE_getDiagOfSigma_V", (DL_FUNC) &_SAIGE_getDiagOfSigma_V, 3},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2344:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2344 |     {"_SAIGE_getCrossprod_noV", (DL_FUNC) &_SAIGE_getCrossprod_noV, 4},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2345:31: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2345 |     {"_SAIGE_getCrossprod_V", (DL_FUNC) &_SAIGE_getCrossprod_V, 4},
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2346:44: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2346 |     {"_SAIGE_getPCG1ofSigmaAndVector_noV", (DL_FUNC) &_SAIGE_getPCG1ofSigmaAndVector_noV, 6},
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2347:42: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2347 |     {"_SAIGE_getPCG1ofSigmaAndVector_V", (DL_FUNC) &_SAIGE_getPCG1ofSigmaAndVector_V, 6},
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2348:29: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2348 |     {"_SAIGE_getSigma_G_V", (DL_FUNC) &_SAIGE_getSigma_G_V, 6},
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2349:31: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2349 |     {"_SAIGE_getSigma_G_noV", (DL_FUNC) &_SAIGE_getSigma_G_noV, 6},
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2350:36: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2350 |     {"_SAIGE_set_useGRMtoFitNULL", (DL_FUNC) &_SAIGE_set_useGRMtoFitNULL, 1},
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2351:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2351 |     {"_SAIGE_set_isSparseGRM", (DL_FUNC) &_SAIGE_set_isSparseGRM, 1},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2352:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2352 |     {"_SAIGE_set_store_sigma", (DL_FUNC) &_SAIGE_set_store_sigma, 1},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2353:29: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2353 |     {"_SAIGE_set_num_Kmat", (DL_FUNC) &_SAIGE_set_num_Kmat, 1},
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2370:49: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2370 |     {"_SAIGE_Get_MultiMarkersBySample_StdGeno", (DL_FUNC) &_SAIGE_Get_MultiMarkersBySample_StdGeno, 2},
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2371:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2371 |     {"_SAIGE_parallelCrossProd", (DL_FUNC) &_SAIGE_parallelCrossProd, 1},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2372:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2372 |     {"_SAIGE_innerProductFun", (DL_FUNC) &_SAIGE_innerProductFun, 2},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2373:39: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2373 |     {"_SAIGE_parallelCrossProd_full", (DL_FUNC) &_SAIGE_parallelCrossProd_full, 2},
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2374:39: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2374 |     {"_SAIGE_parallelCrossProd_LOCO", (DL_FUNC) &_SAIGE_parallelCrossProd_LOCO, 1},
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2375:26: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2375 |     {"_SAIGE_printComb", (DL_FUNC) &_SAIGE_printComb, 1},
+      |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2377:37: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2377 |     {"_SAIGE_parallelcalsparseGRM", (DL_FUNC) &_SAIGE_parallelcalsparseGRM, 1},
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2378:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2378 |     {"_SAIGE_parallelsumTwoVec", (DL_FUNC) &_SAIGE_parallelsumTwoVec, 1},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2380:24: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2380 |     {"_SAIGE_setgeno", (DL_FUNC) &_SAIGE_setgeno, 7},
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2381:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2381 |     {"_SAIGE_Get_OneSNP_Geno", (DL_FUNC) &_SAIGE_Get_OneSNP_Geno, 1},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2382:44: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2382 |     {"_SAIGE_Get_OneSNP_Geno_forVarRatio", (DL_FUNC) &_SAIGE_Get_OneSNP_Geno_forVarRatio, 1},
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2383:35: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2383 |     {"_SAIGE_Get_OneSNP_StdGeno", (DL_FUNC) &_SAIGE_Get_OneSNP_StdGeno, 1},
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2386:37: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2386 |     {"_SAIGE_get_SKAT_pvalue_Rcpp", (DL_FUNC) &_SAIGE_get_SKAT_pvalue_Rcpp, 3},
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2387:38: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2387 |     {"_SAIGE_mainMarkerInCPP_multi", (DL_FUNC) &_SAIGE_mainMarkerInCPP_multi, 7},
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2388:35: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2388 |     {"_SAIGE_getOneMarkerID_VCF", (DL_FUNC) &_SAIGE_getOneMarkerID_VCF, 5},
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2389:48: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2389 |     {"_SAIGE_assign_g_outputFilePrefixSingle", (DL_FUNC) &_SAIGE_assign_g_outputFilePrefixSingle, 1},
+      |                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2390:42: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2390 |     {"_SAIGE_assign_g_outputFilePrefix", (DL_FUNC) &_SAIGE_assign_g_outputFilePrefix, 1},
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2391:43: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2391 |     {"_SAIGE_assign_g_outputFilePrefix0", (DL_FUNC) &_SAIGE_assign_g_outputFilePrefix0, 1},
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2392:45: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2392 |     {"_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp, 2},
+      |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2393:49: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2393 |     {"_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp, 2},
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2394:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2394 |     {"_SAIGE_Get_Lambda_Rcpp", (DL_FUNC) &_SAIGE_Get_Lambda_Rcpp, 3},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2395:45: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2395 |     {"_SAIGE_SKAT_META_Optimal_Param_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Param_Rcpp, 2},
+      |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2396:41: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2396 |     {"_SAIGE_SKAT_Optimal_Each_Q_Rcpp", (DL_FUNC) &_SAIGE_SKAT_Optimal_Each_Q_Rcpp, 4},
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2397:40: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2397 |     {"_SAIGE_Get_Liu_Params_Mod_Rcpp", (DL_FUNC) &_SAIGE_Get_Liu_Params_Mod_Rcpp, 1},
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2398:56: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2398 |     {"_SAIGE_SKAT_Optimal_Integrate_Func_Davies_Rcpp", (DL_FUNC) &_SAIGE_SKAT_Optimal_Integrate_Func_Davies_Rcpp, 8},
+      |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2399:63: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2399 |     {"_SAIGE_SKAT_Optimal_Integrate_Func_single_Davies_Rcpp", (DL_FUNC) &_SAIGE_SKAT_Optimal_Integrate_Func_single_Davies_Rcpp, 8},
+      |                                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2400:47: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2400 |     {"_SAIGE_Get_Liu_Params_Mod_Lambda_Rcpp", (DL_FUNC) &_SAIGE_Get_Liu_Params_Mod_Lambda_Rcpp, 2},
+      |                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2401:50: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2401 |     {"_SAIGE_Get_Liu_PVal_MOD_Lambda_Zero_Rcpp", (DL_FUNC) &_SAIGE_Get_Liu_PVal_MOD_Lambda_Zero_Rcpp, 7},
+      |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2402:45: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2402 |     {"_SAIGE_Get_Liu_PVal_MOD_Lambda_Rcpp", (DL_FUNC) &_SAIGE_Get_Liu_PVal_MOD_Lambda_Rcpp, 4},
+      |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2403:39: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2403 |     {"_SAIGE_Get_PValue_Lambda_Rcpp", (DL_FUNC) &_SAIGE_Get_PValue_Lambda_Rcpp, 3},
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2404:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2404 |     {"_SAIGE_Get_Liu_PVal_Rcpp", (DL_FUNC) &_SAIGE_Get_Liu_PVal_Rcpp, 3},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2405:36: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2405 |     {"_SAIGE_Get_Liu_Params_Rcpp", (DL_FUNC) &_SAIGE_Get_Liu_Params_Rcpp, 1},
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2406:20: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2406 |     {"_SAIGE_SPA", (DL_FUNC) &_SAIGE_SPA, 10},
+      |                    ^~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2407:25: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2407 |     {"_SAIGE_SPA_fast", (DL_FUNC) &_SAIGE_SPA_fast, 16},
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2408:27: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2408 |     {"_SAIGE_Korg_Binom", (DL_FUNC) &_SAIGE_Korg_Binom, 3},
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2409:29: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2409 |     {"_SAIGE_K1_adj_Binom", (DL_FUNC) &_SAIGE_K1_adj_Binom, 4},
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2410:25: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2410 |     {"_SAIGE_K2_Binom", (DL_FUNC) &_SAIGE_K2_Binom, 3},
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2411:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2411 |     {"_SAIGE_getroot_K1_Binom", (DL_FUNC) &_SAIGE_getroot_K1_Binom, 6},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2412:38: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2412 |     {"_SAIGE_Get_Saddle_Prob_Binom", (DL_FUNC) &_SAIGE_Get_Saddle_Prob_Binom, 5},
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2413:27: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2413 |     {"_SAIGE_SPA_binary", (DL_FUNC) &_SAIGE_SPA_binary, 7},
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2414:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2414 |     {"_SAIGE_Korg_fast_Binom", (DL_FUNC) &_SAIGE_Korg_fast_Binom, 9},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2415:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2415 |     {"_SAIGE_K1_adj_fast_Binom", (DL_FUNC) &_SAIGE_K1_adj_fast_Binom, 10},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2416:30: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2416 |     {"_SAIGE_K2_fast_Binom", (DL_FUNC) &_SAIGE_K2_fast_Binom, 9},
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2417:38: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2417 |     {"_SAIGE_getroot_K1_fast_Binom", (DL_FUNC) &_SAIGE_getroot_K1_fast_Binom, 12},
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2418:43: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2418 |     {"_SAIGE_Get_Saddle_Prob_fast_Binom", (DL_FUNC) &_SAIGE_Get_Saddle_Prob_fast_Binom, 11},
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2419:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2419 |     {"_SAIGE_SPA_binary_fast", (DL_FUNC) &_SAIGE_SPA_binary_fast, 13},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2420:25: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2420 |     {"_SAIGE_Korg_Poi", (DL_FUNC) &_SAIGE_Korg_Poi, 3},
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2421:27: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2421 |     {"_SAIGE_K1_adj_Poi", (DL_FUNC) &_SAIGE_K1_adj_Poi, 4},
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2422:23: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2422 |     {"_SAIGE_K2_Poi", (DL_FUNC) &_SAIGE_K2_Poi, 3},
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2423:31: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2423 |     {"_SAIGE_getroot_K1_Poi", (DL_FUNC) &_SAIGE_getroot_K1_Poi, 6},
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2424:36: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2424 |     {"_SAIGE_Get_Saddle_Prob_Poi", (DL_FUNC) &_SAIGE_Get_Saddle_Prob_Poi, 5},
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2425:29: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2425 |     {"_SAIGE_SPA_survival", (DL_FUNC) &_SAIGE_SPA_survival, 7},
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2426:30: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2426 |     {"_SAIGE_Korg_fast_Poi", (DL_FUNC) &_SAIGE_Korg_fast_Poi, 9},
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2427:32: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2427 |     {"_SAIGE_K1_adj_fast_Poi", (DL_FUNC) &_SAIGE_K1_adj_fast_Poi, 10},
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2428:28: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2428 |     {"_SAIGE_K2_fast_Poi", (DL_FUNC) &_SAIGE_K2_fast_Poi, 9},
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2429:36: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2429 |     {"_SAIGE_getroot_K1_fast_Poi", (DL_FUNC) &_SAIGE_getroot_K1_fast_Poi, 12},
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2430:41: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2430 |     {"_SAIGE_Get_Saddle_Prob_fast_Poi", (DL_FUNC) &_SAIGE_Get_Saddle_Prob_fast_Poi, 11},
+      |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2431:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2431 |     {"_SAIGE_SPA_survival_fast", (DL_FUNC) &_SAIGE_SPA_survival_fast, 13},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2432:26: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2432 |     {"_SAIGE_sum_arma1", (DL_FUNC) &_SAIGE_sum_arma1, 1},
+      |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2433:25: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2433 |     {"_SAIGE_add_logp", (DL_FUNC) &_SAIGE_add_logp, 2},
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2434:33: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2434 |     {"_SAIGE_mult_sp_sp_to_sp", (DL_FUNC) &_SAIGE_mult_sp_sp_to_sp, 2},
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2435:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2435 |     {"_SAIGE_mult_sp_den_to_sp", (DL_FUNC) &_SAIGE_mult_sp_den_to_sp, 2},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2436:34: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP, SEXP)' {aka 'SEXPREC* (*)(SEXPREC*, SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2436 |     {"_SAIGE_mult_den_sp_to_sp", (DL_FUNC) &_SAIGE_mult_den_sp_to_sp, 2},
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RcppExports.cpp:2437:23: warning: cast between incompatible function types from 'SEXPREC* (*)(SEXP)' {aka 'SEXPREC* (*)(SEXPREC*)'} to 'DL_FUNC' {aka 'void* (*)()'} [-Wcast-function-type]
+ 2437 |     {"_SAIGE_gen_sp", (DL_FUNC) &_SAIGE_gen_sp, 1},
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo:752,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:48,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from RcppExports.cpp:4:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/spop_trimat_meat.hpp: In instantiation of 'static void arma::spop_trimat::apply_noalias(arma::SpMat<typename T1::elem_type>&, const arma::SpProxy<T1>&, bool) [with T1 = arma::SpMat<double>; typename T1::elem_type = double]':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/spop_trimat_meat.hpp:133:31:   required from 'static void arma::spop_trimat::apply(arma::SpMat<typename T1::elem_type>&, const arma::SpOp<T1, arma::spop_trimat>&) [with T1 = arma::SpMat<double>; typename T1::elem_type = double]'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/SpMat_meat.hpp:1741:19:   required from 'arma::SpMat<eT>::SpMat(const arma::SpOp<T1, spop_type>&) [with T1 = arma::SpMat<double>; spop_type = arma::spop_trimat; eT = double]'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/spop_symmat_meat.hpp:42:19:   required from 'static void arma::spop_symmat::apply(arma::SpMat<typename T1::elem_type>&, const arma::SpOp<T1, arma::spop_symmat>&) [with T1 = arma::SpMat<double>; typename T1::elem_type = double]'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/SpMat_meat.hpp:1759:19:   required from 'arma::SpMat<eT>& arma::SpMat<eT>::operator=(const arma::SpOp<T1, spop_type>&) [with T1 = arma::SpMat<double>; spop_type = arma::spop_symmat; eT = double]'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloAs.h:181:25:   required from 'arma::SpMat<eT> Rcpp::traits::Exporter<arma::SpMat<eT> >::get() [with T = double]'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/as.h:89:32:   required from 'T Rcpp::internal::as(SEXP, Rcpp::traits::r_type_generic_tag) [with T = arma::SpMat<double>; SEXP = SEXPREC*]'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/as.h:152:31:   required from 'T Rcpp::as(SEXP) [with T = arma::SpMat<double>; SEXP = SEXPREC*]'
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/InputParameter.h:46:54:   required from 'Rcpp::ReferenceInputParameter<T>::ReferenceInputParameter(SEXP) [with T = arma::SpMat<double>; SEXP = SEXPREC*]'
+RcppExports.cpp:254:89:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/spop_trimat_meat.hpp:64:6: warning: implicitly-declared 'arma::SpMat<double>::const_iterator& arma::SpMat<double>::const_iterator::operator=(const arma::SpMat<double>::const_iterator&)' is deprecated [-Wdeprecated-copy]
+   64 |   it = P.begin();
+      |   ~~~^~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo:630,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:48,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from RcppExports.cpp:4:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/SpMat_iterators_meat.hpp:143:1: note: because 'arma::SpMat<double>::const_iterator' has user-provided 'arma::SpMat<eT>::const_iterator::const_iterator(const arma::SpMat<eT>::const_iterator&) [with eT = double]'
+  143 | SpMat<eT>::const_iterator::const_iterator(const typename SpMat<eT>::const_iterator& other)
+      | ^~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:181,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from RcppExports.cpp:4:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/algo.h: In function 'bool Rcpp::__any(RandomAccessIterator, RandomAccessIterator, const T&, std::random_access_iterator_tag) [with RandomAccessIterator = Rcpp::internal::Proxy_Iterator<Rcpp::internal::string_proxy<16> >; T = const char*]':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/algo.h:66:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   66 |    ++__first;
+      |    ^~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/algo.h:67:2: note: here
+   67 |  case 2:
+      |  ^~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/algo.h:70:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   70 |    ++__first;
+      |    ^~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/algo.h:71:2: note: here
+   71 |  case 1:
+      |  ^~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/algo.h:74:4: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   74 |    ++__first;
+      |    ^~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/algo.h:75:2: note: here
+   75 |  case 0:
+      |  ^~~~
+x86_64-conda-linux-gnu-c++ -std=gnu++11 -shared -L/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/lib -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,--gc-sections -Wl,--allow-shlib-undefined -Wl,-rpath,/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib -Wl,-rpath-link,/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib -L/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib -o SAIGE.so RcppExports.o GENO_null.o getMem.o VCF.o BGEN.o PLINK.o SAIGE_test.o SPA_binary.o SPA.o SPA_survival.o UTIL.o Main.o test.o CCT.o Binary_HyperGeo.o Binary_ComputeExact.o Binary_global.o Binary_ComputeExactSKATO.o Binary_resampling.o Binary_Permu_SKAT.o ER_binary_func.o LDmat.o SKATO.o qfc.o -llapack -lblas -lgfortran -lm -lquadmath -L../thirdParty/cget/lib/ -L../thirdParty/cget/lib64/ -lsuperlu -lzstd -L../lib64 -llapack -L/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/lib -lR
+installing to /humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test/SAIGE/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+* DONE (SAIGE)

@@ -113,10 +113,14 @@ cat("minMAFlist ", minMAFlist, "\n")
   OutputFileIndex = NULL	
   if(is.null(OutputFileIndex))
     OutputFileIndex = paste0(OutputFile, ".index")
-
+   
   outList = checkOutputFile(OutputFile, OutputFileIndex, "Region", 1, isOverWriteOutput) # Check 'Util.R'
 
+  cat("traitType ", traitType, "\n")
+
   indexChunk = outList$indexChunk
+
+
   Start = outList$Start
   End = outList$End	
 
@@ -153,27 +157,46 @@ cat("minMAFlist ", minMAFlist, "\n")
 
     #output the result from Rcpp
     cat("isappend ", isappend, "\n")
-    isOpenOutFile = openOutfile(traitType, isappend)
-    if(!isOpenOutFile){
-	stop("Output file ", OutputFile, " can't be opened\n")
+    for(itt in 1:length(traitType)){
+      if(length(traitType) == 1){
+	OutputFile_itt = OutputFile
+      }else{
+	OutputFile_itt = paste0(OutputFile, "_", itt)
+      }
+        assign_g_outputFilePrefix(OutputFile_itt)
+        isOpenOutFile = openOutfile(traitType[itt],isappend)
+        if(!isOpenOutFile){
+                stop("Output file ", OutputFile_itt, " can't be opened\n")
+        }
     }
+
   }else{
     stop("r.corr needs to be either 1 (BURDEN test) or 0 (SKAT-O test)\n")
   }	  
 
+  assign_g_outputFilePrefix0(OutputFile)
 
   if(is_single_in_groupTest){
-      cat("is_single_in_groupTest = TRUE. Single-variant assoc tests results will be output\n")
-    isOpenOutFile_singleinGroup = openOutfile_singleinGroup(traitType, isImputation, isappend, is_output_moreDetails)
-    if(!isOpenOutFile_singleinGroup){
-        stop("Output file ", OutputFile, ".singleAssoc.txt can't be opened\n")
-    }
+  cat("is_single_in_groupTest = TRUE. Single-variant assoc tests results will be output\n")
 
+
+    for(itt in 1:length(traitType)){
+      if(length(traitType) == 1){
+	OutputFile_itt = OutputFile
+      }else{
+        OutputFile_itt = paste0(OutputFile, "_", itt)
+      } 
+       assign_g_outputFilePrefix(OutputFile_itt)
+       isOpenOutFile_singleinGroup = openOutfile_singleinGroup(traitType[itt], isImputation, isappend, is_output_moreDetails)
+       if(!isOpenOutFile_singleinGroup){
+           stop("Output file ", OutputFile_itt, ".singleAssoc.txt can't be opened\n")
+       }
+    }
   }else{
       cat("is_single_in_groupTest = FALSE. Single-variant assoc tests results will not be output\n")
   }
 
-
+  cat("Number of phenotypes to test:\t", length(traitType), "\n")
   ##check group file
   region_list = checkGroupFile(groupFile)
 
@@ -209,8 +232,6 @@ cat("minMAFlist ", minMAFlist, "\n")
 
   gf = file(groupFile, "r")
 
-  cat("indexChunk is ", indexChunk, "\n")
-
   skipline = indexChunk*nline_per_gene
   if(indexChunk > 0 & indexChunk < nRegions){
     for(k in 1:skipline){
@@ -220,8 +241,11 @@ cat("minMAFlist ", minMAFlist, "\n")
   }
 
   if(regionTestType != "BURDEN"){
-  	P1Mat = matrix(0, markers_per_chunk_in_groupTest, n)
-  	P2Mat = matrix(0, n, markers_per_chunk_in_groupTest)
+
+  	cat("length(traitType) ", length(traitType), "\n")
+	cat("markers_per_chunk_in_groupTest ", markers_per_chunk_in_groupTest, "\n")
+  	P1Mat = matrix(0, markers_per_chunk_in_groupTest * length(traitType), n)
+  	P2Mat = matrix(0, n, markers_per_chunk_in_groupTest * length(traitType))
   }else{
 	P1Mat = matrix(0, 1, 1)
 	P2Mat = matrix(0, 1, 1)  
@@ -234,9 +258,11 @@ cat("minMAFlist ", minMAFlist, "\n")
   mth = 0
 
   numberRegionsInChunk = 0
-  cat("indexChunk ", indexChunk, "\n")
-  cat("nRegions ", nRegions, "\n")
+  #cat("indexChunk ", indexChunk, "\n")
+  #cat("nRegions ", nRegions, "\n")
   pval.Region.all = NULL
+  pval.Region.all.list = list()
+  
   OutList.all = NULL
   Output_MarkerList.all = NULL
   cth_chunk_to_output=1
@@ -270,13 +296,14 @@ cat("minMAFlist ", minMAFlist, "\n")
     pval.Region = NULL
     region = RegionList[[mth]]
 
-    print("region")
-    print(names(region))
+    #print("region")
+    #print(names(region))
 
 
     annolistsub = region$annoVec 
     regionName = names(RegionList)[mth]
     i = i + 1
+
     if(!is.null(region$SNP) & length(annolistsub) > 0){
 
       SNP = region$SNP
@@ -348,30 +375,57 @@ cat("minMAFlist ", minMAFlist, "\n")
       #rm(genoIndex)
       #gc()
     #tb0 = proc.time()
+
+#print("outList")
+#print(outList)
+#print(names(outList))
+#print(outList)
+
+q_multTrait = length(outList$pvalVec)/length(traitType)
+
+for(tt in 1:length(traitType)){
+	tt_start = q_multTrait*(tt-1)+1
+	tt_end = q_multTrait*(tt)
+	pval.Region = NULL
+	pval.Region.all = NULL
       if(is_single_in_groupTest){
       #OutList = as.data.frame(outList$OUT_DF)
-        noNAIndices = which(!is.na(outList$pvalVec))
+
+        #cat("length(outList$pvalVec) ", length(outList$pvalVec), "\n")
+	#print(outList$pvalVec[tt_start:tt_end])
+	
+        noNAIndices = which(!is.na(outList$pvalVec[tt_start:tt_end]))
+	#print("length(outList$pvalVec)")
+
+	#print("WEIGHT")
+	#print(WEIGHT)
+
         if(sum(WEIGHT) > 0){
           AnnoWeights = c(WEIGHT, rep(1, outList$numofUR))
         }
       }
 
-
       annoMAFIndicatorMat = outList$annoMAFIndicatorMat
+
+	#print("tt_start")
+	#print(tt_start)
+	#print("tt_end")
+	#print(tt_end)
+
 
       if((sum(outList$NumUltraRare_GroupVec) + sum(outList$NumRare_GroupVec)) > 0){
 
         if(regionTestType != "BURDEN"){
  	  #ta0 = proc.time()
-          if(traitType == "binary" | traitType == "count"){	     
-            outList$gyVec = outList$gyVec[noNAIndices]
+          if(traitType[tt] == "binary" ){	     
+            gyVec= outList$gyVec[tt_start:tt_end][noNAIndices]
           }
 
-          if(isCondition){
-            outList$VarMatAdjCond = outList$VarMatAdjCond[noNAIndices,noNAIndices]
-            outList$TstatAdjCond = outList$TstatAdjCond[noNAIndices]
-            outList$G1tilde_P_G2tilde_Weighted_Mat = outList$G1tilde_P_G2tilde_Weighted_Mat[noNAIndices,,drop=F]
-            weightMat_G2_G2 = outList$G2_Weight_cond %*% t(outList$G2_Weight_cond)
+          if(isCondition){#check later
+            VarMatAdjCond = outList$VarMatAdjCond[noNAIndices,noNAIndices]
+            TstatAdjCond = outList$TstatAdjCond[noNAIndices]
+            G1tilde_P_G2tilde_Weighted_Mat = G1tilde_P_G2tilde_Weighted_Mat[noNAIndices,,drop=F]
+            weightMat_G2_G2 = G2_Weight_cond %*% t(G2_Weight_cond)
           }	  
         
        ### Get annotation maf indicators
@@ -380,11 +434,35 @@ cat("minMAFlist ", minMAFlist, "\n")
        #notNAindice = which(!is.na(outList$TstatVec_flip))
        #print("notNAindice")
        #print(notNAindice)
-       StatVec = outList$TstatVec_flip[noNAIndices]
-       VarSVec = diag(outList$VarMat)
+       #cat("length(outList$TstatVec_flip) ", length(outList$TstatVec_flip), "\n")
+       StatVec = outList$TstatVec_flip[tt_start:tt_end][noNAIndices]
+	#noNAIndices_start_end = c(tt_start:tt_end)[noNAIndices]
+
+	#cat("length(StatVec) ", length(StatVec), "\n")
+	#print(dim(outList$VarMat))
+
+  	#ncolVarMat = ncol(outList$VarMat)/length(traitType)
+ 	#tt_start_sub = ncolVarMat*(tt-1)+1
+ 	#tt_end_sub = ncolVarMat*(tt)
+
+  	length_varchunk = ncol(outList$VarMat)/length(traitType)
+        startvarMat = length_varchunk*(tt-1)+1
+        endvarMat = length_varchunk*tt
+
+
+  	#cat("ncolVarMat ", ncolVarMat, "\n")
+  	#cat("tt ", tt, "\n")
+	#cat("tt_start_sub ", tt_start_sub, " tt_end_sub ", tt_end_sub, "\n")
+	#print(dim(outList$VarMat[, tt_start_sub:tt_end_sub]))
+       VarSVec = diag(outList$VarMat[,startvarMat:endvarMat])
+	#cat("length(VarSVec) ", length(VarSVec), "\n")
        VarSVec = VarSVec[!is.na(VarSVec)]
-       adjPVec = outList$pvalVec[!is.na(outList$pvalVec)]
+	#cat("length(VarSVec) ", length(VarSVec), "\n")
+       pvalVec0 = outList$pvalVec[tt_start:tt_end]
+	#cat("length(pvalVec0) ", length(pvalVec0), "\n")
+       adjPVec = pvalVec0[!is.na(pvalVec0)]
 		
+
        #varTestedIndices = which(apply(annoMAFIndicatorMat, 1, isContainValue, val=1))
        #print("varTestedIndices")
        #print(varTestedIndices)
@@ -392,9 +470,9 @@ cat("minMAFlist ", minMAFlist, "\n")
        #annoMAFIndicatorMat = annoMAFIndicatorMat[varTestedIndices, , drop=F]
        #MAFVec = outList$MAFVec[varTestedIndices]
        annoMAFIndicatorMat = annoMAFIndicatorMat[noNAIndices, , drop=F]
+       #MAFVec = outList$MAFVec[1:q_multTrait][noNAIndices]
        MAFVec = outList$MAFVec[noNAIndices]
        #AnnoWeights = dbeta(MAFVec,1,25)
-
        #if(sum(WEIGHT) > 0){
  #	 AnnoWeights = AnnoWeights[noNAIndices] 
  #      }else{
@@ -419,6 +497,10 @@ cat("minMAFlist ", minMAFlist, "\n")
 
 	}
 
+
+	#print("AnnoWeightsMat")
+	#print(AnnoWeightsMat)
+
 	weightMat_G1_G2_Mat = list()
 	wStatMat = NULL
 	wadjVarSMat_list = list()
@@ -426,23 +508,33 @@ cat("minMAFlist ", minMAFlist, "\n")
 	wadjVarSMat_cond_list = list()
 
 
-       if(isCondition){    
+       if(isCondition){  #check  
     	 #weightMat_G1_G2 = AnnoWeights %*% t(outList$G2_Weight_cond)
 	for(ia in 1:ncol(AnnoWeightsMat)){
     	 	weightMat_G1_G2_Mat[[ia]] = AnnoWeightsMat[,ia] %*% t(outList$G2_Weight_cond)
 	 }
        }
+
+
+	#length_varchunk = ncol(outList$VarMat)/length(traitType)
+	#startvarMat = length_varchunk*(tt-1)+1
+	#endvarMat = length_varchunk*tt
+
+	#cat("startvarMat ", startvarMat, "\n")
+	#cat("endvarMat ", endvarMat, "\n")
+
+
 	for(ia in 1:ncol(AnnoWeightsMat)){	
                 AnnoWeights = AnnoWeightsMat[,ia]
                 wStatVec = StatVec * AnnoWeights
 		weightMat = AnnoWeights %*% t(AnnoWeights)
-                wadjVarSMat = outList$VarMat * weightMat
+                wadjVarSMat = (outList$VarMat)[,startvarMat:endvarMat] * weightMat
 
                 wStatMat = cbind(wStatMat, wStatVec)
                 wadjVarSMat_list[[ia]] = wadjVarSMat
 		if(isCondition){
-	  		wStatVec_cond = wStatVec - outList$TstatAdjCond
-          		wadjVarSMat_cond = wadjVarSMat - outList$VarMatAdjCond
+	  		wStatVec_cond = wStatVec - outList$TstatAdjCond[tt_start:tt_end]
+          		wadjVarSMat_cond = wadjVarSMat[tt_start:tt_end] - outList$VarMatAdjCond[tt_start:tt_end]
 			wStatVec_cond_Mat = cbind(wStatVec_cond_Mat, wStatVec_cond)
 			wadjVarSMat_cond_list[[ia]] = wadjVarSMat_cond	
      		}
@@ -453,10 +545,16 @@ cat("minMAFlist ", minMAFlist, "\n")
 
     #gc()
 
-    print("q_maf_for_anno")
-    print(outList$q_maf_for_annoMat)
+    #print("q_maf_for_anno")
+    #print(outList$q_maf_for_annoMat)
 
+#	print("AnnoWeightsMat")
+#	print(dim(AnnoWeightsMat))
+
+#	print("annoMAFIndicatorMat")
+#	print(dim(annoMAFIndicatorMat))
     annoMAFIndVec = c()
+  for(r in 1:length(weightlist)){
     for(j in 1:length(annolistsub)){
 	AnnoName = annolistsub[j]
 	#maxMAF0 = outList$q_maf_for_annoVec[j]
@@ -464,6 +562,7 @@ cat("minMAFlist ", minMAFlist, "\n")
 	for(m in 1:length(maxMAFlist)){
 	  maxMAF0 = outList$q_maf_for_annoMat[j, m]
 	  jm = (j-1)*(length(maxMAFlist)) + m
+    	  jmr = (r-1)*(length(annolistsub)) * (length(maxMAFlist)) + (j-1) * (length(maxMAFlist)) + m
 	  maxMAFName = maxMAFlist[m]
 	  minMAFName = minMAFlist[m]
 
@@ -472,35 +571,49 @@ cat("minMAFlist ", minMAFlist, "\n")
           	annoMAFIndVec.temp = NULL
           }
 
+	#cat("jmr ", jmr, "\n")
+
+	#print(weightlist)
+	#print(dim(wadjVarSMat_list[[r]]))
+	#print(dim(wStatMat))
 
        if(maxMAF0 != 1){
-	  for(r in 1:length(weightlist)){
-		jmr = (j-1)*(length(maxMAFlist)) * (length(weightlist)) + (m-1) * (length(weightlist)) + r
 		
 	    #if(m <= maxMAF0){
 	       tempPos = which(annoMAFIndicatorMat[,jmr] == 1)
+		#print("length(tempPos)")
+		#print(length(tempPos))
+	
+
 	       if(length(tempPos) > 0){
-	       isPolyRegion = TRUE
+	        isPolyRegion = TRUE
 		annoMAFIndVec = c(annoMAFIndVec, jmr)
 		annoMAFIndVec.temp = c(annoMAFIndVec.temp, jmr)
 		weightName = weightlist[r]
 		wadjVarSMat = wadjVarSMat_list[[r]] 
 		wStatVec = wStatMat[,r] 
-		AnnoWeights = AnnoWeightsMat[,r] 
+		AnnoWeights = AnnoWeightsMat[,r]
+
+		
+		#print("AnnoWeightsMat b")
+		#print(AnnoWeightsMat)
+
 		Phi = wadjVarSMat[tempPos, tempPos, drop=F]
 		Score = wStatVec[tempPos]
 		p.new = adjPVec[tempPos]
 
 		#if(traitType == "binary" | traitType == "count"){
-			if(traitType == "binary"){
+			if(traitType[tt] == "binary"){
 				g.sum = outList$genoSumMat[,jmr]
-				q.sum<-sum(outList$gyVec[tempPos] * AnnoWeights[tempPos])
+				q.sum<-sum(gyVec[tempPos] * AnnoWeights[tempPos])
 				mu.a = mu
 
 				re_phi = get_newPhi_scaleFactor(q.sum, mu.a, g.sum, p.new, Score, Phi, regionTestType)
 		        	Phi = re_phi$val
                 	}
 
+			#print("AnnoWeights[tempPos]")
+			#print(AnnoWeights[tempPos])
 			Pvalue_ACATV = get_CCT_pvalue(p.new, AnnoWeights[tempPos])	
 			if(is_SKATO){	
 				groupOutList = get_SKAT_pvalue(Score, Phi, r.corr, regionTestType)
@@ -531,7 +644,7 @@ cat("minMAFlist ", minMAFlist, "\n")
                                                     BETA_Burden = groupOutList$BETA_Burden,
                                                     SE_Burden = groupOutList$SE_Burden)
 	      	     if(isCondition){
-			if(traitType == "binary"){
+			if(traitType[tt] == "binary"){
 				G1tilde_P_G2tilde_Mat_scaled = t(t((outList$G1tilde_P_G2tilde_Weighted_Mat[tempPos,,drop=F]) * sqrt(as.vector(re_phi$scaleFactor))) * sqrt(as.vector(outList$scalefactor_G2_cond)))
 #t(t(b * sqrt(a1)) * sqrt(a2))
 		        	adjCondTemp = G1tilde_P_G2tilde_Mat_scaled %*% outList$VarInvMat_G2_cond_scaled	
@@ -580,7 +693,6 @@ cat("minMAFlist ", minMAFlist, "\n")
 
 	#}else{ #if(m <= maxMAF0){
 	
-	}#for(r in 1:length(weightlist)){
 		   
 	}else{ #if(m <= maxMAF0){
 		
@@ -601,26 +713,23 @@ cat("minMAFlist ", minMAFlist, "\n")
 
 	}
     }#for(m in 1:length(maxMAFlist)){
-}#for(j in 1:length(annolist)){
+  }#for(j in 1:length(annolist)){
+}#for(r in 1:length(weightlist)){
 
 
 gc()
 #}
-print("pval.Region")
-print(pval.Region)
-
-
-#if(regionTestType != "BURDEN"){
-
-print("outList$NumRare_GroupVec")
-print(outList$NumRare_GroupVec)
-print("annoMAFIndVec")
-print(annoMAFIndVec)
+#print("pval.Region")
+#print(pval.Region)
+#print("outList$NumRare_GroupVec")
+#print(outList$NumRare_GroupVec)
+#print("annoMAFIndVec")
+#print(annoMAFIndVec)
 
 
     if(length(annoMAFIndVec) > 0){
       pval.Region$MAC = outList$MAC_GroupVec[annoMAFIndVec]
-      if(traitType == "binary"){
+      if(traitType[tt] == "binary"){
     	pval.Region$MAC_case = outList$MACCase_GroupVec[annoMAFIndVec]
     	pval.Region$MAC_control = outList$MACCtrl_GroupVec[annoMAFIndVec]
       }
@@ -659,7 +768,7 @@ if(length(annolistsub) > 1 | length(maxMAFlist) > 1 | length(weightlist) > 1){
 	}	
    }
    cctVec = c(cctVec, NA)
-   if(traitType == "binary"){
+   if(traitType[tt] == "binary"){
      cctVec = c(cctVec, NA, NA)
    }
    cctVec = c(cctVec, NA, NA)
@@ -697,7 +806,7 @@ if(is_fastTest){
       }
   }
 
-       if(traitType == "binary"){	     
+       if(traitType[tt] == "binary"){	     
          outList$gyVec = outList$gyVec[noNAIndices]
        }
 
@@ -815,7 +924,7 @@ if(is_fastTest){
          	weightName = weightlist[r]
                 AnnoWeights = AnnoWeightsMat[,r]
 
-		if(traitType == "binary" | traitType == "count"){
+		if(traitType[tt] == "binary" | traitType[tt] == "count"){
 			p.new = adjPVec[tempPos]
 			g.sum = outList$genoSumMat[,jmr]
 			q.sum<-sum(outList$gyVec[tempPos] * AnnoWeights[tempPos])
@@ -850,7 +959,7 @@ if(is_fastTest){
                 #                                    BETA_Burden = groupOutList$BETA_Burden,
                 #                                    SE_Burden = groupOutList$SE_Burden)
 	      if(isCondition){
-		if(traitType == "binary"){
+		if(traitType[tt] == "binary"){
 			G1tilde_P_G2tilde_Mat_scaled = t(t((outList$G1tilde_P_G2tilde_Weighted_Mat[tempPos,,drop=F]) * sqrt(as.vector(re_phi$scaleFactor))) * sqrt(as.vector(outList$scalefactor_G2_cond)))
 #t(t(b * sqrt(a1)) * sqrt(a2))
 		        adjCondTemp = G1tilde_P_G2tilde_Mat_scaled %*% outList$VarInvMat_G2_cond_scaled	
@@ -1061,12 +1170,17 @@ cctpval_Burden = get_CCT_pvalue(pval.Region$Pvalue_Burden_cond)
    }	   
 
   indexChunk = i
+
   #Start = (i==1)
+
+#if(tt == length(traitType)){
   Start = (cth_chunk_to_output==1)
   End = (i==nRegions)
+#}
+
+#i = i + 1
   AnalysisType = "Region"
   nEachChunk = 1
-
 
 if(regionTestType != "BURDEN"){  
     pval.Region.all = rbind(pval.Region.all, pval.Region)
@@ -1077,7 +1191,9 @@ if(is_output_markerList_in_groupTest){
      rm(Output_MarkerList)
  } 	   
 
-rm(outList)
+if(tt == length(traitType)){
+	rm(outList)
+}
 rm(pval.Region)
 if(regionTestType != "BURDEN"){
      rm(resultDF)
@@ -1085,16 +1201,29 @@ if(regionTestType != "BURDEN"){
 gc()
   
 }#if(length(noNAIndices) > 0){ 
-  }else{#if(!is.null(region)){
+pval.Region.all.list[[tt]] = pval.Region.all
+pval.Region.all = NULL
+}##for(tt in 1:length(traitType)){
+
+
+}else{#if(!is.null(region)){
     cat(regionName, " is empty.\n")
   }
 
 
 # output
 if(mth ==  numberRegionsInChunk){
+
+
+
   message1 = "This is the output index file for SAIGE package to record the end point in case users want to restart the analysis. Please do not modify this file."
   message2 = paste("This is a", AnalysisType, "level analysis.")
   message3 = paste("nEachChunk =", nEachChunk)
+
+  #cat("indexChunk ", indexChunk, "\n")
+
+
+
   message4 = paste("Have completed the analysis of chunk", indexChunk)
   message5 = "Have completed the analyses of all chunks."
   #n1 = length(Output)
@@ -1102,14 +1231,22 @@ if(mth ==  numberRegionsInChunk){
   cat("write to output\n")
   #cat("n1 is ", n1, "\n")
   #cat("n2 is ", n2, "\n")
+
+for(tt in 1:length(traitType)){
+  pval.Region.all = pval.Region.all.list[[tt]]
+  if(length(traitType) == 1){
+	OutputFile_tt = OutputFile
+  }else{
+  	OutputFile_tt = paste0(OutputFile, "_", tt)
+  }
   if(regionTestType != "BURDEN"){
       if(Start){
         if(!is.null(pval.Region.all)){
-          fwrite(pval.Region.all, OutputFile, quote = F, sep = "\t", append = F, col.names = T, row.names = F, na="NA")
+          fwrite(pval.Region.all, OutputFile_tt, quote = F, sep = "\t", append = F, col.names = T, row.names = F, na="NA")
         }
       }else{
         if(!is.null(pval.Region.all)){
-          fwrite(pval.Region.all, OutputFile, quote = F, sep = "\t", append = T, col.names = F, row.names = F, na="NA")
+          fwrite(pval.Region.all, OutputFile_tt, quote = F, sep = "\t", append = T, col.names = F, row.names = F, na="NA")
         }
         #write.table(Output, OutputFile, quote = F, sep = "\t", append = T, col.names = F, row.names = F)
       }
@@ -1128,6 +1265,12 @@ if(mth ==  numberRegionsInChunk){
     }
 
 
+pval.Region.all = NULL
+OutList.all = NULL
+Output_MarkerList.all = NULL
+cth_chunk_to_output = cth_chunk_to_output + 1
+gc()
+} #for(tt in 1:length(traitType)){
 
 #if(FALSE){
   #print("write Output 2")
@@ -1135,19 +1278,18 @@ if(mth ==  numberRegionsInChunk){
     write.table(c(message1, message2, message3), OutputFileIndex,
                 quote = F, sep = "\t", append = F, col.names = F, row.names = F)
   }
+  if(!End){
   write.table(message4, OutputFileIndex, quote = F, sep = "\t", append = T, col.names = F, row.names = F)
+  }
 
   if(End){
     write.table(message5, OutputFileIndex, quote = F, sep = "\t", append = T, col.names = F, row.names = F)
   }
 #}#if(FALSE)
 
-pval.Region.all = NULL
-OutList.all = NULL
-Output_MarkerList.all = NULL
-cth_chunk_to_output = cth_chunk_to_output + 1
-gc()
-}
+
+
+}#if(mth ==  numberRegionsInChunk){
 
 
 }else{#if(!is.null(RegionList)){
@@ -1164,14 +1306,43 @@ gc()
                    paste0(OutputFile, ".markerInfo"),"'.")
 
   message = "Analysis done!"
-  message = paste0(message, " The set-based tests results have been saved to '", OutputFile, "'.")
+
+for(itt in 1:length(traitType)){
+
+  if(length(traitType) == 1){
+       OutputFile_itt = OutputFile
+  }else{
+       OutputFile_itt = paste0(OutputFile, "_", itt)
+  } 
+
+
+  message = paste0(message, " The set-based tests results have been saved to '", OutputFile_itt, "'.")
   if(is_output_markerList_in_groupTest){
-	message = paste0(message, " The marker lists have been saved to '", OutputFile, ".markerList.txt'.")
+	message = paste0(message, " The marker lists have been saved to '", OutputFile_itt, ".markerList.txt'.")
   }	  
   if(is_single_in_groupTest){
-  	message = paste0(message, " The single-variant association tests results have been saved to '", OutputFile, ".singleAssoc.txt'.")
+  	message = paste0(message, " The single-variant association tests results have been saved to '", OutputFile_itt, ".singleAssoc.txt'.")
+  } 
 
-  }
+ }#for(itt in 1:length(traitType)){
+
+if(length(traitType) > 1){
+       assign_g_outputFilePrefix(OutputFile)
+       removeOutfile_inGroup()
+}
+
+ if(is_single_in_groupTest){
+    for(itt in 1:length(traitType)){
+     if(length(traitType) == 1){
+	OutputFile_itt = OutputFile
+     }else{
+       OutputFile_itt = paste0(OutputFile, "_", itt)
+     }	
+       assign_g_outputFilePrefix(OutputFile_itt)
+       removeOutfile_singleinGroup_temp()
+    } 
+ }
+
 
   return(message)
 

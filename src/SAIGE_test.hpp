@@ -36,7 +36,7 @@ class SAIGEClass
       arma::mat m_XV;
       int m_n, m_p; //MAIN Dimensions: sample size, number of covariates
 		
-      unsigned int m_itrait, m_startip, m_startin, m_endip, m_endin;
+      unsigned int m_itrait, m_startip, m_startin, m_startic, m_endip, m_endin, m_endic;
 
       double m_varRatioVal;
       arma::vec m_varRatio_sparse;
@@ -79,9 +79,12 @@ class SAIGEClass
       arma::vec m_G2_Weight_cond;
       arma::vec m_MAF_cond;
       double  m_qsum_cond;
+     arma::vec  m_qsum_cond_Vec;
       arma::vec m_gsum_cond;
+      arma::mat m_gsum_cond_Mat;
       arma::vec m_p_cond;
       arma::vec m_scalefactor_G2_cond;
+      arma::mat m_scalefactor_G2_cond_Mat;
       arma::mat m_VarInvMat_cond_scaled_weighted;
       //arma::mat m_VarInvMat_cond_region_binary;
       bool m_isCondition;
@@ -127,6 +130,7 @@ arma::mat    m_varWeightsvec_mt;
 arma::mat    m_y_mt;
 arma::mat    m_offset_mt;
 
+std::vector<std::ofstream> OutFile_single_vec;
 
     SAIGEClass(
         arma::mat & t_XVX,
@@ -256,7 +260,7 @@ arma::mat    m_offset_mt;
     arma::sp_mat gen_sp_SigmaMat();
 
 
-    bool assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj, unsigned int itrait);
+    bool assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj);
 
     void assignSingleVarianceRatio(bool issparseforVR, bool isnoXadj);
 
@@ -271,13 +275,17 @@ arma::mat    m_offset_mt;
       arma::vec & t_Tstat_cond,
        arma::vec & t_G2_Weight_cond,
       arma::vec & t_MAF_cond,
-      double t_qsum_cond,
-      arma::vec & t_gsum_cond,
+        arma::vec & t_qsum_cond,
+	arma::mat & t_gsum_cond,
       arma::vec & t_p_cond);
 
      void assignConditionFactors_scalefactor(
         arma::vec & t_scalefactor_G2_cond);	
 
+
+     void assignConditionFactors_scalefactor_multiTrait(
+        arma::mat & t_scalefactor_G2_cond
+	                );
 
     void extract_XV_XXVX_inv(arma::mat & t_XV, arma::mat & t_XXVX_inv);
 
@@ -392,6 +400,10 @@ arma::mat    m_offset_mt;
      void assign_for_trait_i(unsigned int itrait);
      void assign_for_trait_i_2(unsigned int itrait);
      void assign_for_itrait(unsigned int t_itrait);
+     void assign_for_itrait_binaryindices(unsigned int t_itrait);
+     void assignConditionFactors_scalefactor_multiTrait( arma::mat & t_scalefactor_G2_cond,
+             unsigned int oml);
+
 };
 }
 #endif

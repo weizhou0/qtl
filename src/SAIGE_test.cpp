@@ -109,8 +109,8 @@ SAIGEClass::SAIGEClass(
     m_cateVarRatioMaxMACVecInclude = t_cateVarRatioMaxMACVecInclude;
     m_traitType_vec = t_traitType;
 
-    m_case_indices = arma::find(m_y == 1);
-    m_ctrl_indices = arma::find(m_y == 0);
+    //m_case_indices = arma::find(m_y == 1);
+    //m_ctrl_indices = arma::find(m_y == 0);
     m_p = t_X.n_cols;
     m_SPA_Cutoff = t_SPA_Cutoff;
     m_impute_method =  t_impute_method;
@@ -125,15 +125,16 @@ SAIGEClass::SAIGEClass(
 
     if(m_traitType == "binary"){
       //if(m_isOutputAFinCaseCtrl){
-        m_case_indices = arma::find(m_y == 1);
-        m_ctrl_indices = arma::find(m_y == 0);
+      if(m_y_mt.n_cols == 1){
+        m_case_indices = arma::find(m_y_mt.col(0) == 1);
+        m_ctrl_indices = arma::find(m_y_mt.col(0) == 0);
 	m_n_case = m_case_indices.n_elem;
 	m_n_ctrl = m_ctrl_indices.n_elem;
+      } 	
 	m_is_Firth_beta = t_is_Firth_beta;
 	m_pCutoffforFirth = t_pCutoffforFirth;
-      //}
     }
-	m_offset_mt = t_offset;
+    m_offset_mt = t_offset;
     //m_dimNum = t_dimNum;
     m_flagSparseGRM = t_flagSparseGRM;
     //m_isFastTest = t_isFastTest;
@@ -200,18 +201,19 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
 
 
     if(t_is_region && m_traitType == "binary"){
-      t_gy = dot(t_gtilde, m_y);
+      t_gy = dot(t_gtilde, m_y_mt.col(m_itrait));
     }
 
-    S = dot(t_gtilde, m_res % m_varWeightsvec);
+    S = dot(t_gtilde, m_res_mt.col(m_itrait) % m_varWeightsvec_mt.col(m_itrait));
 
     //std::cout << "S " << S << std::endl;
 
-    S = S/m_tauvec[0]; 
+    S = S/m_tauvec_mt(0,m_itrait); 
 
     double varRatioVal_var2 = m_varRatioVal;
-    if(!m_flagSparseGRM_cur){
-      t_P2Vec = t_gtilde % m_mu2 *m_tauvec[0]; 
+
+   if(!m_flagSparseGRM_cur){
+      t_P2Vec = t_gtilde % (m_mu2_mt.col(m_itrait)) *(m_tauvec_mt(0,m_itrait)); 
       //t_P2Vec = t_gtilde % m_mu2; 
       var2m = dot(t_P2Vec, t_gtilde);
     }else{
@@ -273,7 +275,6 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     t_Tstat = S;
     t_var1 = var1;
     t_var2 = var2;
-    //std::cout << "t_pval_str " << t_pval_str << std::endl;
 }
 
 
@@ -516,13 +517,13 @@ void SAIGEClass::getadjGFast(arma::vec & t_GVec, arma::vec & g, arma::uvec & iIn
   // To increase computational efficiency when lots of GVec elements are 0
   arma::vec m_XVG(m_p, arma::fill::zeros);
   for(int i = 0; i < indexNonZeroVec0_arma.n_elem; i++){
-      m_XVG += m_XV.col(indexNonZeroVec0_arma(i)) * t_GVec0(indexNonZeroVec0_arma(i));
+      m_XVG += m_XV_mt.rows(m_startip, m_endip).col(indexNonZeroVec0_arma(i)) * t_GVec0(indexNonZeroVec0_arma(i));
   }
 
    //std::cout << "m_XXVX_inv " << m_XXVX_inv.n_cols << " " << m_XXVX_inv.n_rows << std::endl;
    //std::cout << "m_XVG " << m_XVG.n_cols << " " << m_XVG.n_rows << std::endl;
 
-  g = t_GVec0 - m_XXVX_inv * m_XVG; 
+  g = t_GVec0 - m_XXVX_inv_mt.rows(m_startin, m_endin) * m_XVG; 
 }
 
 
@@ -624,17 +625,22 @@ if(!t_isnoadjCov){
   	  is_gtilde = false;
 	  //std::cout << "herehrerereok" << std::endl;
 	  scoreTestFast(t_GVec0, indexNonZeroVec0_arma, t_Beta, t_seBeta, t_pval_str, altFreq0, t_Tstat, t_var1, t_var2, t_pval);
+	    //std::cout << "t_pval from scoreTestFast " << t_pval << std::endl;
 	}else{
   	  is_gtilde = true;
 	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);	
-	}	
+	  //  std::cout << "t_pval from scoreTest " << t_pval << std::endl;
+	}
   }else{
   	is_gtilde = false;
 	unsigned int nonzero = iIndex.n_elem;
 	unsigned int nGvec = t_GVec.n_elem;
 	//scoreTestFast_noadjCov(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, altFreq0,t_Tstat, t_var1, t_var2);
 	scoreTestFast_noadjCov_multiTrait(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, altFreq0,t_Tstat, t_var1, t_var2);
+	//std::cout << "t_pval_str from scoreTestFast_noadjCov_multiTrait " << t_pval_str << std::endl;
   }
+
+//std::cout << "scoreTestFast_noadjCov_multiTrait " << std::endl;
 
   double StdStat = std::abs(t_Tstat) / sqrt(t_var1);
   t_isSPAConverge = false;
@@ -673,21 +679,19 @@ if(!t_isnoadjCov){
       muNB.set_size(iIndexSize);
       muNA.set_size(iIndexComVecSize);
 
-    
-      SAIGEClass::assign_for_trait_i_2(0);
 
       if(t_isnoadjCov){
 	   //scoreTestFast(t_GVec0, indexNonZeroVec0_arma, t_Beta, t_seBeta, t_pval_str, altFreq0, t_Tstat, t_var1, t_var2, t_pval);
 	  bool hasVarRatio;
 	  double MAC = arma::sum(t_GVec);
-          if(m_varRatio_null.n_elem > 1){
-            hasVarRatio = assignVarianceRatio(MAC, m_flagSparseGRM_cur, false, m_itrait);
+          if(m_varRatio_null_mt.n_rows > 1){
+            hasVarRatio = assignVarianceRatio(MAC, m_flagSparseGRM_cur, false);
 	  }else{
             assignSingleVarianceRatio(m_flagSparseGRM_cur, false);
           }
 	  is_gtilde = true;
 	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);
-//	  std::cout << "t_pval from scoreTest " << t_pval << std::endl;
+	 // std::cout << "t_pval from scoreTest " << t_pval << std::endl;
 	  try {
         	pval_noadj = std::stod(t_pval_str);
  	   } catch (const std::invalid_argument&) {
@@ -715,15 +719,18 @@ if(!t_isnoadjCov){
 
 	//int t_gtilden = t_gtilde.n_elem;
         p_iIndexComVecSize = double(iIndexComVecSize)/(t_GVec0.n_elem);
-   	m1 = dot(m_mu, t_gtilde);
+        arma::vec mu_vec = m_mu_mt.col(m_itrait);
+   	m1 = dot(mu_vec, t_gtilde);
 
 	if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur ){
 		unsigned int j1 = 0;
 		unsigned int j2 = 0;
 		gNB = t_gtilde(iIndex);
 		gNA = t_gtilde(iIndexComVec);
-   		muNB = m_mu(iIndex);
-   		muNA = m_mu(iIndexComVec);
+   		muNB = mu_vec(iIndex);
+   		//muNB = m_mu_mt(iIndex, m_itrait);
+   		muNA = mu_vec(iIndexComVec);
+   		//muNA = m_mu_mt(iIndexComVec, m_itrait);
   		gmuNB = dot(gNB,muNB);
    		NAmu= m1-gmuNB;
 	}else{
@@ -734,6 +741,7 @@ if(!t_isnoadjCov){
 
 	}
 
+	//std::cout << "m_mu_mt.col(m_itrait) " << std::endl;
    	if(m_traitType == "binary"){
                 q = t_Tstat/sqrt(t_var1/t_var2) + m1;
 
@@ -754,16 +762,17 @@ if(!t_isnoadjCov){
            		NAsigma = t_var2 - arma::sum(muNB % arma::pow(gNB,2));
 		}
         }
+	//std::cout << "m_mu_mt.col(m_itrait) " << std::endl;
     	bool logp=false;
 	double tol0 = std::numeric_limits<double>::epsilon();
 	tol1 = std::pow(tol0, 0.25);
 
 	if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur){
-		//std::cout << "SPA_fast" << std::endl;
-        	SPA_fast(m_mu, t_gtilde, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, t_SPApval, t_isSPAConverge);
+        	SPA_fast(mu_vec, t_gtilde, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, t_SPApval, t_isSPAConverge);
+	//	std::cout << "SPA_fast " << t_SPApval << std::endl;
 	}else{
-		//std::cout << "SPA" << std::endl;
-		SPA(m_mu, t_gtilde, q, qinv, pval_noadj, tol1, logp, m_traitType, t_SPApval, t_isSPAConverge);	
+		SPA(mu_vec, t_gtilde, q, qinv, pval_noadj, tol1, logp, m_traitType, t_SPApval, t_isSPAConverge);	
+	//	std::cout << "SPA"  << t_SPApval <<  std::endl;
        /*
         if(pval_noadj < 0.0001){
 	arma::uvec v = { 0, 1, 2, 3, 4 };
@@ -779,6 +788,7 @@ if(!t_isnoadjCov){
         }
 	*/
 	}
+	//std::cout << "m_mu_mt.col(m_itrait) " << std::endl;
         //std::cout << "t_SPApval " << t_SPApval << std::endl;
 	//std::cout << "q " << q << std::endl;
 	//m_mu.print("m_mu");
@@ -853,7 +863,7 @@ if(!t_isnoadjCov){
 }
 
 
-
+//std::cout << "OKKKKK" << std::endl;
 
    if(m_traitType == "binary" & m_is_Firth_beta & t_pval <= m_pCutoffforFirth){
 	t_isFirth = true;
@@ -883,12 +893,12 @@ if(!t_isnoadjCov){
         	getadjGFast(t_GVec, t_gtilde, iIndex);
         	is_gtilde = true;
         }
-        t_G1tilde_P_G2tilde = sqrt(m_varRatioVal) * t_gtilde.t() * m_P2Mat_cond;
-        arma::vec t_Tstat_ctemp =  t_G1tilde_P_G2tilde * m_VarInvMat_cond * m_Tstat_cond;
-	arma::mat tempgP2 = t_gtilde.t() * m_P2Mat_cond;
+        t_G1tilde_P_G2tilde = sqrt(m_varRatioVal) * t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
+        arma::vec t_Tstat_ctemp =  t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (m_Tstat_cond.subvec(m_startic, m_endic));
+	arma::mat tempgP2 = t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
 
     	t_Tstat_c = t_Tstat - t_Tstat_ctemp(0);
-    	arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * m_VarInvMat_cond * (t_G1tilde_P_G2tilde.t());
+    	arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (t_G1tilde_P_G2tilde.t());
     	t_varT_c = t_var1 - t_varT_ctemp(0);
 
     double S_c = t_Tstat_c;
@@ -1008,7 +1018,7 @@ if(!t_isnoadjCov){
 
 
       if(!m_flagSparseGRM_cur){
-        t_P2Vec = t_gtilde % m_mu2 *m_tauvec[0];
+        t_P2Vec = t_gtilde % (m_mu2_mt.col(m_itrait)) *(m_tauvec_mt(0,m_itrait));
       }else{
 
 	 if(m_SigmaMat_sp.n_rows > 2){
@@ -1034,26 +1044,26 @@ if(!t_isnoadjCov){
 }
 
 
-bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj, unsigned int itrait){
+bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj){
     bool hasVarRatio = false;
     arma::vec m_varRatio;
     if(issparseforVR){
 	//m_varRatio = m_varRatio_sparse;
-	m_varRatio = m_varRatio_sparse_mt.col(itrait);
+	m_varRatio = m_varRatio_sparse_mt.col(m_itrait);
     }else{
 	if(!isnoXadj){    
 	    //m_varRatio = m_varRatio_null;
-	    m_varRatio = m_varRatio_null_mt.col(itrait);
+	    m_varRatio = m_varRatio_null_mt.col(m_itrait);
 	}else{
 	//m_varRatio_null_noXadj.print("m_varRatio_null_noXadj");
-	    m_varRatio = m_varRatio_null_noXadj_mt.col(itrait);
+	    m_varRatio = m_varRatio_null_noXadj_mt.col(m_itrait);
 	    //m_varRatio.print("m_varRatio");
 	}	
     }
    
 
-   //m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
-/*
+    //m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
+    m_cateVarRatioMaxMACVecInclude.print("m_cateVarRatioMaxMACVecInclude");
     for(unsigned int i = 0; i < m_cateVarRatioMaxMACVecInclude.n_elem; i++)
     {
         if(MAC <= m_cateVarRatioMaxMACVecInclude(i) && MAC > m_cateVarRatioMinMACVecExclude(i)){    	    
@@ -1076,10 +1086,10 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXa
                 hasVarRatio = true;
         }
     }
-*/
-   m_varRatioVal = m_varRatio(0);
+
+   //m_varRatioVal = m_varRatio(0);
    hasVarRatio = true;
-    return(hasVarRatio);    
+   return(hasVarRatio);    
 }
 
 
@@ -1137,17 +1147,17 @@ arma::vec SAIGEClass::assignVarianceRatioi_multi(arma::vec & MACvec, bool isspar
 
 
 void SAIGEClass::assignSingleVarianceRatio(bool issparseforVR, bool isnoXadj){ 
-    arma::vec m_varRatio;
+    arma::rowvec m_varRatio;
     if(issparseforVR){
-        m_varRatio = m_varRatio_sparse;
+        m_varRatio = m_varRatio_sparse_mt.row(0);
     }else{
 	if(isnoXadj){    
-            m_varRatio = m_varRatio_null_noXadj;
+            m_varRatio = m_varRatio_null_noXadj_mt.row(0);
 	}else{
-	    m_varRatio = m_varRatio_null;	
+	    m_varRatio = m_varRatio_null_mt.row(0);	
 	}	
     }	
-    m_varRatioVal = m_varRatio(0);
+    m_varRatioVal = m_varRatio(m_itrait);
 }
 
 
@@ -1163,8 +1173,8 @@ void SAIGEClass::assignConditionFactors(
       arma::vec & t_Tstat_cond,
       arma::vec & t_G2_Weight_cond,
       arma::vec & t_MAF_cond,
-      double t_qsum_cond,
-      arma::vec & t_gsum_cond,
+      arma::vec & t_qsum_cond,
+      arma::mat & t_gsum_cond,
       arma::vec & t_p_cond
       ){
 	m_P2Mat_cond = t_P2Mat_cond;
@@ -1172,13 +1182,13 @@ void SAIGEClass::assignConditionFactors(
 	m_VarMat_cond = t_VarMat_cond;
 	m_Tstat_cond = t_Tstat_cond;
 	m_MAF_cond = t_MAF_cond;
-	m_qsum_cond = t_qsum_cond;
-	m_gsum_cond = t_gsum_cond;
+	m_qsum_cond_Vec = t_qsum_cond;
+	m_gsum_cond_Mat = t_gsum_cond;
 	m_G2_Weight_cond = t_G2_Weight_cond;
 	m_p_cond = t_p_cond;
 }
 
-void SAIGEClass::assignConditionFactors_scalefactor(
+void SAIGEClass::assignConditionFactors_scalefactor( 
 	arma::vec & t_scalefactor_G2_cond	
 		){
 	m_scalefactor_G2_cond = t_scalefactor_G2_cond;
@@ -1191,10 +1201,36 @@ void SAIGEClass::assignConditionFactors_scalefactor(
 	
 }
 
-void SAIGEClass::extract_XV_XXVX_inv(arma::mat & t_XV, arma::mat & t_XXVX_inv){
-	t_XV = m_XV;
-	t_XXVX_inv = m_XXVX_inv;	
+
+void SAIGEClass::assignConditionFactors_scalefactor_multiTrait(
+        arma::mat & t_scalefactor_G2_cond,
+	unsigned int oml
+                ){
+	unsigned int startoml = oml * (m_VarMat_cond.n_rows);
+	unsigned int endoml = (oml+1) * (m_VarMat_cond.n_rows) - 1;
+	m_scalefactor_G2_cond_Mat = t_scalefactor_G2_cond;
+		
+        m_scalefactor_G2_cond = t_scalefactor_G2_cond.col(oml);
+        arma::mat scalefactor_G2_cond_Mat = arma::diagmat(arma::sqrt(m_scalefactor_G2_cond));
+        arma::mat weightMat_G2_G2 = m_G2_Weight_cond * m_G2_Weight_cond.t();
+        arma::mat VarMat_cond_scaled = scalefactor_G2_cond_Mat * (m_VarMat_cond.cols(startoml, endoml)) * scalefactor_G2_cond_Mat;
+        arma::mat VarMat_cond_scaled_weighted = VarMat_cond_scaled % weightMat_G2_G2;
+        m_VarInvMat_cond_scaled_weighted.cols(startoml, endoml) = VarMat_cond_scaled_weighted.i();
+        //m_VarInvMat_cond_region_binary = (1/scalefactor_G2_cond_Mat) * m_VarInvMat_cond       * (1/scalefactor_G2_cond_Mat);
 }
+
+
+void SAIGEClass::extract_XV_XXVX_inv(arma::mat & t_XV, arma::mat & t_XXVX_inv){
+	//std::cout << "m_XV_mt.n_rows " << m_XV_mt.n_rows << " " << m_XV_mt.n_cols << std::endl;
+	//std::cout << "m_XXVX_inv_mt.n_rows " <<m_XXVX_inv_mt.n_rows << " " << m_XXVX_inv_mt.n_cols  << std::endl;
+	t_XV = m_XV_mt.rows(m_startip, m_endip);
+	t_XXVX_inv = m_XXVX_inv_mt.rows(m_startin, m_endin);
+
+	//std::cout << " t_XV.n_rows " << t_XV.n_rows << " " << t_XV.n_cols << std::endl;
+	//std::cout << " t_XXVX_inv.n_rows " << t_XXVX_inv.n_rows << " " << t_XXVX_inv.n_cols << std::endl;
+
+
+} 
 
 
 
@@ -1814,7 +1850,7 @@ std::cout << "t_GMatraw.n_elem " << t_GMatraw.n_elem << std::endl;
       unsigned int j = t_SPAind_vec(i);
 
      if(m_varRatio_null.n_elem > 1){
-     	hasVarRatio = assignVarianceRatio(t_MAC_vec(j), m_flagSparseGRM_cur, true, m_itrait);
+     	hasVarRatio = assignVarianceRatio(t_MAC_vec(j), m_flagSparseGRM_cur, true);
       }
       t_gtilde = t_GMat_tilde_sub.col(i);
       //t_gtilde = t_GMat_sub.col(i);
@@ -2146,17 +2182,17 @@ void SAIGEClass::assign_for_trait_i_2(unsigned int itrait){
 
 	//std::cout << startip << " " << endip << " " << startin << " " << endin;
         m_y = m_y_mt.col(itrait);
-        m_offset = m_offset_mt.col(itrait);
+        //m_offset = m_offset_mt.col(itrait);
 
-        m_X = m_X_mt.rows(startin, endin);
-        m_S_a = m_S_a_mt.col(itrait);
+        //m_X = m_X_mt.rows(startin, endin);
+        //m_S_a = m_S_a_mt.col(itrait);
         m_mu = m_mu_mt.col(itrait);
-        m_resout = m_resout_mt.col(itrait);
+        //m_resout = m_resout_mt.col(itrait);
 
-        m_XVX = m_XVX_mt.rows(startip, endip);
+        //m_XVX = m_XVX_mt.rows(startip, endip);
         m_XV = m_XV_mt.rows(startip, endip);
         m_XXVX_inv = m_XXVX_inv_mt.rows(startin, endin);
-        m_XVX_inv_XV = m_XVX_inv_XV_mt.rows(startin, endin);
+        //m_XVX_inv_XV = m_XVX_inv_XV_mt.rows(startin, endin);
 }
 
 
@@ -2191,11 +2227,25 @@ void SAIGEClass::assign_for_trait_i(unsigned int itrait){
 
 void SAIGEClass::assign_for_itrait(unsigned int t_itrait){
 	m_itrait = t_itrait;
+	m_traitType = m_traitType_vec.at(m_itrait);
 	m_startip = m_itrait*m_p;
 	m_endip = m_startip + m_p - 1;
 	m_startin = m_itrait*m_n;
 	m_endin = m_startin + m_n - 1;
+
+	m_startic = m_itrait*m_numMarker_cond;
+	m_endic = m_startic + m_numMarker_cond - 1;
+
 }	
+
+
+void SAIGEClass::assign_for_itrait_binaryindices(unsigned int t_itrait){
+
+        m_case_indices = arma::find(m_y_mt.col(t_itrait) == 1);
+        m_ctrl_indices = arma::find(m_y_mt.col(t_itrait) == 0);
+        m_n_case = m_case_indices.n_elem;
+        m_n_ctrl = m_ctrl_indices.n_elem;
+}
 
 
 }

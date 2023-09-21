@@ -206,6 +206,12 @@ void assign_conditionMarkers_factors(
 void assign_conditionMarkers_factors_binary_region(
                            arma::vec & scalefactor_G2_cond);
 
+
+void assign_conditionMarkers_factors_binary_region_multiTrait(
+                           arma::mat & scalefactor_G2_cond,
+			   unsigned int oml);
+
+
 void set_iterator_inVcf(std::string & variantList);
 
 bool check_Vcf_end();
@@ -241,7 +247,7 @@ void writeOutfile_single(bool t_isMoreOutput,
 			bool t_isFirth,
                          int mFirth,
                          int mFirthConverge,
-			std::vector<std::string> & t_traitType,	 
+			std::vector<std::string> & t_traitType, 
                         std::vector<std::string> & chrVec,
                         std::vector<std::string> & posVec,
                         std::vector<std::string> & markerVec,
@@ -278,7 +284,9 @@ void writeOutfile_single(bool t_isMoreOutput,
                         std::vector<std::string> & seBeta_ge_cStrVec,
                         std::vector<std::string> & pval_ge_cStrVec,
                         std::vector<std::string> & pval_noSPA_ge_cStrVec,
-                        std::vector<double>  & pval_SKAT_ge_cVec);
+                        std::vector<double>  & pval_SKAT_ge_cVec,
+			unsigned int itt,
+			unsigned int nmarkers);
 
 
 
@@ -344,10 +352,11 @@ void writeOutfile_BURDEN(std::string regionName,
                         arma::vec & NumUltraRare_GroupVec,
                         double cctpval,
                         double cctpval_cond,
+			                        unsigned int  q_weight,
                         unsigned int q_anno,
                         unsigned int q_maf,
                         bool isCondition,
-                        std::string t_traitType);
+                        unsigned int itt);
 
 void copy_singleInGroup();
 
@@ -359,7 +368,7 @@ int writeOutfile_singleInGroup(bool t_isMoreOutput,
                         bool t_isFirth,
                          int mFirth,
                          int mFirthConverge,
-                        std::string t_traitType,
+                        std::vector<std::string> & t_traitType,
                         std::vector<std::string> & chrVec,
                         std::vector<std::string> & posVec,
                         std::vector<std::string> & markerVec,
@@ -391,7 +400,9 @@ int writeOutfile_singleInGroup(bool t_isMoreOutput,
                         std::vector<double>  & N_case_hetVec,
                         std::vector<double>  & N_ctrl_homVec,
                         std::vector<uint32_t> & N_Vec,
-                        std::ofstream & t_OutFile_singleInGroup);
+			std::ofstream & t_OutFile_singleInGroup,
+			unsigned int itt,
+			unsigned int nmarkers);
 
 uint32_t Unified_getSampleSizeinGeno(std::string & t_genoType);
 uint32_t Unified_getSampleSizeinAnalysis(std::string & t_genoType);
@@ -608,5 +619,16 @@ Rcpp::List  getOneMarkerID_VCF(
                                uint32_t & t_pd,           // base position
                                std::string & t_chr       // chromosome
                                );
+void assign_g_outputFilePrefixSingle( std::string t_outputFilePrefixSingle);
+
+void assign_g_outputFilePrefix( std::string t_outputFilePrefix);
+
+void assign_g_outputFilePrefix0( std::string t_outputFilePrefix);
+
+void removeOutfile_singleinGroup_temp();
+
+void removeOutfile_inGroup();
+
+void removeOutfile_inSingle();
 
 #endif

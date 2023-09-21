@@ -275,7 +275,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // mainRegionInCPP
-Rcpp::List mainRegionInCPP(std::string t_genoType, std::vector<std::string>& t_genoIndex_prev, std::vector<std::string>& t_genoIndex, arma::mat& annoIndicatorMat, std::vector<std::string>& t_weightlistvec, arma::vec& maxMAFVec, arma::vec& minMAFVec, std::string t_outputFile, std::string t_traitType, unsigned int t_n, arma::mat& P1Mat, arma::mat& P2Mat, std::string t_regionTestType, bool t_isImputation, arma::mat& t_Beta_param, arma::mat& t_weight, arma::vec& t_weight_cond, bool t_isIncludeNoWeights, bool t_isSingleinGroupTest, bool t_isOutputMarkerList, std::vector<std::string>& annoStringVec, std::string regionName, bool t_isFastTest, bool t_isMoreOutput);
+Rcpp::List mainRegionInCPP(std::string t_genoType, std::vector<std::string>& t_genoIndex_prev, std::vector<std::string>& t_genoIndex, arma::mat& annoIndicatorMat, std::vector<std::string>& t_weightlistvec, arma::vec& maxMAFVec, arma::vec& minMAFVec, std::string t_outputFile, std::vector<std::string>& t_traitType, unsigned int t_n, arma::mat& P1Mat, arma::mat& P2Mat, std::string t_regionTestType, bool t_isImputation, arma::mat& t_Beta_param, arma::mat& t_weight, arma::vec& t_weight_cond, bool t_isIncludeNoWeights, bool t_isSingleinGroupTest, bool t_isOutputMarkerList, std::vector<std::string>& annoStringVec, std::string regionName, bool t_isFastTest, bool t_isMoreOutput);
 RcppExport SEXP _SAIGE_mainRegionInCPP(SEXP t_genoTypeSEXP, SEXP t_genoIndex_prevSEXP, SEXP t_genoIndexSEXP, SEXP annoIndicatorMatSEXP, SEXP t_weightlistvecSEXP, SEXP maxMAFVecSEXP, SEXP minMAFVecSEXP, SEXP t_outputFileSEXP, SEXP t_traitTypeSEXP, SEXP t_nSEXP, SEXP P1MatSEXP, SEXP P2MatSEXP, SEXP t_regionTestTypeSEXP, SEXP t_isImputationSEXP, SEXP t_Beta_paramSEXP, SEXP t_weightSEXP, SEXP t_weight_condSEXP, SEXP t_isIncludeNoWeightsSEXP, SEXP t_isSingleinGroupTestSEXP, SEXP t_isOutputMarkerListSEXP, SEXP annoStringVecSEXP, SEXP regionNameSEXP, SEXP t_isFastTestSEXP, SEXP t_isMoreOutputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -288,7 +288,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec& >::type maxMAFVec(maxMAFVecSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type minMAFVec(minMAFVecSEXP);
     Rcpp::traits::input_parameter< std::string >::type t_outputFile(t_outputFileSEXP);
-    Rcpp::traits::input_parameter< std::string >::type t_traitType(t_traitTypeSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type t_traitType(t_traitTypeSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type t_n(t_nSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type P1Mat(P1MatSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type P2Mat(P2MatSEXP);
@@ -329,6 +329,17 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::vec& >::type scalefactor_G2_cond(scalefactor_G2_condSEXP);
     assign_conditionMarkers_factors_binary_region(scalefactor_G2_cond);
+    return R_NilValue;
+END_RCPP
+}
+// assign_conditionMarkers_factors_binary_region_multiTrait
+void assign_conditionMarkers_factors_binary_region_multiTrait(arma::mat& scalefactor_G2_cond, unsigned int oml);
+RcppExport SEXP _SAIGE_assign_conditionMarkers_factors_binary_region_multiTrait(SEXP scalefactor_G2_condSEXP, SEXP omlSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type scalefactor_G2_cond(scalefactor_G2_condSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type oml(omlSEXP);
+    assign_conditionMarkers_factors_binary_region_multiTrait(scalefactor_G2_cond, oml);
     return R_NilValue;
 END_RCPP
 }
@@ -423,6 +434,33 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type t_isMoreOutput(t_isMoreOutputSEXP);
     rcpp_result_gen = Rcpp::wrap(openOutfile_singleinGroup(t_traitType, t_isImputation, isappend, t_isMoreOutput));
     return rcpp_result_gen;
+END_RCPP
+}
+// removeOutfile_singleinGroup_temp
+void removeOutfile_singleinGroup_temp();
+RcppExport SEXP _SAIGE_removeOutfile_singleinGroup_temp() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    removeOutfile_singleinGroup_temp();
+    return R_NilValue;
+END_RCPP
+}
+// removeOutfile_inGroup
+void removeOutfile_inGroup();
+RcppExport SEXP _SAIGE_removeOutfile_inGroup() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    removeOutfile_inGroup();
+    return R_NilValue;
+END_RCPP
+}
+// removeOutfile_inSingle
+void removeOutfile_inSingle();
+RcppExport SEXP _SAIGE_removeOutfile_inSingle() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    removeOutfile_inSingle();
+    return R_NilValue;
 END_RCPP
 }
 // openOutfile_single
@@ -1507,6 +1545,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// assign_g_outputFilePrefixSingle
+void assign_g_outputFilePrefixSingle(std::string t_outputFilePrefixSingle);
+RcppExport SEXP _SAIGE_assign_g_outputFilePrefixSingle(SEXP t_outputFilePrefixSingleSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type t_outputFilePrefixSingle(t_outputFilePrefixSingleSEXP);
+    assign_g_outputFilePrefixSingle(t_outputFilePrefixSingle);
+    return R_NilValue;
+END_RCPP
+}
+// assign_g_outputFilePrefix
+void assign_g_outputFilePrefix(std::string t_outputFilePrefix);
+RcppExport SEXP _SAIGE_assign_g_outputFilePrefix(SEXP t_outputFilePrefixSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type t_outputFilePrefix(t_outputFilePrefixSEXP);
+    assign_g_outputFilePrefix(t_outputFilePrefix);
+    return R_NilValue;
+END_RCPP
+}
+// assign_g_outputFilePrefix0
+void assign_g_outputFilePrefix0(std::string t_outputFilePrefix);
+RcppExport SEXP _SAIGE_assign_g_outputFilePrefix0(SEXP t_outputFilePrefixSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type t_outputFilePrefix(t_outputFilePrefixSEXP);
+    assign_g_outputFilePrefix0(t_outputFilePrefix);
+    return R_NilValue;
+END_RCPP
+}
 // SKAT_META_Optimal_Get_Q_Rcpp
 Rcpp::List SKAT_META_Optimal_Get_Q_Rcpp(const arma::vec& Score, const arma::vec& r_all);
 RcppExport SEXP _SAIGE_SKAT_META_Optimal_Get_Q_Rcpp(SEXP ScoreSEXP, SEXP r_allSEXP) {
@@ -2257,6 +2325,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_mainRegionInCPP", (DL_FUNC) &_SAIGE_mainRegionInCPP, 24},
     {"_SAIGE_assign_conditionMarkers_factors", (DL_FUNC) &_SAIGE_assign_conditionMarkers_factors, 5},
     {"_SAIGE_assign_conditionMarkers_factors_binary_region", (DL_FUNC) &_SAIGE_assign_conditionMarkers_factors_binary_region, 1},
+    {"_SAIGE_assign_conditionMarkers_factors_binary_region_multiTrait", (DL_FUNC) &_SAIGE_assign_conditionMarkers_factors_binary_region_multiTrait, 2},
     {"_SAIGE_set_iterator_inVcf", (DL_FUNC) &_SAIGE_set_iterator_inVcf, 4},
     {"_SAIGE_check_Vcf_end", (DL_FUNC) &_SAIGE_check_Vcf_end, 0},
     {"_SAIGE_move_forward_iterator_Vcf", (DL_FUNC) &_SAIGE_move_forward_iterator_Vcf, 1},
@@ -2264,6 +2333,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_closeGenoFile", (DL_FUNC) &_SAIGE_closeGenoFile, 1},
     {"_SAIGE_openOutfile", (DL_FUNC) &_SAIGE_openOutfile, 2},
     {"_SAIGE_openOutfile_singleinGroup", (DL_FUNC) &_SAIGE_openOutfile_singleinGroup, 4},
+    {"_SAIGE_removeOutfile_singleinGroup_temp", (DL_FUNC) &_SAIGE_removeOutfile_singleinGroup_temp, 0},
+    {"_SAIGE_removeOutfile_inGroup", (DL_FUNC) &_SAIGE_removeOutfile_inGroup, 0},
+    {"_SAIGE_removeOutfile_inSingle", (DL_FUNC) &_SAIGE_removeOutfile_inSingle, 0},
     {"_SAIGE_openOutfile_single", (DL_FUNC) &_SAIGE_openOutfile_single, 5},
     {"_SAIGE_set_flagSparseGRM_cur_SAIGE", (DL_FUNC) &_SAIGE_set_flagSparseGRM_cur_SAIGE, 1},
     {"_SAIGE_set_flagSparseGRM_cur_SAIGE_org", (DL_FUNC) &_SAIGE_set_flagSparseGRM_cur_SAIGE_org, 0},
@@ -2356,6 +2428,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_get_SKAT_pvalue_Rcpp", (DL_FUNC) &_SAIGE_get_SKAT_pvalue_Rcpp, 3},
     {"_SAIGE_mainMarkerInCPP_multi", (DL_FUNC) &_SAIGE_mainMarkerInCPP_multi, 7},
     {"_SAIGE_getOneMarkerID_VCF", (DL_FUNC) &_SAIGE_getOneMarkerID_VCF, 5},
+    {"_SAIGE_assign_g_outputFilePrefixSingle", (DL_FUNC) &_SAIGE_assign_g_outputFilePrefixSingle, 1},
+    {"_SAIGE_assign_g_outputFilePrefix", (DL_FUNC) &_SAIGE_assign_g_outputFilePrefix, 1},
+    {"_SAIGE_assign_g_outputFilePrefix0", (DL_FUNC) &_SAIGE_assign_g_outputFilePrefix0, 1},
     {"_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp, 2},
     {"_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp", (DL_FUNC) &_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp, 2},
     {"_SAIGE_Get_Lambda_Rcpp", (DL_FUNC) &_SAIGE_Get_Lambda_Rcpp, 3},

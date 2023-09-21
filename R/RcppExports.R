@@ -81,6 +81,10 @@ assign_conditionMarkers_factors_binary_region <- function(scalefactor_G2_cond) {
     invisible(.Call('_SAIGE_assign_conditionMarkers_factors_binary_region', PACKAGE = 'SAIGE', scalefactor_G2_cond))
 }
 
+assign_conditionMarkers_factors_binary_region_multiTrait <- function(scalefactor_G2_cond, oml) {
+    invisible(.Call('_SAIGE_assign_conditionMarkers_factors_binary_region_multiTrait', PACKAGE = 'SAIGE', scalefactor_G2_cond, oml))
+}
+
 set_iterator_inVcf <- function(variantList, chrom, beg_pd, end_pd) {
     invisible(.Call('_SAIGE_set_iterator_inVcf', PACKAGE = 'SAIGE', variantList, chrom, beg_pd, end_pd))
 }
@@ -107,6 +111,18 @@ openOutfile <- function(t_traitType, isappend) {
 
 openOutfile_singleinGroup <- function(t_traitType, t_isImputation, isappend, t_isMoreOutput) {
     .Call('_SAIGE_openOutfile_singleinGroup', PACKAGE = 'SAIGE', t_traitType, t_isImputation, isappend, t_isMoreOutput)
+}
+
+removeOutfile_singleinGroup_temp <- function() {
+    invisible(.Call('_SAIGE_removeOutfile_singleinGroup_temp', PACKAGE = 'SAIGE'))
+}
+
+removeOutfile_inGroup <- function() {
+    invisible(.Call('_SAIGE_removeOutfile_inGroup', PACKAGE = 'SAIGE'))
+}
+
+removeOutfile_inSingle <- function() {
+    invisible(.Call('_SAIGE_removeOutfile_inSingle', PACKAGE = 'SAIGE'))
 }
 
 openOutfile_single <- function(t_traitType, t_isImputation, isappend, t_isMoreOutput, t_isGbyE) {
@@ -475,6 +491,18 @@ mainMarkerInCPP_multi <- function(t_genoType, t_traitType, t_genoIndex_prev, t_g
 
 getOneMarkerID_VCF <- function(t_ref, t_alt, t_marker, t_pd, t_chr) {
     .Call('_SAIGE_getOneMarkerID_VCF', PACKAGE = 'SAIGE', t_ref, t_alt, t_marker, t_pd, t_chr)
+}
+
+assign_g_outputFilePrefixSingle <- function(t_outputFilePrefixSingle) {
+    invisible(.Call('_SAIGE_assign_g_outputFilePrefixSingle', PACKAGE = 'SAIGE', t_outputFilePrefixSingle))
+}
+
+assign_g_outputFilePrefix <- function(t_outputFilePrefix) {
+    invisible(.Call('_SAIGE_assign_g_outputFilePrefix', PACKAGE = 'SAIGE', t_outputFilePrefix))
+}
+
+assign_g_outputFilePrefix0 <- function(t_outputFilePrefix) {
+    invisible(.Call('_SAIGE_assign_g_outputFilePrefix0', PACKAGE = 'SAIGE', t_outputFilePrefix))
 }
 
 SKAT_META_Optimal_Get_Q_Rcpp <- function(Score, r_all) {

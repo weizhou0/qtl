@@ -386,8 +386,8 @@ get_SKAT_pvalue_Burden_SKAT = function(Score, Phi){
                                                          Phi = Phi,
                                                          r.corr = 1,
                                                          Score.Resampling = NULL), silent = TRUE)
-		print("out_BURDEN_List")
-		print(out_BURDEN_List)
+		#print("out_BURDEN_List")
+		#print(out_BURDEN_List)
 
 		if(class(out_BURDEN_List) == "try-error"){
 			Pvalue_BURDEN = NA

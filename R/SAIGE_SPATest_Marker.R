@@ -31,12 +31,20 @@ SAIGE.Marker = function(traitType,
   }  
 
   cat("traitType ", traitType, "\n")
-
-  isOpenOutFile_single = openOutfile_single(traitType[1], isImputation, isappend, isMoreOutput, isGbyE)
-
-  if(!isOpenOutFile_single){
-    stop("Output file ", OutputFile, " can't be opened\n")
+  assign_g_outputFilePrefix0(OutputFile)
+  for(itt in 1:length(traitType)){
+     if(length(traitType) > 1){
+	OutputFile_itt = paste0(OutputFile, "_", itt)
+     }else{
+	OutputFile_itt = OutputFile
+     }
+  	assign_g_outputFilePrefixSingle(OutputFile_itt) 
+  	isOpenOutFile_single = openOutfile_single(traitType[itt], isImputation, isappend, isMoreOutput, isGbyE)
+  	if(!isOpenOutFile_single){
+    		stop("Output file ", OutputFile_itt, " can't be opened\n")
+  	}
   }
+
 
   ## set up an object for genotype
   if(genoType != "vcf"){
@@ -64,6 +72,7 @@ SAIGE.Marker = function(traitType,
     }
 
 
+    cat("Number of phenotypes to test:\t", length(traitType), "\n")
     cat("Number of all markers to test:\t", length(genoIndex), "\n")
     cat("Number of markers in each chunk:\t", nMarkersEachChunk, "\n")
     cat("Number of chunks for all markers:\t", nChunks, "\n")
@@ -202,8 +211,19 @@ SAIGE.Marker = function(traitType,
   } #while(is_marker_test){
 
   # information to users
-  output = paste0("Analysis done! The results have been saved to '", OutputFile,"'.")
 
+if(length(traitType) == 1){
+  output = paste0("Analysis done! The results have been saved to '", OutputFile,"'.")
+}else{
+  output = "Analysis done! The results have been saved to"
+  for(tt in 1:length(traitType)){
+    OutputFile_tt = paste0(OutputFile, "_", tt)
+    output = paste0(output, "'", OutputFile_tt, "',")
+  }
+
+  assign_g_outputFilePrefix0(OutputFile)
+  removeOutfile_inSingle()
+}
   return(output)
 }
 
