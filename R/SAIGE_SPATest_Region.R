@@ -423,10 +423,10 @@ for(tt in 1:length(traitType)){
           }
 
           if(isCondition){#check later
-            VarMatAdjCond = outList$VarMatAdjCond[noNAIndices,noNAIndices]
-            TstatAdjCond = outList$TstatAdjCond[noNAIndices]
-            G1tilde_P_G2tilde_Weighted_Mat = G1tilde_P_G2tilde_Weighted_Mat[noNAIndices,,drop=F]
-            weightMat_G2_G2 = G2_Weight_cond %*% t(G2_Weight_cond)
+            VarMatAdjCond = outList$VarMatAdjCond[tt_start:tt_end,][noNAIndices,noNAIndices]
+            TstatAdjCond = outList$TstatAdjCond[tt_start:tt_end][noNAIndices]
+            G1tilde_P_G2tilde_Weighted_Mat = outList$G1tilde_P_G2tilde_Weighted_Mat[tt_start:tt_end,][noNAIndices,,drop=F]
+            weightMat_G2_G2 = outList$G2_Weight_cond %*% t(outList$G2_Weight_cond)
           }	  
         
        ### Get annotation maf indicators
@@ -534,8 +534,14 @@ for(tt in 1:length(traitType)){
                 wStatMat = cbind(wStatMat, wStatVec)
                 wadjVarSMat_list[[ia]] = wadjVarSMat
 		if(isCondition){
-	  		wStatVec_cond = wStatVec - outList$TstatAdjCond[tt_start:tt_end]
-          		wadjVarSMat_cond = wadjVarSMat[tt_start:tt_end] - outList$VarMatAdjCond[tt_start:tt_end]
+	  		wStatVec_cond = wStatVec - outList$TstatAdjCond[tt_start:tt_end][noNAIndices]
+			print(dim(outList$VarMatAdjCond))
+			print(dim(wadjVarSMat))
+			print(length(wStatVec))
+			print(length(outList$TstatAdjCond))
+			print(tt_start)
+			print(tt_end)
+          		wadjVarSMat_cond = wadjVarSMat - outList$VarMatAdjCond[tt_start:tt_end,][noNAIndices,noNAIndices]
 			wStatVec_cond_Mat = cbind(wStatVec_cond_Mat, wStatVec_cond)
 			wadjVarSMat_cond_list[[ia]] = wadjVarSMat_cond	
      		}
@@ -645,8 +651,12 @@ for(tt in 1:length(traitType)){
                                                     BETA_Burden = groupOutList$BETA_Burden,
                                                     SE_Burden = groupOutList$SE_Burden)
 	      	     if(isCondition){
+
+
 			if(traitType[tt] == "binary"){
-				G1tilde_P_G2tilde_Mat_scaled = t(t((outList$G1tilde_P_G2tilde_Weighted_Mat[tempPos,,drop=F]) * sqrt(as.vector(re_phi$scaleFactor))) * sqrt(as.vector(outList$scalefactor_G2_cond)))
+			print("length(outList$scalefactor_G2_cond)")
+			print(length(outList$scalefactor_G2_cond))
+				G1tilde_P_G2tilde_Mat_scaled = t(t((outList$G1tilde_P_G2tilde_Weighted_Mat[tt_start:tt_end,][tempPos,,drop=F]) * sqrt(as.vector(re_phi$scaleFactor))) * sqrt(as.vector(outList$scalefactor_G2_cond)))
 #t(t(b * sqrt(a1)) * sqrt(a2))
 		        	adjCondTemp = G1tilde_P_G2tilde_Mat_scaled %*% outList$VarInvMat_G2_cond_scaled	
 				VarMatAdjCond = adjCondTemp %*% t(G1tilde_P_G2tilde_Mat_scaled)
@@ -656,7 +666,11 @@ for(tt in 1:length(traitType)){
 			
 			}else{
 				wStatVec_cond = wStatVec_cond_Mat[,r]
+				print("length(wStatVec_cond)")
+				print(length(wStatVec_cond))
+				print(length(tempPos))
 				wadjVarSMat_cond = wadjVarSMat_cond_list[[r]]
+				print(dim(wadjVarSMat_cond))
 				Score_cond = wStatVec_cond[tempPos]
 				Phi_cond = wadjVarSMat_cond[tempPos, tempPos]
 			}

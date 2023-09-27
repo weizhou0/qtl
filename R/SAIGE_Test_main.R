@@ -336,10 +336,16 @@ SPAGMMATtest = function(bgenFile = "",
     
   #print("setSAIGEobjInCPP -1a")
   #print_g_n_unique()
+    condition_genoIndex_a = c(-1)
     condition_genoIndex = c(-1)
     if(isCondition){
         cat("Conducting conditional analysis. Please specify the conditioning markers in the order as they are store in the genotype/dosage file.\n")
-    }	   
+	condition_genoIndex=extract_genoIndex_condition(condition, objGeno$markerInfo, genoType)
+    #}else{
+    	condition_genoIndex_a = condition_genoIndex$cond_genoIndex
+	print("condition_genoIndex_a")
+	print(condition_genoIndex_a)
+    }
     #set up the SAIGE object based on the null model results
 #print("SigmaMat_sp")
     #print(SigmaMat_sp)
@@ -519,7 +525,7 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
                      t_isnoadjCov = is_noadjCov,
                      t_pval_cutoff_for_fastTest = pval_cutoff_for_fastTest,
                      t_isCondition = isCondition,
-                     t_condition_genoIndex = condition_genoIndex,
+                     t_condition_genoIndex = condition_genoIndex_a,
                      t_is_Firth_beta = is_Firth_beta,
                      t_pCutoffforFirth = pCutoffforFirth,
                      t_offset = offset,  ##check later
@@ -613,7 +619,7 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
 		     t_isnoadjCov = is_noadjCov, 
 		     t_pval_cutoff_for_fastTest = pval_cutoff_for_fastTest,
 		     t_isCondition = isCondition,
-		     t_condition_genoIndex = condition_genoIndex,
+		     t_condition_genoIndex = condition_genoIndex_a,
 		     t_is_Firth_beta = is_Firth_beta,
 		     t_pCutoffforFirth = pCutoffforFirth,
 		     t_offset = offset, 
@@ -644,11 +650,16 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
   gc()
    #process condition
     if (isCondition) {
-        n = length(obj.model$y) #sample size
-
+        #n = length(obj.model$y) #sample size
+	n = ncol(I_mat)
+	#n_uniq = length(unique(obj.model))
 	##re-order the conditioning markers
 	##condition_original = unlist(strsplit(condition, ","))
-	condition_genoIndex=extract_genoIndex_condition(condition, objGeno$markerInfo, genoType)
+	#condition_genoIndex=extract_genoIndex_condition(condition, objGeno$markerInfo, genoType)
+	print("condition_genoIndex")
+	print(condition_genoIndex)
+
+
 	if(!is.null(weights_for_condition)){
 		condition_weights = weights_for_condition
 		#print(condition_weights)
@@ -658,19 +669,22 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
 			stop("The length of the provided weights for conditioning markers is not equal to the number of conditioning markers\n")
 		}	
         }else{
-		condition_weights = rep(0, length(condition_genoIndex$cond_genoIndex))
+		condition_weights = rep(1, length(condition_genoIndex$cond_genoIndex))
 	}	
 
 	condition_genoIndex_a = as.character(format(condition_genoIndex$cond_genoIndex, scientific = FALSE))
 	condition_genoIndex_prev_a = as.character(format(condition_genoIndex$cond_genoIndex_prev, scientific = FALSE)) 
+	print("OKKK")
 	assign_conditionMarkers_factors(genoType, condition_genoIndex_prev_a, condition_genoIndex_a,  n, condition_weights)
-	if(obj.model$traitType[1] == "binary" & isGroupTest){
+	print("OKKK2")
+if(obj.model$traitType[1] == "binary" & isGroupTest){
 	  outG2cond = RegionSetUpConditional_binary_InCPP(condition_weights)
 	G2condList_list = NULL
 	 for(oml in 1:length(obj.model.List)){
 	startcond = (oml-1)*length(condition_genoIndex$cond_genoIndex) + 1
 	endcond = oml*length(condition_genoIndex$cond_genoIndex)
 
+	
 	  G2condList = get_newPhi_scaleFactor(q.sum = outG2cond$qsum_G2_cond[oml], mu.a = mu_sample[,oml], g.sum = outG2cond$gsum_G2_cond[,oml], p.new = outG2cond$pval_G2_cond[startcond:endcond], Score = outG2cond$Score_G2_cond[startcond:endcond], Phi = outG2cond$VarMat_G2_cond[,startcond:endcond], "SKAT-O")
 	  scaleFactorVec = as.vector(G2condList$scaleFactor)
 	  G2condList$scaleFactorVec = scaleFactorVec

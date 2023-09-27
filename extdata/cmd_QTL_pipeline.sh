@@ -44,6 +44,10 @@ Rscript /humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuo
 
 #'
 
+outpath=/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step2/gene_group/output/
+geneLocationFile=/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/GeneLocations.renamegene.tsv
+
+
 i=$(awk -v gene=$genename '$1 == gene {print $3}' $geneLocationFile)
 
 echo "$i"

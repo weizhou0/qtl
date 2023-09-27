@@ -309,6 +309,9 @@ void mainMarkerInCPP(
   int mFirthConverge = 0;
 
   for(int i = 0; i < t_genoIndex.size(); i++){
+
+//std::cout << "i " << i << std::endl;
+
     if((i+1) % g_marker_chunksize == 0){
       //std::cout << "Completed " << (i+1) << "/" << q << " markers in the chunk." << std::endl;
       std::cout << "Completed " << (i+1) << "/" << t_genoIndex.size() << " markers in the chunk." << std::endl;
@@ -354,8 +357,8 @@ void mainMarkerInCPP(
    //t_GVec0.clear();
    //t_GVec.clear();
    //std::cout << "Unified_getOneMarker " << std::endl;
-   //std::cout << "n " << n << std::endl;
-   //std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
+//   std::cout << "n " << n << std::endl;
+//   std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
 
    //t_GVec.set_size(n);
    bool isReadMarker = Unified_getOneMarker(t_genoType, gIndex_prev, gIndex, ref, alt, marker, pd, chr, altFreq, altCounts, missingRate, imputeInfo,
@@ -399,7 +402,7 @@ void mainMarkerInCPP(
 
     std::string pds = std::to_string(pd); 
     std::string info = chr+":"+pds+":"+ref+":"+alt;
-   // std::cout << "info " << info << std::endl;
+//    std::cout << "info " << info << std::endl;
 
   //std::cout << "Here2 mainMarkerInCPP" << std::endl;
 
@@ -417,7 +420,7 @@ void mainMarkerInCPP(
     missingRateVec.at(j_mt0) = missingRate;
     imputationInfoVec.at(j_mt0) = imputeInfo;
  }
-  //std::cout << "Here2b mainMarkerInCPP" << std::endl;
+//  std::cout << "Here2b mainMarkerInCPP" << std::endl;
 
 
     // MAF and MAC are for Quality Control (QC)
@@ -455,7 +458,7 @@ void mainMarkerInCPP(
 
     flip = imputeGenoAndFlip(t_GVec, altFreq, altCounts,indexForMissing, g_impute_method, g_dosage_zerod_cutoff, g_dosage_zerod_MAC_cutoff, MAC, indexZeroVec, indexNonZeroVec);
    
-  //std::cout << "Here2c mainMarkerInCPP" << std::endl;
+//  std::cout << "Here2c mainMarkerInCPP" << std::endl;
 //arma::vec timeoutput4 = getTime();
 //printTime(timeoutput3, timeoutput4, "imputeGenoAndFlip");
 for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
@@ -483,7 +486,7 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
     arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
 
 
-    //std::cout << "g_n_unique " << g_n_unique << std::endl;
+ //   std::cout << "g_n_unique " << g_n_unique << std::endl;
     indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
     indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
 /*
@@ -581,7 +584,7 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
     }
 
 
-    //std::cout << "pval " << pval << std::endl;
+//    std::cout << "pval " << pval << std::endl;
     //std::cout << "ptr_gSAIGEobj->m_pval_cutoff_for_fastTest " << ptr_gSAIGEobj->m_pval_cutoff_for_fastTest << std::endl;
      
     if(pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
@@ -1346,6 +1349,7 @@ Rcpp::List mainRegionInCPP(
 		w0G2Vec_cond.at(ci) = w0G2_cond;
 	}
   }
+
   arma::mat w0G2Mat_cond(q_cond, q_cond);
   w0G2Mat_cond = w0G2Vec_cond * (w0G2Vec_cond.t());
 
@@ -2388,12 +2392,12 @@ double maxMAFName;
 unsigned int startt, endt;
 //std::cout << "If only conduct Burden test b " << std::endl;
 
+if(t_regionTestType == "BURDEN"){
 for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
   ptr_gSAIGEobj->assign_for_itrait(i_mt);
   startt = i_mt*q_anno*q_maf*q_weight;
   endt = (i_mt+1)*q_anno*q_maf*q_weight - 1;
 
-  if(t_regionTestType == "BURDEN"){
      for(unsigned int r = 0; r < q_weight; r++){
      for(unsigned int j = 0; j < q_anno; j++){
        AnnoName = annoStringVec[j];
@@ -2499,7 +2503,7 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
 
 	   cctpval = CCT_cpp(nonMissingPvalVec);
            if(isCondition){
-	arma::vec BURDEN_pval_cVec_onetrait = BURDEN_pval_cVec.subvec(startt, endt);
+	   arma::vec BURDEN_pval_cVec_onetrait = BURDEN_pval_cVec.subvec(startt, endt);
 	   arma::vec nonMissingPvalVec_cond = BURDEN_pval_cVec_onetrait.elem(nonMissingPvalVecInd);
 	   cctpval_cond = CCT_cpp(nonMissingPvalVec_cond);	   
            }
@@ -2547,12 +2551,14 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
 
  //arma::vec timeoutput3 = getTime();
  //printTime(timeoutput2, timeoutput3, "burden test done");
+ //
+ }//for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
  }else{//if(t_regionTestType == "BURDEN"){
   //q_maf_for_anno = q_maf_for_anno + 1;
   OutList.push_back(MAC_GroupVec, "MAC_GroupVec");
   //OutList.push_back(q_maf_for_anno, "q_maf_for_annoVec");
   OutList.push_back(q_maf_for_anno, "q_maf_for_annoMat");
-  if(t_traitType.at(i_mt) == "binary"){
+  if(t_traitType.at(0) == "binary"){
     OutList.push_back(MACCase_GroupVec, "MACCase_GroupVec");
     OutList.push_back(MACControl_GroupVec, "MACCtrl_GroupVec");
     OutList.push_back(genoSumMat, "genoSumMat");
@@ -2565,9 +2571,47 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
   //arma::mat scaled_m_VarInvMat_cond;
     if(isCondition){
   //std::cout << "okk5" << std::endl;
-      arma::mat AdjCondMat = G1tilde_P_G2tilde_Weighted_Mat * (ptr_gSAIGEobj->m_VarInvMat_cond / (w0G2Mat_cond));
-      arma::mat VarMatAdjCond = AdjCondMat * (G1tilde_P_G2tilde_Weighted_Mat.t());
-      arma::vec TstatAdjCond = AdjCondMat * (ptr_gSAIGEobj->m_Tstat_cond % w0G2Vec_cond ); 
+   std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;	
+   std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_cols " << G1tilde_P_G2tilde_Weighted_Mat.n_cols << std::endl;	
+   std::cout << "(ptr_gSAIGEobj->m_VarInvMat_cond).n_rows " << (ptr_gSAIGEobj->m_VarInvMat_cond).n_rows  << std::endl;
+   std::cout << "(ptr_gSAIGEobj->m_VarInvMat_cond).n_cols " << (ptr_gSAIGEobj->m_VarInvMat_cond).n_cols  << std::endl;
+
+   arma::mat AdjCondMat(q_multTrait, q_cond);
+   arma::mat VarMatAdjCond(q_multTrait, q);
+   arma::vec TstatAdjCond(q_multTrait);
+   arma::mat AdjCondMat_sub(q, q_cond);
+   arma::mat VarInvMat_cond_sub(q_cond, q_cond);
+   arma::mat VarMatAdjCond_sub(q,q);
+   arma::vec TstatAdjCond_sub(q);
+   arma::vec Tstat_cond_sub(q_cond);
+   arma::mat G1tilde_P_G2tilde_Weighted_Mat_sub(q, q_cond);
+unsigned int startt_qcond, endt_qcond;
+   for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
+  	startt = i_mt*q;
+  	endt = (i_mt+1)*q - 1;
+	startt_qcond = i_mt*q_cond;
+	endt_qcond = (i_mt+1)*q_cond - 1;
+	G1tilde_P_G2tilde_Weighted_Mat_sub = G1tilde_P_G2tilde_Weighted_Mat.rows(startt,endt);
+	VarInvMat_cond_sub = (ptr_gSAIGEobj->m_VarInvMat_cond).cols(startt_qcond, endt_qcond);
+	AdjCondMat_sub = G1tilde_P_G2tilde_Weighted_Mat_sub * (VarInvMat_cond_sub / (w0G2Mat_cond));
+	//w0G2Mat_cond.print("w0G2Mat_cond");
+	//(ptr_gSAIGEobj->m_VarInvMat_cond).print("ptr_gSAIGEobj->m_VarInvMat_cond");
+	//AdjCondMat_sub.print("AdjCondMat_sub");
+	//G1tilde_P_G2tilde_Weighted_Mat_sub.print("G1tilde_P_G2tilde_Weighted_Mat_sub");
+	AdjCondMat.rows(startt,endt) = AdjCondMat_sub;
+   std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;	
+	VarMatAdjCond_sub = AdjCondMat_sub * (G1tilde_P_G2tilde_Weighted_Mat_sub.t());
+	//VarMatAdjCond_sub.print("VarMatAdjCond_sub");
+	VarMatAdjCond.rows(startt,endt) = VarMatAdjCond_sub;
+   std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;
+   	Tstat_cond_sub = (ptr_gSAIGEobj->m_Tstat_cond).subvec(startt_qcond,endt_qcond);
+	TstatAdjCond_sub = AdjCondMat_sub * (Tstat_cond_sub % w0G2Vec_cond );
+	TstatAdjCond.subvec(startt, endt) = TstatAdjCond_sub;
+   std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;	
+   }
+      //arma::mat AdjCondMat = G1tilde_P_G2tilde_Weighted_Mat * (ptr_gSAIGEobj->m_VarInvMat_cond / (w0G2Mat_cond));
+      //arma::mat VarMatAdjCond = AdjCondMat * (G1tilde_P_G2tilde_Weighted_Mat.t());
+      //arma::vec TstatAdjCond = AdjCondMat * (ptr_gSAIGEobj->m_Tstat_cond % w0G2Vec_cond ); 
       OutList.push_back(G1tilde_P_G2tilde_Weighted_Mat, "G1tilde_P_G2tilde_Weighted_Mat"); 
       OutList.push_back(ptr_gSAIGEobj->m_scalefactor_G2_cond, "scalefactor_G2_cond");
       OutList.push_back(ptr_gSAIGEobj->m_VarInvMat_cond_scaled_weighted, "VarInvMat_G2_cond_scaled"); 
@@ -2575,6 +2619,9 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
       OutList.push_back(ptr_gSAIGEobj->m_G2_Weight_cond, "G2_Weight_cond");
       OutList.push_back(TstatAdjCond, "TstatAdjCond");
       OutList.push_back(VarMatAdjCond, "VarMatAdjCond"); 
+
+     
+
     }
 
     if(!t_isFastTest){
@@ -2586,11 +2633,11 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
      }
 
   //}//for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
-
+   
 }//if(t_regionTestType == "BURDEN"){
 
 
-}
+//}
 
 
 //std::cout << "If only conduct Burden test d " << std::endl;
@@ -2735,6 +2782,10 @@ void assign_conditionMarkers_factors(
   ptr_gSAIGEobj->set_flagSparseGRM_cur(ptr_gSAIGEobj->m_flagSparseGRM);
   bool isImpute = false;	
   unsigned int q = t_genoIndex.size();
+
+  std::cout << "q " << q << std::endl;
+
+
   unsigned int nt = ptr_gSAIGEobj->m_traitType_vec.size();
   arma::mat P1Mat(q*nt, t_n);
   arma::mat P2Mat(t_n, q*nt);
@@ -2815,15 +2866,6 @@ void assign_conditionMarkers_factors(
   double MAC = MAF * 2 * t_n * (1 - missingRate);
 
   bool hasVarRatio;
-  if((ptr_gSAIGEobj->m_varRatio_null).n_elem == 1){
-	ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM, true);	
-  }else{
-	hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM, true);
-	//if(!hasVarRatio){
-	//	std::cout << "Error! Conditioning marker " << info << " has MAC " << MAC << " and does not have variance ratio estimated." << std::endl;
-	//	exit(EXIT_FAILURE);
-	//}	
-  }	  
  
   flip = imputeGenoAndFlip(GVec, altFreq, altCounts, indexForMissing, g_impute_method, g_dosage_zerod_cutoff, g_dosage_zerod_MAC_cutoff, MAC, indexZeroVec, indexNonZeroVec);
 
@@ -2838,10 +2880,35 @@ void assign_conditionMarkers_factors(
 
   arma::vec gtildeVec;
 
- for(unsigned int i_mt = 0; i_mt < nt; i_mt++){
+  std::cout << "herebefore " << std::endl;
+  bool isSingleVarianceRatio;
+  if(ptr_gSAIGEobj->m_varRatio_null_mt.n_rows == 1){
+        //ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
+        //ptr_gSAIGEobj->assignSingleVarianceRatio(false);
+        isSingleVarianceRatio = true;
+  }else{
+        isSingleVarianceRatio = false;
+  }
+
+
+  for(unsigned int i_mt = 0; i_mt < nt; i_mt++){
 
      ptr_gSAIGEobj->assign_for_itrait(i_mt);
      unsigned int j_mt = i_mt*q+i;
+
+    if(isSingleVarianceRatio){
+  //std::cout << "Here2f mainMarkerInCPP" << std::endl;
+       ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
+       //std::cout << "Here2g mainMarkerInCPP" << std::endl;
+    }else{
+ // std::cout << "Here2gb mainMarkerInCPP" << std::endl;
+       hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
+ // std::cout << "Here2gc mainMarkerInCPP" << std::endl;
+    }
+
+
+  std::cout << "j_mt " << j_mt << std::endl;
+
 
   if(MAC > g_MACCutoffforER){
      Unified_getMarkerPval(
@@ -2856,6 +2923,8 @@ void assign_conditionMarkers_factors(
 
   }
 
+      std::cout << "after p value" << std::endl;
+      ptr_gSAIGEobj->getadjG(GVec, gtildeVec);
       P1Mat.row(j_mt) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*gtildeVec.t();
       P2Mat.col(j_mt) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*P2Vec;
       //P1Mat.row(i) = gtildeVec.t();
@@ -2867,7 +2936,7 @@ void assign_conditionMarkers_factors(
 	std::cerr << "ERROR: Conditioning marker is monomorphic\n";
       }	      
 
-
+      std::cout << "after p value 2" << std::endl;
      //if(!t_weight_cond.is_zero()){
      w0G2_cond = t_weight_cond(i);
     //}else{
@@ -2878,6 +2947,7 @@ void assign_conditionMarkers_factors(
      if(i_mt == 0){
      	gsumVec = gsumVec + GVec * w0G2_cond;
      }
+           std::cout << "after p value 3" << std::endl;
      //gsumMat.col(i_mt) = gsumMat.col(i_mt) + GVec * w0G2_cond;
      TstatVec(j_mt) = Tstat;
      pVec(j_mt) = pval;
@@ -2887,20 +2957,37 @@ void assign_conditionMarkers_factors(
 
 
  arma::mat VarMatsub, P1Matsub, P2Matsub;
- arma::vec qsumVec(nt);
+ arma::vec qsumVec(nt*q);
  arma::mat gsumtildeMat(gsumVec.n_elem, nt); 
  arma::vec gsumtildeVec;
  arma::mat VarMat(q, q*nt);
+
+ gyVec.print("gyVec");
  for(unsigned int i_mt = 0; i_mt < nt; i_mt++){
+     std::cout << "after p value 4" << std::endl;
      ptr_gSAIGEobj->assign_for_itrait(i_mt);
      P1Matsub = P1Mat.rows(i_mt*q, (i_mt+1)*q - 1);
-     P2Matsub - P2Mat.cols(i_mt*q, (i_mt+1)*q - 1);	 
+     P2Matsub = P2Mat.cols(i_mt*q, (i_mt+1)*q - 1);
+	//P1Matsub.print("P1Matsub");
+	//P2Matsub.print("P2Matsub");	
+	std::cout << "P1Matsub.n_rows " << P1Matsub.n_rows << std::endl;
+	std::cout << "P1Matsub.n_cols " << P1Matsub.n_cols << std::endl;
+	std::cout << "P2Matsub.n_rows " << P2Matsub.n_rows << std::endl;
+	std::cout << "P2Matsub.n_cols " << P2Matsub.n_cols << std::endl;
+
+     std::cout << "after p value 5" << std::endl;
      VarMatsub = P1Matsub * P2Matsub;
      VarMat.cols(i_mt*q, (i_mt+1)*q - 1) = VarMatsub;
-     VarInvMat.cols(i_mt*q, (i_mt+1)*q - 1) = VarMat.i();
-     qsumVec(i_mt) = arma::accu(gyVec(i_mt*q, (i_mt+1)*q - 1));
+     VarInvMat.cols(i_mt*q, (i_mt+1)*q - 1) = VarMatsub.i();
+     std::cout << "after p value 6" << std::endl;
+     
+
+
+     qsumVec(i_mt) = arma::accu(gyVec.subvec(i_mt*q, (i_mt+1)*q - 1));
      ptr_gSAIGEobj->getadjG(gsumVec, gsumtildeVec);
-    gsumtildeMat.col(i_mt) = gsumtildeVec;
+     std::cout << "after p value 7" << std::endl;
+     gsumtildeMat.col(i_mt) = gsumtildeVec;
+     std::cout << "after p value 8" << std::endl;
 }
   //double qsum = arma::accu(gyVec);
 

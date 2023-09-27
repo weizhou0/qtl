@@ -269,22 +269,12 @@ fitNULLGLMM_multiV = function(plinkFile = "",
     if (!file.exists(phenoFile)) {
         stop("ERROR! phenoFile ", phenoFile, " does not exsit\n")
     }else{
-        if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
-            data = data.table:::fread(cmd = paste0("gunzip -c ", 
-                phenoFile), header = T, stringsAsFactors = FALSE, 
-                colClasses = list(character = sampleIDColinphenoFile), data.table=F)
-        }else {
-            data = data.table:::fread(phenoFile, header = T, 
-                stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table=F)
-        }
-        #data = data.frame(ydat)
 	if(longlCol == ""){
 		checkColList = c(phenoCol, covarColList, sampleIDColinphenoFile)
 	}else{
 		checkColList = c(phenoCol, covarColList, sampleIDColinphenoFile, longlCol)
 	}
-
-
+	
 	if(length(offsetCol) > 0){
             cat(offsetCol, "is the offset term\n")
 	    checkColList = c(checkColList, offsetCol)	
@@ -296,17 +286,51 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	}	
 
 
+if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
+        cmd=paste0("gunzip -c ", phenoFile ,"| head -n 1 | sed 's/\\t/\\n/g' | sed 's/\ /\\n/g' | awk '{print $1\"\\t\"NR}' > ", outputPrefix, "_", phenoCol, "_lineNum_temp")
+        system(cmd)
+}else{
+        cmd=paste0("cat ", phenoFile ,"| head -n 1 | sed 's/\\t/\\n/g' | sed 's/\ /\\n/g' | awk '{print $1\"\\t\"NR}' > ", outputPrefix, "_",phenoCol, "_lineNum_temp")
+        system(cmd)
+}
 
-        for (i in checkColList) {
-            if (!(i %in% colnames(data))) {
-                stop("ERROR! column for ", i, " does not exist in the phenoFile \n")
-            }else{
-		data = data[,which(colnames(data) %in% checkColList), drop=F]	
-		data = data[complete.cases(data),,drop=F]
-	    }		    
-        }
+checkColListDataFrame = data.frame(colna=checkColList)
+phenoFilephenoCol_lineNum = data.table::fread(paste0(outputPrefix, "_", phenoCol, "_lineNum_temp"), header=F, data.table=F)
+
+phenoFilephenoCol_lineNum_checkColList = merge(checkColListDataFrame, phenoFilephenoCol_lineNum, by.x=1, by.y=1)
+
+write.table(phenoFilephenoCol_lineNum_checkColList[,2], paste0(outputPrefix, "_", phenoCol, "_colnames_subset_temp"), quote=F, col.names=F, row.names=F)
 
 
+if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
+	cmdb = paste0("cut -f $(tr '\\n' ',' < ", outputPrefix, "_", phenoCol, "_colnames_subset_temp | sed 's/,$//') <(gunzip -c", phenoFile, ")> ", outputPrefix, "_",phenoCol,"_subcols_temp")
+}else{
+
+	cmdb = paste0("cut -f $(tr '\\n' ',' < ", outputPrefix, "_", phenoCol, "_colnames_subset_temp | sed 's/,$//') ", phenoFile, "> ", outputPrefix, "_",phenoCol,"_subcols_temp")
+}
+
+
+system(cmdb)
+
+phenoFiletemp = paste0(outputPrefix, "_",phenoCol,"_subcols_temp")
+
+        
+      data = data.table:::fread(phenoFiletemp, header = T, 
+                stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table=F)
+        #data = data.frame(ydat)
+
+file.remove(paste0(outputPrefix, "_", phenoCol, "_colnames_subset_temp"))
+file.remove(paste0(outputPrefix, "_", phenoCol, "_lineNum_temp"))
+file.remove(paste0(outputPrefix, "_", phenoCol, "_subcols_temp"))
+
+	#if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
+        #    data = data.table:::fread(cmd = paste0("gunzip -c ", 
+        #        phenoFile), header = T, stringsAsFactors = FALSE, 
+        #        colClasses = list(character = sampleIDColinphenoFile), data.table=F, select=checkColList)
+        #}else {
+        #    data = data.table:::fread(phenoFile, header = T, 
+        #        stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table=F, select=checkColList)
+        #}
 
         if(isRemoveZerosinPheno){
             data = data[which(data[,which(colnames(data) == phenoCol)] > 0), ]

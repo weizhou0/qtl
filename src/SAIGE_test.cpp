@@ -489,11 +489,13 @@ void SAIGEClass::scoreTestFast_noadjCov_multiTrait(arma::vec & t_GVec,
 
 
 void SAIGEClass::getadjG(arma::vec & t_GVec, arma::vec & g){
-   g = m_XV * t_GVec;
+   //g = m_XV * t_GVec;
+   g = m_XV_mt.rows(m_startip, m_endip) * t_GVec;
    //t_GVec.t().print("t_GVec");
    //std::cout << "sum(t_GVec) " << arma::accu(t_GVec) << std::endl;
    //      m_XV.print("m_XV");
-    g = t_GVec - m_XXVX_inv * g;
+   //g = t_GVec - m_XXVX_inv * g;
+   g = t_GVec - m_XXVX_inv_mt.rows(m_startin, m_endin) * g;
     //m_XXVX_inv.print("m_XXVX_inv");
     //g.t().print("g");
 }
@@ -893,13 +895,28 @@ if(!t_isnoadjCov){
         	getadjGFast(t_GVec, t_gtilde, iIndex);
         	is_gtilde = true;
         }
+
+//std::cout << "here is_gtilde" << std::endl;
+
         t_G1tilde_P_G2tilde = sqrt(m_varRatioVal) * t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
+//std::cout << "here is_gtilde 1" << std::endl;
+//std::cout << "m_startic " << m_startic << std::endl;
+//std::cout << "m_endic " << m_endic << std::endl;
+	//m_P2Mat_cond.print("m_P2Mat_cond");	
+	//t_G1tilde_P_G2tilde.print("t_G1tilde_P_G2tilde");
+	//m_VarInvMat_cond.print("m_VarInvMat_cond");
+	//m_Tstat_cond.print("m_Tstat_cond");
         arma::vec t_Tstat_ctemp =  t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (m_Tstat_cond.subvec(m_startic, m_endic));
+//std::cout << "here is_gtilde 2" << std::endl;
 	arma::mat tempgP2 = t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
+//std::cout << "here is_gtilde 3" << std::endl;
 
     	t_Tstat_c = t_Tstat - t_Tstat_ctemp(0);
+//std::cout << "here is_gtilde 4" << std::endl;
     	arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (t_G1tilde_P_G2tilde.t());
+//std::cout << "here is_gtilde 5" << std::endl;
     	t_varT_c = t_var1 - t_varT_ctemp(0);
+//std::cout << "here is_gtilde 6" << std::endl;
 
     double S_c = t_Tstat_c;
 
