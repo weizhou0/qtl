@@ -100,14 +100,21 @@ BEGIN_RCPP
 END_RCPP
 }
 // setAssocTest_GlobalVarsInCPP_GbyE
-void setAssocTest_GlobalVarsInCPP_GbyE(arma::fmat& t_emat, bool t_isgxe, double t_pval_cutoff_for_gxe);
-RcppExport SEXP _SAIGE_setAssocTest_GlobalVarsInCPP_GbyE(SEXP t_ematSEXP, SEXP t_isgxeSEXP, SEXP t_pval_cutoff_for_gxeSEXP) {
+void setAssocTest_GlobalVarsInCPP_GbyE(arma::mat& t_emat, bool t_isgxe, double t_pval_cutoff_for_gxe, arma::mat& t_XV_gxe, arma::mat& t_XXVX_inv_gxe, arma::mat& t_y_gxe, arma::mat& t_res_gxe, arma::mat& t_mu2_gxe, arma::mat& t_mu_gxe, arma::mat& t_varWeights_gxe);
+RcppExport SEXP _SAIGE_setAssocTest_GlobalVarsInCPP_GbyE(SEXP t_ematSEXP, SEXP t_isgxeSEXP, SEXP t_pval_cutoff_for_gxeSEXP, SEXP t_XV_gxeSEXP, SEXP t_XXVX_inv_gxeSEXP, SEXP t_y_gxeSEXP, SEXP t_res_gxeSEXP, SEXP t_mu2_gxeSEXP, SEXP t_mu_gxeSEXP, SEXP t_varWeights_gxeSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::fmat& >::type t_emat(t_ematSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_emat(t_ematSEXP);
     Rcpp::traits::input_parameter< bool >::type t_isgxe(t_isgxeSEXP);
     Rcpp::traits::input_parameter< double >::type t_pval_cutoff_for_gxe(t_pval_cutoff_for_gxeSEXP);
-    setAssocTest_GlobalVarsInCPP_GbyE(t_emat, t_isgxe, t_pval_cutoff_for_gxe);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_XV_gxe(t_XV_gxeSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_XXVX_inv_gxe(t_XXVX_inv_gxeSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_y_gxe(t_y_gxeSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_res_gxe(t_res_gxeSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_mu2_gxe(t_mu2_gxeSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_mu_gxe(t_mu_gxeSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type t_varWeights_gxe(t_varWeights_gxeSEXP);
+    setAssocTest_GlobalVarsInCPP_GbyE(t_emat, t_isgxe, t_pval_cutoff_for_gxe, t_XV_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe);
     return R_NilValue;
 END_RCPP
 }
@@ -2311,7 +2318,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGE_openOutfile_single_LDmat", (DL_FUNC) &_SAIGE_openOutfile_single_LDmat, 1},
     {"_SAIGE_closeOutfile_single_LDmat", (DL_FUNC) &_SAIGE_closeOutfile_single_LDmat, 0},
     {"_SAIGE_setAssocTest_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setAssocTest_GlobalVarsInCPP, 9},
-    {"_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE", (DL_FUNC) &_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE, 3},
+    {"_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE", (DL_FUNC) &_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE, 10},
     {"_SAIGE_setMarker_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setMarker_GlobalVarsInCPP, 2},
     {"_SAIGE_setRegion_GlobalVarsInCPP", (DL_FUNC) &_SAIGE_setRegion_GlobalVarsInCPP, 4},
     {"_SAIGE_mainMarkerInCPP", (DL_FUNC) &_SAIGE_mainMarkerInCPP, 7},

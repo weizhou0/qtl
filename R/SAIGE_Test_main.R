@@ -265,8 +265,6 @@ SPAGMMATtest = function(bgenFile = "",
 
     obj.model.List = ReadModel_multiTrait(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt=9999, espa_range=c(-20,20)) #readInGLMM.R8
 
-    setAssocTest_GlobalVarsInCPP_GbyE(obj.model.List[[1]]$eMat, obj.model.List[[1]]$isgxe, pval_cutoff_for_gxe);	
-
 
     if(obj.model.List[[1]]$traitType == "binary"){
         if(max_MAC_use_ER > 0){
@@ -376,7 +374,35 @@ SPAGMMATtest = function(bgenFile = "",
     #print(sum(!duplicated(obj.model$X)))
     #print("length(unique(obj.model$sampleID))")
     #print(length(unique(obj.model$sampleID)))
+eMat = NULL
+isgxe_vec = NULL
+for(oml in 1:length(obj.model.List)){
+	print("dim(I_mat)")
+	print(dim(I_mat))
+	print("obj.model.List[[oml]]$eMat)")
+	print(dim(obj.model.List[[oml]]$eMat))
+        #eMat = cbind(eMat, t(I_mat)%*%(obj.model.List[[oml]]$eMat))
+        eMat = cbind(eMat, (obj.model.List[[oml]]$eMat))
+        isgxe_vec = c(isgxe_vec, obj.model.List[[oml]]$isgxe)	
+}
 
+if(sum(isgxe_vec) != 0 && sum(isgxe_vec) != length(isgxe_vec)){
+	stop("isgxe for all traits needs to be the same (perform or not perform dynamic qtl analyses)\n")	
+}
+
+cat("pval_cutoff_for_gxe ", pval_cutoff_for_gxe, "\n")
+print("dim(eMat)")
+print(dim(eMat))
+print(isgxe_vec)
+eMat = as.matrix(eMat)
+#setAssocTest_GlobalVarsInCPP_GbyE(eMat, TRUE, 0.001)
+        XV_gxe = NULL
+        XXVX_inv_gxe = NULL
+        y_gxe = NULL
+        res_gxe = NULL
+        mu2_gxe = NULL
+        mu_gxe = NULL
+        varWeights_gxe = NULL
 
    ##Set up the sample level summary statistics. This is specifically for data sets with repeated measurements
    if(sum(duplicated(obj.model.List[[1]]$sampleID)) > 0){
@@ -399,6 +425,7 @@ SPAGMMATtest = function(bgenFile = "",
 	tauVal_sp = NULL
 	traitType = NULL
 	varWeights_sample = NULL
+
      for(oml in 1:length(obj.model.List)){
      	obj.model = obj.model.List[[oml]]
 	Xsample0 = obj.model$sampleXMat  ##from step 1
@@ -423,8 +450,7 @@ SPAGMMATtest = function(bgenFile = "",
 
 	Sigma_iXXSigma_iX0 = obj.model$Sigma_iXXSigma_iX
 	Sigma_iXXSigma_iX = rbind(Sigma_iXXSigma_iX, Sigma_iXXSigma_iX0)
-
-#print("dim(XVXsample)")
+		
 #print(dim(XVXsample))
 #print("dim(XXVXsample_inv)")
 #print(dim(XXVXsample_inv))
@@ -464,12 +490,21 @@ SPAGMMATtest = function(bgenFile = "",
 	obj_cc_res.out = cbind(obj_cc_res.out, obj.model$obj_cc$res.out)
 	#tauVal_sp = cbind(tauVal_sp, obj.model$tauVal_sp)
 	traitType = c(traitType, obj.model$traitType)
+	if(isgxe_vec[1]){
+		XV_gxe = rbind(XV_gxe, obj.model$obj.noK$XV)	
+		XXVX_inv_gxe = rbind(XXVX_inv_gxe, obj.model$obj.noK$XXVX_inv)
+		y_gxe = cbind(y_gxe, obj.model$y)
+		res_gxe = cbind(res_gxe, obj.model$residuals)
+        	mu2_gxe = cbind(mu2_gxe, obj.model$mu2)
+        	mu_gxe = cbind(mu_gxe, obj.model$mu)
+		varWeights_gxe = cbind(varWeights_gxe, obj.model$varWeights)
+	}
      }	
   }
 
 
-#print("dim(ratioVecList$ratioVec_sparse)")
-#print(dim(ratioVecList$ratioVec_sparse))
+print("dim(ratioVecList$ratioVec_sparse)")
+print(dim(ratioVecList$ratioVec_sparse))
 #print(ratioVecList)
 #print(SPAcutoff)
 #print(theta)
@@ -496,8 +531,55 @@ SPAGMMATtest = function(bgenFile = "",
 
 #print("XXVXsample_inv")
 #print(XXVXsample_inv)
-if(sum(duplicated(obj.model$sampleID)) > 0){
+if(sum(duplicated(obj.model.List[[1]]$sampleID)) > 0){
+    print("XXVXsample_inv")
+print(length(XVXsample))
+print(length(XXVXsample_inv))
+print(length(XVsample))
+print(length(XVX_inv_XVsample))
+print(length(Sigma_iXXSigma_iX))
+print(length(Xsample))
+print(length(S_a_sample))
+print(length(res_sample))
+print(length(mu2_sample))
+print(length(mu_sample))
+print(length(as.matrix(ratioVecList$ratioVec_sparse)))
+print(length(as.matrix(ratioVecList$ratioVec_null)))
+print(length(as.matrix(ratioVecList$ratioVec_null_noXadj)))
+print(length(as.matrix(ratioVecList$ratioVec_null_eg)))
+print(length(as.matrix(ratioVecList$ratioVec_sparse_eg)))
+print(length(cateVarRatioMinMACVecExclude))
+print(length(cateVarRatioMaxMACVecInclude))
+print(length(SPAcutoff))
+print(length(theta))
+print(length(varWeights_sample))
+print(length(traitType))
+print(length(y))
+print(length(impute_method))
+print(length(isSparseGRM))
+print(length(is_noadjCov))
+print(length(pval_cutoff_for_fastTest))
+print(length(isCondition))
+print(length(condition_genoIndex_a))
+print(length(is_Firth_beta))
+print(length(pCutoffforFirth))
+print(length(offset))
+print(length(obj_cc_res.out))
+print(length(SigmaMat_sp))
+print(length(obj.model$tauVal_sp))
+print(length(I_mat))
+print(length(b-1))
+print(length(T_longl_mat))
+print(length(obj.model.List[[1]]$T_longl_vec))
+print(length(is_EmpSPA))
+print(length(obj.model$cumul))
 
+
+print("OKKKK")
+print(traitType)
+
+
+#if(FALSE){
     setSAIGEobjInCPP(t_XVX=XVXsample,
                      t_XXVX_inv=XXVXsample_inv,
                      t_XV=XVsample,
@@ -518,8 +600,8 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
                      t_SPA_Cutoff = SPAcutoff,
                      t_tauvec = theta,
                      t_varWeightsvec = varWeights_sample,
-                     t_traitType = traitType,
-                     t_y = y,
+                     t_traitType = as.vector(traitType),
+                     t_y = as.matrix(y),
                      t_impute_method = impute_method,
                      t_flagSparseGRM = isSparseGRM,
                      t_isnoadjCov = is_noadjCov,
@@ -538,11 +620,11 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
                      t_T_longl_vec = obj.model.List[[1]]$T_longl_vec,
                      t_is_EmpSPA = is_EmpSPA,
                      t_cumul = obj.model$cumul) 
+#}
 
 
 
-
-  #print("setSAIGEobjInCPP 0")
+  print("setSAIGEobjInCPP 0")
   #print_g_n_unique()
 
 #print("ratioVecList")
@@ -550,16 +632,17 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
 
 }else{
 #}
-        Xsample = NULL
-        Vsample = NULL
-        XVsample = NULL
-        XXVXsample_inv = NULL
-        XVX_inv_XVsample = NULL
+        X = NULL
+        V = NULL
+        XV = NULL
+        XVX = NULL
+        XXVX_inv = NULL
+        XVX_inv_XV = NULL
         Sigma_iXXSigma_iX = NULL
-        res_sample = NULL
-        mu_sample = NULL
-        mu2_sample = NULL
-        S_a_sample = NULL
+        res = NULL
+        mu = NULL
+        mu2 = NULL
+        S_a = NULL
         theta = NULL
         y = NULL
         offset = NULL
@@ -568,8 +651,8 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
 	traitType = NULL
 	varWeights = NULL
      for(oml in 1:length(obj.model.List)){
-	traitType = c(traitType, obj.model$traitType)
         obj.model = obj.model.List[[oml]]
+	traitType = c(traitType, obj.model$traitType)
         XVX = rbind(XVX, obj.model$obj.noK$XVX)
 	XXVX_inv = rbind(XXVX_inv, obj.model$obj.noK$XXVX_inv)
 	XV = rbind(XV, obj.model$obj.noK$XV)
@@ -589,10 +672,20 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
 	varWeights = cbind(varWeights, obj.model$varWeights)
      }
 
+        if(isgxe_vec[1]){
+                XV_gxe = XV
+                XXVX_inv_gxe = XXVX_inv
+		y_gxe = y
+        	res_gxe = res
+		mu2_gxe = mu2 
+        	mu_gxe = mu
+        	varWeights_gxe = varWeights
+        }
+
+
 	mu_sample = mu
 
-
-    setSAIGEobjInCPP(t_XVX=XVX,
+	setSAIGEobjInCPP(t_XVX=XVX,
 		     t_XXVX_inv=XXVX_inv,
 		     t_XV=XV,
 		     t_XVX_inv_XV=XVX_inv_XV,
@@ -602,11 +695,11 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
 		     t_res=res,
 		     t_mu2=mu2,
 		     t_mu=mu,
-		     t_varRatio_sparse = as.vector(ratioVecList$ratioVec_sparse),
-		     t_varRatio_null = as.vector(ratioVecList$ratioVec_null),
-		     t_varRatio_null_noXadj = as.vector(ratioVecList$ratioVec_null_noXadj),
-		     t_varRatio_null_eg = as.vector(ratioVecList$ratioVec_null_eg),	
-		     t_varRatio_sparse_eg = as.vector(ratioVecList$ratioVec_sparse_eg),	
+		     t_varRatio_sparse = as.matrix(ratioVecList$ratioVec_sparse),
+		     t_varRatio_null = as.matrix(ratioVecList$ratioVec_null),
+		     t_varRatio_null_noXadj = as.matrix(ratioVecList$ratioVec_null_noXadj),
+		     t_varRatio_null_eg = as.matrix(ratioVecList$ratioVec_null_eg),	
+		     t_varRatio_sparse_eg = as.matrix(ratioVecList$ratioVec_sparse_eg),	
 		     t_cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
 		     t_cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
 		     t_SPA_Cutoff = SPAcutoff,
@@ -625,11 +718,11 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
 		     t_offset = offset, 
 		     t_resout = obj_cc_res.out, 
 		     t_SigmaMat_sp = SigmaMat_sp,
-		     t_tauVal_sp = tauVal_sp,
+		     t_tauVal_sp = obj.model$tauVal_sp,
 		     t_Ilongmat = I_mat,
 		     t_I_longl_vec = b-1,
 		     t_Tlongmat = T_longl_mat,
-		     t_T_longl_vec = obj.model$T_longl_vec,
+		     t_T_longl_vec = obj.model.List[[1]]$T_longl_vec,
 		     t_is_EmpSPA = is_EmpSPA,
 		     t_cumul = obj.model$cumul) 
 
@@ -648,6 +741,11 @@ if(sum(duplicated(obj.model$sampleID)) > 0){
 
   #rm(sparseSigmaRList)
   gc()
+
+  print("HEREHREHREH")
+
+   setAssocTest_GlobalVarsInCPP_GbyE(eMat, isgxe_vec[1], as.numeric(pval_cutoff_for_gxe), XV_gxe, XXVX_inv_gxe,   y_gxe , res_gxe , mu2_gxe , mu_gxe , varWeights_gxe );	
+
    #process condition
     if (isCondition) {
         #n = length(obj.model$y) #sample size

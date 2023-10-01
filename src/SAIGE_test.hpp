@@ -24,9 +24,9 @@ class SAIGEClass
       arma::vec  m_S_a;
       std::string m_traitType; 
       std::string m_impute_method;
-      std::vector<uint32_t> m_condition_genoIndex;
 
     public:
+      std::vector<uint32_t> m_condition_genoIndex;
       arma::vec m_mu2;
       arma::vec m_mu2_sample;
       arma::vec m_tauvec;
@@ -34,9 +34,9 @@ class SAIGEClass
       arma::vec m_varWeightsvec; 
       arma::mat m_XXVX_inv;
       arma::mat m_XV;
-      int m_n, m_p; //MAIN Dimensions: sample size, number of covariates
+      int m_n, m_p, m_p_gxe, m_n_gxe; //MAIN Dimensions: sample size, number of covariates
 		
-      unsigned int m_itrait, m_startip, m_startin, m_startic, m_endip, m_endin, m_endic;
+      unsigned int m_itrait, m_startip, m_startin, m_startic, m_endip, m_endin, m_endic, m_startip_gxe, m_endip_gxe, m_startin_gxe, m_endin_gxe;
 
       double m_varRatioVal;
       arma::vec m_varRatio_sparse;
@@ -109,6 +109,17 @@ class SAIGEClass
       approxfun::approxfunClass m_K_2_emp;
       arma::mat m_cumul;
       double m_varResid;
+
+
+arma::mat m_XV_gxe_mt;
+arma::mat m_XXVX_inv_gxe_mt;
+arma::mat m_y_gxe_mt;
+arma::mat m_res_gxe_mt;
+arma::mat m_mu2_gxe_mt;
+arma::mat m_mu_gxe_mt;
+arma::mat m_varWeights_gxe_mt;
+
+
 arma::mat    m_XVX_mt;
 arma::mat    m_XV_mt;
 arma::mat    m_XXVX_inv_mt;
@@ -129,7 +140,6 @@ arma::mat    m_tauvec_mt;
 arma::mat    m_varWeightsvec_mt;
 arma::mat    m_y_mt;
 arma::mat    m_offset_mt;
-
 std::vector<std::ofstream> OutFile_single_vec;
 
     SAIGEClass(
@@ -403,6 +413,54 @@ std::vector<std::ofstream> OutFile_single_vec;
      void assign_for_itrait_binaryindices(unsigned int t_itrait);
      void assignConditionFactors_scalefactor_multiTrait( arma::mat & t_scalefactor_G2_cond,
              unsigned int oml);
+
+
+void getMarkerPval_gxe(arma::vec & t_GVec,
+                               arma::uvec & iIndex,
+                               arma::uvec & iIndexComVec,
+                               double& t_Beta,
+                               double& t_seBeta,
+                               double& t_pval,
+                               double& t_pval_noSPA,
+                               double t_altFreq,
+                               double& t_Tstat,
+                               double& t_gy,
+                               double& t_var1,
+                               bool & t_isSPAConverge,
+                               arma::vec & t_gtilde,
+                               bool & is_gtilde,
+                               bool  is_region,
+                               arma::vec & t_P2Vec,
+                               bool t_isCondition,
+                               double& t_Beta_c,
+                                double& t_seBeta_c,
+                                double& t_pval_c,
+                                double& t_pval_noSPA_c,
+                                double& t_Tstat_c,
+                                double& t_varT_c,
+                                arma::rowvec & t_G1tilde_P_G2tilde,
+                                bool & t_isFirth,
+                                bool & t_isFirthConverge,
+                                bool t_isER,
+                                bool t_isnoadjCov,
+                                bool t_isSparseGRM);
+
+void getadjGFast_gxe(arma::vec & t_GVec, arma::vec & g, arma::uvec & iIndex);
+
+void scoreTest_gxe(arma::vec & t_GVec,
+                     double& t_Beta,
+                     double& t_seBeta,
+                     std::string& t_pval_str,
+                     double t_altFreq,
+                     double &t_Tstat,
+                     double &t_var1,
+                     double &t_var2,
+                     arma::vec & t_gtilde,
+                     arma::vec & t_P2Vec,
+                     double& t_gy,
+                     bool t_is_region,
+                     arma::uvec & t_indexForNonZero,
+                     double & t_pval);
 
 };
 }

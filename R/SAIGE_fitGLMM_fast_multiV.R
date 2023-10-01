@@ -1448,7 +1448,25 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   freqVec = getAlleleFreqVec()
   Nnomissing = length(mu)
   varRatioTable = NULL
+  
+  
+  #uniqsampleind = which(!duplicated(obj.glmm.null$sampleID))
+  #var_weights_sample = var_weights[uniqsampleind]
+  Vsample0 = as.vector(t(obj.noK$V) %*% I_mat)
+  Xsample0 = obj.glmm.null$sampleXMat
+  XVsample0 = t(Xsample0 * Vsample0)
+  XVXsample0 = t(Xsample0) %*% (t(XVsample0))
+  XVXsample_inv0 = solve(XVXsample0)
+  XXVXsample_inv0 = Xsample0 %*% XVXsample_inv0
+  XVX_inv_XVsample0 = XXVXsample_inv0 * Vsample0
+  XVsample0_e_list = list()
+  for(ne in 1:ncol(obj.glmm.null$eMat)){
+    evec = obj.glmm.null$eMat[,ne]
+    Vsample0_e = as.vector(t(obj.noK$V * evec) %*% I_mat)	
 
+    XVsample0_e =  t(Xsample0 * (Vsample0_e))
+    XVsample0_e_list[[ne]] = XVsample0_e
+  }  
 
   for(k in 1:length(listOfMarkersForVarRatio)){
     if(cateVarRatioIndexVec[k] == 1){
@@ -1484,6 +1502,9 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
           }
 
 	#if(sum(duplicated(obj.glmm.null$sampleID)) > 0){
+	  if(sum(G0)/(2*length(G0)) > 0.5){
+            G0 = 2-G0
+          }
 	  G0sample  = G0
 	  #print("length(G0)   aaaaa")
 	  #print(length(G0))
@@ -1562,14 +1583,26 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	  	var1GE_vec = NULL
 		var2sparseGE_vec = NULL
 		getildeMat = NULL
+		getilde_sample0_Mat = NULL
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
 			evec = obj.glmm.null$eMat[,ne]
 			print("evec[1:100]")
 			print(evec[1:100])
+			#evec = t(I_mat) %*% evec
+			#XVsample0_e = XVsample0_e_list[[ne]] 
 			GE = G0 * evec
 			GE_tilde = GE  -  obj.noK$XXVX_inv %*%  (obj.noK$XV %*% GE)
+			#GE_tilde_new = GE - I_mat %*% XXVXsample_inv0 %*%  (XVsample0_e %*% G0sample)
+			#print("sum(GE_tilde != GE_tilde_new)")
+			#print(sum((GE_tilde -  GE_tilde_new)^2))
+
+			#print(obj.noK$XXVX_inv[1:2,])
+			#XXVX_invtemp = I_mat %*% XXVXsample_inv0
+			#print(XXVX_invtemp[1:2,])
+
 			#obj.glmm.null$eMat[,ne] = GE_tilde
 			getildeMat = cbind(getildeMat, GE_tilde)
+
 			Sigma_iGE = getSigma_G_multiV(W, tauVecNew, GE_tilde, maxiterPCG, tolPCG, LOCO=FALSE)
 			var1GE = t(GE_tilde)%*%Sigma_iGE- t(GE_tilde)%*%Sigma_iX%*%(solve(t(X)%*%Sigma_iX))%*%t(X)%*%Sigma_iGE
 			var1GE_vec = c(var1GE_vec, var1GE)
@@ -1578,6 +1611,13 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 			cat("p_exact_GE ", p_exact_GE, "\n")
 			cat("S_GE ", S_GE, "\n")
 			cat("var1GE ", var1GE, "\n")
+			
+			I_mat_e = I_mat * evec			
+			#evec_sample = as.vector(t(t(evec) %*% I_mat))
+			#GE_sample = G0sample * evec_sample
+			GE_sample = as.vector(t(G0) %*% I_mat_e)
+			GE_sample_tilde = GE_sample  -  XXVXsample_inv0 %*%  (XVsample0 %*% GE_sample)
+			getilde_sample0_Mat = cbind(getilde_sample0_Mat, GE_sample_tilde)
 			if(useSparseGRMforVarRatio){
 				set_isSparseGRM(useSparseGRMforVarRatio)
 				Sigma_iGE_sparse = getSigma_G_noV(W, tauVecNew, GE_tilde, maxiterPCG, tolPCG, LOCO=FALSE)
@@ -1630,8 +1670,6 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, 1)
        }	       
   }	
-   
-
 
 
     if(obj.glmm.null$traitType == "binary"){
@@ -1640,8 +1678,13 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
-			GE_tilde = getildeMat[,ne]
-                        var22nullGE = innerProduct(mu*(1-mu)*var_weights, GE_tilde*GE_tilde)
+			#GE_tilde = getildeMat[,ne]
+			GE_sample_tilde = getilde_sample0_Mat[,ne] 
+                        #var22nullGE = innerProduct(mu*(1-mu)*var_weights, GE_tilde*GE_tilde)
+                        var22nullGE = innerProduct(as.vector(t(mu*(1-mu)*var_weights) %*% I_mat), as.vector(GE_sample_tilde*GE_sample_tilde))
+			
+			
+			#var22nullGE = innerProduct(mu*(1-mu)*var_weights, GE_tilde*GE_tilde)
                         var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
 		}
 	 }	
@@ -1651,21 +1694,34 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
-			GE_tilde = getildeMat[,ne]
-                        var22nullGE = innerProduct(GE_tilde, GE_tilde*var_weights)
+			#GE_tilde = getildeMat[,ne]
+			GE_sample_tilde = getilde_sample0_Mat[,ne]
+                        #var22nullGE = innerProduct(GE_tilde, GE_tilde*var_weights)
+                        var22nullGE = innerProduct(as.vector(GE_sample_tilde), as.vector(GE_sample_tilde)*as.vector(t(var_weights) %*% I_mat))
                         var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
 		}
 	 }	
     }else if(obj.glmm.null$traitType == "count"){
          var2null = innerProduct(mu*var_weights, G*G)
+	 G0_sample_tilde = G0sample - XXVXsample_inv0 %*%  (XVsample0 %*% G0sample)
+	cat("mean(G0_sample_tilde) ", mean(G0_sample_tilde), "\n")
+         var2null_new = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
+	 cat("var2null ", var2null, "\n")
+	 cat("var2null_new ", var2null_new, "\n")
 	 muI = as.vector(t(mu) %*% I_mat)*as.vector(var_weights)
          var2null_noXadj = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G_noXadj*G_noXadj)
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
 			GE_tilde = getildeMat[,ne]
+			#GE_sample_tilde = getilde_sample0_Mat[,ne]
+			#cat("mean(GE_sample_tilde) ", mean(GE_sample_tilde), "\n")
                         var22nullGE = innerProduct(mu*var_weights, GE_tilde*GE_tilde)
-                        var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
+                        #var22nullGE = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), as.vector(GE_sample_tilde*GE_sample_tilde))
+			#cat("var22nullGE_old ", var22nullGE_old, "\n")
+			cat("var22nullGE ", var22nullGE, "\n")
+			
+			var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
 		}
 	 }	
     }else if(obj.glmm.null$traitType == "count_nb"){
@@ -1674,16 +1730,18 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
-			GE_tilde = getildeMat[,ne]
-                        var22nullGE = innerProduct(W, GE_tilde*GE_tilde)
+			#GE_tilde = getildeMat[,ne]
+			GE_sample_tilde = getilde_sample0_Mat[,ne]
+                        #var22nullGE = innerProduct(W, GE_tilde*GE_tilde)
+                        var22nullGE = innerProduct(as.vector(t(W) %*% I_mat), as.vector(GE_sample_tilde*GE_sample_tilde))
                         var2nullGE_vec = c(var2nullGE_vec, var22nullGE)
 		}
 	 }	
     }	    
 
-  cat("mu\n")
-  print(mu[1:100])
-  cat("AC ", AC, "\n")
+   cat("mu\n")
+   print(mu[1:100])
+   cat("AC ", AC, "\n")
    # cat("S ", S*sqrt(AC), "\n")
    cat("var1 ", var1, "\n")
    cat("var2null ", var2null, "\n")
@@ -1755,8 +1813,8 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
       	varRatioTable = rbind(varRatioTable, c(varRatio_NULL_eg_vec[ne], "null", 0))
       	varRatioTable = rbind(varRatioTable, c(varRatio_sparse_eg_vec[ne], "sparse", 0))
       }	
-print(varRatio_NULL_eg_vec)
-print(varRatio_NULL_eg_mat)
+     print(varRatio_NULL_eg_vec)
+     print(varRatio_NULL_eg_mat)
  } 
 
   varRatioTable = rbind(varRatioTable, c(varRatio_null, "null", k))

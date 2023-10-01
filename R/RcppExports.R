@@ -25,8 +25,8 @@ setAssocTest_GlobalVarsInCPP <- function(t_impute_method, t_missing_cutoff, t_mi
     invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP', PACKAGE = 'SAIGE', t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_outputFilePrefix, t_MACCutoffforER))
 }
 
-setAssocTest_GlobalVarsInCPP_GbyE <- function(t_emat, t_isgxe, t_pval_cutoff_for_gxe) {
-    invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE', PACKAGE = 'SAIGE', t_emat, t_isgxe, t_pval_cutoff_for_gxe))
+setAssocTest_GlobalVarsInCPP_GbyE <- function(t_emat, t_isgxe, t_pval_cutoff_for_gxe, t_XV_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe) {
+    invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE', PACKAGE = 'SAIGE', t_emat, t_isgxe, t_pval_cutoff_for_gxe, t_XV_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe))
 }
 
 setMarker_GlobalVarsInCPP <- function(t_isOutputMoreDetails, t_marker_chunksize) {

@@ -22,15 +22,23 @@ void setAssocTest_GlobalVarsInCPP(std::string t_impute_method,
 
 
 void setAssocTest_GlobalVarsInCPP_GbyE(
-				arma::fmat & t_emat,
-				bool t_isgxe
-					);
+                                arma::mat & t_emat,
+                                bool t_isgxe,
+                                double t_pval_cutoff_for_gxe,
+                                arma::mat & t_XV_gxe,
+                                arma::mat & t_XXVX_inv_gxe,
+                                arma::mat & t_y_gxe,
+                                arma::mat & t_res_gxe,
+                                arma::mat & t_mu2_gxe,
+                                arma::mat & t_mu_gxe,
+                                arma::mat & t_varWeights_gxe);
 
 
 void setMarker_GlobalVarsInCPP(
                                bool t_isOutputMoreDetails,
                                int t_marker_chunksize,
-			       arma::mat & t_emat,	                                bool t_isgxe
+			       arma::mat & t_emat,
+			       bool t_isgxe
                                );
 
 
@@ -101,6 +109,39 @@ void Unified_getMarkerPval(
 			   bool t_isER,
 			   bool t_isnoadjCov,
                                 bool t_isSparseGRM); 
+
+
+void Unified_getMarkerPval_gxe(
+                           arma::vec & t_GVec,
+                           bool t_isOnlyOutputNonZero,
+                           arma::uvec & t_indexForNonZero_vec,
+                           arma::uvec & t_indexForZero_vec,
+                           double& t_Beta,
+                           double& t_seBeta,
+                           double& t_pval,
+                           double& t_pval_noSPA,
+                           double& t_Tstat,
+                           double& t_gy,
+                           double& t_varT,
+                           double t_altFreq,
+                           bool & t_isSPAConverge,
+                           arma::vec & t_gtilde,
+                           bool & is_gtilde,
+                           bool  is_region,
+                           arma::vec & t_P2Vec,
+                           bool t_isCondition,
+                           double& t_Beta_c,
+                           double& t_seBeta_c,
+                           double& t_pval_c,
+                           double& t_pval_noSPA_c,
+                           double& t_Tstat_c,
+                           double& t_varT_c,
+                           arma::rowvec & t_G1tilde_P_G2tilde_Vec,
+                           bool & t_isFirth,
+                           bool & t_isFirthConverge,
+                           bool t_isER,
+                           bool t_isnoadjCov,
+                           bool t_isSparseGRM);
 
 
 

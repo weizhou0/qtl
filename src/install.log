@@ -1,0 +1,1285 @@
+* installing *source* package 'SAIGE' ...
+staged installation is only possible with locking
+** using non-staged installation
+** libs
+x86_64-conda-linux-gnu-c++ -std=gnu++11 -I"/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/include" -DNDEBUG -I ../thirdParty/cget/include -I ../thirdParty/cget/lib -I ../thirdParty/cget/lib64 -D SQLITE_ENABLE_COLUMN_METADATA -O3 -fpic -Wall -Wextra -pedantic  -DARMA_64BIT_WORD=1 -D__STDC_FORMAT_MACROS -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppParallel/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/data.table/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/SPAtest/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppEigen/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Matrix/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/methods/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/optparse/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/SKAT/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/MetaSKAT/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/qlcMatrix/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RhpcBLASctl/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RSQLite/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/dplyr/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/nlme/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/MASS/include' -I'/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppNumerical/include' -DNDEBUG -D_FORTIFY_SOURCE=2 -O2 -isystem /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/include -I/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/include -Wl,-rpath-link,/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib   -fpic  -fvisibility-inlines-hidden  -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/r-base-split_1648745733215/work=/usr/local/src/conda/r-base-4.1.3 -fdebug-prefix-map=/stanley/genetics/users/wzhou/.conda/envs/RSAIGE=/usr/local/src/conda-prefix  -c Main.cpp -o Main.o
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:127,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'const char* Rcpp::type2name(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'const char* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:86:26: note: in expansion of macro 'GET_CALLABLE'
+   86 |         static Fun fun = GET_CALLABLE("type2name");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'long unsigned int Rcpp::internal::enterRNGScope()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'long unsigned int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:93:30: note: in expansion of macro 'GET_CALLABLE'
+   93 |             static Fun fun = GET_CALLABLE("enterRNGScope");
+      |                              ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'long unsigned int Rcpp::internal::exitRNGScope()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'long unsigned int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:99:30: note: in expansion of macro 'GET_CALLABLE'
+   99 |             static Fun fun = GET_CALLABLE("exitRNGScope");
+      |                              ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'long unsigned int Rcpp::internal::beginSuspendRNGSynchronization()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'long unsigned int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:105:30: note: in expansion of macro 'GET_CALLABLE'
+  105 |             static Fun fun = GET_CALLABLE("beginSuspendRNGSynchronization");
+      |                              ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'long unsigned int Rcpp::internal::endSuspendRNGSynchronization()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'long unsigned int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:111:30: note: in expansion of macro 'GET_CALLABLE'
+  111 |             static Fun fun = GET_CALLABLE("endSuspendRNGSynchronization");
+      |                              ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'double Rcpp::mktime00(tm&)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'double (*)(tm&)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:132:26: note: in expansion of macro 'GET_CALLABLE'
+  132 |         static Fun fun = GET_CALLABLE("mktime00");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'tm* Rcpp::gmtime_(const time_t*)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'tm* (*)(const long int*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:138:27: note: in expansion of macro 'GET_CALLABLE'
+  138 |         static Fun fun =  GET_CALLABLE("gmtime_");
+      |                           ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* Rcpp::Rcpp_precious_preserve(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:154:26: note: in expansion of macro 'GET_CALLABLE'
+  154 |         static Fun fun = GET_CALLABLE("Rcpp_precious_preserve");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void Rcpp::Rcpp_precious_remove(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:159:26: note: in expansion of macro 'GET_CALLABLE'
+  159 |         static Fun fun = GET_CALLABLE("Rcpp_precious_remove");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'Rcpp::Rostream<true>& Rcpp::Rcpp_cout_get()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'Rcpp::Rostream<true>& (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:165:26: note: in expansion of macro 'GET_CALLABLE'
+  165 |         static Fun fun = GET_CALLABLE("Rcpp_cout_get");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'Rcpp::Rostream<false>& Rcpp::Rcpp_cerr_get()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'Rcpp::Rostream<false>& (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:170:26: note: in expansion of macro 'GET_CALLABLE'
+  170 |         static Fun fun = GET_CALLABLE("Rcpp_cerr_get");
+      |                          ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* rcpp_set_stack_trace(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:188:23: note: in expansion of macro 'GET_CALLABLE'
+  188 |     static Fun fun =  GET_CALLABLE("rcpp_set_stack_trace");
+      |                       ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'std::string demangle(const string&)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'std::__cxx11::basic_string<char> (*)(const std::__cxx11::basic_string<char>&)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:194:22: note: in expansion of macro 'GET_CALLABLE'
+  194 |     static Fun fun = GET_CALLABLE("demangle");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'const char* short_file_name(const char*)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'const char* (*)(const char*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:200:22: note: in expansion of macro 'GET_CALLABLE'
+  200 |     static Fun fun = GET_CALLABLE("short_file_name");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* stack_trace(const char*, int)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(const char*, int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:206:22: note: in expansion of macro 'GET_CALLABLE'
+  206 |     static Fun fun = GET_CALLABLE("stack_trace");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* get_string_elt(SEXP, R_xlen_t)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(SEXPREC*, long int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:212:22: note: in expansion of macro 'GET_CALLABLE'
+  212 |     static Fun fun = GET_CALLABLE("get_string_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'const char* char_get_string_elt(SEXP, R_xlen_t)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'const char* (*)(SEXPREC*, long int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:218:22: note: in expansion of macro 'GET_CALLABLE'
+  218 |     static Fun fun = GET_CALLABLE("char_get_string_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void set_string_elt(SEXP, R_xlen_t, SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(SEXPREC*, long int, SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:224:22: note: in expansion of macro 'GET_CALLABLE'
+  224 |     static Fun fun = GET_CALLABLE("set_string_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void char_set_string_elt(SEXP, R_xlen_t, const char*)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(SEXPREC*, long int, const char*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:230:22: note: in expansion of macro 'GET_CALLABLE'
+  230 |     static Fun fun = GET_CALLABLE("char_set_string_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC** get_string_ptr(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC** (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:236:22: note: in expansion of macro 'GET_CALLABLE'
+  236 |     static Fun fun = GET_CALLABLE("get_string_ptr");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC* get_vector_elt(SEXP, R_xlen_t)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC* (*)(SEXPREC*, long int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:242:22: note: in expansion of macro 'GET_CALLABLE'
+  242 |     static Fun fun = GET_CALLABLE("get_vector_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void set_vector_elt(SEXP, R_xlen_t, SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(SEXPREC*, long int, SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:248:22: note: in expansion of macro 'GET_CALLABLE'
+  248 |     static Fun fun = GET_CALLABLE("set_vector_elt");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'SEXPREC** get_vector_ptr(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'SEXPREC** (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:254:22: note: in expansion of macro 'GET_CALLABLE'
+  254 |     static Fun fun = GET_CALLABLE("get_vector_ptr");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'const char* char_nocheck(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'const char* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:260:22: note: in expansion of macro 'GET_CALLABLE'
+  260 |     static Fun fun = GET_CALLABLE("char_nocheck");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void* dataptr(SEXP)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void* (*)(SEXPREC*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:266:22: note: in expansion of macro 'GET_CALLABLE'
+  266 |     static Fun fun = GET_CALLABLE("dataptr");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'void setCurrentScope(Rcpp::Module*)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'void (*)(Rcpp::Module*)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:278:22: note: in expansion of macro 'GET_CALLABLE'
+  278 |     static Fun fun = GET_CALLABLE("setCurrentScope");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'int* get_cache(int)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'int* (*)(int)'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:284:22: note: in expansion of macro 'GET_CALLABLE'
+  284 |     static Fun fun = GET_CALLABLE("get_cache");
+      |                      ^~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h: In function 'int error_occured()':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:82:35: warning: cast between incompatible function types from 'DL_FUNC' {aka 'void* (*)()'} to 'Fun' {aka 'int (*)()'} [-Wcast-function-type]
+   82 |     #define GET_CALLABLE(__FUN__) (Fun) R_GetCCallable( "Rcpp", __FUN__ )
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/routines.h:296:22: note: in expansion of macro 'GET_CALLABLE'
+  296 |     static Fun fun = GET_CALLABLE("error_occured");
+      |                      ^~~~~~~~~~~~
+In file included from ../thirdParty/cget/include/savvy/site_info.hpp:12,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:10,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/savvy/typed_value.hpp: At global scope:
+../thirdParty/cget/include/savvy/typed_value.hpp:32:43: warning: overflow in conversion from 'int' to 'int8_t' {aka 'signed char'} changes value from '128' to '-128' [-Woverflow]
+   32 |   static const std::int8_t missing_int8 = 0x80;
+      |                                           ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp:33:45: warning: overflow in conversion from 'int' to 'int16_t' {aka 'short int'} changes value from '32768' to '-32768' [-Woverflow]
+   33 |   static const std::int16_t missing_int16 = 0x8000;
+      |                                             ^~~~~~
+../thirdParty/cget/include/savvy/typed_value.hpp:37:49: warning: overflow in conversion from 'int' to 'int8_t' {aka 'signed char'} changes value from '129' to '-127' [-Woverflow]
+   37 |   static const std::int8_t end_of_vector_int8 = 0x81;
+      |                                                 ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp:38:51: warning: overflow in conversion from 'int' to 'int16_t' {aka 'short int'} changes value from '32769' to '-32767' [-Woverflow]
+   38 |   static const std::int16_t end_of_vector_int16 = 0x8001;
+      |                                                   ^~~~~~
+In file included from ../thirdParty/cget/include/savvy/site_info.hpp:12,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:10,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function 'static T savvy::typed_value::missing_value() [with T = signed char]':
+../thirdParty/cget/include/savvy/typed_value.hpp:1882:85: warning: overflow in conversion from 'int' to 'int8_t' {aka 'signed char'} changes value from '128' to '-128' [-Woverflow]
+ 1882 |   template <> inline std::int8_t typed_value::missing_value<std::int8_t>() { return 0x80; }
+      |                                                                                     ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function 'static T savvy::typed_value::missing_value() [with T = short int]':
+../thirdParty/cget/include/savvy/typed_value.hpp:1883:87: warning: overflow in conversion from 'int' to 'int16_t' {aka 'short int'} changes value from '32768' to '-32768' [-Woverflow]
+ 1883 |   template <> inline std::int16_t typed_value::missing_value<std::int16_t>() { return 0x8000; }
+      |                                                                                       ^~~~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function 'static T savvy::typed_value::end_of_vector_value() [with T = signed char]':
+../thirdParty/cget/include/savvy/typed_value.hpp:1910:91: warning: overflow in conversion from 'int' to 'int8_t' {aka 'signed char'} changes value from '129' to '-127' [-Woverflow]
+ 1910 |   template <> inline std::int8_t typed_value::end_of_vector_value<std::int8_t>() { return 0x81; }
+      |                                                                                           ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function 'static T savvy::typed_value::end_of_vector_value() [with T = short int]':
+../thirdParty/cget/include/savvy/typed_value.hpp:1911:93: warning: overflow in conversion from 'int' to 'int16_t' {aka 'short int'} changes value from '32769' to '-32767' [-Woverflow]
+ 1911 |   template <> inline std::int16_t typed_value::end_of_vector_value<std::int16_t>() { return 0x8001; }
+      |                                                                                             ^~~~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function 'static T savvy::typed_value::max_reserved_value() [with T = signed char]':
+../thirdParty/cget/include/savvy/typed_value.hpp:1938:90: warning: overflow in conversion from 'int' to 'int8_t' {aka 'signed char'} changes value from '135' to '-121' [-Woverflow]
+ 1938 |   template <> inline std::int8_t typed_value::max_reserved_value<std::int8_t>() { return 0x87; }
+      |                                                                                          ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function 'static T savvy::typed_value::max_reserved_value() [with T = short int]':
+../thirdParty/cget/include/savvy/typed_value.hpp:1939:92: warning: overflow in conversion from 'int' to 'int16_t' {aka 'short int'} changes value from '32775' to '-32761' [-Woverflow]
+ 1939 |   template <> inline std::int16_t typed_value::max_reserved_value<std::int16_t>() { return 0x8007; }
+      |                                                                                            ^~~~~~
+../thirdParty/cget/include/savvy/typed_value.hpp: In static member function 'static typename std::enable_if<std::is_signed<typename T::value_type>::value, unsigned int>::type savvy::typed_value::internal::get_typed_value_size(const T&)':
+../thirdParty/cget/include/savvy/typed_value.hpp:3876:5: warning: this 'else' clause does not guard... [-Wmisleading-indentation]
+ 3876 |     else
+      |     ^~~~
+../thirdParty/cget/include/savvy/typed_value.hpp:3879:7: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'else'
+ 3879 |       ret += vec.size() * sizeof(typename T::value_type);
+      |       ^~~
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In constructor 'shrinkwrap::gz::ibuf::ibuf(FILE*)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:174:16: warning: 'shrinkwrap::gz::ibuf::zstrm_' will be initialized after [-Wreorder]
+  174 |       z_stream zstrm_;
+      |                ^~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:167:33: warning:   'std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::gz::ibuf::compressed_buffer_' [-Wreorder]
+  167 |       std::vector<std::uint8_t> compressed_buffer_;
+      |                                 ^~~~~~~~~~~~~~~~~~
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:21:7: warning:   when initialized here [-Wreorder]
+   21 |       ibuf(FILE* fp)
+      |       ^~~~
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:178:13: warning: 'shrinkwrap::gz::ibuf::fp_' will be initialized after [-Wreorder]
+  178 |       FILE* fp_;
+      |             ^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:169:19: warning:   'std::size_t shrinkwrap::gz::ibuf::put_back_size_' [-Wreorder]
+  169 |       std::size_t put_back_size_;
+      |                   ^~~~~~~~~~~~~~
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp:21:7: warning:   when initialized here [-Wreorder]
+   21 |       ibuf(FILE* fp)
+      |       ^~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::avail_in' [-Wmissing-field-initializers]
+   31 |         at_block_boundary_(false)
+      |                                 ^
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::total_in' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::next_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::avail_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::total_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::msg' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::state' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::zalloc' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::zfree' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::opaque' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::data_type' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::adler' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:31:33: warning: missing initializer for member 'z_stream_s::reserved' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function 'void shrinkwrap::gz::ibuf::move(shrinkwrap::gz::ibuf&&)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::avail_in' [-Wmissing-field-initializers]
+   88 |         src.zstrm_ = {0};
+      |                        ^
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::total_in' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::next_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::avail_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::total_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::msg' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::state' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::zalloc' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::zfree' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::opaque' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::data_type' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::adler' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:88:24: warning: missing initializer for member 'z_stream_s::reserved' [-Wmissing-field-initializers]
+In file included from ../thirdParty/cget/include/savvy/csi.hpp:10,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:13,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function 'virtual std::basic_streambuf<char>::int_type shrinkwrap::gz::ibuf::underflow()':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:146:36: warning: comparison of integer expressions of different signedness: 'long int' and 'uint64_t' {aka 'long unsigned int'} [-Wsign-compare]
+  146 |             if ((egptr() - gptr()) < advance_amount)
+      |                 ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function 'virtual std::basic_streambuf<char>::pos_type shrinkwrap::gz::ibuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:161:73: warning: unused parameter 'off' [-Wunused-parameter]
+  161 |       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+      |                                                ~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:161:101: warning: unused parameter 'way' [-Wunused-parameter]
+  161 |       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+      |                                                                              ~~~~~~~~~~~~~~~~~~~~~~~^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:161:130: warning: unused parameter 'which' [-Wunused-parameter]
+  161 |       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+      |                                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In constructor 'shrinkwrap::gz::obuf::obuf(FILE*)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:341:13: warning: 'shrinkwrap::gz::obuf::fp_' will be initialized after [-Wreorder]
+  341 |       FILE* fp_;
+      |             ^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:338:33: warning:   'std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::gz::obuf::compressed_buffer_' [-Wreorder]
+  338 |       std::vector<std::uint8_t> compressed_buffer_;
+      |                                 ^~~~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:184:7: warning:   when initialized here [-Wreorder]
+  184 |       obuf(FILE* fp)
+      |       ^~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::avail_in' [-Wmissing-field-initializers]
+  189 |         decompressed_buffer_(default_block_size)
+      |                                                ^
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::total_in' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::next_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::avail_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::total_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::msg' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::state' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::zalloc' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::zfree' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::opaque' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::data_type' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::adler' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:189:48: warning: missing initializer for member 'z_stream_s::reserved' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function 'virtual std::basic_streambuf<char>::pos_type shrinkwrap::bgzf::ibuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:439:130: warning: unused parameter 'which' [-Wunused-parameter]
+  439 |       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which) // Supports tellg for virtual offset.
+      |                                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function 'virtual std::basic_streambuf<char>::pos_type shrinkwrap::bgzf::ibuf::seekpos(std::basic_streambuf<char>::pos_type, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:462:102: warning: unused parameter 'which' [-Wunused-parameter]
+  462 |       virtual std::streambuf::pos_type seekpos(std::streambuf::pos_type pos, std::ios_base::openmode which)
+      |                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In constructor 'shrinkwrap::bgzf::obuf::obuf(FILE*, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:723:13: warning: 'shrinkwrap::bgzf::obuf::fp_' will be initialized after [-Wreorder]
+  723 |       FILE* fp_;
+      |             ^~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:721:33: warning:   'std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::bgzf::obuf::compressed_buffer_' [-Wreorder]
+  721 |       std::vector<std::uint8_t> compressed_buffer_;
+      |                                 ^~~~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:491:7: warning:   when initialized here [-Wreorder]
+  491 |       obuf(FILE* fp, std::ios::openmode mode = std::ios::out)
+      |       ^~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp:509:18: warning: unused variable 'has_eof' [-Wunused-variable]
+  509 |             bool has_eof = false;
+      |                  ^~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In member function 'int shrinkwrap::bgzf::obuf::write_compressed_block(uint32_t)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::avail_in' [-Wmissing-field-initializers]
+  647 |           zs = {0};
+      |                  ^
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::total_in' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::next_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::avail_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::total_out' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::msg' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::state' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::zalloc' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::zfree' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::opaque' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::data_type' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::adler' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:647:18: warning: missing initializer for member 'z_stream_s::reserved' [-Wmissing-field-initializers]
+../thirdParty/cget/include/shrinkwrap/gz.hpp:633:23: warning: unused variable 'buffer_size' [-Wunused-variable]
+  633 |         std::uint32_t buffer_size = bgzf_block_size;
+      |                       ^~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/gz.hpp: In constructor 'shrinkwrap::bgzf::ostream::ostream(const string&, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/gz.hpp:760:64: warning: unused parameter 'mode' [-Wunused-parameter]
+  760 |       ostream(const std::string& file_path, std::ios::openmode mode = std::ios::out)
+      |                                             ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/cassert:44,
+                 from ../thirdParty/cget/include/savvy/s1r.hpp:22,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:14,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/savvy/s1r.hpp: In member function 'void savvy::s1r::reader::init()':
+../thirdParty/cget/include/savvy/s1r.hpp:669:101: warning: comparison of unsigned expression in '>= 0' is always true [-Wtype-limits]
+  669 |             assert(total_file_size - (block_count * block_size + footer.size() + tree_details_size) >= 0ll);
+      |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In constructor 'shrinkwrap::zstd::ibuf::ibuf(FILE*)':
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:184:21: warning: 'shrinkwrap::zstd::ibuf::input_' will be initialized after [-Wreorder]
+  184 |       ZSTD_inBuffer input_;
+      |                     ^~~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:181:33: warning:   'std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::zstd::ibuf::compressed_buffer_' [-Wreorder]
+  181 |       std::vector<std::uint8_t> compressed_buffer_;
+      |                                 ^~~~~~~~~~~~~~~~~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:21:7: warning:   when initialized here [-Wreorder]
+   21 |       ibuf(FILE* fp)
+      |       ^~~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:187:19: warning: 'shrinkwrap::zstd::ibuf::current_block_position_' will be initialized after [-Wreorder]
+  187 |       std::size_t current_block_position_;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:185:13: warning:   'FILE* shrinkwrap::zstd::ibuf::fp_' [-Wreorder]
+  185 |       FILE* fp_;
+      |             ^~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:21:7: warning:   when initialized here [-Wreorder]
+   21 |       ibuf(FILE* fp)
+      |       ^~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:28:15: warning: missing initializer for member 'ZSTD_inBuffer_s::size' [-Wmissing-field-initializers]
+   28 |         fp_(fp)
+      |               ^
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:28:15: warning: missing initializer for member 'ZSTD_inBuffer_s::pos' [-Wmissing-field-initializers]
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:16,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In member function 'virtual std::basic_streambuf<char>::pos_type shrinkwrap::zstd::ibuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:141:130: warning: unused parameter 'which' [-Wunused-parameter]
+  141 |       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+      |                                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In member function 'virtual std::basic_streambuf<char>::pos_type shrinkwrap::zstd::ibuf::seekpos(std::basic_streambuf<char>::pos_type, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:159:102: warning: unused parameter 'which' [-Wunused-parameter]
+  159 |       virtual std::streambuf::pos_type seekpos(std::streambuf::pos_type pos, std::ios_base::openmode which)
+      |                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In constructor 'shrinkwrap::zstd::obuf::obuf(FILE*, int)':
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:373:13: warning: 'shrinkwrap::zstd::obuf::fp_' will be initialized after [-Wreorder]
+  373 |       FILE* fp_;
+      |             ^~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:368:33: warning:   'std::vector<unsigned char, std::allocator<unsigned char> > shrinkwrap::zstd::obuf::compressed_buffer_' [-Wreorder]
+  368 |       std::vector<std::uint8_t> compressed_buffer_;
+      |                                 ^~~~~~~~~~~~~~~~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:193:7: warning:   when initialized here [-Wreorder]
+  193 |       obuf(FILE* fp, int compression_level)
+      |       ^~~~
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In member function 'virtual std::basic_streambuf<char>::pos_type shrinkwrap::zstd::obuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:307:130: warning: unused parameter 'which' [-Wunused-parameter]
+  307 |       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+      |                                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/cassert:44,
+                 from ../thirdParty/cget/include/savvy/s1r.hpp:22,
+                 from ../thirdParty/cget/include/savvy/reader.hpp:14,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/zstd.hpp: In member function 'virtual int shrinkwrap::zstd::obuf::sync()':
+../thirdParty/cget/include/shrinkwrap/zstd.hpp:357:49: warning: comparison of integer expressions of different signedness: 'long int' and 'std::size_t' {aka 'long unsigned int'} [-Wsign-compare]
+  357 |           assert(ftell(fp_) == -1 || ftell(fp_) == total_compressed_bytes_written_); // ftell() returns -1 when output file is piped stream
+      |                                      ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../thirdParty/cget/include/savvy/reader.hpp:18,
+                 from VCF.hpp:7,
+                 from Main.cpp:21:
+../thirdParty/cget/include/shrinkwrap/stdio.hpp: In member function 'virtual std::basic_streambuf<char>::pos_type shrinkwrap::stdio::filebuf::seekoff(std::basic_streambuf<char>::off_type, std::ios_base::seekdir, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/stdio.hpp:70:130: warning: unused parameter 'which' [-Wunused-parameter]
+   70 |       virtual std::streambuf::pos_type seekoff(std::streambuf::off_type off, std::ios_base::seekdir way, std::ios_base::openmode which)
+      |                                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+../thirdParty/cget/include/shrinkwrap/stdio.hpp: In member function 'virtual std::basic_streambuf<char>::pos_type shrinkwrap::stdio::filebuf::seekpos(std::basic_streambuf<char>::pos_type, std::ios_base::openmode)':
+../thirdParty/cget/include/shrinkwrap/stdio.hpp:85:102: warning: unused parameter 'which' [-Wunused-parameter]
+   85 |       virtual std::streambuf::pos_type seekpos(std::streambuf::pos_type pos, std::ios_base::openmode which)
+      |                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/mpl/aux_/na_assert.hpp:23,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/mpl/arg.hpp:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/mpl/placeholders.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/iterator/iterator_categories.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/iterator/iterator_facade.hpp:13,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/range/iterator_range_core.hpp:27,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/algorithm/string/replace.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/date_facet.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/gregorian/gregorian_io.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/gregorian/gregorian.hpp:31,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/time_formatters.hpp:12,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/mpl/assert.hpp: At global scope:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/mpl/assert.hpp:194:21: warning: unnecessary parentheses in declaration of 'assert_arg' [-Wparentheses]
+  194 | failed ************ (Pred::************
+      |                     ^
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/mpl/assert.hpp:199:21: warning: unnecessary parentheses in declaration of 'assert_not_arg' [-Wparentheses]
+  199 | failed ************ (boost::mpl::not_<Pred>::************
+      |                     ^
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/shared_ptr.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/shared_ptr.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/detail/shared_count.hpp:361:33: warning: 'template<class> class std::auto_ptr' is deprecated [-Wdeprecated-declarations]
+  361 |     explicit shared_count( std::auto_ptr<Y> & r ): pi_( new sp_counted_impl_p<Y>( r.get() ) )
+      |                                 ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/locale_conv.h:41,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/locale:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/iomanip:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:53,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/unique_ptr.h:57:28: note: declared here
+   57 |   template<typename> class auto_ptr;
+      |                            ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/shared_ptr.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/shared_ptr.hpp:250:65: warning: 'template<class> class std::auto_ptr' is deprecated [-Wdeprecated-declarations]
+  250 | template< class T, class R > struct sp_enable_if_auto_ptr< std::auto_ptr< T >, R >
+      |                                                                 ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/locale_conv.h:41,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/locale:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/iomanip:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:53,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/unique_ptr.h:57:28: note: declared here
+   57 |   template<typename> class auto_ptr;
+      |                            ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/shared_ptr.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/shared_ptr.hpp:507:31: warning: 'template<class> class std::auto_ptr' is deprecated [-Wdeprecated-declarations]
+  507 |     explicit shared_ptr( std::auto_ptr<Y> & r ): px(r.get()), pn()
+      |                               ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/locale_conv.h:41,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/locale:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/iomanip:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:53,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/unique_ptr.h:57:28: note: declared here
+   57 |   template<typename> class auto_ptr;
+      |                            ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/shared_ptr.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/shared_ptr.hpp:520:22: warning: 'template<class> class std::auto_ptr' is deprecated [-Wdeprecated-declarations]
+  520 |     shared_ptr( std::auto_ptr<Y> && r ): px(r.get()), pn()
+      |                      ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/locale_conv.h:41,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/locale:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/iomanip:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:53,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/unique_ptr.h:57:28: note: declared here
+   57 |   template<typename> class auto_ptr;
+      |                            ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/shared_ptr.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/shared_ptr.hpp:603:34: warning: 'template<class> class std::auto_ptr' is deprecated [-Wdeprecated-declarations]
+  603 |     shared_ptr & operator=( std::auto_ptr<Y> & r )
+      |                                  ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/locale_conv.h:41,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/locale:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/iomanip:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:53,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/unique_ptr.h:57:28: note: declared here
+   57 |   template<typename> class auto_ptr;
+      |                            ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/shared_ptr.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/shared_ptr.hpp:612:34: warning: 'template<class> class std::auto_ptr' is deprecated [-Wdeprecated-declarations]
+  612 |     shared_ptr & operator=( std::auto_ptr<Y> && r )
+      |                                  ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/locale_conv.h:41,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/locale:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/iomanip:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:53,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/unique_ptr.h:57:28: note: declared here
+   57 |   template<typename> class auto_ptr;
+      |                            ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/shared_ptr.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/time_clock.hpp:17,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time_types.hpp:10,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/time_formatters.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/posix_time/posix_time.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:11,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/shared_ptr.hpp: In member function 'boost::shared_ptr<T>& boost::shared_ptr<T>::operator=(std::auto_ptr<_Up>&&)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/smart_ptr/shared_ptr.hpp:614:38: warning: 'template<class> class std::auto_ptr' is deprecated [-Wdeprecated-declarations]
+  614 |         this_type( static_cast< std::auto_ptr<Y> && >( r ) ).swap( *this );
+      |                                      ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/locale_conv.h:41,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/locale:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/iomanip:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:53,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/unique_ptr.h:57:28: note: declared here
+   57 |   template<typename> class auto_ptr;
+      |                            ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/bind/mem_fn.hpp:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/mem_fn.hpp:22,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/function/detail/prologue.hpp:18,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/function.hpp:30,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/algorithm/string/detail/find_iterator.hpp:18,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/algorithm/string/find_iterator.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/algorithm/string/iter_find.hpp:27,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/algorithm/string/split.hpp:16,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/algorithm/string.hpp:23,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/tz_db_base.hpp:24,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/tz_database.hpp:14,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time/local_time/local_time.hpp:19,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/date_time.hpp:15,
+                 from GENO_null.hpp:19,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/get_pointer.hpp: At global scope:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/BH/include/boost/get_pointer.hpp:48:40: warning: 'template<class> class std::auto_ptr' is deprecated [-Wdeprecated-declarations]
+   48 | template<class T> T * get_pointer(std::auto_ptr<T> const& p)
+      |                                        ^~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/locale_conv.h:41,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/locale:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/iomanip:43,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:53,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/x86_64-conda-linux-gnu/include/c++/10.3.0/bits/unique_ptr.h:57:28: note: declared here
+   57 |   template<typename> class auto_ptr;
+      |                            ^~~~~~~~
+Main.cpp: In function 'void mainMarkerInCPP(std::string&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, bool&, bool&, bool&)':
+Main.cpp:312:20: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<std::__cxx11::basic_string<char> >::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  312 |   for(int i = 0; i < t_genoIndex.size(); i++){
+      |                  ~~^~~~~~~~~~~~~~~~~~~~
+Main.cpp:376:12: warning: unused variable 'isEndFile' [-Wunused-variable]
+  376 |       bool isEndFile = check_Vcf_end();
+      |            ^~~~~~~~~
+Main.cpp:410:27: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<std::__cxx11::basic_string<char> >::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  410 |  for(int i_mt0 = 0; i_mt0 < t_traitType.size(); i_mt0++){
+      |                     ~~~~~~^~~~~~~~~~~~~~~~~~~~
+Main.cpp:321:75: warning: unused variable 'N_case_hom' [-Wunused-variable]
+  321 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                           ^~~~~~~~~~
+Main.cpp:321:87: warning: unused variable 'N_ctrl_het' [-Wunused-variable]
+  321 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                       ^~~~~~~~~~
+Main.cpp:321:99: warning: unused variable 'N_case_het' [-Wunused-variable]
+  321 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                                   ^~~~~~~~~~
+Main.cpp:321:111: warning: unused variable 'N_ctrl_hom' [-Wunused-variable]
+  321 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                                               ^~~~~~~~~~
+Main.cpp:323:34: warning: unused variable 'N' [-Wunused-variable]
+  323 |     uint32_t pd, N_case, N_ctrl, N;
+      |                                  ^
+Main.cpp:429:9: warning: unused variable 'nG' [-Wunused-variable]
+  429 |     int nG = t_GVec.n_elem;
+      |         ^~
+Main.cpp:297:8: warning: variable 'hasVarRatio' set but not used [-Wunused-but-set-variable]
+  297 |   bool hasVarRatio = true;;
+      |        ^~~~~~~~~~~
+Main.cpp: In function 'void setVCFobjInCPP(std::string, std::string, std::string, std::vector<std::__cxx11::basic_string<char> >&)':
+Main.cpp:1142:6: warning: unused variable 'isEnd' [-Wunused-variable]
+ 1142 | bool isEnd = ptr_gVCFobj->check_iterator_end();
+      |      ^~~~~
+Main.cpp: In function 'Rcpp::List RegionSetUpConditional_binary_InCPP(arma::vec&)':
+Main.cpp:1255:22: warning: unused variable 'MAFG2_cond' [-Wunused-variable]
+ 1255 |    double w0G2_cond, MAFG2_cond;
+      |                      ^~~~~~~~~~
+Main.cpp: In function 'Rcpp::List mainRegionInCPP(std::string, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, arma::mat&, std::vector<std::__cxx11::basic_string<char> >&, arma::vec&, arma::vec&, std::string, std::vector<std::__cxx11::basic_string<char> >&, unsigned int, arma::mat&, arma::mat&, std::string, bool, arma::mat&, arma::mat&, arma::vec&, bool, bool, bool, std::vector<std::__cxx11::basic_string<char> >&, std::string, bool, bool)':
+Main.cpp:2016:11: warning: unused variable 'imputeInfo' [-Wunused-variable]
+ 2016 |    double imputeInfo = 1;
+      |           ^~~~~~~~~~
+Main.cpp:2448:13: warning: unused variable 'n' [-Wunused-variable]
+ 2448 |         int n = genoSumVec.size();
+      |             ^
+Main.cpp:2463:16: warning: unused variable 'missingRate' [-Wunused-variable]
+ 2463 |         double missingRate = 0;
+      |                ^~~~~~~~~~~
+Main.cpp:2464:16: warning: unused variable 'imputeInfo' [-Wunused-variable]
+ 2464 |         double imputeInfo = 1;
+      |                ^~~~~~~~~~
+Main.cpp:2466:14: warning: unused variable 'flip' [-Wunused-variable]
+ 2466 |         bool flip = false;
+      |              ^~~~
+Main.cpp:2469:16: warning: unused variable 'w0' [-Wunused-variable]
+ 2469 |         double w0;
+      |                ^~
+Main.cpp:1322:8: warning: variable 'isWeightCustomized' set but not used [-Wunused-but-set-variable]
+ 1322 |   bool isWeightCustomized = false;
+      |        ^~~~~~~~~~~~~~~~~~
+Main.cpp:1331:8: warning: variable 'is_Beta_weight' set but not used [-Wunused-but-set-variable]
+ 1331 |   bool is_Beta_weight = false;
+      |        ^~~~~~~~~~~~~~
+Main.cpp:1368:21: warning: unused variable 'MAFG2_cond' [-Wunused-variable]
+ 1368 |   double w0G2_cond, MAFG2_cond;
+      |                     ^~~~~~~~~~
+Main.cpp:1412:10: warning: unused variable 'MACgroup' [-Wunused-variable]
+ 1412 |   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |          ^~~~~~~~
+Main.cpp:1412:69: warning: unused variable 'N_case_hom' [-Wunused-variable]
+ 1412 |   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                     ^~~~~~~~~~
+Main.cpp:1412:81: warning: unused variable 'N_ctrl_het' [-Wunused-variable]
+ 1412 |   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                 ^~~~~~~~~~
+Main.cpp:1412:93: warning: unused variable 'N_case_het' [-Wunused-variable]
+ 1412 |   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                             ^~~~~~~~~~
+Main.cpp:1412:105: warning: unused variable 'N_ctrl_hom' [-Wunused-variable]
+ 1412 |   double MACgroup, MACcasegroup, MACcontrolgroup, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                                         ^~~~~~~~~~
+Main.cpp:1413:28: warning: unused variable 'N' [-Wunused-variable]
+ 1413 |   uint32_t N_case, N_ctrl, N;
+      |                            ^
+Main.cpp:1481:8: warning: variable 'hasVarRatio' set but not used [-Wunused-but-set-variable]
+ 1481 |   bool hasVarRatio = true;;
+      |        ^~~~~~~~~~~
+Main.cpp:1491:16: warning: unused variable 'nchunks' [-Wunused-variable]
+ 1491 |   unsigned int nchunks = 0; //number of chunks
+      |                ^~~~~~~
+Main.cpp:1493:16: warning: unused variable 'i1InChunk' [-Wunused-variable]
+ 1493 |   unsigned int i1InChunk = 0; //i1th marker in ith chunk
+      |                ^~~~~~~~~
+Main.cpp:1496:16: warning: variable 'jm' set but not used [-Wunused-but-set-variable]
+ 1496 |   unsigned int jm, jmr;
+      |                ^~
+Main.cpp:2675:6: warning: unused variable 'numofUR' [-Wunused-variable]
+ 2675 |  int numofUR = q_anno_maf_weight;
+      |      ^~~~~~~
+Main.cpp:1295:34: warning: unused parameter 't_weightlistvec' [-Wunused-parameter]
+ 1295 |       std::vector<std::string> & t_weightlistvec,
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+Main.cpp: In function 'void assign_conditionMarkers_factors(std::string, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, unsigned int, arma::vec&)':
+Main.cpp:2851:10: warning: variable 'flip' set but not used [-Wunused-but-set-variable]
+ 2851 |     bool flip = false;
+      |          ^~~~
+Main.cpp:2899:8: warning: variable 'hasVarRatio' set but not used [-Wunused-but-set-variable]
+ 2899 |   bool hasVarRatio;
+      |        ^~~~~~~~~~~
+Main.cpp: In function 'arma::vec fast_logistf_fit(arma::mat&, arma::vec&, arma::vec&, arma::vec&, bool, arma::uvec&, arma::vec, int, int, int, double, double, double, bool&)':
+Main.cpp:3086:16: warning: unused parameter 'col_fit' [-Wunused-parameter]
+ 3086 |   arma::uvec & col_fit,
+      |   ~~~~~~~~~~~~~^~~~~~~
+Main.cpp:3090:6: warning: unused parameter 'maxhs' [-Wunused-parameter]
+ 3090 |  int maxhs,
+      |  ~~~~^~~~~
+Main.cpp:3091:9: warning: unused parameter 'lconv' [-Wunused-parameter]
+ 3091 |  double lconv,
+      |  ~~~~~~~^~~~~
+Main.cpp: In function 'void set_varianceRatio(double, bool, bool)':
+Main.cpp:3539:10: warning: variable 'hasVarRatio' set but not used [-Wunused-but-set-variable]
+ 3539 |     bool hasVarRatio;
+      |          ^~~~~~~~~~~
+Main.cpp: In function 'void writeOutfile_BURDEN(std::string, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, arma::vec&, std::vector<double>&, std::vector<double>&, arma::vec&, std::vector<double>&, std::vector<double>&, arma::vec&, arma::vec&, arma::vec&, arma::vec&, arma::vec&, double, double, unsigned int, unsigned int, unsigned int, bool, unsigned int)':
+Main.cpp:3582:22: warning: variable 'q' set but not used [-Wunused-but-set-variable]
+ 3582 |      unsigned int i, q;
+      |                      ^
+Main.cpp: In function 'int writeOutfile_singleInGroup(bool, bool, bool, bool, int, int, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<bool>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<unsigned int>&, std::vector<unsigned int>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<unsigned int>&, std::ofstream&, unsigned int, unsigned int)':
+Main.cpp:3647:30: warning: unused parameter 't_isFirth' [-Wunused-parameter]
+ 3647 |                         bool t_isFirth,
+      |                         ~~~~~^~~~~~~~~
+Main.cpp:3648:30: warning: unused parameter 'mFirth' [-Wunused-parameter]
+ 3648 |                          int mFirth,
+      |                          ~~~~^~~~~~
+Main.cpp:3649:30: warning: unused parameter 'mFirthConverge' [-Wunused-parameter]
+ 3649 |                          int mFirthConverge,
+      |                          ~~~~^~~~~~~~~~~~~~
+Main.cpp: In function 'arma::fvec getDiagOfSigma_multiV(arma::fvec&, arma::fvec&, bool)':
+Main.cpp:4113:32: warning: comparison of integer expressions of different signedness: 'unsigned int' and 'int' [-Wsign-compare]
+ 4113 |         for(unsigned int i=0; i< Nnomissing; i++){
+      |                               ~^~~~~~~~~~~~
+Main.cpp: In function 'void setStartEndIndex(int, int, int)':
+Main.cpp:4287:14: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 4287 |         if(i < startIndex || i > endIndex){
+      |            ~~^~~~~~~~~~~~
+Main.cpp:4287:32: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 4287 |         if(i < startIndex || i > endIndex){
+      |                              ~~^~~~~~~~~~
+Main.cpp: In function 'Rcpp::List fitglmmaiRPCG_multiV(arma::fvec&, arma::fmat&, arma::fvec&, arma::fvec&, arma::ivec&, arma::fvec&, arma::fmat&, arma::fmat&, int, int, float, float, float, bool)':
+Main.cpp:4369:20: warning: catching polymorphic type 'class std::runtime_error' by value [-Wcatch-value=]
+ 4369 |         catch(std::runtime_error){
+      |                    ^~~~~~~~~~~~~
+Main.cpp:4387:23: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 4387 |         for(int i=0; i<k1; i++){
+      |                      ~^~~
+Main.cpp:4348:13: warning: unused variable 'q2' [-Wunused-variable]
+ 4348 |         int q2 = arma::sum(fixtauVec==0);
+      |             ^~
+Main.cpp: In function 'arma::ivec updatefixrhoidx0(arma::fvec&, float)':
+Main.cpp:4628:23: warning: comparison of integer expressions of different signedness: 'int' and 'const uword' {aka 'const long long unsigned int'} [-Wsign-compare]
+ 4628 |         for(int i=0; i<g_covarianceidxMat.n_rows; i++){
+      |                      ~^~~~~~~~~~~~~~~~~~~~~~~~~~
+Main.cpp: In function 'arma::ivec tauUpdateValue(arma::fvec&)':
+Main.cpp:4649:23: warning: comparison of integer expressions of different signedness: 'int' and 'const uword' {aka 'const long long unsigned int'} [-Wsign-compare]
+ 4649 |         for(int i=0; i<g_covarianceidxMat.n_rows; i++){
+      |                      ~^~~~~~~~~~~~~~~~~~~~~~~~~~
+Main.cpp:4648:54: warning: unused variable 'tau0temp' [-Wunused-variable]
+ 4648 |         float tau0_x1, tau0_x2, tau0_x3, tau0_x2_x3, tau0temp;
+      |                                                      ^~~~~~~~
+Main.cpp: In function 'Rcpp::List getAIScore_multiV(arma::fvec&, arma::fmat&, arma::fvec&, arma::fvec&, arma::ivec&, arma::fvec&, arma::fmat&, arma::fmat&, int, int, float, float, bool)':
+Main.cpp:4710:31: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 4710 |                 for(int i=0; i<k1; i++){
+      |                              ~^~~
+Main.cpp:4755:33: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 4755 |                   for(int i=0; i<k1; i++){
+      |                                ~^~~
+Main.cpp:4810:33: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 4810 |                   for(int i=0; i<k1; i++){
+      |                                ~^~~
+Main.cpp:4671:13: warning: unused variable 'q2' [-Wunused-variable]
+ 4671 |         int q2 = arma::sum(fixtauVec==0);
+      |             ^~
+Main.cpp: In function 'arma::fvec GetTrace_multiV(arma::fmat, arma::fmat&, arma::fvec&, arma::fvec&, arma::ivec&, arma::fmat&, int, int, float, float, bool)':
+Main.cpp:4981:41: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 4981 |                           for(int j=2; j<k1;j++){
+      |                                        ~^~~
+Main.cpp:4988:20: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 4988 |      for(int j=2; j<k1;j++){
+      |                   ~^~~
+Main.cpp:5018:47: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 5018 |                                 for(int j=3; j<k1;j++){
+      |                                              ~^~~
+Main.cpp:5034:47: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 5034 |                                 for(int j=2; j<k1;j++){
+      |                                              ~^~~
+Main.cpp:5085:41: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 5085 |                                 while(j < k1){
+      |                                       ~~^~~~
+Main.cpp:5134:41: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+ 5134 |                                 while(j < k1){
+      |                                       ~~^~~~
+Main.cpp:4905:61: warning: unused parameter 'Xmat' [-Wunused-parameter]
+ 4905 | arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec & fixtauVec, arma::fmat& cov1,  int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
+      |                                                 ~~~~~~~~~~~~^~~~
+Main.cpp: In function 'arma::fvec get_GRMdiagVec()':
+Main.cpp:5284:7: warning: unused variable 'mMarker' [-Wunused-variable]
+ 5284 |   int mMarker = gettotalMarker();
+      |       ^~~~~~~
+Main.cpp: In function 'void set_Diagof_StdGeno_LOCO()':
+Main.cpp:5314:18: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 5314 | for(size_t k=0; k< chrlength; k++){
+      |                 ~^~~~~~~~~~~
+Main.cpp: In function 'Rcpp::List createSparseKin(arma::fvec&, float, arma::fvec&, arma::fvec&)':
+Main.cpp:5503:32: warning: comparison of integer expressions of different signedness: 'unsigned int' and 'int' [-Wsign-compare]
+ 5503 |         for(unsigned int i=0; i< Ntotal; i++){
+      |                               ~^~~~~~~~
+Main.cpp:5504:41: warning: comparison of integer expressions of different signedness: 'unsigned int' and 'int' [-Wsign-compare]
+ 5504 |               for(unsigned int j = i; j < Ntotal; j++){
+      |                                       ~~^~~~~~~~
+Main.cpp:5528:26: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 5528 |         for(size_t i=0; i< Mmarker; i++){
+      |                         ~^~~~~~~~~
+Main.cpp:5493:16: warning: unused variable 'sizeTemp' [-Wunused-variable]
+ 5493 |         size_t sizeTemp;
+      |                ^~~~~~~~
+Main.cpp:5494:15: warning: unused variable 'kinValue' [-Wunused-variable]
+ 5494 |         float kinValue;
+      |               ^~~~~~~~
+Main.cpp: In function 'Rcpp::List refineKin(float)':
+Main.cpp:5577:26: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 5577 |         for(size_t i=0; i< Mmarker; i++){
+      |                         ~^~~~~~~~~
+Main.cpp: In function 'arma::fvec getDiagOfSigma_noV(arma::fvec&, arma::fvec&, bool)':
+Main.cpp:5690:32: warning: comparison of integer expressions of different signedness: 'unsigned int' and 'int' [-Wsign-compare]
+ 5690 |         for(unsigned int i=0; i< Nnomissing; i++){
+      |                               ~^~~~~~~~~~~~
+Main.cpp:5649:74: warning: unused parameter 'LOCO' [-Wunused-parameter]
+ 5649 | arma::fvec getDiagOfSigma_noV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO){
+      |                                                                     ~~~~~^~~~
+Main.cpp: In function 'arma::fvec getDiagOfSigma_V(arma::fvec&, float, float)':
+Main.cpp:5743:32: warning: comparison of integer expressions of different signedness: 'unsigned int' and 'int' [-Wsign-compare]
+ 5743 |         for(unsigned int i=0; i< Nnomissing; i++){
+      |                               ~^~~~~~~~~~~~
+Main.cpp: At global scope:
+Main.cpp:6152:2: warning: extra ';' [-Wpedantic]
+ 6152 | };
+      |  ^
+Main.cpp: In function 'void Get_MultiMarkersBySample_StdGeno_Mat()':
+Main.cpp:6195:26: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 6195 |         for(size_t k=0; k< m_M_Submarker; k++){
+      |                         ~^~~~~~~~~~~~~~~
+Main.cpp:6233:40: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 6233 |                                 if(ind == Nnomissing){
+      |                                    ~~~~^~~~~~~~~~~~~
+Main.cpp: In function 'void Get_MultiMarkersBySample_StdGeno(arma::fvec&, std::vector<float, std::allocator<float> >&)':
+Main.cpp:6274:26: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 6274 |         for(size_t k=0; k< m_M_Submarker; k++){
+      |                         ~^~~~~~~~~~~~~~~
+Main.cpp:6308:40: warning: comparison of integer expressions of different signedness: 'size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 6308 |                                 if(ind == Nnomissing){
+      |                                    ~~~~^~~~~~~~~~~~~
+Main.cpp: In function 'void printComb(int)':
+Main.cpp:6597:26: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'int' [-Wsign-compare]
+ 6597 |   for(std::size_t k=0; k < x; k++) {
+      |                        ~~^~~
+Main.cpp: In function 'Rcpp::List get_SKAT_pvalue_Rcpp(arma::vec&, arma::mat&, arma::vec&)':
+Main.cpp:6909:11: warning: unused variable 'error_code' [-Wunused-variable]
+ 6909 |       int error_code = 0;
+      |           ^~~~~~~~~~
+Main.cpp: In function 'void mainMarkerInCPP_multi(std::string&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, bool&, bool&, bool&)':
+Main.cpp:7112:12: warning: unused variable 'isEndFile' [-Wunused-variable]
+ 7112 |       bool isEndFile = check_Vcf_end();
+      |            ^~~~~~~~~
+Main.cpp:7154:12: warning: unused variable 'Beta' [-Wunused-variable]
+ 7154 |     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
+      |            ^~~~
+Main.cpp:7154:18: warning: unused variable 'seBeta' [-Wunused-variable]
+ 7154 |     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
+      |                  ^~~~~~
+Main.cpp:7154:26: warning: unused variable 'pval' [-Wunused-variable]
+ 7154 |     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
+      |                          ^~~~
+Main.cpp:7154:32: warning: unused variable 'pval_noSPA' [-Wunused-variable]
+ 7154 |     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
+      |                                ^~~~~~~~~~
+Main.cpp:7154:44: warning: unused variable 'Tstat' [-Wunused-variable]
+ 7154 |     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
+      |                                            ^~~~~
+Main.cpp:7154:51: warning: unused variable 'varT' [-Wunused-variable]
+ 7154 |     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
+      |                                                   ^~~~
+Main.cpp:7154:57: warning: unused variable 'gy' [-Wunused-variable]
+ 7154 |     double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy;
+      |                                                         ^~
+Main.cpp:7155:12: warning: unused variable 'Beta_c' [-Wunused-variable]
+ 7155 |     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
+      |            ^~~~~~
+Main.cpp:7155:20: warning: unused variable 'seBeta_c' [-Wunused-variable]
+ 7155 |     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
+      |                    ^~~~~~~~
+Main.cpp:7155:30: warning: unused variable 'pval_c' [-Wunused-variable]
+ 7155 |     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
+      |                              ^~~~~~
+Main.cpp:7155:38: warning: unused variable 'pval_noSPA_c' [-Wunused-variable]
+ 7155 |     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
+      |                                      ^~~~~~~~~~~~
+Main.cpp:7155:52: warning: unused variable 'Tstat_c' [-Wunused-variable]
+ 7155 |     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
+      |                                                    ^~~~~~~
+Main.cpp:7155:61: warning: unused variable 'varT_c' [-Wunused-variable]
+ 7155 |     double Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c;
+      |                                                             ^~~~~~
+Main.cpp:7157:10: warning: unused variable 'isSPAConverge' [-Wunused-variable]
+ 7157 |     bool isSPAConverge, is_gtilde, is_Firth, is_FirthConverge;
+      |          ^~~~~~~~~~~~~
+Main.cpp:7157:25: warning: unused variable 'is_gtilde' [-Wunused-variable]
+ 7157 |     bool isSPAConverge, is_gtilde, is_Firth, is_FirthConverge;
+      |                         ^~~~~~~~~
+Main.cpp:7157:36: warning: unused variable 'is_Firth' [-Wunused-variable]
+ 7157 |     bool isSPAConverge, is_gtilde, is_Firth, is_FirthConverge;
+      |                                    ^~~~~~~~
+Main.cpp:7157:46: warning: unused variable 'is_FirthConverge' [-Wunused-variable]
+ 7157 |     bool isSPAConverge, is_gtilde, is_Firth, is_FirthConverge;
+      |                                              ^~~~~~~~~~~~~~~~
+Main.cpp:7068:57: warning: unused variable 'AF_case' [-Wunused-variable]
+ 7068 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                         ^~~~~~~
+Main.cpp:7068:66: warning: unused variable 'AF_ctrl' [-Wunused-variable]
+ 7068 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                  ^~~~~~~
+Main.cpp:7068:75: warning: unused variable 'N_case_hom' [-Wunused-variable]
+ 7068 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                           ^~~~~~~~~~
+Main.cpp:7068:87: warning: unused variable 'N_ctrl_het' [-Wunused-variable]
+ 7068 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                       ^~~~~~~~~~
+Main.cpp:7068:99: warning: unused variable 'N_case_het' [-Wunused-variable]
+ 7068 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                                   ^~~~~~~~~~
+Main.cpp:7068:111: warning: unused variable 'N_ctrl_hom' [-Wunused-variable]
+ 7068 |     double altFreq, altCounts, missingRate, imputeInfo, AF_case, AF_ctrl, N_case_hom, N_ctrl_het, N_case_het, N_ctrl_hom;
+      |                                                                                                               ^~~~~~~~~~
+Main.cpp:7070:18: warning: unused variable 'N_case' [-Wunused-variable]
+ 7070 |     uint32_t pd, N_case, N_ctrl, N;
+      |                  ^~~~~~
+Main.cpp:7070:26: warning: unused variable 'N_ctrl' [-Wunused-variable]
+ 7070 |     uint32_t pd, N_case, N_ctrl, N;
+      |                          ^~~~~~
+Main.cpp:7070:34: warning: unused variable 'N' [-Wunused-variable]
+ 7070 |     uint32_t pd, N_case, N_ctrl, N;
+      |                                  ^
+Main.cpp:7074:10: warning: variable 'flip' set but not used [-Wunused-but-set-variable]
+ 7074 |     bool flip = false;
+      |          ^~~~
+Main.cpp:7120:9: warning: unused variable 'nG' [-Wunused-variable]
+ 7120 |     int nG = t_GVec.n_elem;
+      |         ^~
+Main.cpp:7048:8: warning: unused variable 'hasVarRatio' [-Wunused-variable]
+ 7048 |   bool hasVarRatio = true;;
+      |        ^~~~~~~~~~~
+Main.cpp:7049:8: warning: variable 'isSingleVarianceRatio' set but not used [-Wunused-but-set-variable]
+ 7049 |   bool isSingleVarianceRatio = true;
+      |        ^~~~~~~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppParallel/include/RcppParallel/TinyThread.h:7,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppParallel/include/RcppParallel.h:6,
+                 from GENO_null.hpp:10,
+                 from Main.cpp:25:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppParallel/include/RcppParallel/Common.h: In instantiation of 'int RcppParallel::resolveValue(const char*, T, U) [with T = long unsigned int; U = int]':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppParallel/include/RcppParallel.h:57:28:   required from 'void RcppParallel::parallelReduce(std::size_t, std::size_t, Reducer&, std::size_t, int) [with Reducer = CorssProd_usingSubMarker; std::size_t = long unsigned int]'
+Main.cpp:5415:66:   required from here
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppParallel/include/RcppParallel/Common.h:16:23: warning: comparison of integer expressions of different signedness: 'long unsigned int' and 'int' [-Wsign-compare]
+   16 |    if (requestedValue != defaultValue && requestedValue > 0)
+      |        ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+In file included from SKATO.hpp:8,
+                 from Main.cpp:26:
+qfc.hpp: At global scope:
+qfc.hpp:40:15: warning: 'double exp1(double)' declared 'static' but never defined [-Wunused-function]
+   40 | static double exp1(double x);
+      |               ^~~~
+qfc.hpp:41:13: warning: 'void counter()' declared 'static' but never defined [-Wunused-function]
+   41 | static void counter(void);
+      |             ^~~~~~~
+qfc.hpp:42:15: warning: 'double square(double)' declared 'static' but never defined [-Wunused-function]
+   42 | static double square(double x);
+      |               ^~~~~~
+qfc.hpp:43:15: warning: 'double cube(double)' declared 'static' but never defined [-Wunused-function]
+   43 | static double cube(double x);
+      |               ^~~~
+qfc.hpp:44:16: warning: 'double log1(double, BOOL)' declared 'static' but never defined [-Wunused-function]
+   44 | static double  log1(double x, BOOL first);
+      |                ^~~~
+qfc.hpp:45:13: warning: 'void order()' declared 'static' but never defined [-Wunused-function]
+   45 | static void order(void);
+      |             ^~~~~
+qfc.hpp:46:17: warning: 'double errbd(double, double*)' declared 'static' but never defined [-Wunused-function]
+   46 | static double   errbd(double u, double* cx);
+      |                 ^~~~~
+qfc.hpp:47:16: warning: 'double ctff(double, double*)' declared 'static' but never defined [-Wunused-function]
+   47 | static double  ctff(double accx, double* upn);
+      |                ^~~~
+qfc.hpp:48:15: warning: 'double truncation(double, double)' declared 'static' but never defined [-Wunused-function]
+   48 | static double truncation(double u, double tausq);
+      |               ^~~~~~~~~~
+qfc.hpp:49:13: warning: 'void findu(double*, double)' declared 'static' but never defined [-Wunused-function]
+   49 | static void findu(double* utx, double accx);
+      |             ^~~~~
+qfc.hpp:50:13: warning: 'void integrate(int, double, double, BOOL)' declared 'static' but never defined [-Wunused-function]
+   50 | static void integrate(int nterm, double interv, double tausq, BOOL mainx);
+      |             ^~~~~~~~~
+qfc.hpp:51:15: warning: 'double cfe(double)' declared 'static' but never defined [-Wunused-function]
+   51 | static double cfe(double x);
+      |               ^~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo:639,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:48,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/diskio_meat.hpp: In static member function 'static bool arma::diskio::convert_token(eT&, const string&) [with eT = double]':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/diskio_meat.hpp:480:22: warning: ignoring return value of 'long long unsigned int strtoull(const char*, char**, int)' declared with attribute 'warn_unused_result' [-Wunused-result]
+  480 |         std::strtoull(str_offset1, &endptr, 10);
+      |         ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from SKATO.hpp:8,
+                 from Main.cpp:26:
+qfc.hpp: At global scope:
+qfc.hpp:35:16: warning: 'env' defined but not used [-Wunused-variable]
+   35 | static jmp_buf env;
+      |                ^~~
+qfc.hpp:34:39: warning: 'nc' defined but not used [-Wunused-variable]
+   34 | static int *n,*th; static double *lb,*nc;
+      |                                       ^~
+qfc.hpp:34:35: warning: 'lb' defined but not used [-Wunused-variable]
+   34 | static int *n,*th; static double *lb,*nc;
+      |                                   ^~
+qfc.hpp:34:16: warning: 'th' defined but not used [-Wunused-variable]
+   34 | static int *n,*th; static double *lb,*nc;
+      |                ^~
+qfc.hpp:34:13: warning: 'n' defined but not used [-Wunused-variable]
+   34 | static int *n,*th; static double *lb,*nc;
+      |             ^
+qfc.hpp:33:49: warning: 'fail' defined but not used [-Wunused-variable]
+   33 | static int count0, r, lim;  static BOOL ndtsrt, fail;
+      |                                                 ^~~~
+qfc.hpp:33:41: warning: 'ndtsrt' defined but not used [-Wunused-variable]
+   33 | static int count0, r, lim;  static BOOL ndtsrt, fail;
+      |                                         ^~~~~~
+qfc.hpp:33:23: warning: 'lim' defined but not used [-Wunused-variable]
+   33 | static int count0, r, lim;  static BOOL ndtsrt, fail;
+      |                       ^~~
+qfc.hpp:33:20: warning: 'r' defined but not used [-Wunused-variable]
+   33 | static int count0, r, lim;  static BOOL ndtsrt, fail;
+      |                    ^
+qfc.hpp:33:12: warning: 'count0' defined but not used [-Wunused-variable]
+   33 | static int count0, r, lim;  static BOOL ndtsrt, fail;
+      |            ^~~~~~
+qfc.hpp:32:21: warning: 'ersm' defined but not used [-Wunused-variable]
+   32 | static double intl, ersm;
+      |                     ^~~~
+qfc.hpp:32:15: warning: 'intl' defined but not used [-Wunused-variable]
+   32 | static double intl, ersm;
+      |               ^~~~
+qfc.hpp:31:40: warning: 'c' defined but not used [-Wunused-variable]
+   31 | static double sigsq, lmax, lmin, mean, c;
+      |                                        ^
+qfc.hpp:31:34: warning: 'mean' defined but not used [-Wunused-variable]
+   31 | static double sigsq, lmax, lmin, mean, c;
+      |                                  ^~~~
+qfc.hpp:31:28: warning: 'lmin' defined but not used [-Wunused-variable]
+   31 | static double sigsq, lmax, lmin, mean, c;
+      |                            ^~~~
+qfc.hpp:31:22: warning: 'lmax' defined but not used [-Wunused-variable]
+   31 | static double sigsq, lmax, lmin, mean, c;
+      |                      ^~~~
+qfc.hpp:31:15: warning: 'sigsq' defined but not used [-Wunused-variable]
+   31 | static double sigsq, lmax, lmin, mean, c;
+      |               ^~~~~
+Main.cpp: In function 'uint32_t Unified_getSampleSizeinGeno(std::string&)':
+Main.cpp:1028:14: warning: 'N0' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1028 |     return(N0);
+      |              ^
+Main.cpp: In function 'uint32_t Unified_getSampleSizeinAnalysis(std::string&)':
+Main.cpp:1044:13: warning: 'N' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1044 |     return(N);
+      |             ^
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/RcppCommon.h:187,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:25,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/internal/wrap.h: In function 'Rcpp::List mainRegionInCPP(std::string, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, arma::mat&, std::vector<std::__cxx11::basic_string<char> >&, arma::vec&, arma::vec&, std::string, std::vector<std::__cxx11::basic_string<char> >&, unsigned int, arma::mat&, arma::mat&, std::string, bool, arma::mat&, arma::mat&, arma::vec&, bool, bool, bool, std::vector<std::__cxx11::basic_string<char> >&, std::string, bool, bool)':
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/Rcpp/include/Rcpp/internal/wrap.h:442:41: warning: 'numofUR0' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  442 |             r_vector_start<RTYPE>(x)[0] = object;
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+Main.cpp:2676:6: note: 'numofUR0' was declared here
+ 2676 |  int numofUR0;
+      |      ^~~~~~~~
+Main.cpp:2558:22: warning: 'cctpval_cond' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 2558 |   writeOutfile_BURDEN(regionName,
+      |   ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+ 2559 |    BURDEN_AnnoName_Vec,
+      |    ~~~~~~~~~~~~~~~~~~~~
+ 2560 |    BURDEN_maxMAFName_Vec,
+      |    ~~~~~~~~~~~~~~~~~~~~~~
+ 2561 |    BURDEN_pval_Vec,
+      |    ~~~~~~~~~~~~~~~~   
+ 2562 |    BURDEN_Beta_Vec,
+      |    ~~~~~~~~~~~~~~~~   
+ 2563 |    BURDEN_seBeta_Vec,
+      |    ~~~~~~~~~~~~~~~~~~ 
+ 2564 |    BURDEN_pval_cVec,
+      |    ~~~~~~~~~~~~~~~~~  
+ 2565 |    BURDEN_Beta_cVec,
+      |    ~~~~~~~~~~~~~~~~~  
+ 2566 |    BURDEN_seBeta_cVec,
+      |    ~~~~~~~~~~~~~~~~~~~
+ 2567 |    MAC_GroupVec,
+      |    ~~~~~~~~~~~~~      
+ 2568 |    MACCase_GroupVec,
+      |    ~~~~~~~~~~~~~~~~~  
+ 2569 |    MACControl_GroupVec,
+      |    ~~~~~~~~~~~~~~~~~~~~
+ 2570 |    NumRare_GroupVec,
+      |    ~~~~~~~~~~~~~~~~~  
+ 2571 |    NumUltraRare_GroupVec,
+      |    ~~~~~~~~~~~~~~~~~~~~~~
+ 2572 |    cctpval,
+      |    ~~~~~~~~           
+ 2573 |    cctpval_cond,
+      |    ~~~~~~~~~~~~~      
+ 2574 |    q_weight,
+      |    ~~~~~~~~~          
+ 2575 |    q_anno,
+      |    ~~~~~~~            
+ 2576 |    q_maf,
+      |    ~~~~~~             
+ 2577 |    isCondition,
+      |    ~~~~~~~~~~~~       
+ 2578 |    i_mt);
+      |    ~~~~~              
+Main.cpp:2140:52: warning: 'N_case' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 2140 |                  N_case_homVec.at(i_i_mt) = N_case - N_case_hetVec.at(i_i_mt) -  N_case_homVec.at(i_i_mt);
+      |                                             ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+Main.cpp:2141:52: warning: 'N_ctrl' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 2141 |                  N_ctrl_homVec.at(i_i_mt) = N_ctrl - N_ctrl_hetVec.at(i_i_mt) - N_ctrl_homVec.at(i_i_mt);
+      |                                             ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo:597,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadilloForward.h:48,
+                 from /stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/RcppArmadillo.h:29,
+                 from Main.cpp:3:
+/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/library/RcppArmadillo/include/armadillo_bits/eop_core_meat.hpp:1031:83: warning: 'w0' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1031 | eop_core<eop_scalar_times     >::process(const eT val, const eT k) { return val * k;                  }
+      |                                                                                   ^
+Main.cpp:1571:12: note: 'w0' was declared here
+ 1571 |     double w0;
+      |            ^~
+Main.cpp:1784:59: warning: 'MACcontrolgroup' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1784 |       MACControl_GroupVec(jmr) = MACControl_GroupVec(jmr) + MACcontrolgroup;
+      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+Main.cpp:1783:53: warning: 'MACcasegroup' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1783 |       MACCase_GroupVec(jmr) = MACCase_GroupVec(jmr) + MACcasegroup;
+      |                               ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+Main.cpp: In function 'void mainMarkerInCPP(std::string&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, std::vector<std::__cxx11::basic_string<char> >&, bool&, bool&, bool&)':
+Main.cpp:836:27: warning: 'is_region_ge' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  836 |      Unified_getMarkerPval(
+      |      ~~~~~~~~~~~~~~~~~~~~~^
+  837 |                     t_GEVec,
+      |                     ~~~~~~~~
+  838 |                           false, // bool t_isOnlyOutputNonZero,
+      |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  839 |                           indexNonZeroVec_arma, indexZeroVec_arma, Beta_ge, seBeta_ge, pval_ge, pval_noSPA_ge, Tstat_ge, gy_ge, varT_ge, altFreq_ge, isSPAConverge_ge, gtildeVec_ge, is_gtilde_ge, is_region_ge, t_P2Vec_ge, true, Beta_c_ge, seBeta_c_ge, pval_c_ge, pval_noSPA_c_ge, Tstat_c_ge, varT_c_ge, G1tilde_P_G2tilde_Vec_ge, is_Firth_ge, is_FirthConverge_ge, false, true, false);
+      |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+x86_64-conda-linux-gnu-c++ -std=gnu++11 -shared -L/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/lib -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,--gc-sections -Wl,--allow-shlib-undefined -Wl,-rpath,/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib -Wl,-rpath-link,/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib -L/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib -o SAIGE.so RcppExports.o GENO_null.o getMem.o VCF.o BGEN.o PLINK.o SAIGE_test.o SPA_binary.o SPA.o SPA_survival.o UTIL.o Main.o test.o CCT.o Binary_HyperGeo.o Binary_ComputeExact.o Binary_global.o Binary_ComputeExactSKATO.o Binary_resampling.o Binary_Permu_SKAT.o ER_binary_func.o LDmat.o SKATO.o qfc.o -llapack -lblas -lgfortran -lm -lquadmath -L../thirdParty/cget/lib/ -L../thirdParty/cget/lib64/ -lsuperlu -lzstd -L../lib64 -llapack -L/stanley/genetics/users/wzhou/.conda/envs/RSAIGE/lib/R/lib -lR
+installing to /humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_debug/SAIGE/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+* DONE (SAIGE)
