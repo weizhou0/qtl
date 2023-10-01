@@ -112,6 +112,10 @@ class SAIGEClass
 
 
 arma::mat m_XV_gxe_mt;
+   arma::mat m_X_gxe_mt;
+        arma::mat m_XVX_inv_XV_gxe_mt;
+        arma::mat m_XVX_gxe_mt;
+arma::mat m_S_a_gxe_mt;
 arma::mat m_XXVX_inv_gxe_mt;
 arma::mat m_y_gxe_mt;
 arma::mat m_res_gxe_mt;
@@ -185,6 +189,11 @@ std::vector<std::ofstream> OutFile_single_vec;
         arma::mat & t_cumul,
 	  bool t_is_gxe,
 	  arma::mat &  t_XV_gxe,
+
+        arma::mat &  t_X_gxe,
+        arma::mat &  t_XVX_inv_XV_gxe,
+        arma::mat &  t_XVX_gxe,
+	arma::mat & t_S_a_gxe,
         arma::mat & t_XXVX_inv_gxe,
         arma::mat & t_y_gxe,
         arma::mat & t_res_gxe,
@@ -470,6 +479,17 @@ void scoreTest_gxe(arma::vec & t_GVec,
                      arma::uvec & t_indexForNonZero,
                      double & t_pval);
 
+
+void scoreTestFast_gxe(arma::vec & t_GVec,
+                     arma::uvec & t_indexForNonZero,
+                     double& t_Beta,
+                     double& t_seBeta,
+                     std::string& t_pval_str,
+                     double t_altFreq,
+                     double &t_Tstat,
+                     double &t_var1,
+                     double &t_var2,
+                     double & t_pval);
 };
 }
 #endif

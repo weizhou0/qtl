@@ -70,12 +70,16 @@ SAIGEClass::SAIGEClass(
         arma::mat & t_cumul,
 	bool t_is_gxe,
 	arma::mat &  t_XV_gxe,
+   arma::mat &  t_X_gxe,
+        arma::mat &  t_XVX_inv_XV_gxe,
+        arma::mat &  t_XVX_gxe,
+	        arma::mat & t_S_a_gxe,
         arma::mat & t_XXVX_inv_gxe,
         arma::mat & t_y_gxe,
         arma::mat & t_res_gxe,
         arma::mat & t_mu2_gxe,
         arma::mat & t_mu_gxe,
-        arma::mat & t_varWeights_gxe	){
+        arma::mat & t_varWeights_gxe){
 
 
 m_is_gxe = t_is_gxe;
@@ -209,7 +213,11 @@ std::cout << "check 4" << std::endl;
       m_varResid = arma::var(m_res);
    }
 std::cout << "check 5" << std::endl;
+      m_X_gxe_mt = t_X_gxe;
+      m_XVX_inv_XV_gxe_mt = t_XVX_inv_XV_gxe;
+      m_XVX_gxe_mt = t_XVX_gxe;
 
+m_S_a_gxe_mt = t_S_a_gxe;
       m_XV_gxe_mt = t_XV_gxe;
       m_XXVX_inv_gxe_mt = t_XXVX_inv_gxe;
       m_y_gxe_mt = t_y_gxe;
@@ -2307,10 +2315,10 @@ void SAIGEClass::assign_for_itrait(unsigned int t_itrait){
 	m_p_gxe = (m_XV_gxe_mt.n_rows) / (m_traitType_vec.size());
 	std::cout << "m_p_gxe " << m_p_gxe << std::endl;
 	m_startip_gxe = m_itrait*m_p_gxe;
-	m_endip_gxe = m_startip + m_p_gxe - 1;
+	m_endip_gxe = m_startip_gxe + m_p_gxe - 1;
 	m_n_gxe = (m_XV_gxe_mt.n_cols) / (m_traitType_vec.size());
 	m_startin_gxe = m_itrait*m_n_gxe;
-	m_endin_gxe = m_startin + m_n_gxe - 1;
+	m_endin_gxe = m_startin_gxe + m_n_gxe - 1;
 	}
 	m_startin = m_itrait*m_n;
 	m_endin = m_startin + m_n - 1;
@@ -2375,7 +2383,15 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
 
 	scoreTest_gxe(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);
 
-       is_gtilde = true;
+        //scoreTestFast_gxe(t_GVec0, indexNonZeroVec0_arma, t_Beta, t_seBeta, t_pval_str, altFreq0, t_Tstat, t_var1, t_var2, t_pval);
+
+
+ is_gtilde = true;
+
+ if(!is_gtilde){
+        getadjGFast_gxe(t_GVec, t_gtilde, indexNonZeroVec0_arma);
+   }
+
 
 std::cout << "here is_gtilde" << std::endl;
 
@@ -2393,7 +2409,7 @@ std::cout << "here is_gtilde 5" << std::endl;
 std::cout << "here is_gtilde 6" << std::endl;
 
     double S_c = t_Tstat_c;
- double stat_c = S_c*S_c/t_varT_c;
+    double stat_c = S_c*S_c/t_varT_c;
 std::cout << "here is_gtilde 7" << std::endl;
      if (t_varT_c <= std::numeric_limits<double>::min()){
         t_pval_noSPA_c = 1;
@@ -2436,14 +2452,14 @@ std::cout << "here is_gtilde 7" << std::endl;
         pval_noSPA_c = 0;
   }
   t_pval_noSPA_c = pval_noSPA_c;
-std::cout << "here is_gtilde 8" << std::endl;
-
+//std::cout << "here is_gtilde 8" << std::endl;
 
 double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
 arma::vec gNB, gNA, muNB, muNA;
   double gmuNB;;
 
     if((m_traitType == "binary" || m_traitType == "count")  && stat_c > std::pow(m_SPA_Cutoff,2)){
+/*
   	arma::vec mu_vec = m_mu_gxe_mt.col(m_itrait);
          m1 = dot(mu_vec, t_gtilde);
         bool t_isSPAConverge_c;
@@ -2482,6 +2498,7 @@ arma::vec gNB, gNA, muNB, muNA;
         }else if(m_traitType == "count"){
                 q_c = t_Tstat_c/sqrt(t_varT_c/t_var2);
                 qinv = -q_c;
+		NAsigma = t_var2 - arma::sum(muNB % arma::pow(gNB,2));
         }
 
         bool logp=false;
@@ -2493,13 +2510,14 @@ std::cout << "here is_gtilde 9" << std::endl;
                 //std::cout << "SPA_fast " << std::endl;
                 SPA_fast(mu_vec, t_gtilde, q_c, qinv_c, pval_noadj_c, false, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, SPApval_c, t_isSPAConverge_c);
         }else{
-                //std::cout << "SPA " << std::endl;
+                std::cout << "SPA " << std::endl;
                 SPA(mu_vec, t_gtilde, q_c, qinv_c, pval_noadj_c, tol1, logp, m_traitType, SPApval_c, t_isSPAConverge_c);
         }
-
+*/
 std::cout << "here is_gtilde 10" << std::endl;
         boost::math::normal ns;
-        t_pval_c = SPApval_c;
+        t_pval_c =pval_noSPA_c;
+        //t_pval_c = SPApval_c;
         double t_qval_c;
         try {
            t_qval_c = boost::math::quantile(ns, t_pval_c/2);
@@ -2511,6 +2529,7 @@ std::cout << "here is_gtilde 10" << std::endl;
         }
     }else{
      t_pval_c = t_pval_noSPA_c;
+    
     }
    }
 
@@ -2629,6 +2648,120 @@ void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,
     t_var1 = var1;
     t_var2 = var2;
 }
+
+
+void SAIGEClass::scoreTestFast_gxe(arma::vec & t_GVec,
+                     arma::uvec & t_indexForNonZero,
+                     double& t_Beta,
+                     double& t_seBeta,
+                     std::string& t_pval_str,
+                     double t_altFreq,
+                     double &t_Tstat,
+                     double &t_var1,
+                     double &t_var2,
+                     double & t_pval){
+
+    arma::vec g1 = t_GVec.elem(t_indexForNonZero);
+    arma::vec m_varWeightsvec_new_sub = m_varWeights_gxe_mt.col(m_itrait);
+    arma::vec m_varWeightsvec_new = m_varWeightsvec_new_sub.elem(t_indexForNonZero);
+    std::cout << "m_startin_gxe " << m_startin_gxe << " " << m_endin_gxe << std::endl;
+    std::cout << "m_startip_gxe " << m_startip_gxe << " " << m_endip_gxe << std::endl;
+    std::cout << "m_X_gxe_mt.rows " << m_X_gxe_mt.n_rows << " " <<  m_X_gxe_mt.n_cols <<  std::endl;
+    arma::mat X_gxe_mt = m_X_gxe_mt.rows(m_startin_gxe, m_endin_gxe);
+    arma::mat X1 = X_gxe_mt.rows(t_indexForNonZero);
+    //arma::mat X1 = (m_X_gxe_mt.rows(m_startip_gxe, m_endip_gxe)).cols(t_indexForNonZero);
+    std::cout << "m_XVX_inv_XV_gxe_mt.rows " << m_XVX_inv_XV_gxe_mt.n_rows << " " <<  m_XVX_inv_XV_gxe_mt.n_cols <<  std::endl;
+    arma::mat XVX_inv_XV_gxe_mt = m_XVX_inv_XV_gxe_mt.rows(m_startin_gxe, m_endin_gxe);
+    arma::mat A1 = XVX_inv_XV_gxe_mt.rows(t_indexForNonZero);
+    //arma::mat A1 = (m_XVX_inv_XV_gxe_mt.rows(m_startip_gxe, m_endip_gxe)).cols(t_indexForNonZero);
+    arma::vec mu21;
+    arma::vec res_gxe_vec = m_res_gxe_mt.col(m_itrait);
+    arma::vec res1 = res_gxe_vec.elem(t_indexForNonZero);
+    res1 = res1 % m_varWeightsvec_new;
+    arma::vec Z = A1.t() * g1;
+    arma::vec B = X1 * Z;
+    arma::vec g1_tilde = g1 - B;
+    double var1, var2, S, S1, S2, g1tildemu2;
+    arma::vec S_a2;
+    double Bmu2;
+    arma::mat  ZtXVXZ = Z.t() * m_XVX_gxe_mt * Z;
+    std::cout << "OKKKKK\n";
+    if(m_traitType == "binary" || m_traitType == "count"){
+
+	arma::vec mu2_gxe_vec = m_mu2_gxe_mt.col(m_itrait);
+      mu21  = mu2_gxe_vec.elem(t_indexForNonZero);
+      std::cout << "OKKKKKa\n";
+      g1tildemu2 = dot(square(g1_tilde), mu21);
+      std::cout << "OKKKKKb\n";
+      Bmu2 = arma::dot(square(B),  mu21);
+      std::cout << "OKKKKKc\n";
+      var2 = ZtXVXZ(0,0) - Bmu2 + g1tildemu2;
+      std::cout << "OKKKKK1\n";
+    }else if(m_traitType == "quantitative" || m_traitType == "count_nb"){
+      Bmu2 = dot(g1, B % m_varWeightsvec_new);
+      //Bmu2 = dot(g1, B);
+      var2 = ZtXVXZ(0,0)*m_tauvec[0] +  dot(g1,g1 % m_varWeightsvec_new) - 2*Bmu2;
+      //var2 = ZtXVXZ(0,0)*m_tauvec[0] +  dot(g1,g1) - 2*Bmu2;
+    }
+
+    var1 = var2 * m_varRatioVal;
+      std::cout << "OKKKKK1\n";
+    S1 = dot(res1, g1_tilde);
+      std::cout << "OKKKKK1a\n";
+    arma::mat res1X1_temp = (res1.t()) * X1;
+      std::cout << "OKKKKK1b\n";
+    arma::vec res1X1 = res1X1_temp.t();
+      std::cout << "OKKKKK1c\n";
+      m_S_a_gxe_mt.print("m_S_a_gxe_mt");
+      res1X1.print("res1X1");
+    S_a2 = m_S_a_gxe_mt.col(m_itrait) - res1X1;
+    S2 = - arma::dot(S_a2,  Z);
+      std::cout << "OKKKKK1d\n";
+    S = S1 + S2;
+    S = S/(m_tauvec_mt(0,m_itrait));
+      std::cout << "OKKKKK2\n";
+    double stat = S*S/var1;
+    //double t_pval;
+/*
+    std::cout << "S FastTest " << S << std::endl;
+    std::cout << "var1 " << var1 << std::endl;
+    std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
+*/
+
+    //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
+    if (var1 <= std::numeric_limits<double>::min()){
+        t_pval = 1;
+    } else{
+      boost::math::chi_squared chisq_dist(1);
+      t_pval = boost::math::cdf(complement(chisq_dist, stat));
+    }
+
+
+      std::cout << "OKKKKK3\n";
+    char pValueBuf[100];
+    if (t_pval != 0)
+        sprintf(pValueBuf, "%.6E", t_pval);
+    else {
+        double log10p = log10(2.0) - M_LOG10E*stat/2 - 0.5*log10(stat*2*M_PI);
+        int exponent = floor(log10p);
+        double fraction = pow(10.0, log10p - exponent);
+        if (fraction >= 9.95) {
+          fraction = 1;
+           exponent++;
+         }
+        sprintf(pValueBuf, "%.1fE%d", fraction, exponent);
+    }
+    std::string buffAsStdStr = pValueBuf;
+    t_pval_str = buffAsStdStr;
+    t_Beta = S/var1;
+    t_seBeta = fabs(t_Beta) / sqrt(fabs(stat));
+    t_Tstat = S;
+    t_var1 = var1;
+    t_var2 = var2;
+    //std::cout << "t_pval_str scoreTestFast " << t_pval_str << std::endl;
+    //std::cout << "end of scoreTestFast" << std::endl;
+}
+
 
 
 }

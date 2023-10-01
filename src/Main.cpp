@@ -867,7 +867,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 	    	ptr_gSAIGEobj->m_varRatioVal =  ptr_gSAIGEobj->m_varRatio_sparse_eg_mt(k,i_mt);
 	//	ptr_gSAIGEobj->m_varRatioVal = ptr_gSAIGEobj->m_varRatio_sparse_eg(k);
 	    }
-	std::cout << "HEREa4" << std::endl;
+	//std::cout << "HEREa4" << std::endl;
 	std::cout << "ptr_gSAIGEobj->m_varRatioVa " << ptr_gSAIGEobj->m_varRatioVal << std::endl;
 	    Unified_getMarkerPval_gxe(
                     t_GEVec,
@@ -881,32 +881,32 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 			pval_noSPA_c_ge_vec.at(k) = std::to_string(pval_noSPA_c_ge);
 			Score_c_ge_vec(k) = Tstat_c_ge;
 
-	     		P1Matge.row(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*(gtildeVec_ge.t());
-	std::cout << "HEREa5a" << std::endl;
+//	     		P1Matge.row(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*(gtildeVec_ge.t());
+	//std::cout << "HEREa5a" << std::endl;
 
-      if(t_P2Vec_ge.n_elem == 0){
-                if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
-                        t_P2Vec_ge = gtildeVec_ge % ((ptr_gSAIGEobj->m_mu2_gxe_mt).col(i_mt)) *((ptr_gSAIGEobj->m_tauvec_mt)(0,i_mt));
-                }else{
-                        t_P2Vec_ge = ptr_gSAIGEobj->getSigma_G_V(gtildeVec_ge, 500, 1e-5);
-                }
+//      if(t_P2Vec_ge.n_elem == 0){
+//                if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
+//                        t_P2Vec_ge = gtildeVec_ge % ((ptr_gSAIGEobj->m_mu2_gxe_mt).col(i_mt)) *((ptr_gSAIGEobj->m_tauvec_mt)(0,i_mt));
+//                }else{
+//                        t_P2Vec_ge = ptr_gSAIGEobj->getSigma_G_V(gtildeVec_ge, 500, 1e-5);
+//                }
+//        }
+//	//std::cout << "HEREa5b" << std::endl;
+
+
+
+//	     P2Matge.col(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec_ge;
         }
-	std::cout << "HEREa5b" << std::endl;
-
-
-
-	     P2Matge.col(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec_ge;
-        }
-        std::cout << "HEREa5c" << std::endl;
-	VarMatge = P1Matge * P2Matge;
+        //std::cout << "HEREa5c" << std::endl;
+	//VarMatge = P1Matge * P2Matge;
 	//arma::vec r_corr = {0.0000, 0.0100, 0.0400, 0.0900, 0.2500, 0.5000, 1.0000};
-	arma::vec r_corr = {0.000}; //SKAT test
+	//arma::vec r_corr = {0.000}; //SKAT test
 	//arma::vec r_corr = {1.000};
-        std::cout << "HEREa6" << std::endl;
+        //std::cout << "HEREa6" << std::endl;
 	//Score_c_ge_vec.save("/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step2/score_example.txt", arma::csv_ascii);
 	//VarMatge.save("/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step2/VarMat_example.txt", arma::csv_ascii);
-	Rcpp::List groupOutListge = get_SKAT_pvalue_Rcpp(Score_c_ge_vec, VarMatge, r_corr);
-        std::cout << "HEREa7" << std::endl;
+	//Rcpp::List groupOutListge = get_SKAT_pvalue_Rcpp(Score_c_ge_vec, VarMatge, r_corr);
+        //std::cout << "HEREa7" << std::endl;
 	if(ne > 1){     
             Beta_c_ge_str = join(Beta_c_ge_vec, ",");
             seBeta_c_ge_str = join(seBeta_c_ge_vec, ",");
@@ -924,7 +924,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 	pval_ge_cStrVec.at(j_mt) = pval_c_ge_str;
 	pval_noSPA_ge_cStrVec.at(j_mt) = pval_noSPA_c_ge_str;
 	//pval_SKATO_ge_cVec.at(i) = Rcpp::as<double>(groupOutListge["Pvalue_SKATO"]);
-	pval_SKAT_ge_cVec.at(j_mt) = Rcpp::as<double>(groupOutListge["Pvalue_SKAT"]);
+	//pval_SKAT_ge_cVec.at(j_mt) = Rcpp::as<double>(groupOutListge["Pvalue_SKAT"]);
 
 
     }//if(g_isgxe){
@@ -1275,6 +1275,11 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
 	arma::mat & t_cumul,
 	        bool t_is_gxe,
         arma::mat &  t_XV_gxe,
+
+        arma::mat &  t_X_gxe,
+        arma::mat &  t_XVX_inv_XV_gxe,
+        arma::mat &  t_XVX_gxe,
+	arma::mat & t_S_a_gxe,
 	arma::mat & t_XXVX_inv_gxe,
 	arma::mat & t_y_gxe,
 	arma::mat & t_res_gxe,
@@ -1328,6 +1333,13 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
 	t_cumul,
 	t_is_gxe,
         t_XV_gxe,
+
+        t_X_gxe,
+        t_XVX_inv_XV_gxe,
+        t_XVX_gxe,
+
+	t_S_a_gxe,
+
         t_XXVX_inv_gxe,
         t_y_gxe,
         t_res_gxe,

@@ -398,11 +398,16 @@ print(isgxe_vec)
 eMat = as.matrix(eMat)
 #setAssocTest_GlobalVarsInCPP_GbyE(eMat, TRUE, 0.001)
         XV_gxe = NULL
+	X_gxe = NULL
+	XVX_inv_XV_gxe = NULL
+	XVX_gxe = NULL
+	S_a_gxe = NULL
         XXVX_inv_gxe = NULL
         y_gxe = NULL
         res_gxe = NULL
         mu2_gxe = NULL
         mu_gxe = NULL
+
         varWeights_gxe = NULL
 
    ##Set up the sample level summary statistics. This is specifically for data sets with repeated measurements
@@ -494,18 +499,35 @@ eMat = as.matrix(eMat)
 	if(isgxe_vec[1]){
 		XV_gxe = rbind(XV_gxe, obj.model$obj.noK$XV)	
 		XXVX_inv_gxe = rbind(XXVX_inv_gxe, obj.model$obj.noK$XXVX_inv)
+		X_gxe = rbind(X_gxe, obj.model$X)
+		XVX_inv_XV_gxe = rbind(XVX_inv_XV_gxe, obj.model$obj.noK$XVX_inv_XV)
+		XVX_gxe = rbind(XVX_gxe,  obj.model$obj.noK$XVX)
 		y_gxe = cbind(y_gxe, obj.model$y)
 		res_gxe = cbind(res_gxe, obj.model$residuals)
         	mu2_gxe = cbind(mu2_gxe, obj.model$mu2)
         	mu_gxe = cbind(mu_gxe, obj.model$mu)
+		print("dim(obj.model$X)")
+		print(dim(obj.model$X))
+		print("length(obj.model$residuals)")
+		print(length(obj.model$residuals))
+		print(obj.model$S_a)
+		S_a_gxe_sub = (as.matrix(obj.model$X)) * (as.vector(obj.model$residuals))
+		print(dim(S_a_gxe_sub))
+		print("colSums(S_a_gxe_sub)")
+		print(colSums(S_a_gxe_sub))
+		S_a_gxe = cbind(S_a_gxe, colSums(S_a_gxe_sub))
 		varWeights_gxe = cbind(varWeights_gxe, obj.model$varWeights)
 	}else{
 	      XV_gxe = matrix(1)
                 XXVX_inv_gxe = matrix(1)
+		X_gxe = matrix(1)
+		XVX_inv_XV_gxe = matrix(1)
+		XVX_gxe = matrix(1)
                 y_gxe = matrix(1)
                 res_gxe = matrix(1)
                 mu2_gxe = matrix(1)
                 mu_gxe = matrix(1)
+		S_a_gxe = matrix(1)
                 varWeights_gxe = matrix(1)	
 
 	}	
@@ -632,6 +654,10 @@ print(traitType)
                      t_cumul = obj.model$cumul,
 		     t_is_gxe = isgxe_vec[1],
 			t_XV_gxe = XV_gxe,
+			t_X_gxe = X_gxe,
+			t_XVX_inv_XV_gxe = XVX_inv_XV_gxe,
+			t_XVX_gxe = XVX_gxe,
+                        t_S_a_gxe = S_a_gxe,
 			t_XXVX_inv_gxe = XXVX_inv_gxe,
 			t_y_gxe=y_gxe,
 			t_res_gxe=res_gxe,
@@ -695,19 +721,27 @@ print(traitType)
         if(isgxe_vec[1]){
                 XV_gxe = XV
                 XXVX_inv_gxe = XXVX_inv
+		X_gxe = X
+		XVX_inv_XV_gxe = XVX_inv_XV
+		XVX_gxe = XVX
 		y_gxe = y
         	res_gxe = res
 		mu2_gxe = mu2 
         	mu_gxe = mu
         	varWeights_gxe = varWeights
+		S_a_gxe = S_a
         }else{
 		XV_gxe = matrix(1)
 		XXVX_inv_gxe = matrix(1)
+		X_gxe = matrix(1)
+		XVX_inv_XV_gxe = matrix(1)
+		XVX_gxe = matrix(1)
 		y_gxe = matrix(1)
 		res_gxe = matrix(1)
 		mu2_gxe = matrix(1)
 		mu_gxe = matrix(1)
 		varWeights_gxe = matrix(1)
+		S_a_gxe = matrix(1)
 	}
 
 	mu_sample = mu
@@ -754,6 +788,11 @@ print(traitType)
 		     t_cumul = obj.model$cumul,
 		         t_is_gxe = isgxe_vec[1],
                         t_XV_gxe = XV_gxe,
+
+      t_X_gxe = X_gxe,
+                        t_XVX_inv_XV_gxe = XVX_inv_XV_gxe,
+                        t_XVX_gxe = XVX_gxe,
+			t_S_a_gxe = S_a_gxe,
                         t_XXVX_inv_gxe = XXVX_inv_gxe,
                         t_y_gxe=y_gxe,
                         t_res_gxe=res_gxe,
