@@ -119,7 +119,7 @@ arma::mat m_mu2_gxe_mt;
 arma::mat m_mu_gxe_mt;
 arma::mat m_varWeights_gxe_mt;
 
-
+bool m_is_gxe;
 arma::mat    m_XVX_mt;
 arma::mat    m_XV_mt;
 arma::mat    m_XXVX_inv_mt;
@@ -182,7 +182,15 @@ std::vector<std::ofstream> OutFile_single_vec;
         arma::sp_mat & t_Tlongmat,
         arma::vec & t_T_longl_vec,
         bool t_is_EmpSPA,
-        arma::mat & t_cumul);
+        arma::mat & t_cumul,
+	  bool t_is_gxe,
+	  arma::mat &  t_XV_gxe,
+        arma::mat & t_XXVX_inv_gxe,
+        arma::mat & t_y_gxe,
+        arma::mat & t_res_gxe,
+        arma::mat & t_mu2_gxe,
+        arma::mat & t_mu_gxe,
+        arma::mat & t_varWeights_gxe	);
 
 
    void set_seed(unsigned int seed);

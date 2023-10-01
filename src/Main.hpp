@@ -230,7 +230,15 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::sp_mat & t_Tlongmat,
         arma::vec & t_T_longl_vec,
         bool t_is_EmpSPA,
-        arma::mat & t_cumul
+        arma::mat & t_cumul,
+	bool t_is_gxe,
+        arma::mat &  t_XV_gxe,
+        arma::mat & t_XXVX_inv_gxe,
+        arma::mat & t_y_gxe,
+        arma::mat & t_res_gxe,
+        arma::mat & t_mu2_gxe,
+        arma::mat & t_mu_gxe,
+        arma::mat & t_varWeights_gxe
         );
 
 

@@ -287,7 +287,8 @@ SPAGMMATtest = function(bgenFile = "",
     set_Vmat_vec_orig(VmatFilelist, VmatSampleFilelist, obj.model.List[[1]]$sampleID)
 
     ratioVecList = Get_Variance_Ratio_multiTrait(varianceRatioFile, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM) #readInGLMM.R
-
+    print("ratioVecList")
+    print(ratioVecList)
 	#print("obj.model$spSigma ")
 	#print(obj.model$spSigma)
     if(!is.null(obj.model.List[[1]]$spSigma)){
@@ -498,7 +499,16 @@ eMat = as.matrix(eMat)
         	mu2_gxe = cbind(mu2_gxe, obj.model$mu2)
         	mu_gxe = cbind(mu_gxe, obj.model$mu)
 		varWeights_gxe = cbind(varWeights_gxe, obj.model$varWeights)
-	}
+	}else{
+	      XV_gxe = matrix(1)
+                XXVX_inv_gxe = matrix(1)
+                y_gxe = matrix(1)
+                res_gxe = matrix(1)
+                mu2_gxe = matrix(1)
+                mu_gxe = matrix(1)
+                varWeights_gxe = matrix(1)	
+
+	}	
      }	
   }
 
@@ -619,7 +629,17 @@ print(traitType)
                      t_Tlongmat = T_longl_mat,
                      t_T_longl_vec = obj.model.List[[1]]$T_longl_vec,
                      t_is_EmpSPA = is_EmpSPA,
-                     t_cumul = obj.model$cumul) 
+                     t_cumul = obj.model$cumul,
+		     t_is_gxe = isgxe_vec[1],
+			t_XV_gxe = XV_gxe,
+			t_XXVX_inv_gxe = XXVX_inv_gxe,
+			t_y_gxe=y_gxe,
+			t_res_gxe=res_gxe,
+			t_mu2_gxe = mu2_gxe,
+			t_mu_gxe=mu_gxe,
+			t_varWeights_gxe = varWeights_gxe
+
+		     ) 
 #}
 
 
@@ -680,8 +700,15 @@ print(traitType)
 		mu2_gxe = mu2 
         	mu_gxe = mu
         	varWeights_gxe = varWeights
-        }
-
+        }else{
+		XV_gxe = matrix(1)
+		XXVX_inv_gxe = matrix(1)
+		y_gxe = matrix(1)
+		res_gxe = matrix(1)
+		mu2_gxe = matrix(1)
+		mu_gxe = matrix(1)
+		varWeights_gxe = matrix(1)
+	}
 
 	mu_sample = mu
 
@@ -724,7 +751,15 @@ print(traitType)
 		     t_Tlongmat = T_longl_mat,
 		     t_T_longl_vec = obj.model.List[[1]]$T_longl_vec,
 		     t_is_EmpSPA = is_EmpSPA,
-		     t_cumul = obj.model$cumul) 
+		     t_cumul = obj.model$cumul,
+		         t_is_gxe = isgxe_vec[1],
+                        t_XV_gxe = XV_gxe,
+                        t_XXVX_inv_gxe = XXVX_inv_gxe,
+                        t_y_gxe=y_gxe,
+                        t_res_gxe=res_gxe,
+                        t_mu2_gxe = mu2_gxe,
+                        t_mu_gxe=mu_gxe,
+                        t_varWeights_gxe = varWeights_gxe) 
 
 }
 

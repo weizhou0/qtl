@@ -67,8 +67,18 @@ SAIGEClass::SAIGEClass(
         arma::sp_mat & t_Tlongmat,
         arma::vec & t_T_longl_vec,
         bool t_is_EmpSPA,
-        arma::mat & t_cumul){
+        arma::mat & t_cumul,
+	bool t_is_gxe,
+	arma::mat &  t_XV_gxe,
+        arma::mat & t_XXVX_inv_gxe,
+        arma::mat & t_y_gxe,
+        arma::mat & t_res_gxe,
+        arma::mat & t_mu2_gxe,
+        arma::mat & t_mu_gxe,
+        arma::mat & t_varWeights_gxe	){
 
+
+m_is_gxe = t_is_gxe;
 std::cout << "check 1" << std::endl;
 std::cout << "m_XVX_mt.n_rows " << m_XVX_mt.n_rows << " " << m_XVX_mt.n_cols << std::endl;
 std::cout << "check 1" << std::endl;
@@ -199,6 +209,14 @@ std::cout << "check 4" << std::endl;
       m_varResid = arma::var(m_res);
    }
 std::cout << "check 5" << std::endl;
+
+      m_XV_gxe_mt = t_XV_gxe;
+      m_XXVX_inv_gxe_mt = t_XXVX_inv_gxe;
+      m_y_gxe_mt = t_y_gxe;
+      m_res_gxe_mt = t_res_gxe;
+      m_mu2_gxe_mt = t_mu2_gxe;
+      m_mu_gxe_mt = t_mu_gxe;
+      m_varWeights_gxe_mt = t_varWeights_gxe;
 }    
 
 
@@ -1109,8 +1127,10 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXa
     }
    
 
-    //m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
+    m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
     m_cateVarRatioMaxMACVecInclude.print("m_cateVarRatioMaxMACVecInclude");
+    m_varRatio.print("m_varRatio");
+    m_varRatio_null_noXadj_mt.print("m_varRatio_null_noXadj_mt");
     for(unsigned int i = 0; i < m_cateVarRatioMaxMACVecInclude.n_elem; i++)
     {
         if(MAC <= m_cateVarRatioMaxMACVecInclude(i) && MAC > m_cateVarRatioMinMACVecExclude(i)){    	    
@@ -1136,6 +1156,7 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXa
 
    //m_varRatioVal = m_varRatio(0);
    hasVarRatio = true;
+   std::cout << "hasVarRatio " << hasVarRatio << std::endl;
    return(hasVarRatio);    
 }
 
@@ -2278,17 +2299,17 @@ void SAIGEClass::assign_for_itrait(unsigned int t_itrait){
 	m_traitType = m_traitType_vec.at(m_itrait);
 	m_startip = m_itrait*m_p;
 	m_endip = m_startip + m_p - 1;
-
+	if(m_is_gxe){
 	m_p_gxe = (m_XV_gxe_mt.n_rows) / m_itrait;
 	m_startip_gxe = m_itrait*m_p_gxe;
 	m_endip_gxe = m_startip + m_p_gxe - 1;
-
-	m_startin = m_itrait*m_n;
-	m_endin = m_startin + m_n - 1;
-	
 	m_n_gxe = (m_XV_gxe_mt.n_cols) / m_itrait;
 	m_startin_gxe = m_itrait*m_n_gxe;
 	m_endin_gxe = m_startin + m_n_gxe - 1;
+	}
+	m_startin = m_itrait*m_n;
+	m_endin = m_startin + m_n - 1;
+	
 
 	m_startic = m_itrait*m_numMarker_cond;
 	m_endic = m_startic + m_numMarker_cond - 1;
