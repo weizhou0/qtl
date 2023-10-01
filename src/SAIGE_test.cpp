@@ -943,7 +943,7 @@ if(!t_isnoadjCov){
         	is_gtilde = true;
         }
 
-std::cout << "here is_gtilde" << std::endl;
+	std::cout << "here is_gtilde" << std::endl;
 
         t_G1tilde_P_G2tilde = sqrt(m_varRatioVal) * t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
 
@@ -2299,11 +2299,16 @@ void SAIGEClass::assign_for_itrait(unsigned int t_itrait){
 	m_traitType = m_traitType_vec.at(m_itrait);
 	m_startip = m_itrait*m_p;
 	m_endip = m_startip + m_p - 1;
+	std::cout << "assign_for_itrait m_is_gxe " << m_is_gxe << std::endl;
+
 	if(m_is_gxe){
-	m_p_gxe = (m_XV_gxe_mt.n_rows) / m_itrait;
+	std::cout << "m_XV_gxe_mt.n_rows " << m_XV_gxe_mt.n_rows << std::endl;
+	std::cout << "m_itrait " << m_itrait << std::endl;
+	m_p_gxe = (m_XV_gxe_mt.n_rows) / (m_traitType_vec.size());
+	std::cout << "m_p_gxe " << m_p_gxe << std::endl;
 	m_startip_gxe = m_itrait*m_p_gxe;
 	m_endip_gxe = m_startip + m_p_gxe - 1;
-	m_n_gxe = (m_XV_gxe_mt.n_cols) / m_itrait;
+	m_n_gxe = (m_XV_gxe_mt.n_cols) / (m_traitType_vec.size());
 	m_startin_gxe = m_itrait*m_n_gxe;
 	m_endin_gxe = m_startin + m_n_gxe - 1;
 	}
@@ -2376,19 +2381,20 @@ std::cout << "here is_gtilde" << std::endl;
 
         t_G1tilde_P_G2tilde = sqrt(m_varRatioVal) * t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
         arma::vec t_Tstat_ctemp =  t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (m_Tstat_cond.subvec(m_startic, m_endic));
-//std::cout << "here is_gtilde 2" << std::endl;
+std::cout << "here is_gtilde 2" << std::endl;
         arma::mat tempgP2 = t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
-//std::cout << "here is_gtilde 3" << std::endl;
+std::cout << "here is_gtilde 3" << std::endl;
 
         t_Tstat_c = t_Tstat - t_Tstat_ctemp(0);
-//std::cout << "here is_gtilde 4" << std::endl;
+std::cout << "here is_gtilde 4" << std::endl;
         arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (t_G1tilde_P_G2tilde.t());
-//std::cout << "here is_gtilde 5" << std::endl;
+std::cout << "here is_gtilde 5" << std::endl;
         t_varT_c = t_var1 - t_varT_ctemp(0);
-//std::cout << "here is_gtilde 6" << std::endl;
+std::cout << "here is_gtilde 6" << std::endl;
 
     double S_c = t_Tstat_c;
  double stat_c = S_c*S_c/t_varT_c;
+std::cout << "here is_gtilde 7" << std::endl;
      if (t_varT_c <= std::numeric_limits<double>::min()){
         t_pval_noSPA_c = 1;
         stat_c = 0;
@@ -2412,6 +2418,7 @@ std::cout << "here is_gtilde" << std::endl;
     }
     std::string buffAsStdStr_c = pValueBuf_c;
     std::string& t_pval_noSPA_str_c = buffAsStdStr_c;
+std::cout << "here is_gtilde 7" << std::endl;
 
     t_Beta_c = S_c/t_varT_c;
     t_seBeta_c = fabs(t_Beta_c) / sqrt(stat_c);
@@ -2429,6 +2436,7 @@ std::cout << "here is_gtilde" << std::endl;
         pval_noSPA_c = 0;
   }
   t_pval_noSPA_c = pval_noSPA_c;
+std::cout << "here is_gtilde 8" << std::endl;
 
 
 double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
@@ -2436,7 +2444,7 @@ arma::vec gNB, gNA, muNB, muNA;
   double gmuNB;;
 
     if((m_traitType == "binary" || m_traitType == "count")  && stat_c > std::pow(m_SPA_Cutoff,2)){
-  	arma::vec mu_vec = m_mu_mt.col(m_itrait);
+  	arma::vec mu_vec = m_mu_gxe_mt.col(m_itrait);
          m1 = dot(mu_vec, t_gtilde);
         bool t_isSPAConverge_c;
         double q_c, qinv_c, pval_noadj_c, SPApval_c;
@@ -2478,6 +2486,7 @@ arma::vec gNB, gNA, muNB, muNA;
 
         bool logp=false;
 
+std::cout << "here is_gtilde 9" << std::endl;
 
 
         if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur){
@@ -2488,6 +2497,7 @@ arma::vec gNB, gNA, muNB, muNA;
                 SPA(mu_vec, t_gtilde, q_c, qinv_c, pval_noadj_c, tol1, logp, m_traitType, SPApval_c, t_isSPAConverge_c);
         }
 
+std::cout << "here is_gtilde 10" << std::endl;
         boost::math::normal ns;
         t_pval_c = SPApval_c;
         double t_qval_c;
@@ -2510,17 +2520,17 @@ arma::vec gNB, gNA, muNB, muNA;
 void SAIGEClass::getadjGFast_gxe(arma::vec & t_GVec, arma::vec & g, arma::uvec & iIndex)
 {
 
-  arma::vec t_GVec0 = t_GVec;
+  //arma::vec t_GVec0 = t_GVec;
   arma::uvec indexNonZeroVec0_arma = iIndex;
   // To increase computational efficiency when lots of GVec elements are 0
   arma::vec m_XVG_gxe(m_p_gxe, arma::fill::zeros);
-  arma::mat m_XV_gxe_mt_sub(m_p_gxe, m_XV_gxe_mt.n_cols);
+  //arma::mat m_XV_gxe_mt_sub(m_p_gxe, m_XV_gxe_mt.n_cols);
   for(int i = 0; i < indexNonZeroVec0_arma.n_elem; i++){
-  	m_XV_gxe_mt_sub = m_XV_gxe_mt.rows(m_startip_gxe, m_endip_gxe);
-	m_XVG_gxe += m_XV_gxe_mt_sub.col(indexNonZeroVec0_arma(i)) * t_GVec0(indexNonZeroVec0_arma(i)); 
-         //m_XVG_gxe += m_XV_gxe_mt.rows(m_startip_gxe, m_endip_gxe).col(indexNonZeroVec0_arma(i)) * t_GVec0(indexNonZeroVec0_arma(i));
+  	//m_XV_gxe_mt_sub = m_XV_gxe_mt.rows(m_startip_gxe, m_endip_gxe);
+	//m_XVG_gxe += m_XV_gxe_mt_sub.col(indexNonZeroVec0_arma(i)) * t_GVec0(indexNonZeroVec0_arma(i)); 
+        m_XVG_gxe += m_XV_gxe_mt.rows(m_startip_gxe, m_endip_gxe).col(indexNonZeroVec0_arma(i)) * t_GVec(indexNonZeroVec0_arma(i));
   }
-  g = t_GVec0 - m_XXVX_inv_gxe_mt.rows(m_startin_gxe, m_endin_gxe) * m_XVG_gxe;
+  g = t_GVec - m_XXVX_inv_gxe_mt.rows(m_startin_gxe, m_endin_gxe) * m_XVG_gxe;
 }
 
 void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,

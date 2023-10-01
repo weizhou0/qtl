@@ -777,9 +777,10 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
      	pVec_g(0) = pval;
 	MAFVec_g(0) = MAF;
 	if((ptr_gSAIGEobj->g_I_longl_mat.n_cols != ptr_gSAIGEobj->g_I_longl_mat.n_rows) && (t_GVec.n_elem < ptr_gSAIGEobj->m_y_gxe_mt.n_rows)){
-		t_GVec1 = ptr_gSAIGEobj->g_I_longl_mat * t_GVec;
+		t_GVec1 = (ptr_gSAIGEobj->g_I_longl_mat) * t_GVec;
 		indexNonZeroVec_arma = arma::find(t_GVec1 > 0.0);
 		indexZeroVec_arma = arma::find(t_GVec1 == 0.0);
+		gtildeVec.set_size(t_GVec1.n_elem);
 	}else{
 
 		t_GVec1 = t_GVec;
@@ -806,17 +807,20 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 
 
 	std::cout << "HEREa1" << std::endl;
-
-        if(t_P2Vec.n_elem == 0){
+	std::cout << "gtildeVec " << gtildeVec.n_elem << std::endl;
+	std::cout << "(ptr_gSAIGEobj->m_mu2_gxe_mt) " << (ptr_gSAIGEobj->m_mu2_gxe_mt).n_rows << " " << (ptr_gSAIGEobj->m_mu2_gxe_mt).n_cols << std::endl;
+        //if(t_P2Vec.n_elem == 0){
                 if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
                         t_P2Vec = gtildeVec % ((ptr_gSAIGEobj->m_mu2_gxe_mt).col(i_mt)) *((ptr_gSAIGEobj->m_tauvec_mt)(0,i_mt));
                 }else{
                         t_P2Vec = ptr_gSAIGEobj->getSigma_G_V(gtildeVec, 500, 1e-5);
                 }
-        }
+        //}
 
 
 	std::cout << "HEREa1a" << std::endl;
+	std::cout << "P2Mat_g " << P2Mat_g.n_rows << " " << P2Mat_g.n_cols << std::endl;
+	std::cout << "t_P2Vec " << t_P2Vec.n_elem << std::endl;
 	P2Mat_g.col(0) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec;
 	std::cout << "HEREa1b" << std::endl;
 	VarMat_g = sqrt(ptr_gSAIGEobj->m_varRatioVal)*gtildeVec.t() * P2Mat_g;
