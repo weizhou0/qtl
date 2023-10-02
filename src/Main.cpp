@@ -575,7 +575,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
     }
     //check 'Main.cpp'
     bool is_region = false;
-
+            //std::cout << "ptr_gSAIGEobj->m_varRatioVal null_noadj" << ptr_gSAIGEobj->m_varRatioVal << std::endl;
 
   //std::cout << "Here3 mainMarkerInCPP" << std::endl;
 
@@ -621,9 +621,9 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 
        ptr_gSAIGEobj->set_flagSparseGRM_cur(ptr_gSAIGEobj->m_flagSparseGRM);
        if(isSingleVarianceRatio){
-         ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, false);
+         ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, false, false);
        }else{
-         hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur, false);
+         hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur, false, false);
        }
 
        if(ptr_gSAIGEobj->m_flagSparseGRM_cur && ptr_gSAIGEobj->m_SigmaMat_sp.n_rows == 2){
@@ -804,6 +804,18 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 
 	 }
 
+    ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
+    if(isSingleVarianceRatio){
+       //std::cout << "Here2f mainMarkerInCPP" << std::endl;
+       ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, false,false);
+       //std::cout << "Here2g mainMarkerInCPP" << std::endl;
+    }else{
+       //std::cout << "Here2gb mainMarkerInCPP" << std::endl;
+       hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur, false,false);
+       //std::cout << "Here2gc mainMarkerInCPP" << std::endl;
+    }
+
+
 
 
 	//std::cout << "HEREa1" << std::endl;
@@ -820,7 +832,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
                 }
         //}
 
-	//std::cout << "ptr_gSAIGEobj->m_varRatioVal " << ptr_gSAIGEobj->m_varRatioVal << std::endl;
+	//std::cout << "ptr_gSAIGEobj->m_varRatioVal null" << ptr_gSAIGEobj->m_varRatioVal << std::endl;
 	//std::cout << "HEREa1a" << std::endl;
 	//std::cout << "P2Mat_g " << P2Mat_g.n_rows << " " << P2Mat_g.n_cols << std::endl;
 	//std::cout << "t_P2Vec " << t_P2Vec.n_elem << std::endl;
@@ -871,7 +883,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 	//	ptr_gSAIGEobj->m_varRatioVal = ptr_gSAIGEobj->m_varRatio_sparse_eg(k);
 	    }
 	//std::cout << "HEREa4" << std::endl;
-	    //std::cout << "ptr_gSAIGEobj->m_varRatioVa " << ptr_gSAIGEobj->m_varRatioVal << std::endl;
+	    //std::cout << "ptr_gSAIGEobj->m_varRatioVa null_eg " << ptr_gSAIGEobj->m_varRatioVal << std::endl;
 	    Unified_getMarkerPval_gxe(
                     t_GEVec,
                           false, // bool t_isOnlyOutputNonZero,
@@ -1261,6 +1273,7 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         arma::mat & t_mu,
         arma::mat & t_varRatio_sparse,
         arma::mat & t_varRatio_null,
+        arma::mat & t_varRatio_null_sample,
         arma::mat & t_varRatio_null_noXadj,
         arma::mat & t_varRatio_null_eg,
         arma::mat & t_varRatio_sparse_eg,
@@ -1319,6 +1332,7 @@ void setSAIGEobjInCPP(arma::mat & t_XVX,
         t_mu,
 	t_varRatio_sparse,
         t_varRatio_null,
+	t_varRatio_null_sample,
 	t_varRatio_null_noXadj,
 	t_varRatio_null_eg,
 	t_varRatio_sparse_eg,

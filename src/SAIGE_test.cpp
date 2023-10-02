@@ -40,6 +40,7 @@ SAIGEClass::SAIGEClass(
         arma::mat & t_mu,
         arma::mat & t_varRatio_sparse,
         arma::mat & t_varRatio_null,
+        arma::mat & t_varRatio_null_sample,
         arma::mat & t_varRatio_null_noXadj,
         arma::mat & t_varRatio_null_eg,
         arma::mat & t_varRatio_sparse_eg,
@@ -99,6 +100,7 @@ m_is_gxe = t_is_gxe;
     m_mu_mt = t_mu;
     m_varRatio_sparse_mt = t_varRatio_sparse;
     m_varRatio_null_mt = t_varRatio_null;
+    m_varRatio_null_sample_mt = t_varRatio_null_sample;
     m_varRatio_null_noXadj_mt = t_varRatio_null_noXadj;
     m_varRatio_null_eg_mt = t_varRatio_null_eg;
     m_varRatio_sparse_eg_mt = t_varRatio_sparse_eg;
@@ -713,10 +715,14 @@ if(!t_isnoadjCov){
 	  bool hasVarRatio;
 	  double MAC = arma::sum(t_GVec);
           if(m_varRatio_null_mt.n_rows > 1){
-            hasVarRatio = assignVarianceRatio(MAC, m_flagSparseGRM_cur, false);
+            hasVarRatio = assignVarianceRatio(MAC, m_flagSparseGRM_cur, false, true);
 	  }else{
-            assignSingleVarianceRatio(m_flagSparseGRM_cur, false);
+            assignSingleVarianceRatio(m_flagSparseGRM_cur, false, true);
           }
+
+            //std::cout << "ptr_gSAIGEobj->m_varRatioVal null_sample" << m_varRatioVal << std::endl;	
+
+
 	  is_gtilde = true;
 	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);
 	  //std::cout << "t_pval from scoreTest " << t_pval << std::endl;
@@ -1140,6 +1146,64 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXa
 }
 
 
+bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj, bool issample){
+    bool hasVarRatio = false;
+    arma::vec m_varRatio;
+    if(issparseforVR){
+        //m_varRatio = m_varRatio_sparse;
+        m_varRatio = m_varRatio_sparse_mt.col(m_itrait);
+    }else{
+        if(!isnoXadj){
+            //m_varRatio = m_varRatio_null;
+	   if(!issample){
+            m_varRatio = m_varRatio_null_mt.col(m_itrait);
+           }else{
+            m_varRatio = m_varRatio_null_sample_mt.col(m_itrait);
+	   }
+        }else{
+        //m_varRatio_null_noXadj.print("m_varRatio_null_noXadj");
+            m_varRatio = m_varRatio_null_noXadj_mt.col(m_itrait);
+            //m_varRatio.print("m_varRatio");
+        }
+    }
+
+
+    m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
+    m_cateVarRatioMaxMACVecInclude.print("m_cateVarRatioMaxMACVecInclude");
+    m_varRatio.print("m_varRatio");
+    m_varRatio_null_noXadj_mt.print("m_varRatio_null_noXadj_mt");
+    for(unsigned int i = 0; i < m_cateVarRatioMaxMACVecInclude.n_elem; i++)
+    {
+        if(MAC <= m_cateVarRatioMaxMACVecInclude(i) && MAC > m_cateVarRatioMinMACVecExclude(i)){
+                m_varRatioVal = m_varRatio(i);
+                hasVarRatio = true;
+        }
+    }
+
+    if(!hasVarRatio){
+        if(MAC < m_cateVarRatioMinMACVecExclude(0)){
+                m_varRatioVal = m_varRatio(0);
+                hasVarRatio = true;
+        }
+    }
+
+    if(!hasVarRatio){
+        if(MAC > m_cateVarRatioMaxMACVecInclude.back()){
+                //m_varRatioVal = m_varRatio(a-1);
+                m_varRatioVal = m_varRatio.back();
+                hasVarRatio = true;
+        }
+    }
+
+   //m_varRatioVal = m_varRatio(0);
+   hasVarRatio = true;
+   std::cout << "hasVarRatio " << hasVarRatio << std::endl;
+   return(hasVarRatio);
+}
+
+
+
+
 arma::vec SAIGEClass::assignVarianceRatioi_multi(arma::vec & MACvec, bool issparseforVR, bool isnoXadj){
     bool hasVarRatio = false;
     arma::vec m_varRatio;
@@ -1207,6 +1271,24 @@ void SAIGEClass::assignSingleVarianceRatio(bool issparseforVR, bool isnoXadj){
     m_varRatioVal = m_varRatio(m_itrait);
 }
 
+
+void SAIGEClass::assignSingleVarianceRatio(bool issparseforVR, bool isnoXadj, bool issample){
+    arma::rowvec m_varRatio;
+    if(issparseforVR){
+        m_varRatio = m_varRatio_sparse_mt.row(0);
+    }else{
+        if(isnoXadj){
+            m_varRatio = m_varRatio_null_noXadj_mt.row(0);
+        }else{
+	  if(!issample){
+            m_varRatio = m_varRatio_null_mt.row(0);
+	  }else{
+	    m_varRatio = m_varRatio_null_sample_mt.row(0);
+	  }
+        }
+    }
+    m_varRatioVal = m_varRatio(m_itrait);
+}
 
 void SAIGEClass::assignSingleVarianceRatio_withinput(double t_varRatioVal){
         m_varRatioVal = t_varRatioVal;

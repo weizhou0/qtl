@@ -247,10 +247,12 @@ Get_Variance_Ratio<-function(varianceRatioFile, cateVarRatioMinMACVecExclude, ca
           cat("WARNING: Sparse GRM is specified. Please make sure the null model was fit using the same sparse GRM in Step 1.\n")
           ratioVec_sparse = c(1)
 	  ratioVec_null = c(-1)
+	  ratioVec_null_sample = c(-1)
 	  ratioVec_null_noXadj = c(-1)
 	}else{
           ratioVec_sparse = c(-1)		
 	  ratioVec_null = c(1)
+	  ratioVec_null_sample = c(1)
 	  ratioVec_null_noXadj = c(1)
 	}
     }else{
@@ -277,6 +279,14 @@ Get_Variance_Ratio<-function(varianceRatioFile, cateVarRatioMinMACVecExclude, ca
             ratioVec_null_noXadj = as.numeric(ratioVec_null_noXadj)
             cat("variance Ratio null_noXadj is ", ratioVec_null_noXadj, "\n")	
 
+	sindex = which(varRatioData[,2] == "null_sample" & varRatioData[,3] > 0)
+	if(length(sindex)>0){
+		ratioVec_null_sample = varRatioData[sindex, 1]	
+		ratioVec_null_sample = as.numeric(ratioVec_null_sample)
+	}else{
+		ratioVec_null_sample = ratioVec_null_noXadj
+	}
+	cat("variance Ratio ratioVec_null_sample is ", ratioVec_null_sample, "\n")
 	    egindex = which(varRatioData[,3] == 0 & varRatioData[,2] == "null")
 	    if(length(egindex) > 0){
 		ratioVec_null_eg = varRatioData[egindex,1]
@@ -307,12 +317,14 @@ Get_Variance_Ratio<-function(varianceRatioFile, cateVarRatioMinMACVecExclude, ca
         	cat("variance Ratio is ", ratioVec_sparse, "\n")
 		ratioVec_null = rep(-1, length(varRatioData[,1]))
 		ratioVec_null_noXadj = rep(-1, length(varRatioData[,1]))
+		ratioVec_null_sample = rep(-1, length(varRatioData[,1]))
 		cat("WARNING: Sparse GRM is specified and the variance ratio(s) were specified. Please make sure the variance ratios were estimated using a full GRM and a sparse GRM.")
 	    }else{
 	        ratioVec_null = varRatioData[,1]
 	        ratioVec_null = as.numeric(ratioVec_null)
                 cat("variance Ratio is ", ratioVec_null, "\n")
 		ratioVec_null_noXadj = ratioVec_null
+		ratioVec_null_sample = ratioVec_null
 		cat("WARNING: Sparse GRM is not specified and the variance ratio(s) were specified. Please make sure that in Step 1, 1. the null model was fit using a full GRM (--useSparseGRMtoFitNULL=FALSE) and the variacne ratio was NOT estimated with the sparse GRM (useSparseGRMforVarRatio=FALSE) or 2. the null model was fit using a sparse GRM (--useSparseGRMtoFitNULL=TRUE) and the variacne ratio was estiamted with the sparse GRM and null --skipVarianceRatioEstimation=FALSE\n")
 		ratioVec_sparse = c(-1)
 	    }
@@ -339,7 +351,7 @@ Get_Variance_Ratio<-function(varianceRatioFile, cateVarRatioMinMACVecExclude, ca
 	
 
     }
-    return(list(ratioVec_sparse = ratioVec_sparse, ratioVec_null = ratioVec_null, ratioVec_null_noXadj = ratioVec_null_noXadj, ratioVec_null_eg = ratioVec_null_eg, ratioVec_sparse_eg=ratioVec_sparse_eg))
+    return(list(ratioVec_sparse = ratioVec_sparse, ratioVec_null = ratioVec_null, ratioVec_null_sample = ratioVec_null_sample ,ratioVec_null_noXadj = ratioVec_null_noXadj, ratioVec_null_eg = ratioVec_null_eg, ratioVec_sparse_eg=ratioVec_sparse_eg))
 }
 
 
@@ -363,6 +375,7 @@ Get_Variance_Ratio_multiTrait<-function(varianceRatioFileList, cateVarRatioMinMA
    #varianceRatioList = list()
    ratioVec_sparse = NULL
    ratioVec_null = NULL
+   ratioVec_null_sample = NULL
    ratioVec_null_noXadj = NULL
    ratioVec_null_eg = NULL
    ratioVec_sparse_eg = NULL
@@ -372,11 +385,12 @@ Get_Variance_Ratio_multiTrait<-function(varianceRatioFileList, cateVarRatioMinMA
 	print(ratioVecList)
 	ratioVec_sparse = cbind(ratioVec_sparse, ratioVecList$ratioVec_sparse)
 	ratioVec_null = cbind(ratioVec_null, ratioVecList$ratioVec_null)
+	ratioVec_null_sample = cbind(ratioVec_null_sample, ratioVecList$ratioVec_null_sample)
 	ratioVec_null_noXadj = cbind(ratioVec_null_noXadj, ratioVecList$ratioVec_null_noXadj)
 	ratioVec_null_eg = cbind(ratioVec_null_eg, ratioVecList$ratioVec_null_eg)
 	ratioVec_sparse_eg = cbind(ratioVec_sparse_eg, ratioVecList$ratioVec_sparse_eg)
    }
-   return(list(ratioVec_sparse = ratioVec_sparse, ratioVec_null = ratioVec_null, ratioVec_null_noXadj = ratioVec_null_noXadj, ratioVec_null_eg = ratioVec_null_eg, ratioVec_sparse_eg=ratioVec_sparse_eg))
+   return(list(ratioVec_sparse = ratioVec_sparse, ratioVec_null = ratioVec_null, ratioVec_null_sample = ratioVec_null_sample, ratioVec_null_noXadj = ratioVec_null_noXadj, ratioVec_null_eg = ratioVec_null_eg, ratioVec_sparse_eg=ratioVec_sparse_eg))
 }
 
 

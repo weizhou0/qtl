@@ -286,6 +286,23 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 	}	
 
 
+##check whether the phenotype file is large
+cmd=paste0("du ", phenoFile ,"| awk '{print $1}' > ", outputPrefix, "_", phenoCol, "_size_temp")
+system(cmd)
+datasize = data.table:::fread(paste0(outputPrefix, "_", phenoCol, "_size_temp"), header=F, data.table=F)
+isphenoFileLarge=FALSE
+if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
+	if(datasize[1,1] > 200000){
+		isphenoFileLarge=TRUE
+	}
+
+}else{
+	if(datasize[1,1] > 500000){
+		isphenoFileLarge=TRUE
+	}
+}
+
+if(isphenoFileLarge){
 if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
         cmd=paste0("gunzip -c ", phenoFile ,"| head -n 1 | sed 's/\\t/\\n/g' | sed 's/\ /\\n/g' | awk '{print $1\"\\t\"NR}' > ", outputPrefix, "_", phenoCol, "_lineNum_temp")
         system(cmd)
@@ -293,6 +310,8 @@ if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
         cmd=paste0("cat ", phenoFile ,"| head -n 1 | sed 's/\\t/\\n/g' | sed 's/\ /\\n/g' | awk '{print $1\"\\t\"NR}' > ", outputPrefix, "_",phenoCol, "_lineNum_temp")
         system(cmd)
 }
+
+#print(cmd)
 
 checkColListDataFrame = data.frame(colna=checkColList)
 phenoFilephenoCol_lineNum = data.table::fread(paste0(outputPrefix, "_", phenoCol, "_lineNum_temp"), header=F, data.table=F)
@@ -309,7 +328,7 @@ if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
 	cmdb = paste0("cut -f $(tr '\\n' ',' < ", outputPrefix, "_", phenoCol, "_colnames_subset_temp | sed 's/,$//') ", phenoFile, "> ", outputPrefix, "_",phenoCol,"_subcols_temp")
 }
 
-
+#print(cmdb)
 system(cmdb)
 
 phenoFiletemp = paste0(outputPrefix, "_",phenoCol,"_subcols_temp")
@@ -323,14 +342,21 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_colnames_subset_temp"))
 file.remove(paste0(outputPrefix, "_", phenoCol, "_lineNum_temp"))
 file.remove(paste0(outputPrefix, "_", phenoCol, "_subcols_temp"))
 
-	#if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
-        #    data = data.table:::fread(cmd = paste0("gunzip -c ", 
-        #        phenoFile), header = T, stringsAsFactors = FALSE, 
-        #        colClasses = list(character = sampleIDColinphenoFile), data.table=F, select=checkColList)
-        #}else {
-        #    data = data.table:::fread(phenoFile, header = T, 
-        #        stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table=F, select=checkColList)
-        #}
+
+}else{  #!isphenoFileLarge
+
+	if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
+            data = data.table:::fread(cmd = paste0("gunzip -c ", 
+                phenoFile), header = T, stringsAsFactors = FALSE, 
+                colClasses = list(character = sampleIDColinphenoFile), data.table=F, select=checkColList)
+        }else {
+            data = data.table:::fread(phenoFile, header = T, 
+                stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table=F, select=checkColList)
+        }
+}
+
+file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
+
 
         if(isRemoveZerosinPheno){
             data = data[which(data[,which(colnames(data) == phenoCol)] > 0), ]
@@ -1454,13 +1480,13 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   #var_weights_sample = var_weights[uniqsampleind]
   
   
-  #Vsample0 = as.vector(t(obj.noK$V) %*% I_mat)
-  #Xsample0 = obj.glmm.null$sampleXMat
-  #XVsample0 = t(Xsample0 * Vsample0)
-  #XVXsample0 = t(Xsample0) %*% (t(XVsample0))
-  #XVXsample_inv0 = solve(XVXsample0)
-  #XXVXsample_inv0 = Xsample0 %*% XVXsample_inv0
-  #XVX_inv_XVsample0 = XXVXsample_inv0 * Vsample0
+  Vsample0 = as.vector(t(obj.noK$V) %*% I_mat)
+  Xsample0 = obj.glmm.null$sampleXMat
+  XVsample0 = t(Xsample0 * Vsample0)
+  XVXsample0 = t(Xsample0) %*% (t(XVsample0))
+  XVXsample_inv0 = solve(XVXsample0)
+  XXVXsample_inv0 = Xsample0 %*% XVXsample_inv0
+  XVX_inv_XVsample0 = XXVXsample_inv0 * Vsample0
   #XVsample0_e_list = list()
   #for(ne in 1:ncol(obj.glmm.null$eMat)){
   #  evec = obj.glmm.null$eMat[,ne]
@@ -1476,6 +1502,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
       numMarkers0 = numMarkers
       varRatio_sparseGRM_vec = NULL
       varRatio_NULL_vec = NULL
+      varRatio_NULL_sample_vec = NULL
       varRatio_NULL_noXadj_vec = NULL
 
 	
@@ -1676,6 +1703,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
     if(obj.glmm.null$traitType == "binary"){
          var2null = innerProduct(mu*(1-mu)*var_weights, G*G)
+         var2null_sample = innerProduct(as.vector(t(mu*(1-mu)*var_weights) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
          var2null_noXadj = innerProduct(as.vector(t(mu*(1-mu)*var_weights) %*% I_mat), G_noXadj*G_noXadj)
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
@@ -1692,6 +1720,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 }	
     }else if(obj.glmm.null$traitType == "quantitative"){
          var2null = innerProduct(G, G*var_weights)
+         var2null_sample = innerProduct(G0_sample_tilde, G0_sample_tilde*var_weights)
          var2null_noXadj = innerProduct(G_noXadj, G_noXadj*as.vector(t(var_weights) %*% I_mat))
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
@@ -1704,11 +1733,11 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 		}
 	 }	
     }else if(obj.glmm.null$traitType == "count"){
-         #var2null = innerProduct(mu*var_weights, G*G)
+         var2null = innerProduct(mu*var_weights, G*G)
 	 G0_sample_tilde = G0sample - XXVXsample_inv0 %*%  (XVsample0 %*% G0sample)
 	 #cat("mean(G0_sample_tilde) ", mean(G0_sample_tilde), "\n")
          #var2null_new = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
-         var2null = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
+         var2null_sample = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
 	 #cat("var2null ", var2null, "\n")
 	 #cat("var2null_new ", var2null_new, "\n")
 	 muI = as.vector(t(mu) %*% I_mat)*as.vector(var_weights)
@@ -1729,6 +1758,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 }	
     }else if(obj.glmm.null$traitType == "count_nb"){
 	 var2null = innerProduct(W, G*G) ##To update
+	 var2null_sample = innerProduct(as.vector(t(W) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
          var2null_noXadj = innerProduct(as.vector(t(W) %*% I_mat), G_noXadj*G_noXadj)
 	 var2nullGE_vec = NULL
 	 if(!is.null(obj.glmm.null$eMat)){
@@ -1752,6 +1782,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
    # cat("p_approx ", p_approx, "\n")
    # cat("p_approx_true ", p_approx_true, "\n")
     varRatio_NULL_vec = c(varRatio_NULL_vec, var1/var2null)
+    varRatio_NULL_sample_vec = c(varRatio_NULL_sample_vec, var1/var2null_sample)
     varRatio_NULL_noXadj_vec = c(varRatio_NULL_noXadj_vec, var1/var2null_noXadj)
  if(!is.null(obj.glmm.null$eMat)){
     varRatio_NULL_eg_mat = rbind(varRatio_NULL_eg_mat, var1GE_vec/var2nullGE_vec)
@@ -1804,6 +1835,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
     varRatioTable = rbind(varRatioTable, c(varRatio_sparse, "sparse", k))
   }
   varRatio_null = mean(varRatio_NULL_vec)
+  varRatio_null_sample = mean(varRatio_NULL_sample_vec)
   cat("varRatio_null", varRatio_null, "\n")
 
   varRatio_null_noXadj = mean(varRatio_NULL_noXadj_vec)
@@ -1822,12 +1854,14 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
   varRatioTable = rbind(varRatioTable, c(varRatio_null, "null", k))
   varRatioTable = rbind(varRatioTable, c(varRatio_null_noXadj, "null_noXadj", k))
+  varRatioTable = rbind(varRatioTable, c(varRatio_null_sample, "null_sample", k))
 
 
   #varRatioTable = rbind(varRatioTable, c(varRatio_null_noXadj, "null", k))
 }else{# if(cateVarRatioVec[k] == 1)
     varRatioTable = rbind(varRatioTable, c(1, "null", k))
     varRatioTable = rbind(varRatioTable, c(1, "null_noXadj", k))
+    varRatioTable = rbind(varRatioTable, c(1, "null_sample", k))
     if(length(varRatio_sparseGRM_vec) > 0){
       varRatioTable = rbind(varRatioTable, c(1, "sparse", k))
     }

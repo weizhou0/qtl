@@ -502,11 +502,9 @@ eMat = as.matrix(eMat)
 		#X_gxe = rbind(X_gxe, obj.model$X)
 		#XVX_inv_XV_gxe = rbind(XVX_inv_XV_gxe, obj.model$obj.noK$XVX_inv_XV)
 		#XVX_gxe = rbind(XVX_gxe,  obj.model$obj.noK$XVX)
-        X_gxe = matrix(1)
+        	X_gxe = matrix(1)
                 XVX_inv_XV_gxe = matrix(1)
                 XVX_gxe = matrix(1)	
-
-
 		y_gxe = cbind(y_gxe, obj.model$y)
 		res_gxe = cbind(res_gxe, obj.model$residuals)
         	mu2_gxe = cbind(mu2_gxe, obj.model$mu2)
@@ -624,6 +622,7 @@ if(sum(duplicated(obj.model.List[[1]]$sampleID)) > 0){
                      t_mu=mu_sample,
                      t_varRatio_sparse = as.matrix(ratioVecList$ratioVec_sparse),
                      t_varRatio_null = as.matrix(ratioVecList$ratioVec_null),
+                     t_varRatio_null_sample = as.matrix(ratioVecList$ratioVec_null_sample),
                      t_varRatio_null_noXadj = as.matrix(ratioVecList$ratioVec_null_noXadj),
                      t_varRatio_null_eg = as.matrix(ratioVecList$ratioVec_null_eg),
                      t_varRatio_sparse_eg = as.matrix(ratioVecList$ratioVec_sparse_eg),
@@ -762,6 +761,7 @@ if(sum(duplicated(obj.model.List[[1]]$sampleID)) > 0){
 		     t_mu=mu,
 		     t_varRatio_sparse = as.matrix(ratioVecList$ratioVec_sparse),
 		     t_varRatio_null = as.matrix(ratioVecList$ratioVec_null),
+                     t_varRatio_null_sample = as.matrix(ratioVecList$ratioVec_null_sample),
 		     t_varRatio_null_noXadj = as.matrix(ratioVecList$ratioVec_null_noXadj),
 		     t_varRatio_null_eg = as.matrix(ratioVecList$ratioVec_null_eg),	
 		     t_varRatio_sparse_eg = as.matrix(ratioVecList$ratioVec_sparse_eg),	

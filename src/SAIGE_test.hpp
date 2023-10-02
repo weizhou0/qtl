@@ -41,6 +41,7 @@ class SAIGEClass
       double m_varRatioVal;
       arma::vec m_varRatio_sparse;
       arma::vec m_varRatio_null;
+      arma::vec m_varRatio_null_sample;
       arma::vec m_varRatio_null_noXadj;
       arma::vec m_varRatio_null_eg;
       arma::vec m_varRatio_sparse_eg;
@@ -137,6 +138,7 @@ arma::mat    m_mu2_mt;
 arma::mat    m_mu_mt;
 arma::mat    m_varRatio_sparse_mt;
 arma::mat    m_varRatio_null_mt;
+arma::mat    m_varRatio_null_sample_mt;
 arma::mat    m_varRatio_null_noXadj_mt;
 arma::mat    m_varRatio_null_eg_mt;
 arma::mat    m_varRatio_sparse_eg_mt;
@@ -159,6 +161,7 @@ std::vector<std::ofstream> OutFile_single_vec;
         arma::mat & t_mu,
         arma::mat & t_varRatio_sparse,
         arma::mat & t_varRatio_null,
+        arma::mat & t_varRatio_null_sample,
         arma::mat & t_varRatio_null_noXadj,
         arma::mat & t_varRatio_null_eg,
         arma::mat & t_varRatio_sparse_eg,
@@ -490,6 +493,10 @@ void scoreTestFast_gxe(arma::vec & t_GVec,
                      double &t_var1,
                      double &t_var2,
                      double & t_pval);
+
+
+void assignSingleVarianceRatio(bool issparseforVR, bool isnoXadj, bool issample);
+bool assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXadj, bool issample);
 };
 }
 #endif
