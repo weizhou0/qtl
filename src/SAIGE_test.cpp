@@ -2395,6 +2395,9 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
 
 std::cout << "here is_gtilde" << std::endl;
 
+std::cout << "t_pval " << t_pval << std::endl;
+
+
         t_G1tilde_P_G2tilde = sqrt(m_varRatioVal) * t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
         arma::vec t_Tstat_ctemp =  t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (m_Tstat_cond.subvec(m_startic, m_endic));
 std::cout << "here is_gtilde 2" << std::endl;
@@ -2406,6 +2409,8 @@ std::cout << "here is_gtilde 4" << std::endl;
         arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (t_G1tilde_P_G2tilde.t());
 std::cout << "here is_gtilde 5" << std::endl;
         t_varT_c = t_var1 - t_varT_ctemp(0);
+        std::cout << "t_varT_c " << t_varT_c << " t_var1 " << t_var1 << " t_varT_ctemp(0) " << t_varT_ctemp(0) << std::endl;
+	std::cout << "t_Tstat_c " << t_Tstat_c << " t_Tstat " << t_Tstat << " t_Tstat_ctemp(0) " << t_Tstat_ctemp(0) << std::endl;
 std::cout << "here is_gtilde 6" << std::endl;
 
     double S_c = t_Tstat_c;

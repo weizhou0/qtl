@@ -810,6 +810,9 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 	std::cout << "gtildeVec " << gtildeVec.n_elem << std::endl;
 	std::cout << "(ptr_gSAIGEobj->m_mu2_gxe_mt) " << (ptr_gSAIGEobj->m_mu2_gxe_mt).n_rows << " " << (ptr_gSAIGEobj->m_mu2_gxe_mt).n_cols << std::endl;
         //if(t_P2Vec.n_elem == 0){
+	//
+	//
+	(ptr_gSAIGEobj->m_tauvec_mt).print("ptr_gSAIGEobj->m_tauvec_mt");
                 if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
                         t_P2Vec = gtildeVec % ((ptr_gSAIGEobj->m_mu2_gxe_mt).col(i_mt)) *((ptr_gSAIGEobj->m_tauvec_mt)(0,i_mt));
                 }else{
@@ -817,7 +820,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
                 }
         //}
 
-
+	std::cout << "ptr_gSAIGEobj->m_varRatioVal " << ptr_gSAIGEobj->m_varRatioVal << std::endl;
 	std::cout << "HEREa1a" << std::endl;
 	std::cout << "P2Mat_g " << P2Mat_g.n_rows << " " << P2Mat_g.n_cols << std::endl;
 	std::cout << "t_P2Vec " << t_P2Vec.n_elem << std::endl;
@@ -875,10 +878,23 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
                           indexNonZeroVec_arma, indexZeroVec_arma, Beta_ge, seBeta_ge, pval_ge, pval_noSPA_ge, Tstat_ge, gy_ge, varT_ge, altFreq_ge, isSPAConverge_ge, gtildeVec_ge, is_gtilde_ge, is_region_ge, t_P2Vec_ge, true, Beta_c_ge, seBeta_c_ge, pval_c_ge, pval_noSPA_c_ge, Tstat_c_ge, varT_c_ge, G1tilde_P_G2tilde_Vec_ge, is_Firth_ge, is_FirthConverge_ge, false, true, false);
 	std::cout << "HEREa5" << std::endl;
 
+    char pValueBuf[100];
+    sprintf(pValueBuf, "%.6E", pval_c_ge);
+    //std::string buffAsStdStr_c = pValueBuf;
+    //std::string& pval_c_ge_c = buffAsStdStr_c;	
+     
+
+			//pval_c_ge_vec.at(k) = std::to_string(pval_c_ge);
+			pval_c_ge_vec.at(k) = pValueBuf;
+	
+
+			//Beta_c_ge_vec.at(k) = std::to_string(Beta_c_ge);
 			Beta_c_ge_vec.at(k) = std::to_string(Beta_c_ge);
+			//seBeta_c_ge_vec.at(k) = std::to_string(seBeta_c_ge);
 			seBeta_c_ge_vec.at(k) = std::to_string(seBeta_c_ge);
-			pval_c_ge_vec.at(k) = std::to_string(pval_c_ge);
-			pval_noSPA_c_ge_vec.at(k) = std::to_string(pval_noSPA_c_ge);
+			// sprintf(pValueBuf, "%.6E", pval_noSPA_c_ge);
+			//pval_noSPA_c_ge_vec.at(k) = std::to_string(pval_noSPA_c_ge);
+			pval_noSPA_c_ge_vec.at(k) = pValueBuf;
 			Score_c_ge_vec(k) = Tstat_c_ge;
 
 //	     		P1Matge.row(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*(gtildeVec_ge.t());
