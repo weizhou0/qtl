@@ -287,15 +287,15 @@ SPAGMMATtest = function(bgenFile = "",
     set_Vmat_vec_orig(VmatFilelist, VmatSampleFilelist, obj.model.List[[1]]$sampleID)
 
     ratioVecList = Get_Variance_Ratio_multiTrait(varianceRatioFile, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM) #readInGLMM.R
-    print("ratioVecList")
-    print(ratioVecList)
+    #print("ratioVecList")
+    #print(ratioVecList)
 	#print("obj.model$spSigma ")
 	#print(obj.model$spSigma)
     if(!is.null(obj.model.List[[1]]$spSigma)){
     	#SigmaMat_sp = getSparseSigma_new() 
     	isSparseGRM = TRUE
 	SigmaMat_sp = chol2inv(chol(obj.model.List[[1]]$spSigma)) 
-	    cat("isSparseGRM 2 ", isSparseGRM, "\n")	
+	cat("isSparseGRM 2 ", isSparseGRM, "\n")	
     }else{
 	SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))
     }	    
@@ -378,10 +378,10 @@ SPAGMMATtest = function(bgenFile = "",
 eMat = NULL
 isgxe_vec = NULL
 for(oml in 1:length(obj.model.List)){
-	print("dim(I_mat)")
-	print(dim(I_mat))
-	print("obj.model.List[[oml]]$eMat)")
-	print(dim(obj.model.List[[oml]]$eMat))
+	#print("dim(I_mat)")
+	#print(dim(I_mat))
+	#print("obj.model.List[[oml]]$eMat)")
+	#print(dim(obj.model.List[[oml]]$eMat))
         #eMat = cbind(eMat, t(I_mat)%*%(obj.model.List[[oml]]$eMat))
         eMat = cbind(eMat, (obj.model.List[[oml]]$eMat))
         isgxe_vec = c(isgxe_vec, obj.model.List[[oml]]$isgxe)	
@@ -392,9 +392,9 @@ if(sum(isgxe_vec) != 0 && sum(isgxe_vec) != length(isgxe_vec)){
 }
 
 cat("pval_cutoff_for_gxe ", pval_cutoff_for_gxe, "\n")
-print("dim(eMat)")
-print(dim(eMat))
-print(isgxe_vec)
+#print("dim(eMat)")
+#print(dim(eMat))
+#print(isgxe_vec)
 eMat = as.matrix(eMat)
 #setAssocTest_GlobalVarsInCPP_GbyE(eMat, TRUE, 0.001)
         XV_gxe = NULL
@@ -506,15 +506,15 @@ eMat = as.matrix(eMat)
 		res_gxe = cbind(res_gxe, obj.model$residuals)
         	mu2_gxe = cbind(mu2_gxe, obj.model$mu2)
         	mu_gxe = cbind(mu_gxe, obj.model$mu)
-		print("dim(obj.model$X)")
-		print(dim(obj.model$X))
-		print("length(obj.model$residuals)")
-		print(length(obj.model$residuals))
-		print(obj.model$S_a)
+		#print("dim(obj.model$X)")
+		#print(dim(obj.model$X))
+		#print("length(obj.model$residuals)")
+		#print(length(obj.model$residuals))
+		#print(obj.model$S_a)
 		S_a_gxe_sub = (as.matrix(obj.model$X)) * (as.vector(obj.model$residuals))
-		print(dim(S_a_gxe_sub))
-		print("colSums(S_a_gxe_sub)")
-		print(colSums(S_a_gxe_sub))
+		#print(dim(S_a_gxe_sub))
+		#print("colSums(S_a_gxe_sub)")
+		#print(colSums(S_a_gxe_sub))
 		S_a_gxe = cbind(S_a_gxe, colSums(S_a_gxe_sub))
 		varWeights_gxe = cbind(varWeights_gxe, obj.model$varWeights)
 	}else{
@@ -535,8 +535,9 @@ eMat = as.matrix(eMat)
   }
 
 
-print("dim(ratioVecList$ratioVec_sparse)")
-print(dim(ratioVecList$ratioVec_sparse))
+#print("dim(ratioVecList$ratioVec_sparse)")
+#print(dim(ratioVecList$ratioVec_sparse))
+
 #print(ratioVecList)
 #print(SPAcutoff)
 #print(theta)
@@ -564,51 +565,52 @@ print(dim(ratioVecList$ratioVec_sparse))
 #print("XXVXsample_inv")
 #print(XXVXsample_inv)
 if(sum(duplicated(obj.model.List[[1]]$sampleID)) > 0){
-    print("XXVXsample_inv")
-print(length(XVXsample))
-print(length(XXVXsample_inv))
-print(length(XVsample))
-print(length(XVX_inv_XVsample))
-print(length(Sigma_iXXSigma_iX))
-print(length(Xsample))
-print(length(S_a_sample))
-print(length(res_sample))
-print(length(mu2_sample))
-print(length(mu_sample))
-print(length(as.matrix(ratioVecList$ratioVec_sparse)))
-print(length(as.matrix(ratioVecList$ratioVec_null)))
-print(length(as.matrix(ratioVecList$ratioVec_null_noXadj)))
-print(length(as.matrix(ratioVecList$ratioVec_null_eg)))
-print(length(as.matrix(ratioVecList$ratioVec_sparse_eg)))
-print(length(cateVarRatioMinMACVecExclude))
-print(length(cateVarRatioMaxMACVecInclude))
-print(length(SPAcutoff))
-print(length(theta))
-print(length(varWeights_sample))
-print(length(traitType))
-print(length(y))
-print(length(impute_method))
-print(length(isSparseGRM))
-print(length(is_noadjCov))
-print(length(pval_cutoff_for_fastTest))
-print(length(isCondition))
-print(length(condition_genoIndex_a))
-print(length(is_Firth_beta))
-print(length(pCutoffforFirth))
-print(length(offset))
-print(length(obj_cc_res.out))
-print(length(SigmaMat_sp))
-print(length(obj.model$tauVal_sp))
-print(length(I_mat))
-print(length(b-1))
-print(length(T_longl_mat))
-print(length(obj.model.List[[1]]$T_longl_vec))
-print(length(is_EmpSPA))
-print(length(obj.model$cumul))
+
+#print("XXVXsample_inv")
+#print(length(XVXsample))
+#print(length(XXVXsample_inv))
+#print(length(XVsample))
+#print(length(XVX_inv_XVsample))
+#print(length(Sigma_iXXSigma_iX))
+#print(length(Xsample))
+#print(length(S_a_sample))
+#print(length(res_sample))
+#print(length(mu2_sample))
+#print(length(mu_sample))
+#print(length(as.matrix(ratioVecList$ratioVec_sparse)))
+#print(length(as.matrix(ratioVecList$ratioVec_null)))
+#print(length(as.matrix(ratioVecList$ratioVec_null_noXadj)))
+#print(length(as.matrix(ratioVecList$ratioVec_null_eg)))
+#print(length(as.matrix(ratioVecList$ratioVec_sparse_eg)))
+#print(length(cateVarRatioMinMACVecExclude))
+#print(length(cateVarRatioMaxMACVecInclude))
+#print(length(SPAcutoff))
+#print(length(theta))
+#print(length(varWeights_sample))
+#print(length(traitType))
+#print(length(y))
+#print(length(impute_method))
+#print(length(isSparseGRM))
+#print(length(is_noadjCov))
+#print(length(pval_cutoff_for_fastTest))
+#print(length(isCondition))
+#print(length(condition_genoIndex_a))
+#print(length(is_Firth_beta))
+#print(length(pCutoffforFirth))
+#print(length(offset))
+#print(length(obj_cc_res.out))
+#print(length(SigmaMat_sp))
+#print(length(obj.model$tauVal_sp))
+#print(length(I_mat))
+#print(length(b-1))
+#print(length(T_longl_mat))
+#print(length(obj.model.List[[1]]$T_longl_vec))
+#print(length(is_EmpSPA))
+#print(length(obj.model$cumul))
 
 
-print("OKKKK")
-print(traitType)
+#print("OKKKK")
+#print(traitType)
 
 
 #if(FALSE){
@@ -670,7 +672,7 @@ print(traitType)
 
 
 
-  print("setSAIGEobjInCPP 0")
+  #print("setSAIGEobjInCPP 0")
   #print_g_n_unique()
 
 #print("ratioVecList")
@@ -816,7 +818,7 @@ print(traitType)
   #rm(sparseSigmaRList)
   gc()
 
-  print("HEREHREHREH")
+  #print("HEREHREHREH")
 
    setAssocTest_GlobalVarsInCPP_GbyE(eMat, isgxe_vec[1], as.numeric(pval_cutoff_for_gxe), XV_gxe, XXVX_inv_gxe,   y_gxe , res_gxe , mu2_gxe , mu_gxe , varWeights_gxe );	
 
@@ -846,9 +848,9 @@ print(traitType)
 
 	condition_genoIndex_a = as.character(format(condition_genoIndex$cond_genoIndex, scientific = FALSE))
 	condition_genoIndex_prev_a = as.character(format(condition_genoIndex$cond_genoIndex_prev, scientific = FALSE)) 
-	print("OKKK")
+#	print("OKKK")
 	assign_conditionMarkers_factors(genoType, condition_genoIndex_prev_a, condition_genoIndex_a,  n, condition_weights)
-	print("OKKK2")
+#	print("OKKK2")
 if(obj.model$traitType[1] == "binary" & isGroupTest){
 	  outG2cond = RegionSetUpConditional_binary_InCPP(condition_weights)
 	G2condList_list = NULL
@@ -927,9 +929,9 @@ if(obj.model$traitType[1] == "binary" & isGroupTest){
       }
 
 
-cat("maxMAF_in_groupTest b ", maxMAF_in_groupTest, "\n")
-cat("minMAF_in_groupTest b ", minMAF_in_groupTest, "\n")
-cat("MAFlimitMat ", MAFlimitMat, "\n")
+#cat("maxMAF_in_groupTest b ", maxMAF_in_groupTest, "\n")
+#cat("minMAF_in_groupTest b ", minMAF_in_groupTest, "\n")
+#cat("MAFlimitMat ", MAFlimitMat, "\n")
 
       maxMACbinind = which(maxMAC_in_groupTest > 0)	
       if(length(maxMACbinind) > 0){ 
@@ -963,7 +965,7 @@ cat("MAFlimitMat ", MAFlimitMat, "\n")
       cat("corresponding min MAF cutoff (exclude) ", minMAF_in_groupTest, "will be applied\n")
 
 
-cat("MAFlimitMat b ", MAFlimitMat, "\n")
+#cat("MAFlimitMat b ", MAFlimitMat, "\n")
 
 
 		    #method_to_CollapseUltraRare,
