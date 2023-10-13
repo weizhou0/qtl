@@ -425,7 +425,12 @@ for(tt in 1:length(traitType)){
           if(isCondition){#check later
             VarMatAdjCond = outList$VarMatAdjCond[tt_start:tt_end,][noNAIndices,noNAIndices]
             TstatAdjCond = outList$TstatAdjCond[tt_start:tt_end][noNAIndices]
-            G1tilde_P_G2tilde_Weighted_Mat = outList$G1tilde_P_G2tilde_Weighted_Mat[tt_start:tt_end,][noNAIndices,,drop=F]
+	    print(dim(outList$G1tilde_P_G2tilde_Weighted_Mat))
+	    cat("tt_start ", tt_start, "\n")
+	    cat("tt_end ", tt_end, "\n")
+	
+            G1tilde_P_G2tilde_Weighted_Mat = outList$G1tilde_P_G2tilde_Weighted_Mat[tt_start:tt_end,,drop=F][noNAIndices,,drop=F]
+
             weightMat_G2_G2 = outList$G2_Weight_cond %*% t(outList$G2_Weight_cond)
           }	  
         

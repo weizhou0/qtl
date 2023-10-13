@@ -646,7 +646,7 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
  if(t_isSparseGRM){
  	t_isnoadjCov = false;
  }
-//std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
+  //std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
 
 if(!t_isnoadjCov){
 	unsigned int nonzero = indexNonZeroVec0_arma.n_elem;
@@ -670,7 +670,7 @@ if(!t_isnoadjCov){
 	//std::cout << "t_pval_str from scoreTestFast_noadjCov_multiTrait " << t_pval_str << std::endl;
   }
 
-//std::cout << "scoreTestFast_noadjCov_multiTrait " << std::endl;
+  //std::cout << "scoreTestFast_noadjCov_multiTrait " << std::endl;
 
   double StdStat = std::abs(t_Tstat) / sqrt(t_var1);
   t_isSPAConverge = false;
@@ -928,28 +928,28 @@ if(!t_isnoadjCov){
         	is_gtilde = true;
         }
 
-	//std::cout << "here is_gtilde" << std::endl;
+	 //std::cout << "here is_gtilde" << std::endl;
+	//std::cout << "m_startic " << m_startic << std::endl;
+	//std::cout << "m_endic " << m_endic << std::endl;
 
         t_G1tilde_P_G2tilde = sqrt(m_varRatioVal) * t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
 
 	//std::cout << "here is_gtilde 1" << std::endl;
-//std::cout << "m_startic " << m_startic << std::endl;
-//std::cout << "m_endic " << m_endic << std::endl;
 	//m_P2Mat_cond.print("m_P2Mat_cond");	
 	//t_G1tilde_P_G2tilde.print("t_G1tilde_P_G2tilde");
 	//m_VarInvMat_cond.print("m_VarInvMat_cond");
 	//m_Tstat_cond.print("m_Tstat_cond");
         arma::vec t_Tstat_ctemp =  t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (m_Tstat_cond.subvec(m_startic, m_endic));
-//std::cout << "here is_gtilde 2" << std::endl;
+	//std::cout << "here is_gtilde 2" << std::endl;
 	arma::mat tempgP2 = t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
-//std::cout << "here is_gtilde 3" << std::endl;
+	//std::cout << "here is_gtilde 3" << std::endl;
 
     	t_Tstat_c = t_Tstat - t_Tstat_ctemp(0);
-//std::cout << "here is_gtilde 4" << std::endl;
+	//std::cout << "here is_gtilde 4" << std::endl;
     	arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (t_G1tilde_P_G2tilde.t());
-//std::cout << "here is_gtilde 5" << std::endl;
+	//std::cout << "here is_gtilde 5" << std::endl;
     	t_varT_c = t_var1 - t_varT_ctemp(0);
-//std::cout << "here is_gtilde 6" << std::endl;
+	//std::cout << "here is_gtilde 6" << std::endl;
 
     double S_c = t_Tstat_c;
 
@@ -1003,6 +1003,7 @@ if(!t_isnoadjCov){
     if((m_traitType == "binary" || m_traitType == "count")  && stat_c > std::pow(m_SPA_Cutoff,2)){
 	bool t_isSPAConverge_c;
 	double q_c, qinv_c, pval_noadj_c, SPApval_c;    
+	arma::vec m_mu_vec = m_mu_mt.col(m_itrait);
 	if(m_traitType == "binary"){
                 q_c = t_Tstat_c/sqrt(t_varT_c/t_var2) + m1;
 
@@ -1019,14 +1020,19 @@ if(!t_isnoadjCov){
         }
 
         bool logp=false;
-
         if(p_iIndexComVecSize >= 0.5){
 		//std::cout << "SPA_fast " << std::endl;
-                SPA_fast(m_mu, t_gtilde, q_c, qinv_c, pval_noadj_c, false, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, SPApval_c, t_isSPAConverge_c);
+                SPA_fast(m_mu_vec, t_gtilde, q_c, qinv_c, pval_noadj_c, false, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, SPApval_c, t_isSPAConverge_c);
+		//std::cout << "after SPA_fast " << std::endl;
         }else{
 		//std::cout << "SPA " << std::endl;
-                SPA(m_mu, t_gtilde, q_c, qinv_c, pval_noadj_c, tol1, logp, m_traitType, SPApval_c, t_isSPAConverge_c);
+                SPA(m_mu_vec, t_gtilde, q_c, qinv_c, pval_noadj_c, tol1, logp, m_traitType, SPApval_c, t_isSPAConverge_c);
+		//std::cout << "after SPA " << std::endl;
         }
+
+        if(SPApval_c < t_pval_noSPA_c){
+		SPApval_c = t_pval_noSPA_c;
+	}
 
         boost::math::normal ns;
         t_pval_c = SPApval_c;
@@ -1141,7 +1147,7 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXa
 
    //m_varRatioVal = m_varRatio(0);
    hasVarRatio = true;
-   std::cout << "hasVarRatio " << hasVarRatio << std::endl;
+   //std::cout << "hasVarRatio " << hasVarRatio << std::endl;
    return(hasVarRatio);    
 }
 

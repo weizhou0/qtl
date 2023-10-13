@@ -24,6 +24,9 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
         bool Isconverge = true;
 	Rcpp::List outuni1;
 	Rcpp::List outuni2;
+        //mu.print("mu");
+	//g.print("g");
+        //std::cout << "q " << q << " qinv " << qinv << std::endl;
         if( traitType == "binary"){
           outuni1 = getroot_K1_Binom(0, mu, g, q, tol);
           outuni2 = getroot_K1_Binom(0, mu, g, qinv, tol);
@@ -32,17 +35,16 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
           outuni2 = getroot_K1_Poi(0, mu, g, qinv, tol);
         }
 
-/*
-        double outuni1root = outuni1["root"];
-        double outuni2root = outuni2["root"];
-        bool Isconverge1 = outuni1["Isconverge"];
-        bool Isconverge2 = outuni2["Isconverge"];
+        //double outuni1root = outuni1["root"];
+        //double outuni2root = outuni2["root"];
+        //bool Isconverge1 = outuni1["Isconverge"];
+        //bool Isconverge2 = outuni2["Isconverge"];
 
-        std::cout << "outuni1root " << outuni1root << std::endl;
-        std::cout << "outuni2root " << outuni2root << std::endl;
-        std::cout << "Isconverge1 " << Isconverge1 << std::endl;
-        std::cout << "Isconverge2 " << Isconverge2 << std::endl;
-*/
+        //std::cout << "outuni1root " << outuni1root << std::endl;
+        //std::cout << "outuni2root " << outuni2root << std::endl;
+        //std::cout << "Isconverge1 " << Isconverge1 << std::endl;
+        //std::cout << "Isconverge2 " << Isconverge2 << std::endl;
+
 
         Rcpp::List getSaddle;
         Rcpp::List getSaddle2;
@@ -76,7 +78,7 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
                                 p2 = pval_noadj/2;
                         }
                 }
-                //std::cout << "p1_nofast " << p1 << "p2 " << p2 << std::endl;
+         //       std::cout << "p1_nofast " << p1 << "p2 " << p2 << std::endl;
 
                 if(logp)
                 {
@@ -85,7 +87,7 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
                         pval = std::abs(p1)+std::abs(p2);
                 }
 
-		//std::cout << "pval " << pval << std::endl;
+	//	std::cout << "pval " << pval << std::endl;
                 Isconverge=true;
         }else {
                         //std::cout << "Error_Converge" << std::endl;

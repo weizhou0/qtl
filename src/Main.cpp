@@ -374,7 +374,7 @@ void mainMarkerInCPP(
    //t_GVec.clear();
    //std::cout << "Unified_getOneMarker " << std::endl;
    //std::cout << "n " << n << std::endl;
-//   std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
+   //std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
 
    //t_GVec.set_size(n);
    bool isReadMarker = Unified_getOneMarker(t_genoType, gIndex_prev, gIndex, ref, alt, marker, pd, chr, altFreq, altCounts, missingRate, imputeInfo,
@@ -436,7 +436,7 @@ void mainMarkerInCPP(
     missingRateVec.at(j_mt0) = missingRate;
     imputationInfoVec.at(j_mt0) = imputeInfo;
  }
-//  std::cout << "Here2b mainMarkerInCPP" << std::endl;
+  //std::cout << "Here2b mainMarkerInCPP" << std::endl;
 
 
     // MAF and MAC are for Quality Control (QC)
@@ -444,7 +444,7 @@ void mainMarkerInCPP(
     int nG = t_GVec.n_elem;
     double MAC = MAF * n * (1 - missingRate) *2;
    
-  /* 
+   /*
    std::cout << "MAC " << MAC << std::endl;
    std::cout << "MAF " << MAF << std::endl;
    std::cout << "n " << n << std::endl;
@@ -474,7 +474,7 @@ void mainMarkerInCPP(
 
     flip = imputeGenoAndFlip(t_GVec, altFreq, altCounts,indexForMissing, g_impute_method, g_dosage_zerod_cutoff, g_dosage_zerod_MAC_cutoff, MAC, indexZeroVec, indexNonZeroVec);
    
-    //std::cout << "Here2c mainMarkerInCPP" << std::endl;
+  // std::cout << "Here2c mainMarkerInCPP" << std::endl;
 //arma::vec timeoutput4 = getTime();
 //printTime(timeoutput3, timeoutput4, "imputeGenoAndFlip");
 for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
@@ -613,7 +613,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
     }
 
 
-//    std::cout << "pval " << pval << std::endl;
+    //std::cout << "pval " << pval << std::endl;
     //std::cout << "ptr_gSAIGEobj->m_pval_cutoff_for_fastTest " << ptr_gSAIGEobj->m_pval_cutoff_for_fastTest << std::endl;
      
     if(pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
