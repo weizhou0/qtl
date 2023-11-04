@@ -770,12 +770,14 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
     	arma::mat P2Matge(nrow_e, 3);	
     	arma::mat VarMatge;
     	arma::vec Score_c_ge_vec(ne);
+	//arma::vec mu_old = ptr_gSAIGEobj->m_mu_mt.col(i_mt);
+        //arma::vec mu_new = mu_old % arma::exp(Beta * gtildeVec);
+        //arma::vec mu_new = mu_old % arma::exp(Beta * t_GVec);
 	//std::cout << "HEREa0" << std::endl;
+	//double Tstat_g_diff = dot(gtildeVec, mu_new-mu_old);
+        //std::cout << "Tstat_g_diff " << Tstat_g_diff << std::endl;
+	//std::cout << "Tstat " << Tstat << std::endl;
 
-	w0G2_cond_Vec_g(0) = 1;
-     	TstatVec_g(0) = Tstat;
-     	pVec_g(0) = pval;
-	MAFVec_g(0) = MAF;
 	if((ptr_gSAIGEobj->g_I_longl_mat.n_cols != ptr_gSAIGEobj->g_I_longl_mat.n_rows) && (t_GVec.n_elem < ptr_gSAIGEobj->m_y_gxe_mt.n_rows)){
 		t_GVec1 = (ptr_gSAIGEobj->g_I_longl_mat) * t_GVec;
 		indexNonZeroVec_arma = arma::find(t_GVec1 > 0.0);
@@ -785,7 +787,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 
 		t_GVec1 = t_GVec;
 	}
-	//t_P2Vec.print("t_P2Vec");
+
 	if((ptr_gSAIGEobj->g_I_longl_mat.n_cols != ptr_gSAIGEobj->g_I_longl_mat.n_rows) && (t_GVec.n_elem < ptr_gSAIGEobj->m_y_gxe_mt.n_rows)){
 	//if(t_GVec.n_elem < ptr_gSAIGEobj->m_y.n_elem){
 	        //t_GVec1 = ptr_gSAIGEobj->g_I_longl_mat * t_GVec;
@@ -803,6 +805,20 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 			//std::cout << "HEREa0a_3" << std::endl;
 
 	 }
+
+
+	//arma::vec mu_gxe_old = ptr_gSAIGEobj->m_mu_gxe_mt.col(i_mt);
+	//arma::vec mu_gxe_new = mu_gxe_old % arma::exp(Beta * gtildeVec);
+	//arma::vec mu_gxe_new = mu_gxe_old % arma::exp(Beta * t_GVec1);
+	//(ptr_gSAIGEobj->m_res_gxe_mt).col(i_mt) = ptr_gSAIGEobj->m_y_gxe_mt.col(i_mt) - mu_gxe_new;
+
+
+	w0G2_cond_Vec_g(0) = 1;
+     	TstatVec_g(0) = Tstat;
+     	//TstatVec_g(0) = Tstat - Tstat_g_diff;
+	pVec_g(0) = pval;
+	MAFVec_g(0) = MAF;
+	//t_P2Vec.print("t_P2Vec");
 
     ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
     if(isSingleVarianceRatio){
@@ -824,7 +840,8 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
         //if(t_P2Vec.n_elem == 0){
 	//
 	//
-	//(ptr_gSAIGEobj->m_tauvec_mt).print("ptr_gSAIGEobj->m_tauvec_mt");
+	(ptr_gSAIGEobj->m_tauvec_mt).print("ptr_gSAIGEobj->m_tauvec_mt");
+
                 if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
                         t_P2Vec = gtildeVec % ((ptr_gSAIGEobj->m_mu2_gxe_mt).col(i_mt)) *((ptr_gSAIGEobj->m_tauvec_mt)(0,i_mt));
                 }else{
@@ -839,8 +856,10 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 	P2Mat_g.col(0) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec;
 	//std::cout << "HEREa1b" << std::endl;
 	VarMat_g = sqrt(ptr_gSAIGEobj->m_varRatioVal)*gtildeVec.t() * P2Mat_g;
+	VarMat_g.print("VarMat_g");
 	//std::cout << "HEREa1c" << std::endl;
-	VarInvMat_g = VarMat_g.i();	
+	VarInvMat_g = VarMat_g.i();
+	VarInvMat_g.print("VarInvMat_g");
 	//std::cout << "HEREa2" << std::endl;
 
   	ptr_gSAIGEobj->assignConditionFactors(
@@ -866,7 +885,8 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 	    //std::cout << "ksub " << ksub << std::endl;
 	    evec = g_emat.col(ksub);
 	    //std::cout << "ksub b " << ksub << std::endl;
-	    t_GEVec = t_GVec1 % evec;
+	    //t_GEVec = t_GVec1 % evec;
+	    t_GEVec = gtildeVec % evec;
 	    altFreq_ge = arma::mean(t_GEVec)/2;
 	    is_gtilde_ge = false;
 	    gtildeVec_ge.clear();
@@ -882,8 +902,10 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 	    	ptr_gSAIGEobj->m_varRatioVal =  ptr_gSAIGEobj->m_varRatio_sparse_eg_mt(k,i_mt);
 	//	ptr_gSAIGEobj->m_varRatioVal = ptr_gSAIGEobj->m_varRatio_sparse_eg(k);
 	    }
-	//std::cout << "HEREa4" << std::endl;
+
+//std::cout << "HEREa4" << std::endl;
 	    //std::cout << "ptr_gSAIGEobj->m_varRatioVa null_eg " << ptr_gSAIGEobj->m_varRatioVal << std::endl;
+	    //
 	    Unified_getMarkerPval_gxe(
                     t_GEVec,
                           false, // bool t_isOnlyOutputNonZero,
@@ -3449,7 +3471,7 @@ bool openOutfile_single(std::string t_traitType, bool t_isImputation, bool isapp
 
                 if(ptr_gSAIGEobj->m_isCondition){
                         OutFile_single << "BETA_c\tSE_c\tTstat_c\tvar_c\tp.value_c\t";
-			if(t_traitType == "binary"){
+			if(t_traitType == "binary" || t_traitType == "count"){
 				OutFile_single << "p.value.NA_c\t";
 			}
                 }

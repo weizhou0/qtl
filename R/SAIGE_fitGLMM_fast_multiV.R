@@ -1046,6 +1046,9 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
         if(length(eCovarCol) > 0){
             cat(eCovarCol, "are environmental covariates\n")
 	    modglmm$eMat = data.new[,which(colnames(data.new) %in%eCovarCol), drop=F]
+	    for(em in 1:ncol(modglmm$eMat)){
+		modglmm$eMat[,em] = (modglmm$eMat[,em] - mean(modglmm$eMat[,em]))/(sd(modglmm$eMat[,em]))
+	    }
         }
 
 	if(length(sampleCovarCol) > 0){
@@ -1619,7 +1622,9 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 			print(evec[1:100])
 			#evec = t(I_mat) %*% evec
 			#XVsample0_e = XVsample0_e_list[[ne]] 
-			GE = G0 * evec
+			#GE = G0 * evec
+			GE = G * evec
+			#GE = G0
 			GE_tilde = GE  -  obj.noK$XXVX_inv %*%  (obj.noK$XV %*% GE)
 			#GE_tilde_new = GE - I_mat %*% XXVXsample_inv0 %*%  (XVsample0_e %*% G0sample)
 			#print("sum(GE_tilde != GE_tilde_new)")

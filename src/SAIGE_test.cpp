@@ -702,6 +702,7 @@ if(!t_isnoadjCov){
 
 
     if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
+    //if(StdStat > 0 && m_traitType != "quantitative"){
       unsigned int iIndexComVecSize = iIndexComVec.n_elem;
       unsigned int iIndexSize = iIndex.n_elem;
       gNB.set_size(iIndexSize);
@@ -2462,7 +2463,11 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
 //std::cout << "here is_gtilde 2" << std::endl;
         arma::mat tempgP2 = t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
 //std::cout << "here is_gtilde 3" << std::endl;
-
+	std::cout << "t_Tstat " << t_Tstat << std::endl;
+	std::cout << "t_Tstat_ctemp(0) " << t_Tstat_ctemp(0) << std::endl;
+	m_Tstat_cond.print("m_Tstat_cond");
+	t_G1tilde_P_G2tilde.print("t_G1tilde_P_G2tilde");
+	m_VarInvMat_cond.print("m_VarInvMat_cond");
         t_Tstat_c = t_Tstat - t_Tstat_ctemp(0);
 //std::cout << "here is_gtilde 4" << std::endl;
         arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (t_G1tilde_P_G2tilde.t());
@@ -2474,8 +2479,15 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
 
     double S_c = t_Tstat_c;
     double stat_c = S_c*S_c/t_varT_c;
-//std::cout << "here is_gtilde 7" << std::endl;
+     std::cout << "here is_gtilde 7" << std::endl;
+     std::cout << "t_varT_c " << t_varT_c << std::endl; 		
+     std::cout << "t_Tstat_c " << t_Tstat_c << std::endl; 		
+
+     std::cout << "t_var1 " << t_var1 << std::endl; 		
+     std::cout << "t_varT_ctemp(0) " << t_varT_ctemp(0) << std::endl; 	
+     std::cout << "std::numeric_limits<double>::min() " << std::numeric_limits<double>::min() << std::endl;
      if (t_varT_c <= std::numeric_limits<double>::min()){
+     //if (t_varT_c <= 10^-10){
         t_pval_noSPA_c = 1;
         stat_c = 0;
      }else{
@@ -2516,13 +2528,14 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
         pval_noSPA_c = 0;
   }
   t_pval_noSPA_c = pval_noSPA_c;
-//std::cout << "here is_gtilde 8" << std::endl;
+  std::cout << "here is_gtilde 8" << std::endl;
+  std::cout << "pval_noSPA_c " << pval_noSPA_c << std::endl;
 
 double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
 arma::vec gNB, gNA, muNB, muNA;
   double gmuNB;;
 
-    if((m_traitType == "binary" || m_traitType == "count")  && stat_c > std::pow(m_SPA_Cutoff,2)){
+    if((m_traitType == "binary" || m_traitType == "count")  && pval_noSPA_c != 1 && stat_c > std::pow(m_SPA_Cutoff,2)){
 /*
   	arma::vec mu_vec = m_mu_gxe_mt.col(m_itrait);
          m1 = dot(mu_vec, t_gtilde);
@@ -2673,11 +2686,11 @@ void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,
     }
 
     var2 = var2m(0,0);
-    //std::cout << "var2 " << var2 << std::endl;
-    //std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
+    std::cout << "var2 Scoretest_gxe " << var2 << std::endl;
+    std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
     //double var1 = var2 * m_varRatioVal;
     double var1 = var2 * varRatioVal_var2;
-    //std::cout << "var1 " << var1 << std::endl;
+    std::cout << "var1 Scoretest_gxe " << var1 << std::endl;
     double stat = S*S/var1;
     //double t_pval;
     //std::cout << "S " << S << std::endl;

@@ -234,6 +234,10 @@ modglmm$obj_cc$res.out)
   if(!is.null(modglmm$eMat)){
 	modglmm$isgxe = TRUE
 	modglmm$eMat = as.matrix(modglmm$eMat)
+	#for(em in 1:ncol(modglmm$eMat)){
+	#	modglmm$eMat[,em] = (modglmm$eMat[,em] - mean(modglmm$eMat[,em]))/sd(modglmm$eMat[,em])
+		#modglmm$eMat[,em] = rep(1, nrow(modglmm$eMat))
+	#}
   }else{
   	modglmm$isgxe = FALSE
 	modglmm$eMat = matrix(rep(1,4),nrow=2, ncol=2)
