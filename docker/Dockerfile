@@ -25,17 +25,17 @@ ENV OMP_NUM_THREADS=1
 
 RUN R CMD INSTALL .
 
-RUN mv extdata/step1_fitNULLGLMM.R extdata/step2_SPAtests.R extdata/step3_LDmat.R extdata/createSparseGRM.R /usr/local/bin/
+RUN mv extdata/step1_fitNULLGLMM_qtl.R extdata/step2_tests_qtl.R extdata/step3_gene_pvalue_qtl.R extdata/makeGroupFile.R /usr/local/bin/
 
-RUN chmod a+x /usr/local/bin/step1_fitNULLGLMM.R
-RUN chmod a+x /usr/local/bin/step2_SPAtests.R
-RUN chmod a+x /usr/local/bin/step3_LDmat.R
-RUN chmod a+x /usr/local/bin/createSparseGRM.R
+RUN chmod a+x /usr/local/bin/step1_fitNULLGLMM_qtl.R
+RUN chmod a+x /usr/local/bin/step2_tests_qtl.R
+RUN chmod a+x /usr/local/bin/step3_gene_pvalue_qtl.R
+RUN chmod a+x /usr/local/bin/makeGroupFile.R
 
-RUN createSparseGRM.R  --help
-RUN step1_fitNULLGLMM.R --help
-RUN step2_SPAtests.R --help
-RUN step3_LDmat.R --help
+RUN makeGroupFile.R  --help
+RUN step1_fitNULLGLMM_qtl --help
+RUN step2_tests_qtl.R --help
+RUN step3_gene_pvalue_qtl.R --help
 
 RUN apt-get update
 RUN apt-get install time
