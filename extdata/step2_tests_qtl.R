@@ -2,7 +2,9 @@
 
 #options(stringsAsFactors=F, scipen = 999)
 options(stringsAsFactors=F)
-library(SAIGE)
+#library(SAIGE)
+#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.3_debug2")
+library(SAIGEQTL)
 BLASctl_installed <- require(RhpcBLASctl)
 library(optparse)
 library(data.table)
@@ -63,6 +65,8 @@ option_list <- list(
     help="Path to the input file containing the glmm model, which is output from previous step. Will be used by load()"),
   make_option("--varianceRatioFile", type="character",default="",
     help="Path to the input file containing the variance ratio, which is output from the previous step"),
+  make_option("--GMMATmodel_varianceRatio_multiTraits_File", type="character",default="",
+    help="Path to the input file containing 3 columns: phenotype name, model file, and variance ratio file. Each line is for one phenotype. This file is used when multiple phenotypes are analyzed simutaneously"), 
   make_option("--SAIGEOutputFile", type="character", default="",
     help="Path to the output file containing assoc test results"),
   make_option("--markers_per_chunk", type="numeric",default=10000,
@@ -75,8 +79,12 @@ option_list <- list(
     help="Whether to overwrite the output file if it exists. If FALSE, the program will continue the unfinished analysis instead of starting over from the beginining [default=TRUE]"),				
   make_option("--maxMAF_in_groupTest", type="character",default="0.0001,0.001,0.01",
     help="Max MAF for markers tested in group test seperated by comma. e.g. 0.0001,0.001,0.01, [default=0.01]"),
+  make_option("--minMAF_in_groupTest_Exclude", type="character",default=NULL,
+    help="Min MAF for markers tested in group test seperated by comma. e.g. 0.00001,0.0001,0.001, minMAF_in_groupTest has the same length as maxMAF_in_groupTest. By default, NULL. [default=NULL]"),
   make_option("--maxMAC_in_groupTest", type="character",default="0",
     help="Max MAC for markers tested in group test seperated by comma.The list will be combined with maxMAF_in_groupTest. e.g. 1,2 . By default, 0 and no maxMAC cutoff are applied. [default=0]"),
+  make_option("--minMAC_in_groupTest_Exclude", type="character",default=NULL,
+    help="Min MAC for markers tested in group test seperated by comma.The list will be combined with minMAF_in_groupTest_Exclude. e.g. 1,2 . By default, 0 and no maxMAC cutoff are applied. minMAC_in_groupTest_Exclude has the same length as maxMAC_in_groupTest. By default, NULL. [default=NULL]"),
   make_option("--annotation_in_groupTest", type="character",default="lof,missense;lof,missense;lof;synonymous",
     help="annotations of markers to be tested in the set-based tests seperated by comma. using ; to combine multiple annotations in the same test, e.g. lof,missense;lof,missense;lof;synonymous will test lof variants only, missense+lof variants, and missense+lof+synonymous variants. default: lof,missense;lof,missense;lof;synonymous"),
   make_option("--groupFile", type="character", default="",
@@ -93,8 +101,8 @@ option_list <- list(
     help="Optional. vector of float. Lower bound for MAC categories. The length equals to the number of MAC categories for variance ratio estimation. [default='10,20.5']"),
   make_option("--cateVarRatioMaxMACVecInclude",type="character", default="20.5",
     help="Optional. vector of float. Higher bound for MAC categories. The length equals to the number of MAC categories for variance ratio estimation minus 1. [default='20.5']"),
-  make_option("--weights.beta", type="character", default="1,25",
-    help="parameters for the beta distribution to weight genetic markers in gene-based tests."),
+  make_option("--weights.beta", type="character", default="1;25",
+    help="parameters for the beta distribution to weight genetic markers in gene-based tests and two values are delimited by ;. Multiple sets can be specified, delimited by comma.[default='1;25']"),
   make_option("--r.corr", type="numeric", default=0,
     help="If r.corr = 1, only Burden tests will be performed. If r.corr = 0, SKAT-O tests will be performed and results for Burden tests and SKAT tests will be output too. [default = 0]"),
   make_option("--markers_per_chunk_in_groupTest", type="numeric", default=100,
@@ -113,7 +121,10 @@ mean, p-value based on traditional score test is returned. Default value is 2.")
 
   make_option("--is_single_in_groupTest", type="logical", default=FALSE,
     help="Whether to output single-variant assoc test results when perform group tests. Note, single-variant assoc test results will always be output when SKAT and SKAT-O tests are conducted with --r.corr=0. This parameter should only be used when only Burden tests are condcuted with --r.corr=1, [default=TRUE]"), 
-  make_option("--is_no_weight_in_groupTest", type="logical", default=FALSE,
+  make_option("--is_SKATO", type="logical", default=FALSE,
+    help="whether to perform SKAT-O test [default=FALSE]"
+  ),  
+  make_option("--is_equal_weight_in_groupTest", type="logical", default=FALSE,
     help="Whether no weights are used in group Test. If FALSE, weights will be calcuated based on MAF from the Beta distribution with paraemters weights.beta or weights will be extracted from the group File if available [default=FALSE]"),
   make_option("--is_output_markerList_in_groupTest", type="logical", default=FALSE,
     help="Whether to output the marker lists included in the set-based tests for each mask.[default=TRUE]"),
@@ -123,14 +134,12 @@ mean, p-value based on traditional score test is returned. Default value is 2.")
     help="p-value cutoff to use approx Firth to estiamte the effect sizes. Only for binary traits. The effect sizes of markers with p-value <= pCutoffforFirth will be estimated using approx Firth [default=0.01]"),
   make_option("--is_fastTest", type="logical", default=FALSE,
     help="Whether to use the fast mode for tests"),
-  make_option("--is_noadjCov", type="logical", default=FALSE,
+  make_option("--is_noadjCov", type="logical", default=TRUE,
     help="Whether to regress out covariates from genotype"),
   make_option("--is_sparseGRM", type="logical", default=FALSE,
     help="Whether to use the sparse GRM"),
   make_option("--pval_cutoff_for_fastTest", type="numeric", default=0.05,
     help="p-value cutoff for using sparse V in Step 2"),
-  make_option("--pval_cutoff_for_gxe", type="numeric", default=0.001,
-    help="p-value cutoff for testing gxe in Step 2"),
   make_option("--max_MAC_for_ER", type="numeric", default=4,
     help="p-values of genetic variants with MAC <= max_MAC_for_ER will be calculated via efficient resampling. [default=4]"),
   make_option("--is_EmpSPA", type="logical", default=FALSE,
@@ -161,7 +170,7 @@ convertoNumeric = function(x,stringOutput){
 #weights.beta.rare <- convertoNumeric(x=strsplit(opt$weights.beta.rare,",")[[1]], "weights.beta.rare")
 #weights.beta.common <- convertoNumeric(x=strsplit(opt$weights.beta.common,",")[[1]], "weights.beta.common")
 #if(sum(weights.beta.common!=weights.beta.rare) > 0){stop("weights.beta.common option is not functioning, so weights.beta.common needs to be equal to weights.beta.rare")}
-weights.beta <- convertoNumeric(x=strsplit(opt$weights.beta,",")[[1]], "weights.beta")
+#weights.beta <- convertoNumeric(x=strsplit(opt$weights.beta,",")[[1]], "weights.beta")
 
 cateVarRatioMinMACVecExclude <- convertoNumeric(x=strsplit(opt$cateVarRatioMinMACVecExclude,",")[[1]], "cateVarRatioMinMACVecExclude")
 cateVarRatioMaxMACVecInclude <- convertoNumeric(x=strsplit(opt$cateVarRatioMaxMACVecInclude,",")[[1]], "cateVarRatioMaxMACVecInclude")
@@ -174,6 +183,21 @@ if(is.null(opt$weights_for_condition)){
 maxMAF_in_groupTest = convertoNumeric(x=strsplit(opt$maxMAF_in_groupTest,",")[[1]], "maxMAF_in_groupTest")
 maxMAC_in_groupTest = convertoNumeric(x=strsplit(opt$maxMAC_in_groupTest,",")[[1]], "maxMAC_in_groupTest")
 
+if(!is.null(opt$minMAF_in_groupTest_Exclude)){
+	minMAF_in_groupTest_Exclude = convertoNumeric(x=strsplit(opt$minMAF_in_groupTest_Exclude,",")[[1]], "minMAF_in_groupTest_Exclude")
+}else{
+	minMAF_in_groupTest_Exclude = NULL
+}
+
+if(!is.null(opt$minMAC_in_groupTest_Exclude)){
+        minMAC_in_groupTest_Exclude = convertoNumeric(x=strsplit(opt$minMAC_in_groupTest_Exclude,",")[[1]], "minMAC_in_groupTest_Exclude")
+}else{
+	minMAC_in_groupTest_Exclude = NULL
+}
+
+
+
+
 annotation_in_groupTest = gsub(":",";",opt$annotation_in_groupTest)
 annotation_in_groupTest = unlist(strsplit(annotation_in_groupTest,",")[[1]])
 
@@ -184,6 +208,18 @@ if (BLASctl_installed){
   # Set number of threads for BLAS to 1, this step does not benefit from multithreading or multiprocessing
   original_num_threads <- blas_get_num_procs()
   blas_set_num_threads(1)
+}
+
+if(opt$weights.beta != ""){
+weights.beta.list = unlist(strsplit(opt$weights.beta, ","))
+weights.beta = NULL
+for(i in 1:length(weights.beta.list)){
+	weights.beta = c(weights.beta, gsub(";",",",weights.beta.list[i]))
+
+}
+}else{
+	weights.beta = NULL
+
 }
 
 print("opt$r.corr")
@@ -214,6 +250,7 @@ SPAGMMATtest(vcfFile=opt$vcfFile,
              LOCO=opt$LOCO,
              GMMATmodelFile=opt$GMMATmodelFile,
              varianceRatioFile=opt$varianceRatioFile,
+	     GMMATmodel_varianceRatio_multiTraits_File=opt$GMMATmodel_varianceRatio_multiTraits_File,
              SAIGEOutputFile=opt$SAIGEOutputFile,
              markers_per_chunk=opt$markers_per_chunk,
              groups_per_chunk=opt$groups_per_chunk,
@@ -221,7 +258,9 @@ SPAGMMATtest(vcfFile=opt$vcfFile,
              is_output_moreDetails =opt$is_output_moreDetails,
              is_overwrite_output = opt$is_overwrite_output,
              maxMAF_in_groupTest = maxMAF_in_groupTest,
+	     minMAF_in_groupTest_Exclude = minMAF_in_groupTest_Exclude,
              maxMAC_in_groupTest = maxMAC_in_groupTest,
+	     minMAC_in_groupTest_Exclude = minMAC_in_groupTest_Exclude, 
              minGroupMAC_in_BurdenTest = opt$minGroupMAC_in_BurdenTest,
              annotation_in_groupTest = annotation_in_groupTest,
              groupFile = opt$groupFile,
@@ -241,14 +280,15 @@ SPAGMMATtest(vcfFile=opt$vcfFile,
              is_Firth_beta = opt$is_Firth_beta,
              pCutoffforFirth = opt$pCutoffforFirth,
              is_single_in_groupTest = opt$is_single_in_groupTest,
-             is_no_weight_in_groupTest = opt$is_no_weight_in_groupTest,
+	     is_SKATO = opt$is_SKATO, 
+             is_equal_weight_in_groupTest = opt$is_equal_weight_in_groupTest,
              is_output_markerList_in_groupTest = opt$is_output_markerList_in_groupTest,
 	     is_noadjCov = opt$is_noadjCov, 
 	     is_sparseGRM = opt$is_sparseGRM,
              pval_cutoff_for_fastTest = opt$pval_cutoff_for_fastTest,
-	     pval_cutoff_for_gxe = opt$pval_cutoff_for_gxe,
              max_MAC_use_ER = opt$max_MAC_for_ER,
-	     is_EmpSPA = opt$is_EmpSPA
+	     is_EmpSPA = opt$is_EmpSPA,
+	     is_fastTest = opt$is_fastTest
 )
 
 

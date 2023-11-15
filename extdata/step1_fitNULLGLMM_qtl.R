@@ -4,8 +4,9 @@ options(stringsAsFactors=F)
 
 ## load R libraries
 
-library(SAIGE)
-#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs/")
+#library(SAIGE)
+#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test2/")
+library(SAIGEQTL)
 require(optparse) #install.packages("optparse")
 
 print(sessionInfo())
@@ -31,6 +32,8 @@ option_list <- list(
     help="Optional. Only for quantitative. Whether to perform the inverse normalization for the phenotype [default='FALSE']"),
   make_option("--covarColList", type="character", default="",
     help="List of covariates (comma separated)"),
+  make_option("--sampleCovarColList", type="character", default="",
+    help="List of covariates that are on sample level (comma separated)"),
   make_option("--longlCol", type="character", default="",
     help=""),	      
   make_option("--qCovarColList", type="character", default="",
@@ -140,7 +143,7 @@ print(opt)
 
 covars <- strsplit(opt$covarColList,",")[[1]]
 qcovars <- strsplit(opt$qCovarColList,",")[[1]]
-
+scovars <- strsplit(opt$sampleCovarColList,",")[[1]]
 convertoNumeric = function(x,stringOutput){
         y= tryCatch(expr = as.numeric(x),warning = function(w) {return(NULL)})
         if(is.null(y)){
@@ -215,5 +218,6 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
 	    longlCol=opt$longlCol,
 	    useGRMtoFitNULL=opt$useGRMtoFitNULL,
 	    offsetCol=opt$offsetCol,
-	    varWeightsCol=opt$varWeightsCol
+	    varWeightsCol=opt$varWeightsCol,
+	    sampleCovarCol=scovars
 	)
