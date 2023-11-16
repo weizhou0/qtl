@@ -6,3 +6,4 @@ The method
 - Fast and scalable for large data, test 20k genes, 200 cell types, millions of cells, millions of variants
 - Test rare variations. Single-variant test is underpowered
 
+Please see [https://weizhou0.github.io/SAIGE-QTL-doc/](https://weizhou0.github.io/SAIGE-QTL-doc/) for how to run SAIGE-QTL. 
