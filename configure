@@ -4,7 +4,7 @@
 [[ ! -z "$CONDA_BUILD" ]] && exit 0
 
 if [[ -z "$(which cget)" ]]; then
-  (>&2 echo "cget must be installed to build SAIGE. Run `pip install cget`.")
+  (>&2 echo "cget must be installed to build SAIGE-QTL. Run `pip install cget`.")
   exit 1
 fi
 
