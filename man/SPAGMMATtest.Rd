@@ -29,6 +29,7 @@ SPAGMMATtest(
   GMMATmodelFile = "",
   LOCO = TRUE,
   varianceRatioFile = "",
+  GMMATmodel_varianceRatio_multiTraits_File = "",
   cateVarRatioMinMACVecExclude = c(10.5, 20.5),
   cateVarRatioMaxMACVecInclude = c(20.5),
   SPAcutoff = 2,
@@ -39,9 +40,11 @@ SPAGMMATtest(
   condition = "",
   sparseGRMFile = "",
   sparseGRMSampleIDFile = "",
+  VmatFilelist = "",
+  VmatSampleFilelist = "",
   relatednessCutoff = 0,
   groupFile = "",
-  weights.beta = c(1, 25),
+  weights.beta = c("1,25"),
   weights_for_condition = NULL,
   r.corr = 0,
   dosage_zerod_cutoff = 0.2,
@@ -50,14 +53,24 @@ SPAGMMATtest(
   MACCutoff_to_CollapseUltraRare = 10,
   annotation_in_groupTest = c("lof", "missense;lof", "missense;lof;synonymous"),
   maxMAF_in_groupTest = c(0.01),
+  minMAF_in_groupTest_Exclude = NULL,
   maxMAC_in_groupTest = c(0),
+  minMAC_in_groupTest_Exclude = NULL,
   minGroupMAC_in_BurdenTest = 5,
   is_Firth_beta = FALSE,
   pCutoffforFirth = 0.01,
   is_overwrite_output = TRUE,
   is_single_in_groupTest = TRUE,
-  is_no_weight_in_groupTest = FALSE,
-  is_output_markerList_in_groupTest = FALSE
+  is_SKATO = FALSE,
+  is_equal_weight_in_groupTest = FALSE,
+  is_output_markerList_in_groupTest = FALSE,
+  pval_cutoff_for_fastTest = 0.05,
+  is_fastTest = FALSE,
+  pval_cutoff_for_gxe = 0.001,
+  is_noadjCov = TRUE,
+  is_sparseGRM = TRUE,
+  max_MAC_use_ER = 4,
+  is_EmpSPA = FALSE
 )
 }
 \arguments{
@@ -101,6 +114,8 @@ SPAGMMATtest(
 
 \item{varianceRatioFile}{character. Path to the input file containing the variance ratio, which is output from the previous step}
 
+\item{GMMATmodel_varianceRatio_multiTraits_File}{character. Path to the input file containing 3 columns: phenotype name, model file, and variance ratio file. Each line is for one phenotype. This file is used when multiple phenotypes are analyzed simutaneously}
+
 \item{cateVarRatioMinMACVecExclude}{vector of float. Lower bound of MAC for MAC categories. The length equals to the number of MAC categories for variance ratio estimation. By default, c(10.5,20.5). If groupFile="", only one variance ratio corresponding to MAC >= 20 is used}
 
 \item{cateVarRatioMaxMACVecInclude}{vector of float. Higher bound of MAC for MAC categories. The length equals to the number of MAC categories for variance ratio estimation minus 1. By default, c(20.5). If groupFile="", only one variance ratio corresponding to MAC >= 20 is used}
@@ -115,7 +130,7 @@ SPAGMMATtest(
 
 \item{markers_per_chunk_in_groupTest}{numeric. Number of markers in each chunk when calculating the variance covariance matrix in the set/group-based tests. By default, 100.}
 
-\item{condition}{character. For conditional analysis. Variant ids are in the format chr:pos_ref/alt and seperated by by comma. e.g."chr3:101651171_C/T,chr3:101651186_G/A".}
+\item{condition}{character. For conditional analysis. Variant ids are in the format chr:pos_ref/alt and seperated by by comma. e.g."chr3:101651171:C:T,chr3:101651186:G:A".}
 
 \item{sparseGRMFile}{character. Path to the pre-calculated sparse GRM file that was used in Step 1}
 
@@ -147,7 +162,7 @@ SPAGMMATtest(
 
 \item{is_single_in_groupTest}{logical.  Whether to output single-variant assoc test results when perform group tests. Note, single-variant assoc test results will always be output when SKAT and SKAT-O tests are conducted with r.corr=0. This parameter should only be used when only Burden tests are condcuted with r.corr=1. By default, TRUE}
 
-\item{is_no_weight_in_groupTest}{logical. Whether no weights are used in group Test. If FALSE, weights will be calcuated based on MAF from the Beta distribution with paraemters weights.beta or weights will be extracted from the group File if available. By default, FALSE}
+\item{is_equal_weight_in_groupTest}{logical. Whether equal weights are used in group Test. If TRUE, equal weights will be included in the group test. By default, FALSE}
 
 \item{is_output_markerList_in_groupTest}{logical. Whether to output the marker lists included in the set-based tests for each mask. By default, FALSE}
 

@@ -2,690 +2,690 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 CCT_cpp <- function(pval) {
-    .Call('_SAIGE_CCT_cpp', PACKAGE = 'SAIGE', pval)
+    .Call('_SAIGEQTL_CCT_cpp', PACKAGE = 'SAIGEQTL', pval)
 }
 
 setGlobalVarsInCPP_LDmat <- function(t_impute_method, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_missing_cutoff, t_maxMAFLimit, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_max_markers_region, t_outputFile) {
-    invisible(.Call('_SAIGE_setGlobalVarsInCPP_LDmat', PACKAGE = 'SAIGE', t_impute_method, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_missing_cutoff, t_maxMAFLimit, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_max_markers_region, t_outputFile))
+    invisible(.Call('_SAIGEQTL_setGlobalVarsInCPP_LDmat', PACKAGE = 'SAIGEQTL', t_impute_method, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_missing_cutoff, t_maxMAFLimit, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_max_markers_region, t_outputFile))
 }
 
 LDmatRegionInCPP <- function(t_genoType, t_genoIndex_prev, t_genoIndex, annoIndicatorMat, t_outputFile, t_n, t_isImputation, annoStringVec, regionName) {
-    invisible(.Call('_SAIGE_LDmatRegionInCPP', PACKAGE = 'SAIGE', t_genoType, t_genoIndex_prev, t_genoIndex, annoIndicatorMat, t_outputFile, t_n, t_isImputation, annoStringVec, regionName))
+    invisible(.Call('_SAIGEQTL_LDmatRegionInCPP', PACKAGE = 'SAIGEQTL', t_genoType, t_genoIndex_prev, t_genoIndex, annoIndicatorMat, t_outputFile, t_n, t_isImputation, annoStringVec, regionName))
 }
 
 openOutfile_single_LDmat <- function(isappend) {
-    .Call('_SAIGE_openOutfile_single_LDmat', PACKAGE = 'SAIGE', isappend)
+    .Call('_SAIGEQTL_openOutfile_single_LDmat', PACKAGE = 'SAIGEQTL', isappend)
 }
 
 closeOutfile_single_LDmat <- function() {
-    invisible(.Call('_SAIGE_closeOutfile_single_LDmat', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_closeOutfile_single_LDmat', PACKAGE = 'SAIGEQTL'))
 }
 
 setAssocTest_GlobalVarsInCPP <- function(t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_outputFilePrefix, t_MACCutoffforER) {
-    invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP', PACKAGE = 'SAIGE', t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_outputFilePrefix, t_MACCutoffforER))
+    invisible(.Call('_SAIGEQTL_setAssocTest_GlobalVarsInCPP', PACKAGE = 'SAIGEQTL', t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_outputFilePrefix, t_MACCutoffforER))
 }
 
 setAssocTest_GlobalVarsInCPP_GbyE <- function(t_emat, t_isgxe, t_pval_cutoff_for_gxe, t_XV_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe) {
-    invisible(.Call('_SAIGE_setAssocTest_GlobalVarsInCPP_GbyE', PACKAGE = 'SAIGE', t_emat, t_isgxe, t_pval_cutoff_for_gxe, t_XV_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe))
+    invisible(.Call('_SAIGEQTL_setAssocTest_GlobalVarsInCPP_GbyE', PACKAGE = 'SAIGEQTL', t_emat, t_isgxe, t_pval_cutoff_for_gxe, t_XV_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe))
 }
 
 setMarker_GlobalVarsInCPP <- function(t_isOutputMoreDetails, t_marker_chunksize) {
-    invisible(.Call('_SAIGE_setMarker_GlobalVarsInCPP', PACKAGE = 'SAIGE', t_isOutputMoreDetails, t_marker_chunksize))
+    invisible(.Call('_SAIGEQTL_setMarker_GlobalVarsInCPP', PACKAGE = 'SAIGEQTL', t_isOutputMoreDetails, t_marker_chunksize))
 }
 
 setRegion_GlobalVarsInCPP <- function(t_max_maf_region, t_max_markers_region, t_MACCutoff_to_CollapseUltraRare, t_min_gourpmac_for_burdenonly) {
-    invisible(.Call('_SAIGE_setRegion_GlobalVarsInCPP', PACKAGE = 'SAIGE', t_max_maf_region, t_max_markers_region, t_MACCutoff_to_CollapseUltraRare, t_min_gourpmac_for_burdenonly))
+    invisible(.Call('_SAIGEQTL_setRegion_GlobalVarsInCPP', PACKAGE = 'SAIGEQTL', t_max_maf_region, t_max_markers_region, t_MACCutoff_to_CollapseUltraRare, t_min_gourpmac_for_burdenonly))
 }
 
 mainMarkerInCPP <- function(t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth) {
-    invisible(.Call('_SAIGE_mainMarkerInCPP', PACKAGE = 'SAIGE', t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth))
+    invisible(.Call('_SAIGEQTL_mainMarkerInCPP', PACKAGE = 'SAIGEQTL', t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth))
 }
 
 Unified_getSampleSizeinGeno <- function(t_genoType) {
-    .Call('_SAIGE_Unified_getSampleSizeinGeno', PACKAGE = 'SAIGE', t_genoType)
+    .Call('_SAIGEQTL_Unified_getSampleSizeinGeno', PACKAGE = 'SAIGEQTL', t_genoType)
 }
 
 Unified_getSampleSizeinAnalysis <- function(t_genoType) {
-    .Call('_SAIGE_Unified_getSampleSizeinAnalysis', PACKAGE = 'SAIGE', t_genoType)
+    .Call('_SAIGEQTL_Unified_getSampleSizeinAnalysis', PACKAGE = 'SAIGEQTL', t_genoType)
 }
 
 setPLINKobjInCPP <- function(t_bimFile, t_famFile, t_bedFile, t_SampleInModel, t_AlleleOrder) {
-    invisible(.Call('_SAIGE_setPLINKobjInCPP', PACKAGE = 'SAIGE', t_bimFile, t_famFile, t_bedFile, t_SampleInModel, t_AlleleOrder))
+    invisible(.Call('_SAIGEQTL_setPLINKobjInCPP', PACKAGE = 'SAIGEQTL', t_bimFile, t_famFile, t_bedFile, t_SampleInModel, t_AlleleOrder))
 }
 
 setBGENobjInCPP <- function(t_bgenFileName, t_bgenFileIndex, t_SampleInBgen, t_SampleInModel, t_AlleleOrder) {
-    invisible(.Call('_SAIGE_setBGENobjInCPP', PACKAGE = 'SAIGE', t_bgenFileName, t_bgenFileIndex, t_SampleInBgen, t_SampleInModel, t_AlleleOrder))
+    invisible(.Call('_SAIGEQTL_setBGENobjInCPP', PACKAGE = 'SAIGEQTL', t_bgenFileName, t_bgenFileIndex, t_SampleInBgen, t_SampleInModel, t_AlleleOrder))
 }
 
 setVCFobjInCPP <- function(t_vcfFileName, t_vcfFileIndex, t_vcfField, t_SampleInModel) {
-    invisible(.Call('_SAIGE_setVCFobjInCPP', PACKAGE = 'SAIGE', t_vcfFileName, t_vcfFileIndex, t_vcfField, t_SampleInModel))
+    invisible(.Call('_SAIGEQTL_setVCFobjInCPP', PACKAGE = 'SAIGEQTL', t_vcfFileName, t_vcfFileIndex, t_vcfField, t_SampleInModel))
 }
 
 setSAIGEobjInCPP <- function(t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_varRatio_null_sample, t_varRatio_null_noXadj, t_varRatio_null_eg, t_varRatio_sparse_eg, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isnoadjCov, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec, t_is_EmpSPA, t_cumul, t_is_gxe, t_XV_gxe, t_X_gxe, t_XVX_inv_XV_gxe, t_XVX_gxe, t_S_a_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe) {
-    invisible(.Call('_SAIGE_setSAIGEobjInCPP', PACKAGE = 'SAIGE', t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_varRatio_null_sample, t_varRatio_null_noXadj, t_varRatio_null_eg, t_varRatio_sparse_eg, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isnoadjCov, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec, t_is_EmpSPA, t_cumul, t_is_gxe, t_XV_gxe, t_X_gxe, t_XVX_inv_XV_gxe, t_XVX_gxe, t_S_a_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe))
+    invisible(.Call('_SAIGEQTL_setSAIGEobjInCPP', PACKAGE = 'SAIGEQTL', t_XVX, t_XXVX_inv, t_XV, t_XVX_inv_XV, t_Sigma_iXXSigma_iX, t_X, t_S_a, t_res, t_mu2, t_mu, t_varRatio_sparse, t_varRatio_null, t_varRatio_null_sample, t_varRatio_null_noXadj, t_varRatio_null_eg, t_varRatio_sparse_eg, t_cateVarRatioMinMACVecExclude, t_cateVarRatioMaxMACVecInclude, t_SPA_Cutoff, t_tauvec, t_varWeightsvec, t_traitType, t_y, t_impute_method, t_flagSparseGRM, t_isnoadjCov, t_pval_cutoff_for_fastTest, t_isCondition, t_condition_genoIndex, t_is_Firth_beta, t_pCutoffforFirth, t_offset, t_resout, t_SigmaMat_sp, t_tauVal_sp, t_Ilongmat, t_I_longl_vec, t_Tlongmat, t_T_longl_vec, t_is_EmpSPA, t_cumul, t_is_gxe, t_XV_gxe, t_X_gxe, t_XVX_inv_XV_gxe, t_XVX_gxe, t_S_a_gxe, t_XXVX_inv_gxe, t_y_gxe, t_res_gxe, t_mu2_gxe, t_mu_gxe, t_varWeights_gxe))
 }
 
 RegionSetUpConditional_binary_InCPP <- function(t_weight_cond) {
-    .Call('_SAIGE_RegionSetUpConditional_binary_InCPP', PACKAGE = 'SAIGE', t_weight_cond)
+    .Call('_SAIGEQTL_RegionSetUpConditional_binary_InCPP', PACKAGE = 'SAIGEQTL', t_weight_cond)
 }
 
 mainRegionInCPP <- function(t_genoType, t_genoIndex_prev, t_genoIndex, annoIndicatorMat, t_weightlistvec, maxMAFVec, minMAFVec, t_outputFile, t_traitType, t_n, P1Mat, P2Mat, t_regionTestType, t_isImputation, t_Beta_param, t_weight, t_weight_cond, t_isIncludeNoWeights, t_isSingleinGroupTest, t_isOutputMarkerList, annoStringVec, regionName, t_isFastTest, t_isMoreOutput) {
-    .Call('_SAIGE_mainRegionInCPP', PACKAGE = 'SAIGE', t_genoType, t_genoIndex_prev, t_genoIndex, annoIndicatorMat, t_weightlistvec, maxMAFVec, minMAFVec, t_outputFile, t_traitType, t_n, P1Mat, P2Mat, t_regionTestType, t_isImputation, t_Beta_param, t_weight, t_weight_cond, t_isIncludeNoWeights, t_isSingleinGroupTest, t_isOutputMarkerList, annoStringVec, regionName, t_isFastTest, t_isMoreOutput)
+    .Call('_SAIGEQTL_mainRegionInCPP', PACKAGE = 'SAIGEQTL', t_genoType, t_genoIndex_prev, t_genoIndex, annoIndicatorMat, t_weightlistvec, maxMAFVec, minMAFVec, t_outputFile, t_traitType, t_n, P1Mat, P2Mat, t_regionTestType, t_isImputation, t_Beta_param, t_weight, t_weight_cond, t_isIncludeNoWeights, t_isSingleinGroupTest, t_isOutputMarkerList, annoStringVec, regionName, t_isFastTest, t_isMoreOutput)
 }
 
 assign_conditionMarkers_factors <- function(t_genoType, t_genoIndex_prev, t_genoIndex, t_n, t_weight_cond) {
-    invisible(.Call('_SAIGE_assign_conditionMarkers_factors', PACKAGE = 'SAIGE', t_genoType, t_genoIndex_prev, t_genoIndex, t_n, t_weight_cond))
+    invisible(.Call('_SAIGEQTL_assign_conditionMarkers_factors', PACKAGE = 'SAIGEQTL', t_genoType, t_genoIndex_prev, t_genoIndex, t_n, t_weight_cond))
 }
 
 assign_conditionMarkers_factors_binary_region <- function(scalefactor_G2_cond) {
-    invisible(.Call('_SAIGE_assign_conditionMarkers_factors_binary_region', PACKAGE = 'SAIGE', scalefactor_G2_cond))
+    invisible(.Call('_SAIGEQTL_assign_conditionMarkers_factors_binary_region', PACKAGE = 'SAIGEQTL', scalefactor_G2_cond))
 }
 
 assign_conditionMarkers_factors_binary_region_multiTrait <- function(scalefactor_G2_cond, oml) {
-    invisible(.Call('_SAIGE_assign_conditionMarkers_factors_binary_region_multiTrait', PACKAGE = 'SAIGE', scalefactor_G2_cond, oml))
+    invisible(.Call('_SAIGEQTL_assign_conditionMarkers_factors_binary_region_multiTrait', PACKAGE = 'SAIGEQTL', scalefactor_G2_cond, oml))
 }
 
 set_iterator_inVcf <- function(variantList, chrom, beg_pd, end_pd) {
-    invisible(.Call('_SAIGE_set_iterator_inVcf', PACKAGE = 'SAIGE', variantList, chrom, beg_pd, end_pd))
+    invisible(.Call('_SAIGEQTL_set_iterator_inVcf', PACKAGE = 'SAIGEQTL', variantList, chrom, beg_pd, end_pd))
 }
 
 check_Vcf_end <- function() {
-    .Call('_SAIGE_check_Vcf_end', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_check_Vcf_end', PACKAGE = 'SAIGEQTL')
 }
 
 move_forward_iterator_Vcf <- function(i) {
-    invisible(.Call('_SAIGE_move_forward_iterator_Vcf', PACKAGE = 'SAIGE', i))
+    invisible(.Call('_SAIGEQTL_move_forward_iterator_Vcf', PACKAGE = 'SAIGEQTL', i))
 }
 
 fast_logistf_fit <- function(x, y, weight, offset, firth, col_fit, init, maxit, maxstep, maxhs, lconv, gconv, xconv, isfirthconverge) {
-    .Call('_SAIGE_fast_logistf_fit', PACKAGE = 'SAIGE', x, y, weight, offset, firth, col_fit, init, maxit, maxstep, maxhs, lconv, gconv, xconv, isfirthconverge)
+    .Call('_SAIGEQTL_fast_logistf_fit', PACKAGE = 'SAIGEQTL', x, y, weight, offset, firth, col_fit, init, maxit, maxstep, maxhs, lconv, gconv, xconv, isfirthconverge)
 }
 
 closeGenoFile <- function(t_genoType) {
-    invisible(.Call('_SAIGE_closeGenoFile', PACKAGE = 'SAIGE', t_genoType))
+    invisible(.Call('_SAIGEQTL_closeGenoFile', PACKAGE = 'SAIGEQTL', t_genoType))
 }
 
 openOutfile <- function(t_traitType, isappend) {
-    .Call('_SAIGE_openOutfile', PACKAGE = 'SAIGE', t_traitType, isappend)
+    .Call('_SAIGEQTL_openOutfile', PACKAGE = 'SAIGEQTL', t_traitType, isappend)
 }
 
 openOutfile_singleinGroup <- function(t_traitType, t_isImputation, isappend, t_isMoreOutput) {
-    .Call('_SAIGE_openOutfile_singleinGroup', PACKAGE = 'SAIGE', t_traitType, t_isImputation, isappend, t_isMoreOutput)
+    .Call('_SAIGEQTL_openOutfile_singleinGroup', PACKAGE = 'SAIGEQTL', t_traitType, t_isImputation, isappend, t_isMoreOutput)
 }
 
 removeOutfile_singleinGroup_temp <- function() {
-    invisible(.Call('_SAIGE_removeOutfile_singleinGroup_temp', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_removeOutfile_singleinGroup_temp', PACKAGE = 'SAIGEQTL'))
 }
 
 removeOutfile_inGroup <- function() {
-    invisible(.Call('_SAIGE_removeOutfile_inGroup', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_removeOutfile_inGroup', PACKAGE = 'SAIGEQTL'))
 }
 
 removeOutfile_inSingle <- function() {
-    invisible(.Call('_SAIGE_removeOutfile_inSingle', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_removeOutfile_inSingle', PACKAGE = 'SAIGEQTL'))
 }
 
 openOutfile_single <- function(t_traitType, t_isImputation, isappend, t_isMoreOutput, t_isGbyE) {
-    .Call('_SAIGE_openOutfile_single', PACKAGE = 'SAIGE', t_traitType, t_isImputation, isappend, t_isMoreOutput, t_isGbyE)
+    .Call('_SAIGEQTL_openOutfile_single', PACKAGE = 'SAIGEQTL', t_traitType, t_isImputation, isappend, t_isMoreOutput, t_isGbyE)
 }
 
 set_flagSparseGRM_cur_SAIGE <- function(t_flagSparseGRM_cur) {
-    invisible(.Call('_SAIGE_set_flagSparseGRM_cur_SAIGE', PACKAGE = 'SAIGE', t_flagSparseGRM_cur))
+    invisible(.Call('_SAIGEQTL_set_flagSparseGRM_cur_SAIGE', PACKAGE = 'SAIGEQTL', t_flagSparseGRM_cur))
 }
 
 set_flagSparseGRM_cur_SAIGE_org <- function() {
-    invisible(.Call('_SAIGE_set_flagSparseGRM_cur_SAIGE_org', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_set_flagSparseGRM_cur_SAIGE_org', PACKAGE = 'SAIGEQTL'))
 }
 
 copy_singleInGroup <- function() {
-    invisible(.Call('_SAIGE_copy_singleInGroup', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_copy_singleInGroup', PACKAGE = 'SAIGEQTL'))
 }
 
 set_dup_sample_index <- function(t_dup_sample_Index) {
-    invisible(.Call('_SAIGE_set_dup_sample_index', PACKAGE = 'SAIGE', t_dup_sample_Index))
+    invisible(.Call('_SAIGEQTL_set_dup_sample_index', PACKAGE = 'SAIGEQTL', t_dup_sample_Index))
 }
 
 setupSparseGRM_new <- function(t_spGRM) {
-    invisible(.Call('_SAIGE_setupSparseGRM_new', PACKAGE = 'SAIGE', t_spGRM))
+    invisible(.Call('_SAIGEQTL_setupSparseGRM_new', PACKAGE = 'SAIGEQTL', t_spGRM))
 }
 
 getSparseSigma_new <- function() {
-    .Call('_SAIGE_getSparseSigma_new', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getSparseSigma_new', PACKAGE = 'SAIGEQTL')
 }
 
 set_I_longl_mat <- function(t_Ilongmat, t_I_longl_vec) {
-    invisible(.Call('_SAIGE_set_I_longl_mat', PACKAGE = 'SAIGE', t_Ilongmat, t_I_longl_vec))
+    invisible(.Call('_SAIGEQTL_set_I_longl_mat', PACKAGE = 'SAIGEQTL', t_Ilongmat, t_I_longl_vec))
 }
 
 set_I_longl_mat_SAIGEtest <- function(t_Ilongmat, t_I_longl_vec) {
-    invisible(.Call('_SAIGE_set_I_longl_mat_SAIGEtest', PACKAGE = 'SAIGE', t_Ilongmat, t_I_longl_vec))
+    invisible(.Call('_SAIGEQTL_set_I_longl_mat_SAIGEtest', PACKAGE = 'SAIGEQTL', t_Ilongmat, t_I_longl_vec))
 }
 
 set_T_longl_mat <- function(t_Tlongmat, t_T_longl_vec) {
-    invisible(.Call('_SAIGE_set_T_longl_mat', PACKAGE = 'SAIGE', t_Tlongmat, t_T_longl_vec))
+    invisible(.Call('_SAIGEQTL_set_T_longl_mat', PACKAGE = 'SAIGEQTL', t_Tlongmat, t_T_longl_vec))
 }
 
 set_T_longl_mat_SAIGEtest <- function(t_Tlongmat, t_T_longl_vec) {
-    invisible(.Call('_SAIGE_set_T_longl_mat_SAIGEtest', PACKAGE = 'SAIGE', t_Tlongmat, t_T_longl_vec))
+    invisible(.Call('_SAIGEQTL_set_T_longl_mat_SAIGEtest', PACKAGE = 'SAIGEQTL', t_Tlongmat, t_T_longl_vec))
 }
 
 getCrossprodMatAndKin <- function(bVec, LOCO) {
-    .Call('_SAIGE_getCrossprodMatAndKin', PACKAGE = 'SAIGE', bVec, LOCO)
+    .Call('_SAIGEQTL_getCrossprodMatAndKin', PACKAGE = 'SAIGEQTL', bVec, LOCO)
 }
 
 getCrossprod_multiV <- function(bVec, wVec, tauVec, LOCO) {
-    .Call('_SAIGE_getCrossprod_multiV', PACKAGE = 'SAIGE', bVec, wVec, tauVec, LOCO)
+    .Call('_SAIGEQTL_getCrossprod_multiV', PACKAGE = 'SAIGEQTL', bVec, wVec, tauVec, LOCO)
 }
 
 getDiagOfSigma_multiV <- function(wVec, tauVec, LOCO) {
-    .Call('_SAIGE_getDiagOfSigma_multiV', PACKAGE = 'SAIGE', wVec, tauVec, LOCO)
+    .Call('_SAIGEQTL_getDiagOfSigma_multiV', PACKAGE = 'SAIGEQTL', wVec, tauVec, LOCO)
 }
 
 gen_sp_Sigma_multiV <- function(wVec, tauVec) {
-    invisible(.Call('_SAIGE_gen_sp_Sigma_multiV', PACKAGE = 'SAIGE', wVec, tauVec))
+    invisible(.Call('_SAIGEQTL_gen_sp_Sigma_multiV', PACKAGE = 'SAIGEQTL', wVec, tauVec))
 }
 
 getPCG1ofSigmaAndVector_multiV <- function(wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO) {
-    .Call('_SAIGE_getPCG1ofSigmaAndVector_multiV', PACKAGE = 'SAIGE', wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO)
+    .Call('_SAIGEQTL_getPCG1ofSigmaAndVector_multiV', PACKAGE = 'SAIGEQTL', wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO)
 }
 
 set_seed <- function(seed) {
-    invisible(.Call('_SAIGE_set_seed', PACKAGE = 'SAIGE', seed))
+    invisible(.Call('_SAIGEQTL_set_seed', PACKAGE = 'SAIGEQTL', seed))
 }
 
 nb <- function(n) {
-    .Call('_SAIGE_nb', PACKAGE = 'SAIGE', n)
+    .Call('_SAIGEQTL_nb', PACKAGE = 'SAIGEQTL', n)
 }
 
 setStartEndIndex <- function(startIndex, endIndex, chromIndex) {
-    invisible(.Call('_SAIGE_setStartEndIndex', PACKAGE = 'SAIGE', startIndex, endIndex, chromIndex))
+    invisible(.Call('_SAIGEQTL_setStartEndIndex', PACKAGE = 'SAIGEQTL', startIndex, endIndex, chromIndex))
 }
 
 setStartEndIndexVec <- function(startIndex_vec, endIndex_vec) {
-    invisible(.Call('_SAIGE_setStartEndIndexVec', PACKAGE = 'SAIGE', startIndex_vec, endIndex_vec))
+    invisible(.Call('_SAIGEQTL_setStartEndIndexVec', PACKAGE = 'SAIGEQTL', startIndex_vec, endIndex_vec))
 }
 
 calCV <- function(xVec) {
-    .Call('_SAIGE_calCV', PACKAGE = 'SAIGE', xVec)
+    .Call('_SAIGEQTL_calCV', PACKAGE = 'SAIGEQTL', xVec)
 }
 
 getSigma_X_multiV <- function(wVec, tauVec, Xmat, maxiterPCG, tolPCG, LOCO) {
-    .Call('_SAIGE_getSigma_X_multiV', PACKAGE = 'SAIGE', wVec, tauVec, Xmat, maxiterPCG, tolPCG, LOCO)
+    .Call('_SAIGEQTL_getSigma_X_multiV', PACKAGE = 'SAIGEQTL', wVec, tauVec, Xmat, maxiterPCG, tolPCG, LOCO)
 }
 
 getSigma_G_multiV <- function(wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO) {
-    .Call('_SAIGE_getSigma_G_multiV', PACKAGE = 'SAIGE', wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO)
+    .Call('_SAIGEQTL_getSigma_G_multiV', PACKAGE = 'SAIGEQTL', wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO)
 }
 
 fitglmmaiRPCG_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO) {
-    .Call('_SAIGE_fitglmmaiRPCG_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO)
+    .Call('_SAIGEQTL_fitglmmaiRPCG_multiV', PACKAGE = 'SAIGEQTL', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO)
 }
 
 getMeanDiagofKmat <- function(LOCO) {
-    .Call('_SAIGE_getMeanDiagofKmat', PACKAGE = 'SAIGE', LOCO)
+    .Call('_SAIGEQTL_getMeanDiagofKmat', PACKAGE = 'SAIGEQTL', LOCO)
 }
 
 getAIScore_multiV <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
-    .Call('_SAIGE_getAIScore_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
+    .Call('_SAIGEQTL_getAIScore_multiV', PACKAGE = 'SAIGEQTL', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
 }
 
 GetTrace_multiV <- function(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
-    .Call('_SAIGE_GetTrace_multiV', PACKAGE = 'SAIGE', Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
+    .Call('_SAIGEQTL_GetTrace_multiV', PACKAGE = 'SAIGEQTL', Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
 }
 
 getCoefficients_multiV <- function(Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG, LOCO) {
-    .Call('_SAIGE_getCoefficients_multiV', PACKAGE = 'SAIGE', Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG, LOCO)
+    .Call('_SAIGEQTL_getCoefficients_multiV', PACKAGE = 'SAIGEQTL', Yvec, Xmat, wVec, tauVec, maxiterPCG, tolPCG, LOCO)
 }
 
 setminMAC_VarianceRatio <- function(t_minMACVarRatio, t_maxMACVarRatio, t_isVarianceRatioinGeno) {
-    invisible(.Call('_SAIGE_setminMAC_VarianceRatio', PACKAGE = 'SAIGE', t_minMACVarRatio, t_maxMACVarRatio, t_isVarianceRatioinGeno))
+    invisible(.Call('_SAIGEQTL_setminMAC_VarianceRatio', PACKAGE = 'SAIGEQTL', t_minMACVarRatio, t_maxMACVarRatio, t_isVarianceRatioinGeno))
 }
 
 get_GRMdiagVec <- function() {
-    .Call('_SAIGE_get_GRMdiagVec', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_get_GRMdiagVec', PACKAGE = 'SAIGEQTL')
 }
 
 setminMAFforGRM <- function(minMAFforGRM) {
-    invisible(.Call('_SAIGE_setminMAFforGRM', PACKAGE = 'SAIGE', minMAFforGRM))
+    invisible(.Call('_SAIGEQTL_setminMAFforGRM', PACKAGE = 'SAIGEQTL', minMAFforGRM))
 }
 
 setmaxMissingRateforGRM <- function(maxMissingforGRM) {
-    invisible(.Call('_SAIGE_setmaxMissingRateforGRM', PACKAGE = 'SAIGE', maxMissingforGRM))
+    invisible(.Call('_SAIGEQTL_setmaxMissingRateforGRM', PACKAGE = 'SAIGEQTL', maxMissingforGRM))
 }
 
 set_Diagof_StdGeno_LOCO <- function() {
-    invisible(.Call('_SAIGE_set_Diagof_StdGeno_LOCO', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_set_Diagof_StdGeno_LOCO', PACKAGE = 'SAIGEQTL'))
 }
 
 get_DiagofKin <- function() {
-    .Call('_SAIGE_get_DiagofKin', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_get_DiagofKin', PACKAGE = 'SAIGEQTL')
 }
 
 parallelCrossProd_usingSubMarker <- function(bVec) {
-    .Call('_SAIGE_parallelCrossProd_usingSubMarker', PACKAGE = 'SAIGE', bVec)
+    .Call('_SAIGEQTL_parallelCrossProd_usingSubMarker', PACKAGE = 'SAIGEQTL', bVec)
 }
 
 getCrossprodMatAndKin_usingSubMarker <- function(bVec) {
-    .Call('_SAIGE_getCrossprodMatAndKin_usingSubMarker', PACKAGE = 'SAIGE', bVec)
+    .Call('_SAIGEQTL_getCrossprodMatAndKin_usingSubMarker', PACKAGE = 'SAIGEQTL', bVec)
 }
 
 parallelInnerProduct <- function(x, y) {
-    .Call('_SAIGE_parallelInnerProduct', PACKAGE = 'SAIGE', x, y)
+    .Call('_SAIGEQTL_parallelInnerProduct', PACKAGE = 'SAIGEQTL', x, y)
 }
 
 createSparseKin <- function(markerIndexVec, relatednessCutoff, wVec, tauVec) {
-    .Call('_SAIGE_createSparseKin', PACKAGE = 'SAIGE', markerIndexVec, relatednessCutoff, wVec, tauVec)
+    .Call('_SAIGEQTL_createSparseKin', PACKAGE = 'SAIGEQTL', markerIndexVec, relatednessCutoff, wVec, tauVec)
 }
 
 refineKin <- function(relatednessCutoff) {
-    .Call('_SAIGE_refineKin', PACKAGE = 'SAIGE', relatednessCutoff)
+    .Call('_SAIGEQTL_refineKin', PACKAGE = 'SAIGEQTL', relatednessCutoff)
 }
 
 getColfromStdGenoMultiMarkersMat <- function(a) {
-    .Call('_SAIGE_getColfromStdGenoMultiMarkersMat', PACKAGE = 'SAIGE', a)
+    .Call('_SAIGEQTL_getColfromStdGenoMultiMarkersMat', PACKAGE = 'SAIGEQTL', a)
 }
 
 getNColStdGenoMultiMarkersMat <- function() {
-    .Call('_SAIGE_getNColStdGenoMultiMarkersMat', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getNColStdGenoMultiMarkersMat', PACKAGE = 'SAIGEQTL')
 }
 
 getNRowStdGenoMultiMarkersMat <- function() {
-    .Call('_SAIGE_getNRowStdGenoMultiMarkersMat', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getNRowStdGenoMultiMarkersMat', PACKAGE = 'SAIGEQTL')
 }
 
 setSubMarkerIndex <- function(subMarkerIndexRandom) {
-    invisible(.Call('_SAIGE_setSubMarkerIndex', PACKAGE = 'SAIGE', subMarkerIndexRandom))
+    invisible(.Call('_SAIGEQTL_setSubMarkerIndex', PACKAGE = 'SAIGEQTL', subMarkerIndexRandom))
 }
 
 setRelatednessCutoff <- function(a) {
-    invisible(.Call('_SAIGE_setRelatednessCutoff', PACKAGE = 'SAIGE', a))
+    invisible(.Call('_SAIGEQTL_setRelatednessCutoff', PACKAGE = 'SAIGEQTL', a))
 }
 
 innerProduct <- function(x, y) {
-    .Call('_SAIGE_innerProduct', PACKAGE = 'SAIGE', x, y)
+    .Call('_SAIGEQTL_innerProduct', PACKAGE = 'SAIGEQTL', x, y)
 }
 
 getDiagOfSigma_noV <- function(wVec, tauVec, LOCO) {
-    .Call('_SAIGE_getDiagOfSigma_noV', PACKAGE = 'SAIGE', wVec, tauVec, LOCO)
+    .Call('_SAIGEQTL_getDiagOfSigma_noV', PACKAGE = 'SAIGEQTL', wVec, tauVec, LOCO)
 }
 
 getDiagOfSigma_V <- function(wVec, tauVal, tauVal0) {
-    .Call('_SAIGE_getDiagOfSigma_V', PACKAGE = 'SAIGE', wVec, tauVal, tauVal0)
+    .Call('_SAIGEQTL_getDiagOfSigma_V', PACKAGE = 'SAIGEQTL', wVec, tauVal, tauVal0)
 }
 
 getCrossprod_noV <- function(bVec, wVec, tauVec, LOCO) {
-    .Call('_SAIGE_getCrossprod_noV', PACKAGE = 'SAIGE', bVec, wVec, tauVec, LOCO)
+    .Call('_SAIGEQTL_getCrossprod_noV', PACKAGE = 'SAIGEQTL', bVec, wVec, tauVec, LOCO)
 }
 
 getCrossprod_V <- function(bVec, wVec, tauVal, tauVal0) {
-    .Call('_SAIGE_getCrossprod_V', PACKAGE = 'SAIGE', bVec, wVec, tauVal, tauVal0)
+    .Call('_SAIGEQTL_getCrossprod_V', PACKAGE = 'SAIGEQTL', bVec, wVec, tauVal, tauVal0)
 }
 
 getPCG1ofSigmaAndVector_noV <- function(wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO) {
-    .Call('_SAIGE_getPCG1ofSigmaAndVector_noV', PACKAGE = 'SAIGE', wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO)
+    .Call('_SAIGEQTL_getPCG1ofSigmaAndVector_noV', PACKAGE = 'SAIGEQTL', wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO)
 }
 
 getPCG1ofSigmaAndVector_V <- function(wVec, tauVal, tauVal0, bVec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getPCG1ofSigmaAndVector_V', PACKAGE = 'SAIGE', wVec, tauVal, tauVal0, bVec, maxiterPCG, tolPCG)
+    .Call('_SAIGEQTL_getPCG1ofSigmaAndVector_V', PACKAGE = 'SAIGEQTL', wVec, tauVal, tauVal0, bVec, maxiterPCG, tolPCG)
 }
 
 getSigma_G_V <- function(wVec, tauVal, tauVal0, Gvec, maxiterPCG, tolPCG) {
-    .Call('_SAIGE_getSigma_G_V', PACKAGE = 'SAIGE', wVec, tauVal, tauVal0, Gvec, maxiterPCG, tolPCG)
+    .Call('_SAIGEQTL_getSigma_G_V', PACKAGE = 'SAIGEQTL', wVec, tauVal, tauVal0, Gvec, maxiterPCG, tolPCG)
 }
 
 getSigma_G_noV <- function(wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO) {
-    .Call('_SAIGE_getSigma_G_noV', PACKAGE = 'SAIGE', wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO)
+    .Call('_SAIGEQTL_getSigma_G_noV', PACKAGE = 'SAIGEQTL', wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO)
 }
 
 set_useGRMtoFitNULL <- function(useGRMtoFitNULL) {
-    invisible(.Call('_SAIGE_set_useGRMtoFitNULL', PACKAGE = 'SAIGE', useGRMtoFitNULL))
+    invisible(.Call('_SAIGEQTL_set_useGRMtoFitNULL', PACKAGE = 'SAIGEQTL', useGRMtoFitNULL))
 }
 
 set_isSparseGRM <- function(t_isSparseGRM) {
-    invisible(.Call('_SAIGE_set_isSparseGRM', PACKAGE = 'SAIGE', t_isSparseGRM))
+    invisible(.Call('_SAIGEQTL_set_isSparseGRM', PACKAGE = 'SAIGEQTL', t_isSparseGRM))
 }
 
 set_store_sigma <- function(isstoreSigma) {
-    invisible(.Call('_SAIGE_set_store_sigma', PACKAGE = 'SAIGE', isstoreSigma))
+    invisible(.Call('_SAIGEQTL_set_store_sigma', PACKAGE = 'SAIGEQTL', isstoreSigma))
 }
 
 set_num_Kmat <- function(t_num_Kmat) {
-    invisible(.Call('_SAIGE_set_num_Kmat', PACKAGE = 'SAIGE', t_num_Kmat))
+    invisible(.Call('_SAIGEQTL_set_num_Kmat', PACKAGE = 'SAIGEQTL', t_num_Kmat))
 }
 
 get_numofV <- function() {
-    .Call('_SAIGE_get_numofV', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_get_numofV', PACKAGE = 'SAIGEQTL')
 }
 
 set_covarianceidx_Mat <- function() {
-    .Call('_SAIGE_set_covarianceidx_Mat', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_set_covarianceidx_Mat', PACKAGE = 'SAIGEQTL')
 }
 
 closeGenoFile_plink <- function() {
-    invisible(.Call('_SAIGE_closeGenoFile_plink', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_closeGenoFile_plink', PACKAGE = 'SAIGEQTL'))
 }
 
 gettotalMarker <- function() {
-    .Call('_SAIGE_gettotalMarker', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_gettotalMarker', PACKAGE = 'SAIGEQTL')
 }
 
 getAlleleFreqVec <- function() {
-    .Call('_SAIGE_getAlleleFreqVec', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getAlleleFreqVec', PACKAGE = 'SAIGEQTL')
 }
 
 getMACVec <- function() {
-    .Call('_SAIGE_getMACVec', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getMACVec', PACKAGE = 'SAIGEQTL')
 }
 
 getMACVec_forVarRatio <- function() {
-    .Call('_SAIGE_getMACVec_forVarRatio', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getMACVec_forVarRatio', PACKAGE = 'SAIGEQTL')
 }
 
 getIndexVec_forVarRatio <- function() {
-    .Call('_SAIGE_getIndexVec_forVarRatio', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getIndexVec_forVarRatio', PACKAGE = 'SAIGEQTL')
 }
 
 getIsVarRatioGeno <- function() {
-    .Call('_SAIGE_getIsVarRatioGeno', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getIsVarRatioGeno', PACKAGE = 'SAIGEQTL')
 }
 
 getSubMarkerIndex <- function() {
-    .Call('_SAIGE_getSubMarkerIndex', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getSubMarkerIndex', PACKAGE = 'SAIGEQTL')
 }
 
 getQCdMarkerIndex <- function() {
-    .Call('_SAIGE_getQCdMarkerIndex', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getQCdMarkerIndex', PACKAGE = 'SAIGEQTL')
 }
 
 getSubMarkerNum <- function() {
-    .Call('_SAIGE_getSubMarkerNum', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getSubMarkerNum', PACKAGE = 'SAIGEQTL')
 }
 
 getNnomissingOut <- function() {
-    .Call('_SAIGE_getNnomissingOut', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getNnomissingOut', PACKAGE = 'SAIGEQTL')
 }
 
 getMsub_MAFge_minMAFtoConstructGRM <- function() {
-    .Call('_SAIGE_getMsub_MAFge_minMAFtoConstructGRM', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getMsub_MAFge_minMAFtoConstructGRM', PACKAGE = 'SAIGEQTL')
 }
 
 getMsub_MAFge_minMAFtoConstructGRM_singleChr <- function() {
-    .Call('_SAIGE_getMsub_MAFge_minMAFtoConstructGRM_singleChr', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_getMsub_MAFge_minMAFtoConstructGRM_singleChr', PACKAGE = 'SAIGEQTL')
 }
 
 Get_MultiMarkersBySample_StdGeno_Mat <- function() {
-    invisible(.Call('_SAIGE_Get_MultiMarkersBySample_StdGeno_Mat', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_Get_MultiMarkersBySample_StdGeno_Mat', PACKAGE = 'SAIGEQTL'))
 }
 
 Get_MultiMarkersBySample_StdGeno <- function(markerIndexVec, stdGenoMultiMarkers) {
-    invisible(.Call('_SAIGE_Get_MultiMarkersBySample_StdGeno', PACKAGE = 'SAIGE', markerIndexVec, stdGenoMultiMarkers))
+    invisible(.Call('_SAIGEQTL_Get_MultiMarkersBySample_StdGeno', PACKAGE = 'SAIGEQTL', markerIndexVec, stdGenoMultiMarkers))
 }
 
 parallelCrossProd <- function(bVec) {
-    .Call('_SAIGE_parallelCrossProd', PACKAGE = 'SAIGE', bVec)
+    .Call('_SAIGEQTL_parallelCrossProd', PACKAGE = 'SAIGEQTL', bVec)
 }
 
 innerProductFun <- function(x, y) {
-    .Call('_SAIGE_innerProductFun', PACKAGE = 'SAIGE', x, y)
+    .Call('_SAIGEQTL_innerProductFun', PACKAGE = 'SAIGEQTL', x, y)
 }
 
 parallelCrossProd_full <- function(bVec, markerNum) {
-    .Call('_SAIGE_parallelCrossProd_full', PACKAGE = 'SAIGE', bVec, markerNum)
+    .Call('_SAIGEQTL_parallelCrossProd_full', PACKAGE = 'SAIGEQTL', bVec, markerNum)
 }
 
 parallelCrossProd_LOCO <- function(bVec) {
-    .Call('_SAIGE_parallelCrossProd_LOCO', PACKAGE = 'SAIGE', bVec)
+    .Call('_SAIGEQTL_parallelCrossProd_LOCO', PACKAGE = 'SAIGEQTL', bVec)
 }
 
 printComb <- function(N) {
-    invisible(.Call('_SAIGE_printComb', PACKAGE = 'SAIGE', N))
+    invisible(.Call('_SAIGEQTL_printComb', PACKAGE = 'SAIGEQTL', N))
 }
 
 findIndiceRelatedSample <- function() {
-    invisible(.Call('_SAIGE_findIndiceRelatedSample', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_findIndiceRelatedSample', PACKAGE = 'SAIGEQTL'))
 }
 
 parallelcalsparseGRM <- function(GRMvec) {
-    invisible(.Call('_SAIGE_parallelcalsparseGRM', PACKAGE = 'SAIGE', GRMvec))
+    invisible(.Call('_SAIGEQTL_parallelcalsparseGRM', PACKAGE = 'SAIGEQTL', GRMvec))
 }
 
 parallelsumTwoVec <- function(x) {
-    invisible(.Call('_SAIGE_parallelsumTwoVec', PACKAGE = 'SAIGE', x))
+    invisible(.Call('_SAIGEQTL_parallelsumTwoVec', PACKAGE = 'SAIGEQTL', x))
 }
 
 setgenoNULL <- function() {
-    invisible(.Call('_SAIGE_setgenoNULL', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_setgenoNULL', PACKAGE = 'SAIGEQTL'))
 }
 
 setgeno <- function(bedfile, bimfile, famfile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne) {
-    invisible(.Call('_SAIGE_setgeno', PACKAGE = 'SAIGE', bedfile, bimfile, famfile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne))
+    invisible(.Call('_SAIGEQTL_setgeno', PACKAGE = 'SAIGEQTL', bedfile, bimfile, famfile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne))
 }
 
 Get_OneSNP_Geno <- function(SNPIdx) {
-    .Call('_SAIGE_Get_OneSNP_Geno', PACKAGE = 'SAIGE', SNPIdx)
+    .Call('_SAIGEQTL_Get_OneSNP_Geno', PACKAGE = 'SAIGEQTL', SNPIdx)
 }
 
 Get_OneSNP_Geno_forVarRatio <- function(SNPIdx) {
-    .Call('_SAIGE_Get_OneSNP_Geno_forVarRatio', PACKAGE = 'SAIGE', SNPIdx)
+    .Call('_SAIGEQTL_Get_OneSNP_Geno_forVarRatio', PACKAGE = 'SAIGEQTL', SNPIdx)
 }
 
 Get_OneSNP_StdGeno <- function(SNPIdx) {
-    .Call('_SAIGE_Get_OneSNP_StdGeno', PACKAGE = 'SAIGE', SNPIdx)
+    .Call('_SAIGEQTL_Get_OneSNP_StdGeno', PACKAGE = 'SAIGEQTL', SNPIdx)
 }
 
 print_g_n_unique <- function() {
-    invisible(.Call('_SAIGE_print_g_n_unique', PACKAGE = 'SAIGE'))
+    invisible(.Call('_SAIGEQTL_print_g_n_unique', PACKAGE = 'SAIGEQTL'))
 }
 
 get_sp_Sigma_to_R <- function() {
-    .Call('_SAIGE_get_sp_Sigma_to_R', PACKAGE = 'SAIGE')
+    .Call('_SAIGEQTL_get_sp_Sigma_to_R', PACKAGE = 'SAIGEQTL')
 }
 
 get_SKAT_pvalue_Rcpp <- function(Score, Phi, r_corr) {
-    .Call('_SAIGE_get_SKAT_pvalue_Rcpp', PACKAGE = 'SAIGE', Score, Phi, r_corr)
+    .Call('_SAIGEQTL_get_SKAT_pvalue_Rcpp', PACKAGE = 'SAIGEQTL', Score, Phi, r_corr)
 }
 
 mainMarkerInCPP_multi <- function(t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth) {
-    invisible(.Call('_SAIGE_mainMarkerInCPP_multi', PACKAGE = 'SAIGE', t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth))
+    invisible(.Call('_SAIGEQTL_mainMarkerInCPP_multi', PACKAGE = 'SAIGEQTL', t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth))
 }
 
 getOneMarkerID_VCF <- function(t_ref, t_alt, t_marker, t_pd, t_chr) {
-    .Call('_SAIGE_getOneMarkerID_VCF', PACKAGE = 'SAIGE', t_ref, t_alt, t_marker, t_pd, t_chr)
+    .Call('_SAIGEQTL_getOneMarkerID_VCF', PACKAGE = 'SAIGEQTL', t_ref, t_alt, t_marker, t_pd, t_chr)
 }
 
 assign_g_outputFilePrefixSingle <- function(t_outputFilePrefixSingle) {
-    invisible(.Call('_SAIGE_assign_g_outputFilePrefixSingle', PACKAGE = 'SAIGE', t_outputFilePrefixSingle))
+    invisible(.Call('_SAIGEQTL_assign_g_outputFilePrefixSingle', PACKAGE = 'SAIGEQTL', t_outputFilePrefixSingle))
 }
 
 assign_g_outputFilePrefix <- function(t_outputFilePrefix) {
-    invisible(.Call('_SAIGE_assign_g_outputFilePrefix', PACKAGE = 'SAIGE', t_outputFilePrefix))
+    invisible(.Call('_SAIGEQTL_assign_g_outputFilePrefix', PACKAGE = 'SAIGEQTL', t_outputFilePrefix))
 }
 
 assign_g_outputFilePrefix0 <- function(t_outputFilePrefix) {
-    invisible(.Call('_SAIGE_assign_g_outputFilePrefix0', PACKAGE = 'SAIGE', t_outputFilePrefix))
+    invisible(.Call('_SAIGEQTL_assign_g_outputFilePrefix0', PACKAGE = 'SAIGEQTL', t_outputFilePrefix))
 }
 
 SKAT_META_Optimal_Get_Q_Rcpp <- function(Score, r_all) {
-    .Call('_SAIGE_SKAT_META_Optimal_Get_Q_Rcpp', PACKAGE = 'SAIGE', Score, r_all)
+    .Call('_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp', PACKAGE = 'SAIGEQTL', Score, r_all)
 }
 
 SKAT_META_Optimal_Get_Q_Res_Rcpp <- function(Score_res, r_all) {
-    .Call('_SAIGE_SKAT_META_Optimal_Get_Q_Res_Rcpp', PACKAGE = 'SAIGE', Score_res, r_all)
+    .Call('_SAIGEQTL_SKAT_META_Optimal_Get_Q_Res_Rcpp', PACKAGE = 'SAIGEQTL', Score_res, r_all)
 }
 
 Get_Lambda_Rcpp <- function(K, isFast, maxK) {
-    .Call('_SAIGE_Get_Lambda_Rcpp', PACKAGE = 'SAIGE', K, isFast, maxK)
+    .Call('_SAIGEQTL_Get_Lambda_Rcpp', PACKAGE = 'SAIGEQTL', K, isFast, maxK)
 }
 
 SKAT_META_Optimal_Param_Rcpp <- function(Phi, r_all) {
-    .Call('_SAIGE_SKAT_META_Optimal_Param_Rcpp', PACKAGE = 'SAIGE', Phi, r_all)
+    .Call('_SAIGEQTL_SKAT_META_Optimal_Param_Rcpp', PACKAGE = 'SAIGEQTL', Phi, r_all)
 }
 
 SKAT_Optimal_Each_Q_Rcpp <- function(Q_all, r_all, lambda_all, method) {
-    .Call('_SAIGE_SKAT_Optimal_Each_Q_Rcpp', PACKAGE = 'SAIGE', Q_all, r_all, lambda_all, method)
+    .Call('_SAIGEQTL_SKAT_Optimal_Each_Q_Rcpp', PACKAGE = 'SAIGEQTL', Q_all, r_all, lambda_all, method)
 }
 
 Get_Liu_Params_Mod_Rcpp <- function(c1) {
-    .Call('_SAIGE_Get_Liu_Params_Mod_Rcpp', PACKAGE = 'SAIGE', c1)
+    .Call('_SAIGEQTL_Get_Liu_Params_Mod_Rcpp', PACKAGE = 'SAIGEQTL', c1)
 }
 
 SKAT_Optimal_Integrate_Func_Davies_Rcpp <- function(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all) {
-    .Call('_SAIGE_SKAT_Optimal_Integrate_Func_Davies_Rcpp', PACKAGE = 'SAIGE', x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all)
+    .Call('_SAIGEQTL_SKAT_Optimal_Integrate_Func_Davies_Rcpp', PACKAGE = 'SAIGEQTL', x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all)
 }
 
 SKAT_Optimal_Integrate_Func_single_Davies_Rcpp <- function(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all) {
-    .Call('_SAIGE_SKAT_Optimal_Integrate_Func_single_Davies_Rcpp', PACKAGE = 'SAIGE', x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all)
+    .Call('_SAIGEQTL_SKAT_Optimal_Integrate_Func_single_Davies_Rcpp', PACKAGE = 'SAIGEQTL', x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all)
 }
 
 Get_Liu_Params_Mod_Lambda_Rcpp <- function(lambda, df1) {
-    .Call('_SAIGE_Get_Liu_Params_Mod_Lambda_Rcpp', PACKAGE = 'SAIGE', lambda, df1)
+    .Call('_SAIGEQTL_Get_Liu_Params_Mod_Lambda_Rcpp', PACKAGE = 'SAIGEQTL', lambda, df1)
 }
 
 Get_Liu_PVal_MOD_Lambda_Zero_Rcpp <- function(Q, muQ, muX, sigmaQ, sigmaX, l, d) {
-    .Call('_SAIGE_Get_Liu_PVal_MOD_Lambda_Zero_Rcpp', PACKAGE = 'SAIGE', Q, muQ, muX, sigmaQ, sigmaX, l, d)
+    .Call('_SAIGEQTL_Get_Liu_PVal_MOD_Lambda_Zero_Rcpp', PACKAGE = 'SAIGEQTL', Q, muQ, muX, sigmaQ, sigmaX, l, d)
 }
 
 Get_Liu_PVal_MOD_Lambda_Rcpp <- function(Q_all, lambda, df1, log_p) {
-    .Call('_SAIGE_Get_Liu_PVal_MOD_Lambda_Rcpp', PACKAGE = 'SAIGE', Q_all, lambda, df1, log_p)
+    .Call('_SAIGEQTL_Get_Liu_PVal_MOD_Lambda_Rcpp', PACKAGE = 'SAIGEQTL', Q_all, lambda, df1, log_p)
 }
 
 Get_PValue_Lambda_Rcpp <- function(lambda, Q, df1) {
-    .Call('_SAIGE_Get_PValue_Lambda_Rcpp', PACKAGE = 'SAIGE', lambda, Q, df1)
+    .Call('_SAIGEQTL_Get_PValue_Lambda_Rcpp', PACKAGE = 'SAIGEQTL', lambda, Q, df1)
 }
 
 Get_Liu_PVal_Rcpp <- function(Q, W, Q_resampling) {
-    .Call('_SAIGE_Get_Liu_PVal_Rcpp', PACKAGE = 'SAIGE', Q, W, Q_resampling)
+    .Call('_SAIGEQTL_Get_Liu_PVal_Rcpp', PACKAGE = 'SAIGEQTL', Q, W, Q_resampling)
 }
 
 Get_Liu_Params_Rcpp <- function(c1) {
-    .Call('_SAIGE_Get_Liu_Params_Rcpp', PACKAGE = 'SAIGE', c1)
+    .Call('_SAIGEQTL_Get_Liu_Params_Rcpp', PACKAGE = 'SAIGEQTL', c1)
 }
 
 SPA <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge) {
-    invisible(.Call('_SAIGE_SPA', PACKAGE = 'SAIGE', mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge))
+    invisible(.Call('_SAIGEQTL_SPA', PACKAGE = 'SAIGEQTL', mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge))
 }
 
 SPA_fast <- function(mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, traitType, pval, isSPAConverge) {
-    invisible(.Call('_SAIGE_SPA_fast', PACKAGE = 'SAIGE', mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, traitType, pval, isSPAConverge))
+    invisible(.Call('_SAIGEQTL_SPA_fast', PACKAGE = 'SAIGEQTL', mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, traitType, pval, isSPAConverge))
 }
 
 Korg_Binom <- function(t1, mu, g) {
-    .Call('_SAIGE_Korg_Binom', PACKAGE = 'SAIGE', t1, mu, g)
+    .Call('_SAIGEQTL_Korg_Binom', PACKAGE = 'SAIGEQTL', t1, mu, g)
 }
 
 K1_adj_Binom <- function(t1, mu, g, q) {
-    .Call('_SAIGE_K1_adj_Binom', PACKAGE = 'SAIGE', t1, mu, g, q)
+    .Call('_SAIGEQTL_K1_adj_Binom', PACKAGE = 'SAIGEQTL', t1, mu, g, q)
 }
 
 K2_Binom <- function(t1, mu, g) {
-    .Call('_SAIGE_K2_Binom', PACKAGE = 'SAIGE', t1, mu, g)
+    .Call('_SAIGEQTL_K2_Binom', PACKAGE = 'SAIGEQTL', t1, mu, g)
 }
 
 getroot_K1_Binom <- function(init, mu, g, q, tol, maxiter) {
-    .Call('_SAIGE_getroot_K1_Binom', PACKAGE = 'SAIGE', init, mu, g, q, tol, maxiter)
+    .Call('_SAIGEQTL_getroot_K1_Binom', PACKAGE = 'SAIGEQTL', init, mu, g, q, tol, maxiter)
 }
 
 Get_Saddle_Prob_Binom <- function(zeta, mu, g, q, logp) {
-    .Call('_SAIGE_Get_Saddle_Prob_Binom', PACKAGE = 'SAIGE', zeta, mu, g, q, logp)
+    .Call('_SAIGEQTL_Get_Saddle_Prob_Binom', PACKAGE = 'SAIGEQTL', zeta, mu, g, q, logp)
 }
 
 SPA_binary <- function(mu, g, q, qinv, pval_noadj, tol, logp) {
-    .Call('_SAIGE_SPA_binary', PACKAGE = 'SAIGE', mu, g, q, qinv, pval_noadj, tol, logp)
+    .Call('_SAIGEQTL_SPA_binary', PACKAGE = 'SAIGEQTL', mu, g, q, qinv, pval_noadj, tol, logp)
 }
 
 Korg_fast_Binom <- function(t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma) {
-    .Call('_SAIGE_Korg_fast_Binom', PACKAGE = 'SAIGE', t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma)
+    .Call('_SAIGEQTL_Korg_fast_Binom', PACKAGE = 'SAIGEQTL', t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma)
 }
 
 K1_adj_fast_Binom <- function(t1, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma) {
-    .Call('_SAIGE_K1_adj_fast_Binom', PACKAGE = 'SAIGE', t1, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma)
+    .Call('_SAIGEQTL_K1_adj_fast_Binom', PACKAGE = 'SAIGEQTL', t1, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma)
 }
 
 K2_fast_Binom <- function(t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma) {
-    .Call('_SAIGE_K2_fast_Binom', PACKAGE = 'SAIGE', t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma)
+    .Call('_SAIGEQTL_K2_fast_Binom', PACKAGE = 'SAIGEQTL', t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma)
 }
 
 getroot_K1_fast_Binom <- function(init, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, maxiter) {
-    .Call('_SAIGE_getroot_K1_fast_Binom', PACKAGE = 'SAIGE', init, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, maxiter)
+    .Call('_SAIGEQTL_getroot_K1_fast_Binom', PACKAGE = 'SAIGEQTL', init, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, maxiter)
 }
 
 Get_Saddle_Prob_fast_Binom <- function(zeta, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, logp) {
-    .Call('_SAIGE_Get_Saddle_Prob_fast_Binom', PACKAGE = 'SAIGE', zeta, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, logp)
+    .Call('_SAIGEQTL_Get_Saddle_Prob_fast_Binom', PACKAGE = 'SAIGEQTL', zeta, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, logp)
 }
 
 SPA_binary_fast <- function(mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol) {
-    .Call('_SAIGE_SPA_binary_fast', PACKAGE = 'SAIGE', mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol)
+    .Call('_SAIGEQTL_SPA_binary_fast', PACKAGE = 'SAIGEQTL', mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol)
 }
 
 Korg_Poi <- function(t1, mu, g) {
-    .Call('_SAIGE_Korg_Poi', PACKAGE = 'SAIGE', t1, mu, g)
+    .Call('_SAIGEQTL_Korg_Poi', PACKAGE = 'SAIGEQTL', t1, mu, g)
 }
 
 K1_adj_Poi <- function(t1, mu, g, q) {
-    .Call('_SAIGE_K1_adj_Poi', PACKAGE = 'SAIGE', t1, mu, g, q)
+    .Call('_SAIGEQTL_K1_adj_Poi', PACKAGE = 'SAIGEQTL', t1, mu, g, q)
 }
 
 K2_Poi <- function(t1, mu, g) {
-    .Call('_SAIGE_K2_Poi', PACKAGE = 'SAIGE', t1, mu, g)
+    .Call('_SAIGEQTL_K2_Poi', PACKAGE = 'SAIGEQTL', t1, mu, g)
 }
 
 getroot_K1_Poi <- function(init, mu, g, q, tol, maxiter) {
-    .Call('_SAIGE_getroot_K1_Poi', PACKAGE = 'SAIGE', init, mu, g, q, tol, maxiter)
+    .Call('_SAIGEQTL_getroot_K1_Poi', PACKAGE = 'SAIGEQTL', init, mu, g, q, tol, maxiter)
 }
 
 Get_Saddle_Prob_Poi <- function(zeta, mu, g, q, logp) {
-    .Call('_SAIGE_Get_Saddle_Prob_Poi', PACKAGE = 'SAIGE', zeta, mu, g, q, logp)
+    .Call('_SAIGEQTL_Get_Saddle_Prob_Poi', PACKAGE = 'SAIGEQTL', zeta, mu, g, q, logp)
 }
 
 SPA_survival <- function(mu, g, q, qinv, pval_noadj, tol, logp) {
-    .Call('_SAIGE_SPA_survival', PACKAGE = 'SAIGE', mu, g, q, qinv, pval_noadj, tol, logp)
+    .Call('_SAIGEQTL_SPA_survival', PACKAGE = 'SAIGEQTL', mu, g, q, qinv, pval_noadj, tol, logp)
 }
 
 Korg_fast_Poi <- function(t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma) {
-    .Call('_SAIGE_Korg_fast_Poi', PACKAGE = 'SAIGE', t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma)
+    .Call('_SAIGEQTL_Korg_fast_Poi', PACKAGE = 'SAIGEQTL', t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma)
 }
 
 K1_adj_fast_Poi <- function(t1, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma) {
-    .Call('_SAIGE_K1_adj_fast_Poi', PACKAGE = 'SAIGE', t1, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma)
+    .Call('_SAIGEQTL_K1_adj_fast_Poi', PACKAGE = 'SAIGEQTL', t1, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma)
 }
 
 K2_fast_Poi <- function(t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma) {
-    .Call('_SAIGE_K2_fast_Poi', PACKAGE = 'SAIGE', t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma)
+    .Call('_SAIGEQTL_K2_fast_Poi', PACKAGE = 'SAIGEQTL', t1, mu, g, gNA, gNB, muNA, muNB, NAmu, NAsigma)
 }
 
 getroot_K1_fast_Poi <- function(init, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, maxiter) {
-    .Call('_SAIGE_getroot_K1_fast_Poi', PACKAGE = 'SAIGE', init, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, maxiter)
+    .Call('_SAIGEQTL_getroot_K1_fast_Poi', PACKAGE = 'SAIGEQTL', init, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, maxiter)
 }
 
 Get_Saddle_Prob_fast_Poi <- function(zeta, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, logp) {
-    .Call('_SAIGE_Get_Saddle_Prob_fast_Poi', PACKAGE = 'SAIGE', zeta, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, logp)
+    .Call('_SAIGEQTL_Get_Saddle_Prob_fast_Poi', PACKAGE = 'SAIGEQTL', zeta, mu, g, q, gNA, gNB, muNA, muNB, NAmu, NAsigma, logp)
 }
 
 SPA_survival_fast <- function(mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol) {
-    .Call('_SAIGE_SPA_survival_fast', PACKAGE = 'SAIGE', mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol)
+    .Call('_SAIGEQTL_SPA_survival_fast', PACKAGE = 'SAIGEQTL', mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol)
 }
 
 sum_arma1 <- function(X) {
-    .Call('_SAIGE_sum_arma1', PACKAGE = 'SAIGE', X)
+    .Call('_SAIGEQTL_sum_arma1', PACKAGE = 'SAIGEQTL', X)
 }
 
 add_logp <- function(p1, p2) {
-    .Call('_SAIGE_add_logp', PACKAGE = 'SAIGE', p1, p2)
+    .Call('_SAIGEQTL_add_logp', PACKAGE = 'SAIGEQTL', p1, p2)
 }
 
 mult_sp_sp_to_sp <- function(a, b) {
-    .Call('_SAIGE_mult_sp_sp_to_sp', PACKAGE = 'SAIGE', a, b)
+    .Call('_SAIGEQTL_mult_sp_sp_to_sp', PACKAGE = 'SAIGEQTL', a, b)
 }
 
 mult_sp_den_to_sp <- function(a, b) {
-    .Call('_SAIGE_mult_sp_den_to_sp', PACKAGE = 'SAIGE', a, b)
+    .Call('_SAIGEQTL_mult_sp_den_to_sp', PACKAGE = 'SAIGEQTL', a, b)
 }
 
 mult_den_sp_to_sp <- function(a, b) {
-    .Call('_SAIGE_mult_den_sp_to_sp', PACKAGE = 'SAIGE', a, b)
+    .Call('_SAIGEQTL_mult_den_sp_to_sp', PACKAGE = 'SAIGEQTL', a, b)
 }
 
 gen_sp <- function(a) {
-    .Call('_SAIGE_gen_sp', PACKAGE = 'SAIGE', a)
+    .Call('_SAIGEQTL_gen_sp', PACKAGE = 'SAIGEQTL', a)
 }
 
