@@ -1220,7 +1220,8 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
         print(t_end - t_begin)
 
 
-	if(bedFile != "" & !useGRMtoFitNULL){
+	#if(bedFile != "" & !useGRMtoFitNULL){
+	if(bedFile != ""){
 		subSampleInGeno = dataMerge_sort$IndexGeno
   		if(is.null(dataMerge_sort$IndexGeno)){
         		subSampleInGeno = dataMerge_sort$IndexPheno
@@ -1249,8 +1250,32 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
         }
 
 	#need check
-        setgeno(bedFile, bimFile, famFile, dataMerge_sort$IndexGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
-        tau = modglmm$theta	    
+   		subSampleInGeno = dataMerge_sort$IndexGeno
+                if(is.null(dataMerge_sort$IndexGeno)){
+                        subSampleInGeno = dataMerge_sort$IndexPheno
+                }
+
+                print(subSampleInGeno[1:1000])
+                print(head(dataMerge_sort))
+                print("HEREHRE")
+
+                subSampleInGeno_unique = subSampleInGeno[!duplicated(subSampleInGeno)]
+
+                #setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+                setgeno(bedFile, bimFile, famFile, subSampleInGeno_unique, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+
+
+        #setgeno(bedFile, bimFile, famFile, dataMerge_sort$IndexGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+        tau = modglmm$theta
+
+        if(any(duplicated(modglmm$sampleID))){
+                set_I_mat_inR(modglmm$sampleID)
+                #if(longlCol != ""){
+                #        set_T_mat_inR(dataMerge_sort$IID, dataMerge_sort$longlVar)
+                #}
+
+        }
+	  set_dup_sample_index(as.numeric(factor(modglmm$sampleID, levels =  unique(modglmm$sampleID))))
         #setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
     }
 
@@ -1538,14 +1563,15 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
             G0 = 2-G0
           }
 	  G0sample  = G0
-	  #print("length(G0)   aaaaa")
-	  #print(length(G0))
-          #cat("G0", G0[1:10], "\n")
+	  print("length(G0)   aaaaa")
+	  print(length(G0))
+          cat("G0", G0[1:10], "\n")
+	  print(dim(I_mat))
+	  print(length(G0sample))
 	  G0 = as.numeric(I_mat %*% G0sample)
 	 #} 
 	  #print("length(G0)   bbbb")
           #print(length(G0))
-
           cat("G0", G0[1:10], "\n")
    
    	  CHR = bimPlink[Indexvector_forVarRatio[i]+1,1]
@@ -1607,9 +1633,12 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	  cat("AC ", AC, "\n")	
 	  S = innerProduct(G , obj.glmm.null$residuals*var_weights)
           cat("S is ", S, "\n")
+	  cat("var1 is ", var1, "\n")
    	  p_exact = pchisq(S^2/var1, df=1, lower.tail=F)
    	  cat("p_exact ", p_exact, "\n")
 	  #res_sample = as.vector(obj.glmm.null$residuals %*% I_mat)
+	  
+
 
 	  if(!is.null(obj.glmm.null$eMat)){
 	  	var1GE_vec = NULL
@@ -1618,13 +1647,18 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 		getilde_sample0_Mat = NULL
 		for(ne in 1:ncol(obj.glmm.null$eMat)){
 			evec = obj.glmm.null$eMat[,ne]
+	  		
+			#evec = rnorm(length(G))
+
 			print("evec[1:100]")
 			print(evec[1:100])
 			#evec = t(I_mat) %*% evec
 			#XVsample0_e = XVsample0_e_list[[ne]] 
-			#GE = G0 * evec
-			GE = G * evec
+			GE = G0 * evec
+			#GE = G * evec
 			#GE = G0
+			print("length(GE)")
+			print(length(GE))
 			GE_tilde = GE  -  obj.noK$XXVX_inv %*%  (obj.noK$XV %*% GE)
 			#GE_tilde_new = GE - I_mat %*% XXVXsample_inv0 %*%  (XVsample0_e %*% G0sample)
 			#print("sum(GE_tilde != GE_tilde_new)")
@@ -1646,12 +1680,10 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 			cat("S_GE ", S_GE, "\n")
 			cat("var1GE ", var1GE, "\n")
 			
-			I_mat_e = I_mat * evec			
-			#evec_sample = as.vector(t(t(evec) %*% I_mat))
-			#GE_sample = G0sample * evec_sample
-			GE_sample = as.vector(t(G0) %*% I_mat_e)
-			GE_sample_tilde = GE_sample  -  XXVXsample_inv0 %*%  (XVsample0 %*% GE_sample)
-			getilde_sample0_Mat = cbind(getilde_sample0_Mat, GE_sample_tilde)
+			#I_mat_e = I_mat * evec			
+			#GE_sample = as.vector(t(G0) %*% I_mat_e)
+			#GE_sample_tilde = GE_sample  -  XXVXsample_inv0 %*%  (XVsample0 %*% GE_sample)
+			#getilde_sample0_Mat = cbind(getilde_sample0_Mat, GE_sample_tilde)
 			if(useSparseGRMforVarRatio){
 				set_isSparseGRM(useSparseGRMforVarRatio)
 				Sigma_iGE_sparse = getSigma_G_noV(W, tauVecNew, GE_tilde, maxiterPCG, tolPCG, LOCO=FALSE)
@@ -1696,6 +1728,7 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 			tauVal = tauVecNew[2]
 		}	
 	Sigma_iG = getSigma_G_V(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
+	#Sigma_iG = getSigma_G_multiV(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
 	var2_a = t(G) %*% Sigma_iG
         var2sparseGRM = var2_a[1,1]
         cat("var2sparseGRM Here ", var2sparseGRM, "\n")
@@ -1926,7 +1959,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   print("length(indicatorGenoSamplesWithPheno)")
   print(length(indicatorGenoSamplesWithPheno))
   #if((!useSparseGRMtoFitNULL & useGRMtoFitNULL) | (skipVarianceRatioEstimation)){
-  if(bedFile != "" & useGRMtoFitNULL){
+  if(bedFile != "" & !useSparseGRMtoFitNULL & useGRMtoFitNULL){
 	print("HEREHRE")
 
         re1 = system.time({setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)})

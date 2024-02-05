@@ -595,10 +595,11 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 //for(int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
 //    int j_mt = i_mt*t_genoIndex.size()+i;
 
+    std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl;
 
 
     if(MAC > g_MACCutoffforER){
-      //std::cout << "Here" << std::endl;
+      std::cout << "Here" << std::endl;
       Unified_getMarkerPval( 
 		    t_GVec, 
                           false, // bool t_isOnlyOutputNonZero, 
@@ -884,9 +885,15 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
       	    ksub = i_mt * ne + k;
 	    //std::cout << "ksub " << ksub << std::endl;
 	    evec = g_emat.col(ksub);
-	    //std::cout << "ksub b " << ksub << std::endl;
-	    //t_GEVec = t_GVec1 % evec;
-	    t_GEVec = gtildeVec % evec;
+	    evec.ones();
+
+	    std::cout << "evec(0) " << evec(0) << std::endl;
+	    std::cout << "t_GVec1(0) " << t_GVec1(0) << std::endl;
+	    t_GEVec = t_GVec1 % evec;
+	    std::cout << "t_GEVec(0) " << t_GEVec(0) << std::endl;
+	    std::cout << "t_GEVec.n_elem " << t_GEVec.n_elem << std::endl;
+	    std::cout << "t_GVec1.n_elem " << t_GVec1.n_elem << std::endl;
+	    //t_GEVec = gtildeVec % evec;
 	    altFreq_ge = arma::mean(t_GEVec)/2;
 	    is_gtilde_ge = false;
 	    gtildeVec_ge.clear();
@@ -2391,7 +2398,11 @@ if(i2 > 0){
   }
    //std::cout << "P1Mat.n_rows ok2 " << P1Mat.n_rows << std::endl; 
 
-  }// if(i2 > 0)    
+  }// if(i2 > 0)   
+
+
+std::cout << "HERERERE" << std::endl;
+
   int mPassCVVecsize = mPassCVVec.size();
   for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
    nchunks_vec(i_mt) = mPassCVVecsize;
@@ -2405,12 +2416,20 @@ i1=i1_vec(0);
 if(t_regionTestType != "BURDEN"){
   VarMat.resize(i1, i1*t_traitType.size());
   VarMatsub.resize(i1, i1);
+std::cout << "HERERERE b " << std::endl;
   for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
 
+std::cout << "HERERERE c 0" << std::endl;
   //VarMatsub.clear();
+std::cout << "i_mt " << i_mt << std::endl;
+std::cout << "i1 " << i1 << std::endl;
+nchunks_vec.print("nchunks_vec");
   if(nchunks_vec(i_mt) == 1){
-    arma::vec VarMat_sub = P1Mat.rows(i_mt*i1, (i_mt+1)*i1-1) * P2Mat.cols(i_mt*i1, (i_mt+1)*i1-1);
-    VarMat.submat(0, i_mt*i1, i1-1, ((i_mt+1)*i1-1)) = VarMat_sub; 
+    arma::mat VarMat_sub_0 = P1Mat.rows(i_mt*i1, (i_mt+1)*i1-1) * P2Mat.cols(i_mt*i1, (i_mt+1)*i1-1);
+    //arma::vec VarMat_sub = VarMat_sub_0.col(0);
+    //P1Mat.rows(i_mt*i1, (i_mt+1)*i1-1) * P2Mat.cols(i_mt*i1, (i_mt+1)*i1-1);
+std::cout << "HERERERE c 0a" << std::endl;
+    VarMat.submat(0, i_mt*i1, i1-1, ((i_mt+1)*i1-1)) = VarMat_sub_0; 
   }
 
   // the region includes more markers than limitation, so P1Mat and P2Mat have been put in hard drive
@@ -2423,7 +2442,7 @@ if(t_regionTestType != "BURDEN"){
   //	 std::cout << "mp " << mp << "   mPassCVVec.at(mp) " << mPassCVVec.at(mp) << std::endl; 
   //}
   
-
+std::cout << "HERERERE c 1" << std::endl;
   if(nchunks_vec(i_mt) > 1)
   {
     int first_row = 0, first_col = 0, last_row = 0, last_col = 0;
@@ -2496,9 +2515,12 @@ if(t_regionTestType != "BURDEN"){
 
     }//if(nchunks > 1)
 
+std::cout << "HERERERE c " << std::endl;
+
   } //    for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
 
 }  //if(t_regionTestType != "BURDEN"){
+std::cout << "HERERERE a " << std::endl;
 //}
 //std::cout << "VarMat.n_rows " << VarMat.n_rows << " " << VarMat.n_cols << std::endl;
 //VarMat.print("VarMat");
@@ -2587,6 +2609,7 @@ std::string AnnoName;
 double maxMAFName;
 unsigned int startt, endt;
 //std::cout << "If only conduct Burden test b " << std::endl;
+std::cout << "HERERERE 2" << std::endl;
 
 if(t_regionTestType == "BURDEN"){
 for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
@@ -4211,12 +4234,14 @@ arma::fvec getDiagOfSigma_multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO
         }else{ //if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
                 diagVec = tauVec(0)/wVec;
                 tauind = tauind + 1;
+		//std::cout << "if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0)" << std::endl;
+
 	  if(g_isGRM && g_isSparseGRM){
+		//std::cout << "if(g_isGRM && g_isSparseGRM){" << std::endl;
                 diagVecG = g_spGRM.diag();
                 diagVecG_I = diagVecG.elem(g_I_longl_vec);
                 diagVec = diagVec + tauVec(tauind) * diagVecG_I;
                 tauind = tauind + 1;
-
                 if(g_T_longl_mat.n_rows > 0){
 		//std::cout << "getDiagOfSigma_multiV Here1" << std::endl;
 		//diagVecG_I.print("diagVecG_I");
@@ -4231,10 +4256,17 @@ arma::fvec getDiagOfSigma_multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO
                   tauind = tauind + 1;
                 }
 	    }else{
+		//std::cout << "else(g_isGRM && g_isSparseGRM){" << std::endl;
 		diagVecG.ones(g_n_unique);
+		//std::cout << "g_n_unique "  <<  g_n_unique << std::endl;
+		//std::cout << "2 else(g_isGRM && g_isSparseGRM){" << std::endl;
 		diagVecG_I = diagVecG.elem(g_I_longl_vec);
+		//diagVecG_I = diagVecG * g_I_longl_mat;
+
+		//std::cout << "tauind " << tauind << std::endl;
                 diagVec = diagVec + tauVec(tauind) * diagVecG_I;
 		tauind = tauind + 1;
+		//std::cout << "getDiagOfSigma_multiV Here0" << std::endl;
 		if(g_T_longl_mat.n_rows > 0){
                   //std::cout << "getDiagOfSigma_multiV Here1" << std::endl;
                   diagVecG_IT = diagVecG_I % g_T_longl_vec;
@@ -4372,17 +4404,18 @@ void gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
 
 // [[Rcpp::export]]
 arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG, bool LOCO){
+    //std::cout << "getPCG1ofSigmaAndVector_multiV start" << std::endl;
     // Start Timers
     //double wall0 = get_wall_time();
     //double cpu0  = get_cpu_time();
     int Nnomissing = wVec.n_elem;
     arma::fvec xVec(Nnomissing);
     xVec.zeros();
-
+    
     if(g_isStoreSigma){
-        std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
+        //std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
         xVec = arma::spsolve(g_spSigma, bVec);
-        std::cout << " arma::spsolve(g_spSigma, bVec) 1" << std::endl;
+        //std::cout << " arma::spsolve(g_spSigma, bVec) 1" << std::endl;
     }else{
         arma::fvec rVec = bVec;
         arma::fvec r1Vec;
@@ -4391,18 +4424,21 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
         arma::fvec minvVec(Nnomissing);
 	//std::cout << "getPCG1ofSigmaAndVector_multiV Here1" << std::endl;
         minvVec = 1/getDiagOfSigma_multiV(wVec, tauVec, LOCO);
+	//std::cout << "getPCG1ofSigmaAndVector_multiV start 1" << std::endl;
         zVec = minvVec % rVec;
 
         float sumr2 = sum(rVec % rVec);
         arma::fvec z1Vec(Nnomissing);
         arma::fvec pVec = zVec;
 
+	//std::cout << "getPCG1ofSigmaAndVector_multiV start 2" << std::endl;
+
         int iter = 0;
         while (sumr2 > tolPCG && iter < maxiterPCG) {
 		iter = iter + 1;
-	//	        std::cout << "getPCG1ofSigmaAndVector_multiV Here2" << std::endl;
+		        //std::cout << "getPCG1ofSigmaAndVector_multiV Here2" << std::endl;
                 arma::fcolvec ApVec = getCrossprod_multiV(pVec, wVec, tauVec, LOCO);
-	//	        std::cout << "getPCG1ofSigmaAndVector_multiV Here3" << std::endl;
+		        //std::cout << "getPCG1ofSigmaAndVector_multiV Here3" << std::endl;
                 arma::fvec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
 
                 float a = preA(0);
@@ -4488,8 +4524,17 @@ arma::fmat getSigma_X_multiV(arma::fvec& wVec, arma::fvec& tauVec,arma::fmat& Xm
         arma::fmat Sigma_iX1(Nnomissing,colNumX);
         arma::fvec XmatVecTemp;
 
+	//std::cout << "colNumX " << colNumX << std::endl;
+
         for(int i = 0; i < colNumX; i++){
                 XmatVecTemp = Xmat.col(i);
+		//std::cout << "i " << i << std::endl;
+		//std::cout << "wVec.n_elem " << wVec.n_elem << std::endl;
+		//std::cout << "XmatVecTemp.n_elem " << XmatVecTemp.n_elem << std::endl;
+		//std::cout << "Nnomissing " << Nnomissing << std::endl;
+		//arma::fvec Sigma_iX1_temp = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG, LOCO);
+		//std::cout << "Sigma_iX1_temp.n_elem " << Sigma_iX1_temp.n_elem << std::endl;
+
                 Sigma_iX1.col(i) = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG, LOCO);
         }
         return(Sigma_iX1);

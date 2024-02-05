@@ -725,8 +725,18 @@ if(!t_isnoadjCov){
 
 
 	  is_gtilde = true;
+
+	  //std::cout << "t_GVec0.n_elem coreTest( " << t_GVec0.n_elem << std::endl;
+	  
 	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);
 	  //std::cout << "t_pval from scoreTest " << t_pval << std::endl;
+	//std::cout << "t_Tstat from scoreTest " << t_Tstat << std::endl;
+	//std::cout << "t_var1 from scoreTest " << t_var1 << std::endl;
+	//std::cout << "t_var2 from scoreTest " << t_var2 << std::endl;
+
+
+
+
 	  try {
         	pval_noadj = std::stod(t_pval_str);
  	   } catch (const std::invalid_argument&) {
@@ -803,8 +813,10 @@ if(!t_isnoadjCov){
 	tol1 = std::pow(tol0, 0.25);
 
 	if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur){
+	//std::cout << "SPA_fast before" << std::endl;
         	SPA_fast(mu_vec, t_gtilde, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, t_SPApval, t_isSPAConverge);
-		//std::cout << "SPA_fast " << t_SPApval << std::endl;
+	//	std::cout << "pval_noadj " << pval_noadj << std::endl;
+	//	std::cout << "SPA_fast " << t_SPApval << std::endl;
 	}else{
 		SPA(mu_vec, t_gtilde, q, qinv, pval_noadj, tol1, logp, m_traitType, t_SPApval, t_isSPAConverge);	
 		//std::cout << "SPA"  << t_SPApval <<  std::endl;
@@ -842,6 +854,7 @@ if(!t_isnoadjCov){
         //t_Tstat_G = t_Tstat_G/m_tauvec[0];
 	//t_SPApval = EmpSPA_getMarkerPval(t_gtilde, t_Tstat_G, g_altFreq_new, g_N);
 	t_SPApval = EmpSPA_getMarkerPval(t_GVec, StdStat, g_altFreq_new, g_N);
+	t_isSPAConverge=true;
 	//std::cout << "Empirical SPA p value " << t_SPApval << std::endl;   
 	//std::cout << "g_altFreq_new " << g_altFreq_new << std::endl;   
    }	   
@@ -896,9 +909,8 @@ if(!t_isnoadjCov){
       t_seBeta = 0;
     }
 }
-
-
-//std::cout << "OKKKKK" << std::endl;
+std::cout << "t_pval " << t_pval << std::endl;
+std::cout << "OKKKKK" << std::endl;
 
    if(m_traitType == "binary" & m_is_Firth_beta & t_pval <= m_pCutoffforFirth){
 	t_isFirth = true;
@@ -1119,10 +1131,10 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXa
     }
    
 
-    m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
-    m_cateVarRatioMaxMACVecInclude.print("m_cateVarRatioMaxMACVecInclude");
-    m_varRatio.print("m_varRatio");
-    m_varRatio_null_noXadj_mt.print("m_varRatio_null_noXadj_mt");
+    //m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
+    //m_cateVarRatioMaxMACVecInclude.print("m_cateVarRatioMaxMACVecInclude");
+    //m_varRatio.print("m_varRatio");
+    //m_varRatio_null_noXadj_mt.print("m_varRatio_null_noXadj_mt");
     for(unsigned int i = 0; i < m_cateVarRatioMaxMACVecInclude.n_elem; i++)
     {
         if(MAC <= m_cateVarRatioMaxMACVecInclude(i) && MAC > m_cateVarRatioMinMACVecExclude(i)){    	    
@@ -1175,10 +1187,10 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXa
     }
 
 
-    m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
-    m_cateVarRatioMaxMACVecInclude.print("m_cateVarRatioMaxMACVecInclude");
-    m_varRatio.print("m_varRatio");
-    m_varRatio_null_noXadj_mt.print("m_varRatio_null_noXadj_mt");
+    //m_cateVarRatioMinMACVecExclude.print("m_cateVarRatioMinMACVecExclude");
+    //m_cateVarRatioMaxMACVecInclude.print("m_cateVarRatioMaxMACVecInclude");
+    //m_varRatio.print("m_varRatio");
+    //m_varRatio_null_noXadj_mt.print("m_varRatio_null_noXadj_mt");
     for(unsigned int i = 0; i < m_cateVarRatioMaxMACVecInclude.n_elem; i++)
     {
         if(MAC <= m_cateVarRatioMaxMACVecInclude(i) && MAC > m_cateVarRatioMinMACVecExclude(i)){
@@ -1204,7 +1216,7 @@ bool SAIGEClass::assignVarianceRatio(double MAC, bool issparseforVR, bool isnoXa
 
    //m_varRatioVal = m_varRatio(0);
    hasVarRatio = true;
-   std::cout << "hasVarRatio " << hasVarRatio << std::endl;
+   //std::cout << "hasVarRatio " << hasVarRatio << std::endl;
    return(hasVarRatio);
 }
 
@@ -1799,7 +1811,7 @@ double SAIGEClass::EmpSPA_getMarkerPval(arma::vec & t_g,
     double pval1 = EmpSPA_GetProb_SPA(adjG0, adjGVecNorm, N0, std::abs(t_zScore), false);
     double pval2 = EmpSPA_GetProb_SPA(adjG0, adjGVecNorm, N0, -1*std::abs(t_zScore), true);
     double pval = pval1 + pval2;
-
+    std::cout << "pval " << pval << std::endl;
     return pval;
   }
 
@@ -2463,11 +2475,11 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
 //std::cout << "here is_gtilde 2" << std::endl;
         arma::mat tempgP2 = t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
 //std::cout << "here is_gtilde 3" << std::endl;
-	std::cout << "t_Tstat " << t_Tstat << std::endl;
-	std::cout << "t_Tstat_ctemp(0) " << t_Tstat_ctemp(0) << std::endl;
-	m_Tstat_cond.print("m_Tstat_cond");
-	t_G1tilde_P_G2tilde.print("t_G1tilde_P_G2tilde");
-	m_VarInvMat_cond.print("m_VarInvMat_cond");
+	//std::cout << "t_Tstat " << t_Tstat << std::endl;
+	//std::cout << "t_Tstat_ctemp(0) " << t_Tstat_ctemp(0) << std::endl;
+	//m_Tstat_cond.print("m_Tstat_cond");
+	//t_G1tilde_P_G2tilde.print("t_G1tilde_P_G2tilde");
+	//m_VarInvMat_cond.print("m_VarInvMat_cond");
         t_Tstat_c = t_Tstat - t_Tstat_ctemp(0);
 //std::cout << "here is_gtilde 4" << std::endl;
         arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (t_G1tilde_P_G2tilde.t());
@@ -2479,13 +2491,13 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
 
     double S_c = t_Tstat_c;
     double stat_c = S_c*S_c/t_varT_c;
-     std::cout << "here is_gtilde 7" << std::endl;
-     std::cout << "t_varT_c " << t_varT_c << std::endl; 		
-     std::cout << "t_Tstat_c " << t_Tstat_c << std::endl; 		
+     //std::cout << "here is_gtilde 7" << std::endl;
+     //std::cout << "t_varT_c " << t_varT_c << std::endl; 		
+     //std::cout << "t_Tstat_c " << t_Tstat_c << std::endl; 		
 
-     std::cout << "t_var1 " << t_var1 << std::endl; 		
-     std::cout << "t_varT_ctemp(0) " << t_varT_ctemp(0) << std::endl; 	
-     std::cout << "std::numeric_limits<double>::min() " << std::numeric_limits<double>::min() << std::endl;
+     //std::cout << "t_var1 " << t_var1 << std::endl; 		
+     //std::cout << "t_varT_ctemp(0) " << t_varT_ctemp(0) << std::endl; 	
+     //std::cout << "std::numeric_limits<double>::min() " << std::numeric_limits<double>::min() << std::endl;
      if (t_varT_c <= std::numeric_limits<double>::min()){
      //if (t_varT_c <= 10^-10){
         t_pval_noSPA_c = 1;
@@ -2528,8 +2540,8 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
         pval_noSPA_c = 0;
   }
   t_pval_noSPA_c = pval_noSPA_c;
-  std::cout << "here is_gtilde 8" << std::endl;
-  std::cout << "pval_noSPA_c " << pval_noSPA_c << std::endl;
+  //std::cout << "here is_gtilde 8" << std::endl;
+  //std::cout << "pval_noSPA_c " << pval_noSPA_c << std::endl;
 
 double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
 arma::vec gNB, gNA, muNB, muNA;
@@ -2655,7 +2667,7 @@ void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,
 
     S = dot(t_gtilde, m_res_gxe_mt.col(m_itrait) % m_varWeights_gxe_mt.col(m_itrait));
 
-    //std::cout << "S " << S << std::endl;
+    //std::cout << "S scoreTest_gxe " << S << std::endl;
 
     S = S/m_tauvec_mt(0,m_itrait);
 
@@ -2686,11 +2698,11 @@ void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,
     }
 
     var2 = var2m(0,0);
-    std::cout << "var2 Scoretest_gxe " << var2 << std::endl;
-    std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
+    //std::cout << "var2 Scoretest_gxe " << var2 << std::endl;
+    //std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
     //double var1 = var2 * m_varRatioVal;
     double var1 = var2 * varRatioVal_var2;
-    std::cout << "var1 Scoretest_gxe " << var1 << std::endl;
+    //std::cout << "var1 Scoretest_gxe " << var1 << std::endl;
     double stat = S*S/var1;
     //double t_pval;
     //std::cout << "S " << S << std::endl;
@@ -2703,6 +2715,7 @@ void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,
         boost::math::chi_squared chisq_dist(1);
         t_pval = boost::math::cdf(complement(chisq_dist, stat));
     }
+    //std::cout << "t_pval Scoretest_gxe " << t_pval << std::endl;
 /*
     char pValueBuf[100];
     if (t_pval != 0)

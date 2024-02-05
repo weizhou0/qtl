@@ -168,13 +168,15 @@ Rcpp::List Get_Saddle_Prob_Poi(double zeta,  arma::vec & mu, arma::vec & g, doub
 		
 
 		if(Ztest > 0){
-			pval0 = boost::math::cdf(complement(norm_dist,Ztest));
+			pval0 = R::pnorm(Ztest,0,1,false,logp);
+			//pval0 = boost::math::cdf(complement(norm_dist,Ztest));
 			pval= pval0;
 			//if(logp){
 			//	pval = std::log(pval);
 			//}	
 		} else {
-			pval0 = boost::math::cdf(norm_dist,Ztest);
+			pval0 = R::pnorm(Ztest,0,1,true,logp);
+			//pval0 = boost::math::cdf(norm_dist,Ztest);
 			pval= -1*pval0;
 			
 			//	-Rcpp::pnorm( Ztest, mean = 0.0, sd = 1.0, lower = true, log = logp );
@@ -203,10 +205,10 @@ Rcpp::List SPA_survival(arma::vec & mu, arma::vec & g, double q, double qinv, do
 	bool Isconverge = true;
 	Rcpp::List outuni1 = getroot_K1_Poi(0, mu, g, q, tol);
 	Rcpp::List outuni2 = getroot_K1_Poi(0, mu, g, qinv, tol);
-	double outuni1root = outuni1["root"];
-	double outuni2root = outuni2["root"];
-	bool Isconverge1 = outuni1["Isconverge"];
-	bool Isconverge2 = outuni2["Isconverge"];
+	//double outuni1root = outuni1["root"];
+	//double outuni2root = outuni2["root"];
+	//bool Isconverge1 = outuni1["Isconverge"];
+	//bool Isconverge2 = outuni2["Isconverge"];
 
 	//std::cout << "outuni1root" << outuni1root << std::endl;
         //std::cout << "outuni2root" << outuni2root << std::endl;
@@ -406,15 +408,15 @@ Rcpp::List Get_Saddle_Prob_fast_Poi(double zeta,  arma::vec & mu, arma::vec & g,
 		boost::math::normal norm_dist(0,1);
                 double pval0;
 		if(Ztest > 0){
-			pval0 = boost::math::cdf(complement(norm_dist,Ztest));
-
+			//pval0 = boost::math::cdf(complement(norm_dist,Ztest));
+			pval0 = R::pnorm(Ztest,0,1,false,logp);
 			pval=pval0;
 			//if(logp){
 			//	pval = std::log(pval);
 			//}	
 		} else {
-			pval0 = boost::math::cdf(norm_dist,Ztest);
-
+			//pval0 = boost::math::cdf(norm_dist,Ztest);
+			pval0 = R::pnorm(Ztest,0,1,true,logp);
 			pval= -pval0;
 			
 			//	-Rcpp::pnorm( Ztest, mean = 0.0, sd = 1.0, lower = true, log = logp );
@@ -478,6 +480,8 @@ Rcpp::List SPA_survival_fast(arma::vec & mu, arma::vec & g, double q, double qin
 			}	
 		}
 
+    std::cout << "p1  first " << p1 << "p2 " << p2 << std::endl;
+                    std::cout << "HEREHERE " << std::endl;
 		if(logp){
 			pval = add_logp(p1,p2);
 		} else {
