@@ -562,9 +562,15 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
   ptr_gSAIGEobj->assign_for_itrait(i_mt);
     //ptr_gSAIGEobj->assign_for_trait_i(i_mt);
   //std::cout << "Here2e mainMarkerInCPP" << std::endl;
-
-    ptr_gSAIGEobj->set_flagSparseGRM_cur(false);		
-    if(isSingleVarianceRatio){
+/*
+  if(ptr_gSAIGEobj->m_SigmaMat_sp.n_rows == 2){
+    ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
+   }else{
+    ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
+   }
+*/
+ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
+  if(isSingleVarianceRatio){
        //std::cout << "Here2f mainMarkerInCPP" << std::endl;
        ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
        //std::cout << "Here2g mainMarkerInCPP" << std::endl;
@@ -575,7 +581,7 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
     }
     //check 'Main.cpp'
     bool is_region = false;
-            //std::cout << "ptr_gSAIGEobj->m_varRatioVal null_noadj" << ptr_gSAIGEobj->m_varRatioVal << std::endl;
+    std::cout << "ptr_gSAIGEobj->m_varRatioVal null_noadj" << ptr_gSAIGEobj->m_varRatioVal << std::endl;
 
   //std::cout << "Here3 mainMarkerInCPP" << std::endl;
 
@@ -595,16 +601,17 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
 //for(int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
 //    int j_mt = i_mt*t_genoIndex.size()+i;
 
-    std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl;
+    //std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl;
 
 
     if(MAC > g_MACCutoffforER){
-      std::cout << "Here" << std::endl;
+      //std::cout << "Here" << std::endl;
+      bool isSparseGRM_b =  ptr_gSAIGEobj->m_flagSparseGRM_cur;
       Unified_getMarkerPval( 
 		    t_GVec, 
                           false, // bool t_isOnlyOutputNonZero, 
                           indexNonZeroVec_arma, indexZeroVec_arma, Beta, seBeta, pval, pval_noSPA, Tstat, gy, varT,   
-			  altFreq, isSPAConverge, gtildeVec, is_gtilde, is_region, t_P2Vec, isCondition, Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c, G1tilde_P_G2tilde_Vec, is_Firth, is_FirthConverge, false, true, false);
+			  altFreq, isSPAConverge, gtildeVec, is_gtilde, is_region, t_P2Vec, isCondition, Beta_c, seBeta_c, pval_c, pval_noSPA_c, Tstat_c, varT_c, G1tilde_P_G2tilde_Vec, is_Firth, is_FirthConverge, false, true, isSparseGRM_b);
     }else{
       Unified_getMarkerPval( 
 		    t_GVec, 
@@ -6118,8 +6125,8 @@ arma::fvec getPCG1ofSigmaAndVector_V(arma::fvec& wVec,  float tauVal, float tauV
 
     if(g_isStoreSigma){
         std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
-        //xVec = arma::spsolve(g_spSigma, bVec);
-        xVec = arma::spsolve(g_spSigma_V, bVec);
+        xVec = arma::spsolve(g_spSigma, bVec);
+        //xVec = arma::spsolve(g_spSigma_V, bVec);
         std::cout << " arma::spsolve(g_spSigma, bVec) 1" << std::endl;
     }else{
         arma::fvec rVec = bVec;

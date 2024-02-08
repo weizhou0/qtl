@@ -112,13 +112,13 @@ m_is_gxe = t_is_gxe;
     m_n = m_res_mt.n_rows;
     m_tauvec_each_length = t_tauvec.n_rows;
 
-
+/*
     if(m_Sigma_iXXSigma_iX.n_cols == 1 && m_Sigma_iXXSigma_iX.n_rows == 1){
 	m_isVarPsadj = false;
     }else{
 	m_isVarPsadj = true;
     }
-
+*/
 
 
     m_cateVarRatioMinMACVecExclude = t_cateVarRatioMinMACVecExclude;
@@ -248,7 +248,11 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
       if(m_SigmaMat_sp.n_rows > 2){	
       //t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
       t_P2Vec = m_SigmaMat_sp * t_gtilde;
+
       var2m = dot(t_P2Vec, t_gtilde);
+      std::cout << "hererehe" << std::endl;
+	std::cout << "m_isVarPsadj " << m_isVarPsadj << std::endl;
+
       if(m_isVarPsadj){
 	varRatioVal_var2 = 1;     
 	var2m = var2m - t_gtilde.t() * m_Sigma_iXXSigma_iX * m_X.t() * t_P2Vec;	
@@ -265,7 +269,7 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     }
 
     var2 = var2m(0,0);
-    //std::cout << "var2 " << var2 << std::endl;
+    std::cout << "var2 " << var2 << std::endl;
     //std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
     //double var1 = var2 * m_varRatioVal;
     double var1 = var2 * varRatioVal_var2;
@@ -474,11 +478,15 @@ void SAIGEClass::scoreTestFast_noadjCov_multiTrait(arma::vec & t_GVec,
     //double var2 = dot(t_GVec_center,t_GVec_center);
 
     double var1 = var2 * m_varRatioVal;
+    std::cout << "var2 " << var2 << std::endl;
+    std::cout << "var1 " << var1 << std::endl;
+
+
     double S = dot(m_res_mt.col(m_itrait), t_GVec_center);
     S = S/m_tauvec_mt(0,m_itrait);
     double stat = S*S/var1;
     double t_pval;
-
+    std::cout << "S " << S << std::endl; 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
         t_pval = 1;
@@ -646,7 +654,8 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
  if(t_isSparseGRM){
  	t_isnoadjCov = false;
  }
-  //std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
+  std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
+  std::cout << "t_isSparseGRM " << t_isSparseGRM << std::endl;
 
 if(!t_isnoadjCov){
 	unsigned int nonzero = indexNonZeroVec0_arma.n_elem;
@@ -721,7 +730,7 @@ if(!t_isnoadjCov){
             assignSingleVarianceRatio(m_flagSparseGRM_cur, false, true);
           }
 
-            //std::cout << "ptr_gSAIGEobj->m_varRatioVal null_sample" << m_varRatioVal << std::endl;	
+        std::cout << "ptr_gSAIGEobj->m_varRatioVal null_sample" << m_varRatioVal << std::endl;	
 
 
 	  is_gtilde = true;
@@ -729,13 +738,10 @@ if(!t_isnoadjCov){
 	  //std::cout << "t_GVec0.n_elem coreTest( " << t_GVec0.n_elem << std::endl;
 	  
 	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);
-	  //std::cout << "t_pval from scoreTest " << t_pval << std::endl;
-	//std::cout << "t_Tstat from scoreTest " << t_Tstat << std::endl;
-	//std::cout << "t_var1 from scoreTest " << t_var1 << std::endl;
-	//std::cout << "t_var2 from scoreTest " << t_var2 << std::endl;
-
-
-
+	std::cout << "t_pval from scoreTest " << t_pval << std::endl;
+	std::cout << "t_Tstat from scoreTest " << t_Tstat << std::endl;
+	std::cout << "t_var1 from scoreTest " << t_var1 << std::endl;
+	std::cout << "t_var2 from scoreTest " << t_var2 << std::endl;
 
 	  try {
         	pval_noadj = std::stod(t_pval_str);
@@ -815,8 +821,8 @@ if(!t_isnoadjCov){
 	if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur){
 	//std::cout << "SPA_fast before" << std::endl;
         	SPA_fast(mu_vec, t_gtilde, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, t_SPApval, t_isSPAConverge);
-	//	std::cout << "pval_noadj " << pval_noadj << std::endl;
-	//	std::cout << "SPA_fast " << t_SPApval << std::endl;
+		std::cout << "pval_noadj " << pval_noadj << std::endl;
+		std::cout << "SPA_fast " << t_SPApval << std::endl;
 	}else{
 		SPA(mu_vec, t_gtilde, q, qinv, pval_noadj, tol1, logp, m_traitType, t_SPApval, t_isSPAConverge);	
 		//std::cout << "SPA"  << t_SPApval <<  std::endl;
@@ -909,8 +915,8 @@ if(!t_isnoadjCov){
       t_seBeta = 0;
     }
 }
-std::cout << "t_pval " << t_pval << std::endl;
-std::cout << "OKKKKK" << std::endl;
+//std::cout << "t_pval " << t_pval << std::endl;
+//std::cout << "OKKKKK" << std::endl;
 
    if(m_traitType == "binary" & m_is_Firth_beta & t_pval <= m_pCutoffforFirth){
 	t_isFirth = true;
