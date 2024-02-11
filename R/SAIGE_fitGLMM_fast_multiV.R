@@ -45,6 +45,7 @@
 #' @param MaleCode character. Values in the column for sex (sexCol) in the phenotype file are used for males. By default, '0'
 #' @param sexCol character. Coloumn name for sex in the phenotype file, e.g Sex. By default, '' 
 #' @param isCovariateOffset logical. Whether to estimate fixed effect coeffciets. By default, FALSE.  
+#' @param isStoreSigma logical. Whether to store sigma matrix. By default, FALSE. If number of individuals is greater than 10,000, this option may use large memory
 #' @return a file ended with .rda that contains the glmm model information, a file ended with .varianceRatio.txt that contains the variance ratio values, and a file ended with #markers.SPAOut.txt that contains the SPAGMMAT tests results for the markers used for estimating the variance ratio.
 #' @export
 fitNULLGLMM_multiV = function(plinkFile = "",
@@ -108,7 +109,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		nrun = 30,
 		VmatFilelist = "",
 		VmatSampleFilelist = "", 
-		useGRMtoFitNULL=TRUE)
+		useGRMtoFitNULL=TRUE, 
+		isStoreSigma = FALSE)
 {
 
     ##set up output files
@@ -934,14 +936,14 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
     obj.noK = NULL
 
 
-    #if(length(fit0$y) > 20000){
-    #isStoreSigma = FALSE
+    #if(length(fit0$y) > 200000){
+    #  isStoreSigma = FALSE
     #}else{
-      isStoreSigma = FALSE
+    #  isStoreSigma = TRUE
     #}
     print("isStoreSigma")
     print(isStoreSigma)
-    set_store_sigma(isStoreSigma)    
+    #set_store_sigma(isStoreSigma) 
 
     if (!skipModelFitting) {
         #setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
@@ -1090,20 +1092,33 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
                 }
         #}
 
-	if(FALSE){
-	 if(length(fit0$y) <= 10000){
-		family = fit0$family
-                eta = modglmm$linear.predictors
-                mu = modglmm$fitted.values
-                mu.eta = family$mu.eta(eta)
-                sqrtW = mu.eta/sqrt(family$variance(mu))
-                W = sqrtW^2
-		W = W * modglmm$varWeights;
-                tauVecNew = modglmm$theta
+	#if(FALSE){
+	 #if(length(fit0$y) <= 10000){
+
+	 cat("isStoreSigma is ", isStoreSigma, "\n")
+	 if(isStoreSigma){
+		#family = fit0$family
+                #eta = modglmm$linear.predictors
+                #mu = modglmm$fitted.values
+                #mu.eta = family$mu.eta(eta)
+                #sqrtW = mu.eta/sqrt(family$variance(mu))
+                #W = sqrtW^2
+		#W = W * modglmm$varWeights;
+                #tauVecNew = modglmm$theta
 		gen_sp_Sigma_multiV(W, tauVecNew)
-		modglmm$spSigma = get_sp_Sigma_to_R()
+		spSigma = get_sp_Sigma_to_R()
+		SigmaMat_sp = chol2inv(chol(spSigma))
+		if(any(duplicated(dataMerge_sort$IID))){
+			b = as.numeric(factor(dataMerge_sort$IID, levels =  unique(dataMerge_sort$IID)))
+			I_mat = Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
+			I_mat = 1.0 * I_mat
+			SigmaMat_sp = SigmaMat_sp %*% I_mat
+			modglmm$spSigma = t(I_mat)%*% SigmaMat_sp
+		}else{
+			modglmm$spSigma = SigmaMat_sp
+		}
          }		 
-	}
+	#}
         #save(modglmm, file = modelOut)
         tau = modglmm$theta
         alpha0 = modglmm$coefficients
@@ -1275,7 +1290,7 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
                 #}
 
         }
-	  set_dup_sample_index(as.numeric(factor(modglmm$sampleID, levels =  unique(modglmm$sampleID))))
+        set_dup_sample_index(as.numeric(factor(modglmm$sampleID, levels =  unique(modglmm$sampleID))))
         #setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
     }
 
@@ -1378,10 +1393,10 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
   print(W[1:20])
   tauVecNew = obj.glmm.null$theta
 
-  isStoreSigma=FALSE
-  if(isStoreSigma){
-         gen_sp_Sigma_multiV(W, tauVecNew)
-  }
+  #isStoreSigma=FALSE
+  #if(isStoreSigma){
+  #       gen_sp_Sigma_multiV(W, tauVecNew)
+  #}
   X = obj.glmm.null$X
 
 
@@ -1711,32 +1726,46 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 
 
    G_noXadj = as.vector(G0sample - mean(G0sample))
+   G0_sample_tilde = G0sample - XXVXsample_inv0 %*%  (XVsample0 %*% G0sample)
    
-   if(useSparseGRMforVarRatio){
-	set_isSparseGRM(useSparseGRMforVarRatio)
-	Sigma_iG = getSigma_G_noV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
-	var2_a = t(G) %*% Sigma_iG
-	var2sparseGRM = var2_a[1,1]
-	cat("var2sparseGRM ", var2sparseGRM, "\n")
-	varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
+   #if(useSparseGRMforVarRatio){
+   #	set_isSparseGRM(useSparseGRMforVarRatio)
+   #	Sigma_iG = getSigma_G_noV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
+   #	var2_a = t(G) %*% Sigma_iG
+   #	var2sparseGRM = var2_a[1,1]
+   #	cat("var2sparseGRM ", var2sparseGRM, "\n")
+   #	varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
 
-  }else{
+  #}else{
        if(any(duplicated(obj.glmm.null$sampleID))){
        		if(useGRMtoFitNULL){
 			tauVal = tauVecNew[3]
 		}else{
 			tauVal = tauVecNew[2]
 		}	
-	Sigma_iG = getSigma_G_V(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
+	#Sigma_iG = getSigma_G_V(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
 	#Sigma_iG = getSigma_G_multiV(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
-	var2_a = t(G) %*% Sigma_iG
+	#var2_a = t(G) %*% Sigma_iG
+        if(isStoreSigma){	
+	Sigma_iG = (obj.glmm.null$spSigma) %*% G0_sample_tilde
+	var2_a = t(G0_sample_tilde) %*% Sigma_iG
+	}else{
+	G0_sample_tilde_I = as.vector(I_mat %*% G0_sample_tilde) 
+	print("Herere")
+	print(length(G0_sample_tilde_I))
+	#Sigma_iG = getSigma_G_multiV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
+	Sigma_iG = getSigma_G_multiV(W, tauVecNew, G0_sample_tilde_I, maxiterPCG, tolPCG, LOCO=FALSE)
+	print("Herere2")
+	var2_a = t(G0_sample_tilde_I) %*% Sigma_iG
+	#Sigma_iG = getSigma_G_V(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
+	}
         var2sparseGRM = var2_a[1,1]
         cat("var2sparseGRM Here ", var2sparseGRM, "\n")
         varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
        }else{
 	varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, 1)
        }	       
-  }	
+  #}	
 
 
     if(obj.glmm.null$traitType == "binary"){
@@ -1772,7 +1801,6 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	 }	
     }else if(obj.glmm.null$traitType == "count"){
          var2null = innerProduct(mu*var_weights, G*G)
-	 G0_sample_tilde = G0sample - XXVXsample_inv0 %*%  (XVsample0 %*% G0sample)
 	 #cat("mean(G0_sample_tilde) ", mean(G0_sample_tilde), "\n")
          #var2null_new = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
          var2null_sample = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
@@ -2069,20 +2097,21 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
     #}
 
 
-    if(isStoreSigma){
-      gen_sp_Sigma_multiV(W, tau)
-    }
+    #if(isStoreSigma){
+    #  gen_sp_Sigma_multiV(W, tau)
+    #}
    
     if(isSparseGRMIdentity){
 	tau[2] = 0
     }
 
+    #print("Here isStoreSigma")
     re.coef = Get_Coef_multiV(y, X, tau, family, alpha0, eta0,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO = FALSE, var_weights = var_weights)
 
-    if(isStoreSigma){
-      gen_sp_Sigma_multiV(re.coef$W, tau)
-    }
-
+    #if(isStoreSigma){
+    #  gen_sp_Sigma_multiV(re.coef$W, tau)
+    #}
+    #print("Here isStoreSigma 2")
 
     re = getAIScore_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG,tolPCG = tolPCG, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
     tau0=tau
@@ -2138,9 +2167,9 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
       t_end_Get_Coef =  proc.time()
       cat("t_end_Get_Coef - t_begin_Get_Coef\n")
       print(t_end_Get_Coef - t_begin_Get_Coef)
-      if(isStoreSigma){
-        gen_sp_Sigma_multiV(re.coef$W, tau)
-      }
+      #if(isStoreSigma){
+      #  gen_sp_Sigma_multiV(re.coef$W, tau)
+      #}
 
 
       fit = fitglmmaiRPCG_multiV(re.coef$Y, X, re.coef$W, tau, fixtau, re.coef$Sigma_iY, re.coef$Sigma_iX, re.coef$cov, nrun, maxiterPCG, tolPCG, tol = tol, traceCVcutoff = traceCVcutoff, LOCO = FALSE)
@@ -2158,12 +2187,12 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 
       mu.eta = family$mu.eta(eta)
  
-#  if(is.null(var_weights)){
-#        sqrtW = mu.eta/sqrt(family$variance(mu))
-#  }else{
-#        sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
-#  }
-#  W = sqrtW^2
+  if(is.null(var_weights)){
+        sqrtW = mu.eta/sqrt(family$variance(mu))
+  }else{
+        sqrtW = mu.eta/sqrt(1/as.vector(var_weights)*family$variance(mu))
+  }
+  W = sqrtW^2
 
      
       print(abs(tau - tau0)/(abs(tau) + abs(tau0) + tol))
@@ -2197,15 +2226,15 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
   if(verbose) cat("\nFinal " ,tau, ":\n")
 
 
-     if(isStoreSigma){
-        gen_sp_Sigma_multiV(W, tau)
-     }
+     #if(isStoreSigma){
+     #   gen_sp_Sigma_multiV(W, tau)
+     #}
 
     #added these steps after tau is estimated 04-14-2018
 
   re.coef = Get_Coef_multiV(y, X, tau, family, alpha, eta,  offset,verbose=verbose, maxiterPCG=maxiterPCG, tolPCG = tolPCG, maxiter=maxiter, LOCO=FALSE, var_weights = var_weights)
 
-cov = re.coef$cov
+  cov = re.coef$cov
   alpha = re.coef$alpha
   eta = re.coef$eta
   Y = re.coef$Y
@@ -2265,10 +2294,13 @@ cov = re.coef$cov
   t_end_null = proc.time()
   cat("t_end_null - t_begin, fitting the NULL model without LOCO took\n")
   print(t_end_null - t_begin)
+  #if(isStoreSigma){
+  #   gen_sp_Sigma_multiV(re.coef$W, tau)
+  #}	  
   if(!isLowMemLOCO & LOCO){
-     if(isStoreSigma){
-        gen_sp_Sigma_multiV(re.coef$W, tau)
-     }	  
+     #if(isStoreSigma){
+     #   gen_sp_Sigma_multiV(re.coef$W, tau)
+     #}	  
     set_Diagof_StdGeno_LOCO()
     glmmResult$LOCOResult = list()
     for (j in 1:22){

@@ -289,24 +289,14 @@ SPAGMMATtest = function(bgenFile = "",
     ratioVecList = Get_Variance_Ratio_multiTrait(varianceRatioFile, cateVarRatioMinMACVecExclude, cateVarRatioMaxMACVecInclude, isGroupTest, isSparseGRM) #readInGLMM.R
     #print("ratioVecList")
     #print(ratioVecList)
-	#print("obj.model$spSigma ")
-	#print(obj.model$spSigma)
-    if(!is.null(obj.model.List[[1]]$spSigma)){
-    	#SigmaMat_sp = getSparseSigma_new() 
-    	isSparseGRM = TRUE
-	SigmaMat_sp = chol2inv(chol(obj.model.List[[1]]$spSigma)) 
-	cat("isSparseGRM 2 ", isSparseGRM, "\n")	
-    }else{
-	SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))
-    }	    
 
 
-    pval_cutoff_for_fastTest = 0
+    #pval_cutoff_for_fastTest = 0
     nsample = length(unique(obj.model.List[[1]]$sampleID))
     cateVarRatioMaxMACVecInclude = c(cateVarRatioMaxMACVecInclude, nsample)	
    
-  #print("setSAIGEobjInCPP -1b")
-  #print_g_n_unique()
+    #print("setSAIGEobjInCPP -1b")
+    #print_g_n_unique()
 
     #in Geno.R
     objGeno = setGenoInput(bgenFile = bgenFile,
@@ -370,6 +360,28 @@ SPAGMMATtest = function(bgenFile = "",
 	       obj.model.List[[1]]$T_longl_vec = rep(1, length(b))
                T_longl_mat = I_mat * (obj.model.List[[1]]$T_longl_vec)
     }	       
+
+	#print("obj.model$spSigma ")
+	#print(obj.model$spSigma)
+    if(!is.null(obj.model.List[[1]]$spSigma)){
+    	#SigmaMat_sp = getSparseSigma_new() 
+    	isSparseGRM = TRUE
+	SigmaMat_sp = NULL
+	#SigmaMat_sp = chol2inv(chol(obj.model.List[[1]]$spSigma)) 
+	for (gm in 1:length(obj.model.List)){
+	  SigmaMat_sp = cbind(SigmaMat_sp, obj.model.List[[gm]]$spSigma)
+	  print(dim(SigmaMat_sp))
+	  #SigmaMat_sp = SigmaMat_sp %*% I_mat
+	  #SigmaMat_sp = t(I_mat)%*%SigmaMat_sp
+	  #print(dim(SigmaMat_sp))
+	}
+	cat("isSparseGRM 2 ", isSparseGRM, "\n")	
+    }else{
+	SigmaMat_sp = Matrix:::sparseMatrix(i = c(1,1,2,2), j = c(1,2,1,2), x = as.vector(c(0,0,0,0)))
+    }	   
+
+
+
 
     #print("sum(!duplicated(obj.model$X))") 
     #print(sum(!duplicated(obj.model$X)))

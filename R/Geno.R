@@ -208,7 +208,7 @@ setGenoInput = function(bgenFile = "",
     
     if(sampleFile != "" | !checkIfSampleIDsExist(bgenFile)){
 	print("Sample IDs were not found in the bgen file.")
-	Check_File_Exist(sampleFile)
+	Check_File_Exist(sampleFile, "sampleFile")
 	sf = file(sampleFile, "r")
 	first_sample_line = readLines(sf, n = 1)
 	close(sf)
