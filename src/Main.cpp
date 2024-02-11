@@ -225,21 +225,14 @@ void mainMarkerInCPP(
 			   bool & t_isFirth) 
 {
 
-  //std::cout << "Here1 mainMarkerInCPP" << std::endl;
-  //std::cout << "t_traitType.size() here " << t_traitType.size() << std::endl;
-  //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM_cur " << ptr_gSAIGEobj->m_flagSparseGRM_cur << std::endl;
-  //std::cout << "ptr_gSAIGEobj->m_flagSparseGRM " << ptr_gSAIGEobj->m_flagSparseGRM << std::endl;
-
-
   int q = (t_genoIndex.size()) * (t_traitType.size());  // number of markers
- unsigned int ne = (g_emat.n_cols)/(t_traitType.size());
+  unsigned int ne = (g_emat.n_cols)/(t_traitType.size());
   // set up output
   std::vector<std::string> markerVec(q);  // marker IDs
   std::vector<std::string> chrVec(q);  // marker IDs
   std::vector<std::string> posVec(q);  // marker IDs
   std::vector<std::string> refVec(q);  // marker IDs
   std::vector<std::string> altVec(q);  // marker IDs
-
   std::vector<std::string> infoVec(q);    // marker information: CHR:POS:REF:ALT
   std::vector<double> altFreqVec(q);      // allele frequencies of ALT allele, this is not always < 0.5.
   std::vector<double> altCountsVec(q);    // allele counts of ALT allele.
@@ -270,9 +263,7 @@ void mainMarkerInCPP(
   std::vector<double> pval_SKAT_ge_cVec(q, arma::datum::nan);
   //std::vector<std::string> Tstat_ge_cStrVec(q, arma::datum::nan);
   //std::vector<std::string> varT_ge_cStrVec(q, arma::datum::nan);
-
-
-
+  
   arma::rowvec G1tilde_P_G2tilde_Vec(ptr_gSAIGEobj->m_numMarker_cond);
 
   std::vector<bool>  isSPAConvergeVec(q);
@@ -280,7 +271,6 @@ void mainMarkerInCPP(
   std::vector<double>  AF_ctrlVec(q);
   std::vector<uint32_t>  N_caseVec(q);
   std::vector<uint32_t>  N_ctrlVec(q);
-  //if(t_isMoreOutput){
   std::vector<double>  N_case_homVec(q);
   std::vector<double>  N_ctrl_hetVec(q);
   std::vector<double>  N_case_hetVec(q);
@@ -289,8 +279,6 @@ void mainMarkerInCPP(
   std::vector<uint> indexZeroVec;
   std::vector<uint> indexNonZeroVec;
   std::vector<uint> indexForMissing;
-
-  //int n = ptr_gSAIGEobj->m_n;
   int n = ptr_gSAIGEobj->m_n;
 	  
   if(g_n_unique > 0){
@@ -302,19 +290,19 @@ void mainMarkerInCPP(
   arma::vec t_GVec(n);
   arma::vec gtildeVec(n);
   arma::vec t_P2Vec;
-  if(ptr_gSAIGEobj->m_isFastTest){
-    ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
-  }else{
-    ptr_gSAIGEobj->set_flagSparseGRM_cur(ptr_gSAIGEobj->m_flagSparseGRM); 
-  }
+  
+  //if(ptr_gSAIGEobj->m_isFastTest){
+//    ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
+  //}else{
+  //  ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
+    //ptr_gSAIGEobj->set_flagSparseGRM_cur(ptr_gSAIGEobj->m_flagSparseGRM); 
+  //}
+
 
   bool hasVarRatio = true;;
   bool isSingleVarianceRatio = true;
 
-  //std::cout << "ptr_gSAIGEobj->m_varRatio_null_mt.n_rows " << ptr_gSAIGEobj->m_varRatio_null_mt.n_rows << std::endl;
   if(ptr_gSAIGEobj->m_varRatio_null_mt.n_rows == 1){
-        //ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
-        //ptr_gSAIGEobj->assignSingleVarianceRatio(false);
 	isSingleVarianceRatio = true;
   }else{		
 	isSingleVarianceRatio = false;
@@ -325,11 +313,8 @@ void mainMarkerInCPP(
   int mFirthConverge = 0;
 
   for(int i = 0; i < t_genoIndex.size(); i++){
-
-//std::cout << "i " << i << std::endl;
-
+    //std::cout << "i " << i << std::endl;
     if((i+1) % g_marker_chunksize == 0){
-      //std::cout << "Completed " << (i+1) << "/" << q << " markers in the chunk." << std::endl;
       std::cout << "Completed " << (i+1) << "/" << t_genoIndex.size() << " markers in the chunk." << std::endl;
     }
     // information of marker
@@ -366,18 +351,12 @@ void mainMarkerInCPP(
     bool isOutputIndexForMissing = true;
     bool isOnlyOutputNonZero = false; 
    
-   //clear vectors
-   indexZeroVec.clear();
-   indexNonZeroVec.clear();
-   indexForMissing.clear();
-   //t_GVec0.clear();
-   //t_GVec.clear();
-   //std::cout << "Unified_getOneMarker " << std::endl;
-   //std::cout << "n " << n << std::endl;
-   //std::cout << "t_GVec.n_elem " << t_GVec.n_elem << std::endl; 
-
-   //t_GVec.set_size(n);
-   bool isReadMarker = Unified_getOneMarker(t_genoType, gIndex_prev, gIndex, ref, alt, marker, pd, chr, altFreq, altCounts, missingRate, imputeInfo,
+    //clear vectors
+    indexZeroVec.clear();
+    indexNonZeroVec.clear();
+    indexForMissing.clear();
+   
+    bool isReadMarker = Unified_getOneMarker(t_genoType, gIndex_prev, gIndex, ref, alt, marker, pd, chr, altFreq, altCounts, missingRate, imputeInfo,
                                           isOutputIndexForMissing, // bool t_isOutputIndexForMissing,
                                           indexForMissing,
                                           isOnlyOutputNonZero, // bool t_isOnlyOutputNonZero,
@@ -393,50 +372,25 @@ void mainMarkerInCPP(
     }
 
 
-   //std::cout << "t_GVec0.size()) " << t_GVec0.size() << std::endl;
-   //arma::vec t_GVec(t_GVec0.size());
-   //arma::vec t_GVec = arma::conv_to< arma::colvec >::from(t_GVec0);
-
-   //arma::vec t_GVec(t_GVec0);
-   //t_GVec0.clear(); 
-
-   //for(uint j = 0; j < n; j++){
-   //	t_GVec(j) = t_GVec0.at(j);	
-   //}
-
-    //for(int indi = 0; indi < indexForNonZero.size(); indi++){
-    //  std::cout << indexForNonZero[indi] << std::endl;
-    //}
-//   std::cout << "marker " << marker << std::endl;
-//   std::cout << "indexForMissing.size() " << indexForMissing.size() << std::endl;
-//   std::cout << "indexNonZeroVec.size() " << indexNonZeroVec.size() << std::endl;
-    //int n = t_GVec.size();
-    //arma::vec gtildeVec(n);
-
-  
-
-
     std::string pds = std::to_string(pd); 
     std::string info = chr+":"+pds+":"+ref+":"+alt;
-//    std::cout << "info " << info << std::endl;
 
-  //std::cout << "Here2 mainMarkerInCPP" << std::endl;
-
- for(int i_mt0 = 0; i_mt0 < t_traitType.size(); i_mt0++){
-    int j_mt0 = i_mt0*t_genoIndex.size()+i;
-    chrVec.at(j_mt0) = chr;
-    posVec.at(j_mt0) = pds;
-    refVec.at(j_mt0) = ref;
-    altVec.at(j_mt0) = alt; 
-    // record basic information for the marker
-    markerVec.at(j_mt0) = marker;               // marker IDs
-    infoVec.at(j_mt0) = info;    // marker information: CHR:POS:REF:ALT
-    altFreqVec.at(j_mt0) = altFreq;         // allele frequencies of ALT allele, this is not always < 0.5.
-    //altCountsVec.at(i) = altCounts;         // allele frequencies of ALT allele, this is not always < 0.5.
-    missingRateVec.at(j_mt0) = missingRate;
-    imputationInfoVec.at(j_mt0) = imputeInfo;
- }
-  //std::cout << "Here2b mainMarkerInCPP" << std::endl;
+   for(int i_mt0 = 0; i_mt0 < t_traitType.size(); i_mt0++){
+     int j_mt0 = i_mt0*t_genoIndex.size()+i;
+     chrVec.at(j_mt0) = chr;
+     posVec.at(j_mt0) = pds;
+     refVec.at(j_mt0) = ref;
+     altVec.at(j_mt0) = alt; 
+     // record basic information for the marker
+     markerVec.at(j_mt0) = marker;               // marker IDs
+     infoVec.at(j_mt0) = info;    // marker information: CHR:POS:REF:ALT
+     altFreqVec.at(j_mt0) = altFreq;         // allele frequencies of ALT allele, this is not always < 0.5.
+     //altCountsVec.at(i) = altCounts;         // allele frequencies of ALT allele, this is not always < 0.5.
+     missingRateVec.at(j_mt0) = missingRate;
+     imputationInfoVec.at(j_mt0) = imputeInfo;
+   }
+  
+    //std::cout << "Here2b mainMarkerInCPP" << std::endl;
 
 
     // MAF and MAC are for Quality Control (QC)
@@ -464,25 +418,22 @@ void mainMarkerInCPP(
       continue;
     }else{
 
-    // Check UTIL.cpp
-    //
-    //
-    //arma::vec timeoutput3 = getTime();
-    indexZeroVec.clear();
-    indexNonZeroVec.clear();
+      // Check UTIL.cpp
+      //arma::vec timeoutput3 = getTime();
+      indexZeroVec.clear();
+      indexNonZeroVec.clear();
 
 
-    flip = imputeGenoAndFlip(t_GVec, altFreq, altCounts,indexForMissing, g_impute_method, g_dosage_zerod_cutoff, g_dosage_zerod_MAC_cutoff, MAC, indexZeroVec, indexNonZeroVec);
+      flip = imputeGenoAndFlip(t_GVec, altFreq, altCounts,indexForMissing, g_impute_method, g_dosage_zerod_cutoff, g_dosage_zerod_MAC_cutoff, MAC, indexZeroVec, indexNonZeroVec);
    
-  // std::cout << "Here2c mainMarkerInCPP" << std::endl;
-//arma::vec timeoutput4 = getTime();
-//printTime(timeoutput3, timeoutput4, "imputeGenoAndFlip");
-for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
-    int j_mt = i_mt*t_genoIndex.size()+i;
-    altFreqVec.at(j_mt) = altFreq;         // allele frequencies of ALT allele, this is not always < 0.5.
-    altCountsVec.at(j_mt) = altCounts;         // allele frequencies of ALT allele, this is not always < 0.5.
+     //arma::vec timeoutput4 = getTime();
+     //printTime(timeoutput3, timeoutput4, "imputeGenoAndFlip");
+   for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
+     int j_mt = i_mt*t_genoIndex.size()+i;
+     altFreqVec.at(j_mt) = altFreq;         // allele frequencies of ALT allele, this is not always < 0.5.
+     altCountsVec.at(j_mt) = altCounts;         // allele frequencies of ALT allele, this is not always < 0.5.
 //}    
-    MAC = std::min(altCounts, 2*n-altCounts);
+     MAC = std::min(altCounts, 2*n-altCounts);
     
    /* 
     std::cout << "MAC " << MAC << std::endl; 
@@ -500,12 +451,10 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
     //arma::vec t_P2Vec;
     //arma::vec t_P2Vec;
     arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
-
-
     //std::cout << "g_n_unique " << g_n_unique << std::endl;
     indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
     indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
-/*
+ /*
     arma::vec t_GVec0, t_GVec_cell;
     double altFreq_new, altCounts_new; 
     
@@ -539,27 +488,25 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
     //arma::vec timeoutput5 = getTime(); 
     //std::cout << "Here1a" << std::endl;
     //set_varianceRatio(MAC, isSingleVarianceRatio);
-
     //ptr_gSAIGEobj->set_flagSparseGRM_cur(m_isSparseGRM);
-
     //if(ptr_gSAIGEobj->m_isnoadjCov){    
     //}	    
-
     //std::cout << "Here2d mainMarkerInCPP" << std::endl;
-  //
-  //
 
-//std::cout << "g_isgxe " << g_isgxe << std::endl;
-//std::cout << "ptr_gSAIGEobj->m_isCondition " << ptr_gSAIGEobj->m_isCondition << std::endl;
+    //std::cout << "g_isgxe " << g_isgxe << std::endl;
+    //std::cout << "ptr_gSAIGEobj->m_isCondition " << ptr_gSAIGEobj->m_isCondition << std::endl;
 
-if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
-    if(ptr_gSAIGEobj->m_isCondition){
-                ptr_gSAIGEobj->m_numMarker_cond = (ptr_gSAIGEobj->m_condition_genoIndex).size();
-    }else{
-                ptr_gSAIGEobj->m_numMarker_cond = 0;
-    }
-}
+   if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
+      if(ptr_gSAIGEobj->m_isCondition){
+           ptr_gSAIGEobj->m_numMarker_cond = (ptr_gSAIGEobj->m_condition_genoIndex).size();
+      }else{
+            ptr_gSAIGEobj->m_numMarker_cond = 0;
+      }
+   }
   ptr_gSAIGEobj->assign_for_itrait(i_mt);
+   ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
+bool isSparseGRM_a =  ptr_gSAIGEobj->m_flagSparseGRM_cur;
+std::cout << "isSparseGRM_a " << isSparseGRM_a << std::endl;
     //ptr_gSAIGEobj->assign_for_trait_i(i_mt);
   //std::cout << "Here2e mainMarkerInCPP" << std::endl;
 /*
@@ -569,15 +516,11 @@ if(g_isgxe && ptr_gSAIGEobj->m_isCondition){
     ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
    }
 */
-ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
-  if(isSingleVarianceRatio){
-       //std::cout << "Here2f mainMarkerInCPP" << std::endl;
+  //ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
+    if(isSingleVarianceRatio){
        ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
-       //std::cout << "Here2g mainMarkerInCPP" << std::endl;
     }else{	
-       //std::cout << "Here2gb mainMarkerInCPP" << std::endl;
        hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
-       //std::cout << "Here2gc mainMarkerInCPP" << std::endl;
     }
     //check 'Main.cpp'
     bool is_region = false;
@@ -607,6 +550,23 @@ ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
     if(MAC > g_MACCutoffforER){
       //std::cout << "Here" << std::endl;
       bool isSparseGRM_b =  ptr_gSAIGEobj->m_flagSparseGRM_cur;
+      std::cout << "isSparseGRM_b " << isSparseGRM_b << std::endl;
+      //gtildeVec = t_GVec;
+     /* if(isSparseGRM_b){
+        //ptr_gSAIGEobj->getadjGFast(t_GVec, gtildeVec, indexNonZeroVec_arma);
+	//arma::fvec f_P2Vec;
+        if(ptr_gSAIGEobj->m_SigmaMat_sp.n_rows > 2){
+	  t_P2Vec = ptr_gSAIGEobj->m_SigmaMat_sp * gtildeVec;
+	}else{
+	  arma::fvec f_gtildeVec = arma::conv_to< arma::fvec >::from( gtildeVec );
+	  arma::fvec tauvec_f = arma::conv_to< arma::fvec >::from((ptr_gSAIGEobj->m_tauvec_mt.col(ptr_gSAIGEobj->m_itrait)));
+	  arma::fvec m_mu2_f = arma::conv_to< arma::fvec >::from(ptr_gSAIGEobj->m_mu2_mt.col(ptr_gSAIGEobj->m_itrait));
+	  f_P2Vec = getSigma_G_multiV(m_mu2_f, tauvec_f, f_gtildeVec, 500, 1e-5, false);
+	  t_P2Vec = arma::conv_to< arma::vec >::from( f_P2Vec );
+        }
+	is_gtilde = true;
+      }
+      */
       Unified_getMarkerPval( 
 		    t_GVec, 
                           false, // bool t_isOnlyOutputNonZero, 
@@ -621,19 +581,21 @@ ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
     }
 
 
-    //std::cout << "pval " << pval << std::endl;
-    //std::cout << "ptr_gSAIGEobj->m_pval_cutoff_for_fastTest " << ptr_gSAIGEobj->m_pval_cutoff_for_fastTest << std::endl;
+    std::cout << "pval " << pval << std::endl;
+    std::cout << "ptr_gSAIGEobj->m_pval_cutoff_for_fastTest " << ptr_gSAIGEobj->m_pval_cutoff_for_fastTest << std::endl;
      
     if(pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
        //ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
 
-       ptr_gSAIGEobj->set_flagSparseGRM_cur(ptr_gSAIGEobj->m_flagSparseGRM);
+       //ptr_gSAIGEobj->set_flagSparseGRM_cur(ptr_gSAIGEobj->m_flagSparseGRM);
+       ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
        if(isSingleVarianceRatio){
-         ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, false, false);
+         ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, false, true); //adj X and in sample
        }else{
-         hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur, false, false);
+         hasVarRatio = ptr_gSAIGEobj->assignVarianceRatio(MAC, ptr_gSAIGEobj->m_flagSparseGRM_cur, false, true);
        }
 
+/*
        if(ptr_gSAIGEobj->m_flagSparseGRM_cur && ptr_gSAIGEobj->m_SigmaMat_sp.n_rows == 2){
          arma::vec t_GVec0 = g_I_longl_mat * t_GVec;	       
          ptr_gSAIGEobj->getadjGFast(t_GVec0, gtildeVec, indexNonZeroVec_arma);
@@ -644,7 +606,7 @@ ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
          arma::fvec sigmainvG_noV_vec = getSigma_G_noV(m_mu2_f, tauvec_f, t_GVec_f, 500, 1e-5, false);
          ptr_gSAIGEobj->m_sigmainvG_noV = arma::conv_to< arma::vec >::from(sigmainvG_noV_vec);	
       }
-
+*/
 
 
      if(MAC > g_MACCutoffforER || t_traitType.at(i_mt) != "binary"){
@@ -4418,7 +4380,7 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
     int Nnomissing = wVec.n_elem;
     arma::fvec xVec(Nnomissing);
     xVec.zeros();
-    
+    //std::cout << "Nnomissing " << Nnomissing << std::endl;
     if(g_isStoreSigma){
         //std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
         xVec = arma::spsolve(g_spSigma, bVec);

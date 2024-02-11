@@ -231,9 +231,9 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     if(t_is_region && m_traitType == "binary"){
       t_gy = dot(t_gtilde, m_y_mt.col(m_itrait));
     }
-
+    
     S = dot(t_gtilde, m_res_mt.col(m_itrait) % m_varWeightsvec_mt.col(m_itrait));
-
+     
     //std::cout << "S " << S << std::endl;
 
     S = S/m_tauvec_mt(0,m_itrait); 
@@ -247,11 +247,10 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     }else{
       if(m_SigmaMat_sp.n_rows > 2){	
       //t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
-      t_P2Vec = m_SigmaMat_sp * t_gtilde;
+      t_P2Vec = (m_SigmaMat_sp.cols(m_startin, m_endin)) * t_gtilde;
 
       var2m = dot(t_P2Vec, t_gtilde);
-      std::cout << "hererehe" << std::endl;
-	std::cout << "m_isVarPsadj " << m_isVarPsadj << std::endl;
+      std::cout << "m_isVarPsadj " << m_isVarPsadj << std::endl;
 
       if(m_isVarPsadj){
 	varRatioVal_var2 = 1;     
@@ -259,8 +258,11 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
       }
      }else{
 	//t_P2Vec = m_sigmainvG_noV;
-	t_P2Vec = getSigma_G_V(t_gtilde, 500, 1e-5);
-	var2m = dot(t_P2Vec, t_gtilde);
+      std::cout << "hererehe" << std::endl;
+      std::cout << t_gtilde.n_elem <<  std::endl;
+      //t_P2Vec = getSigma_G_V(t_gtilde0, 500, 1e-5);
+      std::cout << "hererehe 1" << std::endl;
+      var2m = dot(t_P2Vec, t_gtilde);
       if(m_isVarPsadj){
 	varRatioVal_var2 = 1;      
 	var2m = var2m - t_gtilde.t() * m_Sigma_iXXSigma_iX * m_X.t() * t_P2Vec;	
@@ -495,7 +497,7 @@ void SAIGEClass::scoreTestFast_noadjCov_multiTrait(arma::vec & t_GVec,
       t_pval = boost::math::cdf(complement(chisq_dist, stat));
        //                                                    t_pval = Rf_pchisq(S*S/var1, 1.0, 0, 0);
     }
-
+    std::cout << "t_pval " << t_pval << std::endl;
 
     char pValueBuf[100];
     if (t_pval != 0)
@@ -634,52 +636,25 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
   arma::vec t_GVec0 = t_GVec;
   arma::uvec indexNonZeroVec0_arma = iIndex;
   arma::uvec indexZeroVec0_arma = iIndexComVec;
-/*
-  if((g_I_longl_mat.n_cols != g_I_longl_mat.n_rows) && (t_GVec.n_elem < m_y.n_elem)){
-      t_GVec0 = g_I_longl_mat * t_GVec;
-      altFreq0 = arma::mean(t_GVec0) /2;
-      indexNonZeroVec0_arma = arma::find(t_GVec0 > 0.0);
-      indexZeroVec0_arma = arma::find(t_GVec0 == 0.0);
-   }else{
-      t_GVec0 = t_GVec;
-      altFreq0 = t_altFreq;
-      indexNonZeroVec0_arma = iIndex; 	
-      indexZeroVec0_arma = iIndexComVec;
-   }
-*/
 
- //arma::vec timeoutput3 = getTime();
- //
- //
  if(t_isSparseGRM){
  	t_isnoadjCov = false;
  }
   std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
   std::cout << "t_isSparseGRM " << t_isSparseGRM << std::endl;
 
-if(!t_isnoadjCov){
+  if(!t_isnoadjCov){  //t_isSparseGRM
 	unsigned int nonzero = indexNonZeroVec0_arma.n_elem;
 	unsigned int nGvec = t_GVec0.n_elem;
-	if(!t_isSparseGRM){
-  	  is_gtilde = false;
-	  //std::cout << "herehrerereok" << std::endl;
-	  scoreTestFast(t_GVec0, indexNonZeroVec0_arma, t_Beta, t_seBeta, t_pval_str, altFreq0, t_Tstat, t_var1, t_var2, t_pval);
-	   // std::cout << "t_pval from scoreTestFast " << t_pval << std::endl;
-	}else{
-  	  is_gtilde = true;
-	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);	
-	    //std::cout << "t_pval from scoreTest " << t_pval << std::endl;
-	}
+        is_gtilde = true;
+	scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);	
   }else{
   	is_gtilde = false;
 	unsigned int nonzero = iIndex.n_elem;
 	unsigned int nGvec = t_GVec.n_elem;
-	//scoreTestFast_noadjCov(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, altFreq0,t_Tstat, t_var1, t_var2);
 	scoreTestFast_noadjCov_multiTrait(t_GVec, iIndex, t_Beta, t_seBeta, t_pval_str, altFreq0,t_Tstat, t_var1, t_var2);
-	//std::cout << "t_pval_str from scoreTestFast_noadjCov_multiTrait " << t_pval_str << std::endl;
   }
 
-  //std::cout << "scoreTestFast_noadjCov_multiTrait " << std::endl;
 
   double StdStat = std::abs(t_Tstat) / sqrt(t_var1);
   t_isSPAConverge = false;
@@ -697,267 +672,22 @@ if(!t_isnoadjCov){
         pval_noadj = 0;
   }
 
-  
- //arma::vec timeoutput3_a = getTime();
-  double q, qinv, m1, NAmu, NAsigma, tol1, p_iIndexComVecSize;
-  //arma::uvec iIndexComVec = arma::find(t_GVec == 0);
-  //arma::uvec iIndexVec = arma::find(t_GVec != 0);
-  arma::vec gNB, gNA, muNB, muNA;
-  double gmuNB;
 
-  //std::cout << "t_isER " << t_isER << std::endl;
-  //std::cout << "t_pval_str from scoreTestFast_noadjCov " << t_pval_str << std::endl;
-  if(!t_isER){
-
-
-    if(StdStat > m_SPA_Cutoff && m_traitType != "quantitative"){
-    //if(StdStat > 0 && m_traitType != "quantitative"){
-      unsigned int iIndexComVecSize = iIndexComVec.n_elem;
-      unsigned int iIndexSize = iIndex.n_elem;
-      gNB.set_size(iIndexSize);
-      gNA.set_size(iIndexComVecSize);
-      muNB.set_size(iIndexSize);
-      muNA.set_size(iIndexComVecSize);
-
-
-      if(t_isnoadjCov){
-	   //scoreTestFast(t_GVec0, indexNonZeroVec0_arma, t_Beta, t_seBeta, t_pval_str, altFreq0, t_Tstat, t_var1, t_var2, t_pval);
-	  bool hasVarRatio;
-	  double MAC = arma::sum(t_GVec);
-          if(m_varRatio_null_mt.n_rows > 1){
-            hasVarRatio = assignVarianceRatio(MAC, m_flagSparseGRM_cur, false, true);
-	  }else{
-            assignSingleVarianceRatio(m_flagSparseGRM_cur, false, true);
-          }
-
-        std::cout << "ptr_gSAIGEobj->m_varRatioVal null_sample" << m_varRatioVal << std::endl;	
-
-
-	  is_gtilde = true;
-
-	  //std::cout << "t_GVec0.n_elem coreTest( " << t_GVec0.n_elem << std::endl;
-	  
-	  scoreTest(t_GVec0, t_Beta, t_seBeta, t_pval_str, t_altFreq, t_Tstat, t_var1, t_var2, t_gtilde, t_P2Vec, t_gy, is_region, indexNonZeroVec0_arma, t_pval);
-	std::cout << "t_pval from scoreTest " << t_pval << std::endl;
-	std::cout << "t_Tstat from scoreTest " << t_Tstat << std::endl;
-	std::cout << "t_var1 from scoreTest " << t_var1 << std::endl;
-	std::cout << "t_var2 from scoreTest " << t_var2 << std::endl;
-
-	  try {
-        	pval_noadj = std::stod(t_pval_str);
- 	   } catch (const std::invalid_argument&) {
-        	pval_noadj = 0;
-        	std::cerr << "Argument is invalid\n";
-        	//throw;
-  	   } catch (const std::out_of_range&) {
-        	std::cerr << "Argument is out of range for a double\n";
-                //throw;
-        	pval_noadj = 0;
-  	   }
-
-	  StdStat = std::abs(t_Tstat) / sqrt(t_var1);
-      }//      if(t_isnoadjCov){ 
-
-  if(StdStat > m_SPA_Cutoff){
-  
-      if(!is_gtilde){
-          t_gtilde.resize(t_GVec.n_elem);
-          getadjGFast(t_GVec, t_gtilde, iIndex);
-	  is_gtilde = true;
-      }
-    //std::cout << "is_gtilde before SPA " << is_gtilde << std::endl;
-    if(!m_is_EmpSPA){
-
-	//int t_gtilden = t_gtilde.n_elem;
-        p_iIndexComVecSize = double(iIndexComVecSize)/(t_GVec0.n_elem);
-        arma::vec mu_vec = m_mu_mt.col(m_itrait);
-   	m1 = dot(mu_vec, t_gtilde);
-
-	if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur ){
-		unsigned int j1 = 0;
-		unsigned int j2 = 0;
-		gNB = t_gtilde(iIndex);
-		gNA = t_gtilde(iIndexComVec);
-   		muNB = mu_vec(iIndex);
-   		//muNB = m_mu_mt(iIndex, m_itrait);
-   		muNA = mu_vec(iIndexComVec);
-   		//muNA = m_mu_mt(iIndexComVec, m_itrait);
-  		gmuNB = dot(gNB,muNB);
-   		NAmu= m1-gmuNB;
-	}else{
-		gNA.clear();
-		gNB.clear();
-		muNA.clear();
-		gNB.clear();
-
-	}
-
-	//std::cout << "m_mu_mt.col(m_itrait) " << std::endl;
-   	if(m_traitType == "binary"){
-                q = t_Tstat/sqrt(t_var1/t_var2) + m1;
-
-                if((q-m1) > 0){
-                        qinv = -1 * std::abs(q-m1) + m1;
-                }else if ((q-m1) == 0){
-                        qinv =  m1;
-                }else{
-                        qinv = std::abs(q-m1) + m1;
-                }
-		if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur){
-           		NAsigma = t_var2 - arma::sum(muNB % (1-muNB) % arma::pow(gNB,2));
-		}
-        }else if(m_traitType == "survival" || m_traitType == "count"){
-                q = t_Tstat/sqrt(t_var1/t_var2);
-                qinv = -q;
-		if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur){
-           		NAsigma = t_var2 - arma::sum(muNB % arma::pow(gNB,2));
-		}
-        }
-	//std::cout << "m_mu_mt.col(m_itrait) " << std::endl;
-    	bool logp=false;
-	double tol0 = std::numeric_limits<double>::epsilon();
-	tol1 = std::pow(tol0, 0.25);
-
-	if(p_iIndexComVecSize >= 0.5 && !m_flagSparseGRM_cur){
-	//std::cout << "SPA_fast before" << std::endl;
-        	SPA_fast(mu_vec, t_gtilde, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, t_SPApval, t_isSPAConverge);
-		std::cout << "pval_noadj " << pval_noadj << std::endl;
-		std::cout << "SPA_fast " << t_SPApval << std::endl;
-	}else{
-		SPA(mu_vec, t_gtilde, q, qinv, pval_noadj, tol1, logp, m_traitType, t_SPApval, t_isSPAConverge);	
-		//std::cout << "SPA"  << t_SPApval <<  std::endl;
-       /*
-        if(pval_noadj < 0.0001){
-	arma::uvec v = { 0, 1, 2, 3, 4 };
-
-
-	std::cout << "iIndex.n_elem " << iIndex.n_elem << std::endl;
-        arma::vec muvec = m_mu.elem(v);
-        muvec.print("muvec");
-        arma::vec gtilevec = t_gtilde.elem(v);
-        gtilevec.print("gtilevec");
-	        std::cout << "NAmu " << NAmu << " NAsigma " << NAsigma << " m1 " << m1 << " gmuNB " << gmuNB << std::endl;
-        std::cout << "pval_noadj " << pval_noadj << std::endl;
-        }
-	*/
-	}
-	//std::cout << "m_mu_mt.col(m_itrait) " << std::endl;
-        //std::cout << "t_SPApval " << t_SPApval << std::endl;
-	//std::cout << "q " << q << std::endl;
-	//m_mu.print("m_mu");
-	//t_gtilde.print("t_gtilde");
-	//
-	//
+t_pval = pval_noadj;
+t_pval_noSPA = pval_noadj;
 
 
 
 
-}else{ //if(!m_is_EmpSPA){
-	double g_altFreq_new = arma::mean(t_GVec)/2;
-        int g_N = t_GVec.n_elem;
-        //double t_Tstat_G = dot(t_GVec, m_res % m_varWeightsvec); 
-        //double t_Tstat_G = dot(t_gtilde, m_res % m_varWeightsvec); 
-        //t_Tstat_G = t_Tstat_G/m_tauvec[0];
-	//t_SPApval = EmpSPA_getMarkerPval(t_gtilde, t_Tstat_G, g_altFreq_new, g_N);
-	t_SPApval = EmpSPA_getMarkerPval(t_GVec, StdStat, g_altFreq_new, g_N);
-	t_isSPAConverge=true;
-	//std::cout << "Empirical SPA p value " << t_SPApval << std::endl;   
-	//std::cout << "g_altFreq_new " << g_altFreq_new << std::endl;   
-   }	   
-
-
- }//if(StdStat > m_SPA_Cutoff){
-
-    	boost::math::normal ns;
-	t_pval = t_SPApval;
-    	double t_qval;
-        try {
-           t_qval = boost::math::quantile(ns, t_pval/2);
-           t_qval = fabs(t_qval);
-           t_seBeta = fabs(t_Beta)/t_qval;
-        }catch (const std::overflow_error&) {
-          t_qval = std::numeric_limits<double>::infinity();
-          t_seBeta = 0;
-        } 
-  }
-   t_pval_noSPA = pval_noadj; 
-   if(m_traitType!="quantitative"){
-   //if(m_traitType=="binary"){
-        if(t_isSPAConverge){
-                t_pval = t_SPApval;
-                //t_pval = pval_noadj;
-        }else{
-                t_pval = pval_noadj;
-        }
-   }else{
-        t_pval = t_pval_noSPA;
-   }
-
-
-}else{ //if(!t_isER){
-
-    t_pval_noSPA = pval_noadj; 
-    arma::mat Z_er(t_GVec.n_elem, 1);
-    Z_er.col(0) = t_GVec;
-    arma::vec res_er = m_res;
-    arma::vec pi1_er = m_mu;
-    arma::vec resout_er = m_resout;
-    t_pval =  SKATExactBin_Work(Z_er, res_er, pi1_er, m_n_case, iIndex, iIndexComVec, resout_er, 2e+6, 1e+4, 1e-6, 1);
-	
-    boost::math::normal ns;
-    double t_qval;
-    try{
-      t_qval = boost::math::quantile(ns, t_pval/2);
-      t_qval = fabs(t_qval);
-      t_seBeta = fabs(t_Beta)/t_qval;
-    }catch (const std::overflow_error&) {
-      t_qval = std::numeric_limits<double>::infinity();
-      t_seBeta = 0;
-    }
-}
-//std::cout << "t_pval " << t_pval << std::endl;
-//std::cout << "OKKKKK" << std::endl;
-
-   if(m_traitType == "binary" & m_is_Firth_beta & t_pval <= m_pCutoffforFirth){
-	t_isFirth = true;
-
-	if(!is_gtilde){
-                getadjGFast(t_GVec, t_gtilde, iIndex);
-                is_gtilde = true;
-        }
-	arma::mat x(t_GVec.n_elem, 2, arma::fill::ones);	
-	x.col(1) = t_gtilde;
-	//x.col(1) = t_GVec;
-	arma::vec init(2, arma::fill::zeros);
-	//std::cout << "t_Beta " << t_Beta << std::endl;
-	//std::cout << "t_seBeta " << t_seBeta << std::endl;
-	fast_logistf_fit_simple(x, m_y, m_offset, true, init, 50, 15, 15, 1e-5, 1e-5, 1e-5, t_Beta ,t_seBeta, t_isFirthConverge);	
-	//std::cout << "t_Beta after " << t_Beta << std::endl;
-	//std::cout << "t_seBeta after " << t_seBeta << std::endl;
-   }
-   
-//arma::vec timeoutput4 = getTime();
-//printTime(timeoutput3, timeoutput3_a, "Test Marker  ScoreTest");
-//printTime(timeoutput3, timeoutput4, "Test Marker 3 to 4");
-//printTime(timeoutput3_a, timeoutput4, "Test Marker SPA");
-   //condition
-   if(t_isCondition){
+//condition
+if(t_isCondition){
 	if(!is_gtilde){
         	getadjGFast(t_GVec, t_gtilde, iIndex);
         	is_gtilde = true;
         }
 
-	 //std::cout << "here is_gtilde" << std::endl;
-	//std::cout << "m_startic " << m_startic << std::endl;
-	//std::cout << "m_endic " << m_endic << std::endl;
-
         t_G1tilde_P_G2tilde = sqrt(m_varRatioVal) * t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
 
-	//std::cout << "here is_gtilde 1" << std::endl;
-	//m_P2Mat_cond.print("m_P2Mat_cond");	
-	//t_G1tilde_P_G2tilde.print("t_G1tilde_P_G2tilde");
-	//m_VarInvMat_cond.print("m_VarInvMat_cond");
-	//m_Tstat_cond.print("m_Tstat_cond");
         arma::vec t_Tstat_ctemp =  t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (m_Tstat_cond.subvec(m_startic, m_endic));
 	//std::cout << "here is_gtilde 2" << std::endl;
 	arma::mat tempgP2 = t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
@@ -1017,103 +747,37 @@ if(!t_isnoadjCov){
   }
   t_pval_noSPA_c = pval_noSPA_c; 
 
-
-    //if(m_traitType != "quantitative" && stat_c > std::pow(m_SPA_Cutoff,2)){
-    if((m_traitType == "binary" || m_traitType == "count")  && stat_c > std::pow(m_SPA_Cutoff,2)){
-	bool t_isSPAConverge_c;
-	double q_c, qinv_c, pval_noadj_c, SPApval_c;    
-	arma::vec m_mu_vec = m_mu_mt.col(m_itrait);
-	if(m_traitType == "binary"){
-                q_c = t_Tstat_c/sqrt(t_varT_c/t_var2) + m1;
-
-                if((q_c-m1) > 0){
-                        qinv_c = -1 * std::abs(q_c-m1) + m1;
-                }else if ((q_c-m1) == 0){
-                        qinv_c =  m1;
-                }else{
-                        qinv_c = std::abs(q_c-m1) + m1;
-                }
-        }else if(m_traitType == "count"){
-                q_c = t_Tstat_c/sqrt(t_varT_c/t_var2);
-                qinv = -q_c;
-        }
-
-        bool logp=false;
-        if(p_iIndexComVecSize >= 0.5){
-		//std::cout << "SPA_fast " << std::endl;
-                SPA_fast(m_mu_vec, t_gtilde, q_c, qinv_c, pval_noadj_c, false, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol1, m_traitType, SPApval_c, t_isSPAConverge_c);
-		//std::cout << "after SPA_fast " << std::endl;
-        }else{
-		//std::cout << "SPA " << std::endl;
-                SPA(m_mu_vec, t_gtilde, q_c, qinv_c, pval_noadj_c, tol1, logp, m_traitType, SPApval_c, t_isSPAConverge_c);
-		//std::cout << "after SPA " << std::endl;
-        }
-
-        if(SPApval_c < t_pval_noSPA_c){
-		SPApval_c = t_pval_noSPA_c;
-	}
-
-        boost::math::normal ns;
-        t_pval_c = SPApval_c;
-        double t_qval_c;
-        try {
-           t_qval_c = boost::math::quantile(ns, t_pval_c/2);
-           t_qval_c = fabs(t_qval_c);
-           t_seBeta_c = fabs(t_Beta_c)/t_qval_c;
-        }catch (const std::overflow_error&) {
-          t_qval_c = std::numeric_limits<double>::infinity();
-          t_seBeta_c = 0;
-        }
-    }else{
-    	t_pval_c = t_pval_noSPA_c;	    
-    }	    
-   }
-
-    gNA.clear();
-    gNB.clear();
-    muNA.clear();
-    gNB.clear();
-
-
+}
    //std::cout << "is_region " << is_region << std::endl;
     if(is_region && !is_gtilde){
 	    //arma::vec t_GVec0 = g_I_longl_mat * t_GVec;
 	    //arma::uvec iIndex0 = arma::find(t_GVec0 > 0.0);
-
-
 	getadjGFast(t_GVec, t_gtilde, iIndex);
 	//getadjGFast(t_GVec0, t_gtilde, iIndex0);
 	is_gtilde = true; 
     }
 
     //if(is_region && isScoreFast){
-    if(is_region && (t_isnoadjCov || (!t_isnoadjCov && !t_isSparseGRM))){
-
-      //t_gy = dot(t_gtilde, m_y);
-
-
-      if(!m_flagSparseGRM_cur){
-        t_P2Vec = t_gtilde % (m_mu2_mt.col(m_itrait)) *(m_tauvec_mt(0,m_itrait));
-      }else{
-
-	 if(m_SigmaMat_sp.n_rows > 2){
+    //if(is_region && (t_isnoadjCov || (!t_isnoadjCov && !t_isSparseGRM))){
+    if(is_region){
 
 
-      		t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
-      //var2m = dot(t_P2Vec , t_gtilde);
-      //if(m_isVarPsadj){
-      //  var2m = var2m - t_gtilde.t() * m_Sigma_iXXSigma_iX * m_X.t() * t_P2Vec;
-      //}
-         }else{
-         	t_P2Vec = m_sigmainvG_noV;
-        //var2m = dot(t_P2Vec , t_GVec);
-     }
-
-
-
+      //if(!m_flagSparseGRM_cur){
+      //  t_P2Vec = t_gtilde % (m_mu2_mt.col(m_itrait)) *(m_tauvec_mt(0,m_itrait));
+      //}else{
+      if(t_isnoadjCov){
+	  t_P2Vec = t_gtilde % (m_mu2_mt.col(m_itrait)) *(m_tauvec_mt(0,m_itrait));		
+      }
+      //if(m_SigmaMat_sp.n_rows > 2){
+      //	  t_P2Vec = m_SigmaMat_sp * t_gtilde;
+		
+      //   }else{
+      //   	t_P2Vec = getSigma_G_V(t_gtilde, 500, 1e-5);
+		//m_sigmainvG_noV;
+      //   }
         //arma::sp_mat m_SigmaMat_sp = gen_sp_SigmaMat();
         //t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
-      }
+      //}
     }
     //std::cout << "end of getPval" << std::endl;
 }
@@ -1603,7 +1267,7 @@ arma::vec SAIGEClass::getPCG1ofSigmaAndVector_V(arma::vec& bVec, int maxiterPCG,
     int Nnomissing = m_mu2.n_elem;
     arma::vec xVec(Nnomissing);
     xVec.zeros();
-
+    
     //if(g_isStoreSigma){
     //    std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
     //    //xVec = arma::spsolve(g_spSigma, bVec);
