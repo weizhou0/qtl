@@ -426,6 +426,10 @@ void mainMarkerInCPP(
 
       flip = imputeGenoAndFlip(t_GVec, altFreq, altCounts,indexForMissing, g_impute_method, g_dosage_zerod_cutoff, g_dosage_zerod_MAC_cutoff, MAC, indexZeroVec, indexNonZeroVec);
    
+    arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
+    //std::cout << "g_n_unique " << g_n_unique << std::endl;
+    indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
+    indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
      //arma::vec timeoutput4 = getTime();
      //printTime(timeoutput3, timeoutput4, "imputeGenoAndFlip");
    for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
@@ -450,10 +454,6 @@ void mainMarkerInCPP(
     bool isSPAConverge, is_gtilde, is_Firth, is_FirthConverge;
     //arma::vec t_P2Vec;
     //arma::vec t_P2Vec;
-    arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
-    //std::cout << "g_n_unique " << g_n_unique << std::endl;
-    indexZeroVec_arma = arma::conv_to<arma::uvec>::from(indexZeroVec);
-    indexNonZeroVec_arma = arma::conv_to<arma::uvec>::from(indexNonZeroVec);
  /*
     arma::vec t_GVec0, t_GVec_cell;
     double altFreq_new, altCounts_new; 
@@ -505,8 +505,8 @@ void mainMarkerInCPP(
    }
   ptr_gSAIGEobj->assign_for_itrait(i_mt);
    ptr_gSAIGEobj->set_flagSparseGRM_cur(false);
-bool isSparseGRM_a =  ptr_gSAIGEobj->m_flagSparseGRM_cur;
-std::cout << "isSparseGRM_a " << isSparseGRM_a << std::endl;
+//bool isSparseGRM_a =  ptr_gSAIGEobj->m_flagSparseGRM_cur;
+//std::cout << "isSparseGRM_a " << isSparseGRM_a << std::endl;
     //ptr_gSAIGEobj->assign_for_trait_i(i_mt);
   //std::cout << "Here2e mainMarkerInCPP" << std::endl;
 /*
@@ -524,7 +524,7 @@ std::cout << "isSparseGRM_a " << isSparseGRM_a << std::endl;
     }
     //check 'Main.cpp'
     bool is_region = false;
-    std::cout << "ptr_gSAIGEobj->m_varRatioVal null_noadj" << ptr_gSAIGEobj->m_varRatioVal << std::endl;
+ //   std::cout << "ptr_gSAIGEobj->m_varRatioVal null_noadj" << ptr_gSAIGEobj->m_varRatioVal << std::endl;
 
   //std::cout << "Here3 mainMarkerInCPP" << std::endl;
 
@@ -550,7 +550,7 @@ std::cout << "isSparseGRM_a " << isSparseGRM_a << std::endl;
     if(MAC > g_MACCutoffforER){
       //std::cout << "Here" << std::endl;
       bool isSparseGRM_b =  ptr_gSAIGEobj->m_flagSparseGRM_cur;
-      std::cout << "isSparseGRM_b " << isSparseGRM_b << std::endl;
+      //std::cout << "isSparseGRM_b " << isSparseGRM_b << std::endl;
       //gtildeVec = t_GVec;
      /* if(isSparseGRM_b){
         //ptr_gSAIGEobj->getadjGFast(t_GVec, gtildeVec, indexNonZeroVec_arma);
@@ -581,8 +581,8 @@ std::cout << "isSparseGRM_a " << isSparseGRM_a << std::endl;
     }
 
 
-    std::cout << "pval " << pval << std::endl;
-    std::cout << "ptr_gSAIGEobj->m_pval_cutoff_for_fastTest " << ptr_gSAIGEobj->m_pval_cutoff_for_fastTest << std::endl;
+    //std::cout << "pval " << pval << std::endl;
+    //std::cout << "ptr_gSAIGEobj->m_pval_cutoff_for_fastTest " << ptr_gSAIGEobj->m_pval_cutoff_for_fastTest << std::endl;
      
     if(pval < (ptr_gSAIGEobj->m_pval_cutoff_for_fastTest)){
        //ptr_gSAIGEobj->set_flagSparseGRM_cur(true);
@@ -642,8 +642,8 @@ std::cout << "isSparseGRM_a " << isSparseGRM_a << std::endl;
    //arma::vec timeoutput6 = getTime();
    //printTime(timeoutput5, timeoutput6, "Unified_getMarkerPval");
 
-   indexNonZeroVec_arma.clear();
-   indexZeroVec_arma.clear();
+   //indexNonZeroVec_arma.clear();
+   //indexZeroVec_arma.clear();
    //std::cout << "isSPAConverge " << isSPAConverge << std::endl;
     BetaVec.at(j_mt) = Beta * (1 - 2*flip);  // Beta if flip = false, -1*Beta is flip = true       
     seBetaVec.at(j_mt) = seBeta;       

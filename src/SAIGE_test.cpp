@@ -224,7 +224,10 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
 		     double & t_pval){
     arma::vec Sm, var2m;
     double S, var2;
+    //t_GVec.print("t_GVec");
+    //t_gtilde.print("t_gtilde before");
     getadjGFast(t_GVec, t_gtilde, t_indexForNonZero);
+    //t_gtilde.print("t_gtilde after");
     //getadjG(t_GVec, t_gtilde);
 
 
@@ -247,10 +250,13 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     }else{
       if(m_SigmaMat_sp.n_rows > 2){	
       //t_P2Vec = arma::spsolve(m_SigmaMat_sp, t_gtilde);
+      //std::cout << "m_startin " << m_startin << " m_endin " << m_endin << std::endl;
+      //arma::sp_mat m_SigmaMat_sp_firstcol = m_SigmaMat_sp.cols(m_startin, m_endin);
+      //m_SigmaMat_sp_firstcol.print("m_SigmaMat_sp_firstcol");
+      //t_gtilde.print("t_gtilde");
       t_P2Vec = (m_SigmaMat_sp.cols(m_startin, m_endin)) * t_gtilde;
-
       var2m = dot(t_P2Vec, t_gtilde);
-      std::cout << "m_isVarPsadj " << m_isVarPsadj << std::endl;
+      //std::cout << "m_isVarPsadj " << m_isVarPsadj << std::endl;
 
       if(m_isVarPsadj){
 	varRatioVal_var2 = 1;     
@@ -258,10 +264,10 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
       }
      }else{
 	//t_P2Vec = m_sigmainvG_noV;
-      std::cout << "hererehe" << std::endl;
-      std::cout << t_gtilde.n_elem <<  std::endl;
+      //std::cout << "hererehe" << std::endl;
+      //std::cout << t_gtilde.n_elem <<  std::endl;
       //t_P2Vec = getSigma_G_V(t_gtilde0, 500, 1e-5);
-      std::cout << "hererehe 1" << std::endl;
+      //std::cout << "hererehe 1" << std::endl;
       var2m = dot(t_P2Vec, t_gtilde);
       if(m_isVarPsadj){
 	varRatioVal_var2 = 1;      
@@ -271,7 +277,7 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
     }
 
     var2 = var2m(0,0);
-    std::cout << "var2 " << var2 << std::endl;
+    //std::cout << "var2 " << var2 << std::endl;
     //std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
     //double var1 = var2 * m_varRatioVal;
     double var1 = var2 * varRatioVal_var2;
@@ -480,15 +486,15 @@ void SAIGEClass::scoreTestFast_noadjCov_multiTrait(arma::vec & t_GVec,
     //double var2 = dot(t_GVec_center,t_GVec_center);
 
     double var1 = var2 * m_varRatioVal;
-    std::cout << "var2 " << var2 << std::endl;
-    std::cout << "var1 " << var1 << std::endl;
+    //std::cout << "var2 " << var2 << std::endl;
+    //std::cout << "var1 " << var1 << std::endl;
 
 
     double S = dot(m_res_mt.col(m_itrait), t_GVec_center);
     S = S/m_tauvec_mt(0,m_itrait);
     double stat = S*S/var1;
     double t_pval;
-    std::cout << "S " << S << std::endl; 
+    //std::cout << "S " << S << std::endl; 
     //if (var1 <= std::pow(std::numeric_limits<double>::min(), 2)){
     if (var1 <= std::numeric_limits<double>::min()){
         t_pval = 1;
@@ -497,7 +503,7 @@ void SAIGEClass::scoreTestFast_noadjCov_multiTrait(arma::vec & t_GVec,
       t_pval = boost::math::cdf(complement(chisq_dist, stat));
        //                                                    t_pval = Rf_pchisq(S*S/var1, 1.0, 0, 0);
     }
-    std::cout << "t_pval " << t_pval << std::endl;
+    //std::cout << "t_pval " << t_pval << std::endl;
 
     char pValueBuf[100];
     if (t_pval != 0)
@@ -562,8 +568,15 @@ void SAIGEClass::getadjGFast(arma::vec & t_GVec, arma::vec & g, arma::uvec & iIn
 
    //std::cout << "m_XXVX_inv " << m_XXVX_inv.n_cols << " " << m_XXVX_inv.n_rows << std::endl;
    //std::cout << "m_XVG " << m_XVG.n_cols << " " << m_XVG.n_rows << std::endl;
+  //t_GVec0.print("t_GVec0");
+  //m_XVG.print("m_XVG");
+  //arma::mat m_XXVX_inv_mtsub = m_XXVX_inv_mt.rows(m_startin, m_endin);
+  //m_XXVX_inv_mtsub.print("m_XXVX_inv_mtsub");
+  
+  //g.print("g before");
+  g = t_GVec0 - m_XXVX_inv_mt.rows(m_startin, m_endin) * m_XVG;
+  //g.print("g after");
 
-  g = t_GVec0 - m_XXVX_inv_mt.rows(m_startin, m_endin) * m_XVG; 
 }
 
 
@@ -640,8 +653,8 @@ void SAIGEClass::getMarkerPval(arma::vec & t_GVec,
  if(t_isSparseGRM){
  	t_isnoadjCov = false;
  }
-  std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
-  std::cout << "t_isSparseGRM " << t_isSparseGRM << std::endl;
+  //std::cout << "t_isnoadjCov " << t_isnoadjCov << std::endl;
+  //std::cout << "t_isSparseGRM " << t_isSparseGRM << std::endl;
 
   if(!t_isnoadjCov){  //t_isSparseGRM
 	unsigned int nonzero = indexNonZeroVec0_arma.n_elem;
