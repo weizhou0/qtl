@@ -379,6 +379,8 @@ set_Vmat_vec_orig = function(VmatFilelist, VmatSampleFilelist, modelID){
           stop(VmatSamplefile, " does not exist\n")
         }else{          		
           sparseVmat = getVmatSub(Vmatfile, VmatSamplefile, modelID)
+	  print("dim(sparseVmat)")
+	  print(dim(sparseVmat))
           addNewKat(sparseVmat)
           #Matrix::writeMM(sparseVmat, file="kin2_SAIGE.mtx")
         }

@@ -361,6 +361,10 @@ set_covarianceidx_Mat <- function() {
     .Call('_SAIGEQTL_set_covarianceidx_Mat', PACKAGE = 'SAIGEQTL')
 }
 
+addNewKat <- function(t_Kmat) {
+    invisible(.Call('_SAIGEQTL_addNewKat', PACKAGE = 'SAIGEQTL', t_Kmat))
+}
+
 closeGenoFile_plink <- function() {
     invisible(.Call('_SAIGEQTL_closeGenoFile_plink', PACKAGE = 'SAIGEQTL'))
 }

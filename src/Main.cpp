@@ -6211,6 +6211,16 @@ arma::umat set_covarianceidx_Mat(){
         return(g_covarianceidxMat);
 }
 
+
+// [[Rcpp::export]]
+void addNewKat( arma::sp_mat & t_Kmat){
+        arma::sp_fmat t_Kmat_new = arma::conv_to< arma::sp_fmat >::from(t_Kmat);
+        Kmat_vec.push_back(t_Kmat_new);
+        std::cout << "Kmat_vec.size() " << Kmat_vec.size() << std::endl;
+}
+
+
+
 /*
 // [[Rcpp::export]]
 void set_Vmat_vec_longlVar(){

@@ -685,4 +685,6 @@ void removeOutfile_inGroup();
 
 void removeOutfile_inSingle();
 
+void addNewKat( arma::sp_mat & t_Kmat);
+
 #endif

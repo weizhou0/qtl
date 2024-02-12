@@ -1210,6 +1210,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// addNewKat
+void addNewKat(arma::sp_mat& t_Kmat);
+RcppExport SEXP _SAIGEQTL_addNewKat(SEXP t_KmatSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type t_Kmat(t_KmatSEXP);
+    addNewKat(t_Kmat);
+    return R_NilValue;
+END_RCPP
+}
 // closeGenoFile_plink
 void closeGenoFile_plink();
 RcppExport SEXP _SAIGEQTL_closeGenoFile_plink() {
@@ -2415,6 +2425,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGEQTL_set_num_Kmat", (DL_FUNC) &_SAIGEQTL_set_num_Kmat, 1},
     {"_SAIGEQTL_get_numofV", (DL_FUNC) &_SAIGEQTL_get_numofV, 0},
     {"_SAIGEQTL_set_covarianceidx_Mat", (DL_FUNC) &_SAIGEQTL_set_covarianceidx_Mat, 0},
+    {"_SAIGEQTL_addNewKat", (DL_FUNC) &_SAIGEQTL_addNewKat, 1},
     {"_SAIGEQTL_closeGenoFile_plink", (DL_FUNC) &_SAIGEQTL_closeGenoFile_plink, 0},
     {"_SAIGEQTL_gettotalMarker", (DL_FUNC) &_SAIGEQTL_gettotalMarker, 0},
     {"_SAIGEQTL_getAlleleFreqVec", (DL_FUNC) &_SAIGEQTL_getAlleleFreqVec, 0},

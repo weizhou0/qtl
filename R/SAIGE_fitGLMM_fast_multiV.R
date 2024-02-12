@@ -109,6 +109,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		nrun = 30,
 		VmatFilelist = "",
 		VmatSampleFilelist = "", 
+		VcellmatFilelist = "",
+		VcellmatSampleFilelist = "", 
 		useGRMtoFitNULL=TRUE, 
 		isStoreSigma = FALSE)
 {
@@ -727,8 +729,8 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
     if(any(duplicated(dataMerge_sort$IID))){
        print("HERE")	    
         if(longlCol == ""){
-		print("HERE1")
-		print(useGRMtoFitNULL)
+	    print("HERE1")
+	    print(useGRMtoFitNULL)
 	    if(useGRMtoFitNULL){
 	    print("HERE2")	    
 	       num_Kmat = numofV + 3
@@ -753,8 +755,8 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
 	}	
         #k = 2
     }
-    k = num_Kmat
 
+    k = num_Kmat
 
 
     set_num_Kmat(num_Kmat)
