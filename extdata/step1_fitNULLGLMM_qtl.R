@@ -7,9 +7,9 @@ options(stringsAsFactors=F)
 #library(SAIGE)
 #library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test2/")
 #library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_SAIGE-QTL")
-library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_SPA_smallMemory")
+#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_SPA_smallMemory")
 #library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_0.2.0")
-#library(SAIGEQTL)
+library(SAIGEQTL)
 
 require(optparse) #install.packages("optparse")
 
