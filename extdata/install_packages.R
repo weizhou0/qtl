@@ -7,7 +7,7 @@ install.packages("vctrs", repos='http://cran.rstudio.com/')
 print(packageVersion("vctrs"))
 
 
-req_packages <- c("R.utils", "devtools", "Rcpp", "RcppParallel", "RcppArmadillo", "data.table", "RcppEigen", "Matrix", "methods", "BH", "optparse", "SPAtest", "roxygen2", "rversions","devtools", "SKAT", "RhpcBLASctl", "qlcMatrix", "dplyr", "dbplyr", "RcppNumerical")
+req_packages <- c("R.utils", "devtools", "Rcpp", "RcppParallel", "RcppArmadillo", "data.table", "RcppEigen", "Matrix", "methods", "BH", "optparse", "SPAtest", "roxygen2", "rversions","devtools", "SKAT", "RhpcBLASctl", "dplyr", "dbplyr", "RcppNumerical")
 for (pack in req_packages) {
     if(!require(pack, character.only = TRUE)) {
         install.packages(pack, repos = "https://cloud.r-project.org", dependencies=TRUE)
@@ -15,12 +15,13 @@ for (pack in req_packages) {
     }
 }
 
-github_packages <- c("leeshawn/MetaSKAT")
+github_packages <- c("leeshawn/MetaSKAT", "cysouw/qlcMatrix")
 for (pack in github_packages) {
     if(!require(pack, character.only = TRUE)) {
         devtools::install_github(pack)
     }
 }
+
 
 if((!require("RcppArmadillo", character.only = TRUE)) | packageVersion("RcppArmadillo") < "0.10.7.5.0"){
     install.packages("RcppArmadillo", repos = "https://cloud.r-project.org", dependencies=TRUE)
