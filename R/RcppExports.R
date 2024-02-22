@@ -213,6 +213,10 @@ getSigma_X_multiV <- function(wVec, tauVec, Xmat, maxiterPCG, tolPCG, LOCO) {
     .Call('_SAIGEQTL_getSigma_X_multiV', PACKAGE = 'SAIGEQTL', wVec, tauVec, Xmat, maxiterPCG, tolPCG, LOCO)
 }
 
+gettI_Sigma_I_multiV <- function(wVec, tauVec, maxiterPCG, tolPCG, LOCO) {
+    .Call('_SAIGEQTL_gettI_Sigma_I_multiV', PACKAGE = 'SAIGEQTL', wVec, tauVec, maxiterPCG, tolPCG, LOCO)
+}
+
 getSigma_G_multiV <- function(wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO) {
     .Call('_SAIGEQTL_getSigma_G_multiV', PACKAGE = 'SAIGEQTL', wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO)
 }

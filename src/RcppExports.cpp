@@ -737,6 +737,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gettI_Sigma_I_multiV
+arma::sp_fmat gettI_Sigma_I_multiV(arma::fvec& wVec, arma::fvec& tauVec, int maxiterPCG, float tolPCG, bool LOCO);
+RcppExport SEXP _SAIGEQTL_gettI_Sigma_I_multiV(SEXP wVecSEXP, SEXP tauVecSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(gettI_Sigma_I_multiV(wVec, tauVec, maxiterPCG, tolPCG, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getSigma_G_multiV
 arma::fvec getSigma_G_multiV(arma::fvec& wVec, arma::fvec& tauVec, arma::fvec& Gvec, int maxiterPCG, float tolPCG, bool LOCO);
 RcppExport SEXP _SAIGEQTL_getSigma_G_multiV(SEXP wVecSEXP, SEXP tauVecSEXP, SEXP GvecSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP LOCOSEXP) {
@@ -2388,6 +2403,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGEQTL_setStartEndIndexVec", (DL_FUNC) &_SAIGEQTL_setStartEndIndexVec, 2},
     {"_SAIGEQTL_calCV", (DL_FUNC) &_SAIGEQTL_calCV, 1},
     {"_SAIGEQTL_getSigma_X_multiV", (DL_FUNC) &_SAIGEQTL_getSigma_X_multiV, 6},
+    {"_SAIGEQTL_gettI_Sigma_I_multiV", (DL_FUNC) &_SAIGEQTL_gettI_Sigma_I_multiV, 5},
     {"_SAIGEQTL_getSigma_G_multiV", (DL_FUNC) &_SAIGEQTL_getSigma_G_multiV, 6},
     {"_SAIGEQTL_fitglmmaiRPCG_multiV", (DL_FUNC) &_SAIGEQTL_fitglmmaiRPCG_multiV, 14},
     {"_SAIGEQTL_getMeanDiagofKmat", (DL_FUNC) &_SAIGEQTL_getMeanDiagofKmat, 1},

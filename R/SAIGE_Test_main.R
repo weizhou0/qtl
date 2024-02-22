@@ -132,7 +132,6 @@ SPAGMMATtest = function(bgenFile = "",
      stop("impute_method should be 'best_guess', 'mean' or 'minor'.")
    }
 
-
    checkArgsListBool(is_imputed_data = is_imputed_data,
                      LOCO = LOCO,
 		     is_output_moreDetails = is_output_moreDetails,
@@ -292,6 +291,12 @@ SPAGMMATtest = function(bgenFile = "",
 
 
     #pval_cutoff_for_fastTest = 0
+
+    if(!is_fastTest){
+	pval_cutoff_for_fastTest = 1
+    }
+
+
     nsample = length(unique(obj.model.List[[1]]$sampleID))
     cateVarRatioMaxMACVecInclude = c(cateVarRatioMaxMACVecInclude, nsample)	
    
@@ -573,49 +578,66 @@ eMat = as.matrix(eMat)
 #print("XXVXsample_inv")
 #print(XXVXsample_inv)
 if(sum(duplicated(obj.model.List[[1]]$sampleID)) > 0){
-
-#print("XXVXsample_inv")
-#print(length(XVXsample))
-#print(length(XXVXsample_inv))
-#print(length(XVsample))
-#print(length(XVX_inv_XVsample))
-#print(length(Sigma_iXXSigma_iX))
-#print(length(Xsample))
-#print(length(S_a_sample))
-#print(length(res_sample))
-#print(length(mu2_sample))
-#print(length(mu_sample))
-#print(length(as.matrix(ratioVecList$ratioVec_sparse)))
-#print(length(as.matrix(ratioVecList$ratioVec_null)))
-#print(length(as.matrix(ratioVecList$ratioVec_null_noXadj)))
-#print(length(as.matrix(ratioVecList$ratioVec_null_eg)))
-#print(length(as.matrix(ratioVecList$ratioVec_sparse_eg)))
-#print(length(cateVarRatioMinMACVecExclude))
-#print(length(cateVarRatioMaxMACVecInclude))
-#print(length(SPAcutoff))
-#print(length(theta))
-#print(length(varWeights_sample))
-#print(length(traitType))
-#print(length(y))
-#print(length(impute_method))
-#print(length(isSparseGRM))
-#print(length(is_noadjCov))
-#print(length(pval_cutoff_for_fastTest))
-#print(length(isCondition))
-#print(length(condition_genoIndex_a))
-#print(length(is_Firth_beta))
-#print(length(pCutoffforFirth))
-#print(length(offset))
-#print(length(obj_cc_res.out))
-#print(length(SigmaMat_sp))
-#print(length(obj.model$tauVal_sp))
-#print(length(I_mat))
-#print(length(b-1))
-#print(length(T_longl_mat))
-#print(length(obj.model.List[[1]]$T_longl_vec))
-#print(length(is_EmpSPA))
-#print(length(obj.model$cumul))
-
+if(FALSE){
+print("XXVXsample_inv")
+print(length(XVXsample))
+print(length(XXVXsample_inv))
+print(length(XVsample))
+print(XXVXsample_inv)
+print(XVsample)
+print(length(XVX_inv_XVsample))
+print(length(Sigma_iXXSigma_iX))
+print(length(Xsample))
+print(length(S_a_sample))
+print(length(res_sample))
+print(length(mu2_sample))
+print(length(mu_sample))
+print(ratioVecList)
+print(length(as.matrix(ratioVecList$ratioVec_sparse)))
+print(length(as.matrix(ratioVecList$ratioVec_null)))
+print(length(as.matrix(ratioVecList$ratioVec_null_noXadj)))
+print(length(as.matrix(ratioVecList$ratioVec_null_eg)))
+print(length(as.matrix(ratioVecList$ratioVec_sparse_eg)))
+print(length(cateVarRatioMinMACVecExclude))
+print(length(cateVarRatioMaxMACVecInclude))
+print(length(SPAcutoff))
+print(length(theta))
+print(length(varWeights_sample))
+print(length(traitType))
+print(length(y))
+print(length(impute_method))
+print(length(isSparseGRM))
+print(length(is_noadjCov))
+print(length(pval_cutoff_for_fastTest))
+print(length(isCondition))
+print(length(condition_genoIndex_a))
+print(length(is_Firth_beta))
+print(length(pCutoffforFirth))
+print(length(offset))
+print(length(obj_cc_res.out))
+print(length(SigmaMat_sp))
+print(length(obj.model$tauVal_sp))
+print(obj.model$tauVal_sp)
+print("ok")
+print(length(I_mat))
+print(length(b-1))
+print(length(T_longl_mat))
+print(length(obj.model.List[[1]]$T_longl_vec))
+print(length(is_EmpSPA))
+print(obj.model$cumul)
+print(isgxe_vec[1])
+print(dim(XV_gxe))
+print(dim(X_gxe))
+print(dim(XVX_inv_XV_gxe))
+print(dim(XVX_gxe))
+print(dim(S_a_gxe))
+print(dim(XXVX_inv_gxe))
+print(dim(y_gxe))
+print(dim(res_gxe))
+print(dim(mu2_gxe))
+print(dim(mu_gxe))
+print(varWeights_gxe)
+}
 
 #print("OKKKK")
 #print(traitType)
@@ -832,7 +854,6 @@ if(sum(duplicated(obj.model.List[[1]]$sampleID)) > 0){
   #rm(sparseSigmaRList)
   gc()
 
-  #print("HEREHREHREH")
 
    setAssocTest_GlobalVarsInCPP_GbyE(eMat, isgxe_vec[1], as.numeric(pval_cutoff_for_gxe), XV_gxe, XXVX_inv_gxe,   y_gxe , res_gxe , mu2_gxe , mu_gxe , varWeights_gxe );	
 

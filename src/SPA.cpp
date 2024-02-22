@@ -57,12 +57,12 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
                 }else if(traitType == "count"){
                   getSaddle = Get_Saddle_Prob_Poi(outuni1["root"], mu, g, q, logp);
                   getSaddle2 = Get_Saddle_Prob_Poi(outuni2["root"], mu, g, qinv, logp);
-		  std::cout << "p1_nofast " << std::endl;	
+		  //std::cout << "p1_nofast " << std::endl;	
                 }
 
                 if(getSaddle["isSaddle"]){
                         p1 = getSaddle["pval"];
-			std::cout << "p1 " << p1 << std::endl;
+			//std::cout << "p1 " << p1 << std::endl;
                 }else{
 			Isconverge = false;
                         if(logp){
@@ -73,7 +73,7 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
                 }
                 if(getSaddle2["isSaddle"]){
                         p2 = getSaddle2["pval"];
-			std::cout << "p2 " << p2 << std::endl;
+			//std::cout << "p2 " << p2 << std::endl;
                 }else{
 			Isconverge = false;
                         if(logp){
@@ -91,8 +91,8 @@ void SPA(arma::vec & mu, arma::vec & g, double q, double qinv, double pval_noadj
                         pval = std::abs(p1)+std::abs(p2);
                 }
 
-		std::cout << "pval " << pval << std::endl;
-		std::cout << "pval_noadj " << pval_noadj << std::endl;
+		//std::cout << "pval " << pval << std::endl;
+		//std::cout << "pval_noadj " << pval_noadj << std::endl;
         //        Isconverge=true;
         }else {
                         //std::cout << "Error_Converge" << std::endl;

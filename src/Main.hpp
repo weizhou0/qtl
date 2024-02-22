@@ -687,4 +687,6 @@ void removeOutfile_inSingle();
 
 void addNewKat( arma::sp_mat & t_Kmat);
 
+arma::sp_fmat gettI_Sigma_I_multiV(arma::fvec& wVec, arma::fvec& tauVec, int maxiterPCG, float tolPCG, bool LOCO);
+
 #endif

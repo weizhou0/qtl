@@ -956,7 +956,7 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
 
         tau = rep(0, k) 
 	fixtau = rep(0, k)
-	tauInit = tau
+	#tauInit = tau
 
 	set_isSparseGRM(useSparseGRMtoFitNULL)
         set_useGRMtoFitNULL(useGRMtoFitNULL)
@@ -1107,18 +1107,15 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
                 #W = sqrtW^2
 		#W = W * modglmm$varWeights;
                 #tauVecNew = modglmm$theta
-		gen_sp_Sigma_multiV(W, tauVecNew)
-		spSigma = get_sp_Sigma_to_R()
-		SigmaMat_sp = chol2inv(chol(spSigma))
-		if(any(duplicated(dataMerge_sort$IID))){
-			b = as.numeric(factor(dataMerge_sort$IID, levels =  unique(dataMerge_sort$IID)))
-			I_mat = Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
-			I_mat = 1.0 * I_mat
-			SigmaMat_sp = SigmaMat_sp %*% I_mat
-			modglmm$spSigma = t(I_mat)%*% SigmaMat_sp
-		}else{
-			modglmm$spSigma = SigmaMat_sp
-		}
+		#Matrix::writeMM(spSigma, file="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/saigeqtl_manuscript/realdata/step1/LSM10.CD4_NC.spSigma.mtx")
+		#if(any(duplicated(dataMerge_sort$IID))){
+		modglmm$spSigma = gettI_Sigma_I_multiV(W, tauVecNew, maxiterPCG, tolPCG, LOCO=FALSE)
+		#}else{
+		#	gen_sp_Sigma_multiV(W, tauVecNew)
+		#	spSigma = get_sp_Sigma_to_R()
+		#	SigmaMat_sp = chol2inv(chol(spSigma))
+		#	modglmm$spSigma = SigmaMat_sp
+		#}
          }		 
 	#}
         #save(modglmm, file = modelOut)
@@ -1748,24 +1745,19 @@ extractVarianceRatio_multiV = function(obj.glmm.null,
 	#Sigma_iG = getSigma_G_V(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
 	#Sigma_iG = getSigma_G_multiV(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
 	#var2_a = t(G) %*% Sigma_iG
-        if(isStoreSigma){	
-	Sigma_iG = (obj.glmm.null$spSigma) %*% G0_sample_tilde
-	var2_a = t(G0_sample_tilde) %*% Sigma_iG
-	}else{
-	G0_sample_tilde_I = as.vector(I_mat %*% G0_sample_tilde) 
-	print("Herere")
-	print(length(G0_sample_tilde_I))
-	#Sigma_iG = getSigma_G_multiV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO=FALSE)
-	Sigma_iG = getSigma_G_multiV(W, tauVecNew, G0_sample_tilde_I, maxiterPCG, tolPCG, LOCO=FALSE)
-	print("Herere2")
-	var2_a = t(G0_sample_tilde_I) %*% Sigma_iG
-	#Sigma_iG = getSigma_G_V(W, tauVal, tauVecNew[1], G, maxiterPCG, tolPCG)
-	}
-        var2sparseGRM = var2_a[1,1]
-        cat("var2sparseGRM Here ", var2sparseGRM, "\n")
-        varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
+        	if(isStoreSigma){	
+			Sigma_iG = (obj.glmm.null$spSigma) %*% G0_sample_tilde
+			var2_a = t(G0_sample_tilde) %*% Sigma_iG
+		}else{
+			G0_sample_tilde_I = as.vector(I_mat %*% G0_sample_tilde) 
+			Sigma_iG = getSigma_G_multiV(W, tauVecNew, G0_sample_tilde_I, maxiterPCG, tolPCG, LOCO=FALSE)
+			var2_a = t(G0_sample_tilde_I) %*% Sigma_iG
+		}
+        	var2sparseGRM = var2_a[1,1]
+        	cat("var2sparseGRM Here ", var2sparseGRM, "\n")
+        	varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, var1/var2sparseGRM)
        }else{
-	varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, 1)
+		varRatio_sparseGRM_vec = c(varRatio_sparseGRM_vec, 1)
        }	       
   #}	
 
@@ -2043,6 +2035,7 @@ glmmkin.ai_PCG_Rcpp_multiV = function(bedFile, bimFile, famFile, Xorig, isCovari
 
   tau[1:length(tau)] = 0
   if(family$family %in% c("poisson", "binomial")) {
+  #if(family$family %in% c("binomial")) {
     tau[1] = 1
     fixtau[1] = 1
     tauInit[1] = 1

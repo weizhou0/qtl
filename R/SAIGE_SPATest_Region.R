@@ -108,8 +108,8 @@ SAIGE.Region = function(mu,
 			is_fastTest,
 			pval_cutoff_for_fastTest,
 			is_output_moreDetails){
-cat("maxMAFlist ", maxMAFlist, "\n")
-cat("minMAFlist ", minMAFlist, "\n")
+  cat("maxMAFlist ", maxMAFlist, "\n")
+  cat("minMAFlist ", minMAFlist, "\n")
 
   OutputFileIndex = NULL	
   if(is.null(OutputFileIndex))
@@ -659,8 +659,8 @@ for(tt in 1:length(traitType)){
 
 
 			if(traitType[tt] == "binary"){
-			print("length(outList$scalefactor_G2_cond)")
-			print(length(outList$scalefactor_G2_cond))
+				#print("length(outList$scalefactor_G2_cond)")
+				#print(length(outList$scalefactor_G2_cond))
 				G1tilde_P_G2tilde_Mat_scaled = t(t((outList$G1tilde_P_G2tilde_Weighted_Mat[tt_start:tt_end,][tempPos,,drop=F]) * sqrt(as.vector(re_phi$scaleFactor))) * sqrt(as.vector(outList$scalefactor_G2_cond)))
 #t(t(b * sqrt(a1)) * sqrt(a2))
 		        	adjCondTemp = G1tilde_P_G2tilde_Mat_scaled %*% outList$VarInvMat_G2_cond_scaled	
@@ -671,11 +671,11 @@ for(tt in 1:length(traitType)){
 			
 			}else{
 				wStatVec_cond = wStatVec_cond_Mat[,r]
-				print("length(wStatVec_cond)")
-				print(length(wStatVec_cond))
-				print(length(tempPos))
+				#print("length(wStatVec_cond)")
+				#print(length(wStatVec_cond))
+				#print(length(tempPos))
 				wadjVarSMat_cond = wadjVarSMat_cond_list[[r]]
-				print(dim(wadjVarSMat_cond))
+				#print(dim(wadjVarSMat_cond))
 				Score_cond = wStatVec_cond[tempPos]
 				Phi_cond = wadjVarSMat_cond[tempPos, tempPos]
 			}
@@ -1044,8 +1044,8 @@ if(is_fastTest){
                 pval.Region.temp$Group = AnnoName
                 pval.Region.temp$min_MAF = minMAFName
                 pval.Region.temp$max_MAF = maxMAFName
-		print("pval.Region.temp b")
-		print(pval.Region.temp)
+		#print("pval.Region.temp b")
+		#print(pval.Region.temp)
 		#pval.Region = rbind.data.frame(pval.Region, resultDF)
 		pval.Region = rbind.data.frame(pval.Region, pval.Region.temp)
 	   }			   
