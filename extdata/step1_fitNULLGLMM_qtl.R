@@ -7,9 +7,9 @@ options(stringsAsFactors=F)
 #library(SAIGE)
 #library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test2/")
 #library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_SAIGE-QTL")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_SPA_smallMemory")
+library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_SPA_smallMemory")
 #library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_0.2.0")
-library(SAIGEQTL)
+#library(SAIGEQTL)
 
 require(optparse) #install.packages("optparse")
 
@@ -136,8 +136,6 @@ option_list <- list(
    help="offset column"),
        make_option("--varWeightsCol", type="character", default=NULL,
    help="variance weight column"),
-  make_option("--isCovariateOffset", type="logical", default=TRUE,
-   help="Optional. Whether to estimate fixed effect coeffciets. [default, 'TRUE']"),
   make_option("--isStoreSigma", type="logical", default=TRUE,
    help="Optional. Whether to store the inv Sigma matrix. [default, 'TRUE']")
 )
