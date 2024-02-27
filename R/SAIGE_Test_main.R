@@ -430,13 +430,13 @@ eMat = as.matrix(eMat)
    ##Set up the sample level summary statistics. This is specifically for data sets with repeated measurements
    if(sum(duplicated(obj.model.List[[1]]$sampleID)) > 0){
       
-        Xsample = NULL
-	Vsample = NULL
-	XVsample = NULL
-	XVXsample=NULL
-	XXVXsample_inv = NULL
-	XVX_inv_XVsample = NULL
-	Sigma_iXXSigma_iX = NULL
+	Xsample = list()
+	Vsample = list()
+	XVsample = list()
+	XVXsample = list()
+	XXVXsample_inv = list()
+	XVX_inv_XVsample = list()
+	Sigma_iXXSigma_iX = list()
 	res_sample = NULL
 	mu_sample = NULL
 	mu2_sample = NULL
@@ -452,27 +452,27 @@ eMat = as.matrix(eMat)
      for(oml in 1:length(obj.model.List)){
      	obj.model = obj.model.List[[oml]]
 	Xsample0 = obj.model$sampleXMat  ##from step 1
-	Xsample = rbind(Xsample, Xsample0)
+	Xsample[[oml]] = data.table::as.data.table(Xsample0)
 	#print(dim(I_mat))
 	#print(length(obj.model$obj.noK$V))
 	Vsample0 = as.vector(t(obj.model$obj.noK$V) %*% I_mat)
-	Vsample = rbind(Vsample, Vsample0)
+	Vsample[[oml]] = data.table::as.data.table(Vsample0)
 	#print(dim(Xsample))
 	#print(length(Vsample))
 	XVsample0 = t(Xsample0 * Vsample0)
-	XVsample = rbind(XVsample, XVsample0)
+	XVsample[[oml]] = data.table::as.data.table(XVsample0)
 	XVXsample0 = t(Xsample0) %*% (t(XVsample0))
 	XVXsample_inv0 = solve(XVXsample0)
-	XVXsample = rbind(XVXsample, XVXsample0)
+	XVXsample[[oml]] = data.table::as.data.table(XVXsample0)
 	XXVXsample_inv0 = Xsample0 %*% XVXsample_inv0
 	XVX_inv_XVsample0 = XXVXsample_inv0 * Vsample0
 
-	XXVXsample_inv = rbind(XXVXsample_inv, XXVXsample_inv0)
+	XXVXsample_inv[[oml]] = data.table::as.data.table(XXVXsample_inv0)
 
-	XVX_inv_XVsample = rbind(XVX_inv_XVsample, XVX_inv_XVsample0)
+	XVX_inv_XVsample[[oml]] = data.table::as.data.table(XVX_inv_XVsample0)
 
 	Sigma_iXXSigma_iX0 = obj.model$Sigma_iXXSigma_iX
-	Sigma_iXXSigma_iX = rbind(Sigma_iXXSigma_iX, Sigma_iXXSigma_iX0)
+	Sigma_iXXSigma_iX[[oml]] = data.table::as.data.table(Sigma_iXXSigma_iX0)
 		
 #print(dim(XVXsample))
 #print("dim(XXVXsample_inv)")
@@ -544,8 +544,16 @@ eMat = as.matrix(eMat)
                 varWeights_gxe = matrix(1)	
 
 	}	
-     }	
+     }
+	Xsample = as.matrix(data.table::rbindlist(Xsample))
+	Vsample = as.matrix(data.table::rbindlist(Vsample))
+	XVsample = as.matrix(data.table::rbindlist(XVsample))
+	XVXsample = as.matrix(data.table::rbindlist(XVXsample))
+	XXVXsample_inv = as.matrix(data.table::rbindlist(XXVXsample_inv))
+	XVX_inv_XVsample = as.matrix(data.table::rbindlist(XVX_inv_XVsample))
+	Sigma_iXXSigma_iX = as.matrix(data.table::rbindlist(Sigma_iXXSigma_iX))
   }
+  gc()
 
 
 #print("dim(ratioVecList$ratioVec_sparse)")
