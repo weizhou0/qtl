@@ -377,11 +377,16 @@ ReadModel_multiTrait = function(GMMATmodelFileList = "", chrom="", LOCO=TRUE, is
   # Check file existence
   GMMATmodelFileVec = unlist(strsplit(GMMATmodelFileList, split=","))
   modglmmList = list()
-  for(gm in 1:length(GMMATmodelFileVec)){
-     GMMATmodelFile = GMMATmodelFileVec[gm] 
-     modglmmList[[gm]] = ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt, espa_range)  
+  if (require("furrr")) {
+    future::plan("multicore")
+    modglmmList = furrr::future_map(GMMATmodelFileVec, function(GMMATmodelFile){ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt, espa_range)})
+    future::plan("sequential")
+  } else {
+    for(gm in 1:length(GMMATmodelFileVec)){
+      GMMATmodelFile = GMMATmodelFileVec[gm]
+      modglmmList[[gm]] = ReadModel(GMMATmodelFile, chrom, LOCO, is_Firth_beta, is_EmpSPA, espa_nt, espa_range)
+    }
   }
- 
   return(modglmmList)
 }
 
