@@ -1347,8 +1347,8 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
           modglmm$obj.noK$XVX_inv <- NULL
           modglmm$obj.noK$XVX_inv_XV <- NULL
         }
-        save(modglmm, file = modelOut)
       }
+      save(modglmm, file = modelOut)
     }
 }
 
