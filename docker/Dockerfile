@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM debian:bullseye-slim
 
 LABEL maintainer="wzhou@broadinstitute.org"
 
@@ -11,37 +11,33 @@ RUN apt-get update && \
     cmake \
     libopenblas-base \
     python3-pip \
-    r-cran-devtools
+    r-base-core \
+    time && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install cget
+ADD ./extdata/install_packages.R /usr/local/bin/
 
-ADD ./docker/install_packages.R /usr/local/bin/
-
-RUN Rscript /usr/local/bin/install_packages.R
+RUN pip3 install cget && \
+    Rscript /usr/local/bin/install_packages.R
 
 WORKDIR /app
 
-
 COPY . .
-
-#RUN Rscript extdata/install_packages.R
 
 # Force step_2 to use 1 single thread. More threads are ineffective
 ENV OMP_NUM_THREADS=1
 
 RUN R CMD INSTALL .
 
-RUN mv extdata/step1_fitNULLGLMM_qtl.R extdata/step2_tests_qtl.R extdata/step3_gene_pvalue_qtl.R extdata/makeGroupFile.R /usr/local/bin/
-
-RUN chmod a+x /usr/local/bin/step1_fitNULLGLMM_qtl.R
-RUN chmod a+x /usr/local/bin/step2_tests_qtl.R
-RUN chmod a+x /usr/local/bin/step3_gene_pvalue_qtl.R
-RUN chmod a+x /usr/local/bin/makeGroupFile.R
-
-RUN makeGroupFile.R  --help
-RUN step1_fitNULLGLMM_qtl.R --help
-RUN step2_tests_qtl.R --help
-RUN step3_gene_pvalue_qtl.R --help
-
-RUN apt-get update
-RUN apt-get install time
+RUN mv \
+    extdata/step1_fitNULLGLMM_qtl.R \
+    extdata/step2_tests_qtl.R \
+    extdata/step3_gene_pvalue_qtl.R \
+    extdata/makeGroupFile.R \
+    /usr/local/bin/ && \
+    chmod a+x /usr/local/bin/*.R \
+    step1_fitNULLGLMM_qtl.R --help && \
+    step2_tests_qtl.R --help && \
+    step3_gene_pvalue_qtl.R --help && \
+    makeGroupFile.R  --help
