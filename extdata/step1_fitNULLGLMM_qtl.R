@@ -132,7 +132,9 @@ option_list <- list(
        make_option("--varWeightsCol", type="character", default=NULL,
    help="variance weight column"),
   make_option("--isStoreSigma", type="logical", default=TRUE,
-   help="Optional. Whether to store the inv Sigma matrix. [default, 'TRUE']")
+   help="Optional. Whether to store the inv Sigma matrix. [default, 'TRUE']"),
+  make_option("--isShrinkModelOutput", type="logical", default=TRUE,
+   help="Optional. Whether to remove unnecessary objects for step2 from the model output. [default, 'TRUE']")
 )
 
 
@@ -221,7 +223,8 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
 	    offsetCol=opt$offsetCol,
 	    varWeightsCol=opt$varWeightsCol,
 	    sampleCovarCol=scovars,
-	    isStoreSigma=opt$isStoreSigma
+	    isStoreSigma=opt$isStoreSigma,
+      isShrinkModelOutput=opt$isShrinkModelOutput
 	)
 
 if(!opt$isCovariateOffset){
@@ -292,7 +295,8 @@ if(!opt$isCovariateOffset){
             offsetCol=opt$offsetCol,
             varWeightsCol=opt$varWeightsCol,
             sampleCovarCol=scovars,
-            isStoreSigma=opt$isStoreSigma
+            isStoreSigma=opt$isStoreSigma,
+            isShrinkModelOutput=opt$isShrinkModelOutput
         )
        my_env = new.env()
        load(paste0(opt$outputPrefix, ".offset.rda"), envir = my_env)
