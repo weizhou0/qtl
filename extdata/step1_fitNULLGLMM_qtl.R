@@ -4,11 +4,6 @@ options(stringsAsFactors=F)
 
 ## load R libraries
 
-#library(SAIGE)
-#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test2/")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_SAIGE-QTL")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_SPA_smallMemory")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_0.2.0")
 library(SAIGEQTL)
 
 require(optparse) #install.packages("optparse")
@@ -228,3 +223,103 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
 	    sampleCovarCol=scovars,
 	    isStoreSigma=opt$isStoreSigma
 	)
+
+if(!opt$isCovariateOffset){
+  my_env = new.env()
+  load(paste0(opt$outputPrefix, ".rda"), envir = my_env)
+  modglmm = my_env$modglmm
+  print(modglmm$theta)
+  if(sum(modglmm$theta[2:length(modglmm$theta)]) == 0){
+  	cat("All variance component parameter estiamtes are 0, now try including all covariates as offset\n")
+	opt$isCovariateOffset = TRUE
+	set.seed(1)
+	fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
+            bedFile=opt$bedFile,
+            bimFile=opt$bimFile,
+            famFile=opt$famFile,
+            useSparseGRMtoFitNULL=opt$useSparseGRMtoFitNULL,
+            sparseGRMFile=opt$sparseGRMFile,
+            sparseGRMSampleIDFile=opt$sparseGRMSampleIDFile,
+            phenoFile = opt$phenoFile,
+            phenoCol = opt$phenoCol,
+            isRemoveZerosinPheno = opt$isRemoveZerosinPheno,
+            sampleIDColinphenoFile = opt$sampleIDColinphenoFile,
+            traitType = opt$traitType,
+            outputPrefix = paste0(opt$outputPrefix, ".offset"),
+            isCovariateOffset=opt$isCovariateOffset,
+            nThreads = opt$nThreads,
+            useSparseGRMforVarRatio = opt$useSparseGRMforVarRatio,
+            invNormalize = opt$invNormalize,
+            covarColList = covars,
+            qCovarCol = qcovars,
+            tol=opt$tol,
+            maxiter=opt$maxiter,
+            tolPCG=opt$tolPCG,
+            maxiterPCG=opt$maxiterPCG,
+            SPAcutoff = opt$SPAcutoff,
+            numMarkersForVarRatio = opt$numRandomMarkerforVarianceRatio,
+            skipModelFitting = opt$skipModelFitting,
+            skipVarianceRatioEstimation = opt$skipVarianceRatioEstimation,
+            memoryChunk = opt$memoryChunk,
+            tauInit = tauInit,
+            LOCO = opt$LOCO,
+            isLowMemLOCO = opt$isLowMemLOCO,
+            traceCVcutoff = opt$traceCVcutoff,
+            nrun = opt$nrun,
+            ratioCVcutoff = opt$ratioCVcutoff,
+            outputPrefix_varRatio = opt$outputPrefix_varRatio,
+            IsOverwriteVarianceRatioFile = opt$IsOverwriteVarianceRatioFile,
+            relatednessCutoff = opt$relatednessCutoff,
+            isCateVarianceRatio = opt$isCateVarianceRatio,
+            cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
+            cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
+            isCovariateTransform = opt$isCovariateTransform,
+            isDiagofKinSetAsOne = opt$isDiagofKinSetAsOne,
+            minMAFforGRM = opt$minMAFforGRM,
+            maxMissingRateforGRM = opt$maxMissingRateforGRM,
+            minCovariateCount=opt$minCovariateCount,
+            includeNonautoMarkersforVarRatio=opt$includeNonautoMarkersforVarRatio,
+            sexCol=opt$sexCol,
+            FemaleCode=opt$FemaleCode,
+            FemaleOnly=opt$FemaleOnly,
+            MaleCode=opt$MaleCode,
+            MaleOnly=opt$MaleOnly,
+            SampleIDIncludeFile=opt$SampleIDIncludeFile,
+            VmatFilelist=opt$VmatFilelist,
+            VmatSampleFilelist=opt$VmatSampleFilelist,
+            longlCol=opt$longlCol,
+            useGRMtoFitNULL=opt$useGRMtoFitNULL,
+            offsetCol=opt$offsetCol,
+            varWeightsCol=opt$varWeightsCol,
+            sampleCovarCol=scovars,
+            isStoreSigma=opt$isStoreSigma
+        )
+       my_env = new.env()
+       load(paste0(opt$outputPrefix, ".offset.rda"), envir = my_env)
+       modglmm = my_env$modglmm
+       print(modglmm$theta)
+       if(sum(modglmm$theta[2:length(modglmm$theta)]) == 0){
+		cat("All variance component parameters are estiamted to be zero.\n")
+		file.remove(paste0(opt$outputPrefix, ".offset.rda"))
+		if (file.exists(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))) {
+		  file.remove(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))
+		  #Delete file if it exists
+		}else{
+		  if (file.exists(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))) {
+                    file.remove(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))
+                  }
+		}
+	}else{
+
+		file.rename(paste0(opt$outputPrefix, ".offset.rda"), paste0(opt$outputPrefix, ".rda"))
+		if (file.exists(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))) {
+                  file.rename(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"), paste0(opt$outputPrefix, ".varianceRatio.txt"))
+                  #Delete file if it exists
+                }else{
+                  if (file.exists(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))) {
+                    file.rename(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"), paste0(opt$outputPrefix_varRatio, ".varianceRatio.txt"))
+                  }
+                }
+	}
+  }
+}
