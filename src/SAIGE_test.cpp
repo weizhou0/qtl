@@ -255,6 +255,7 @@ void SAIGEClass::scoreTest(arma::vec & t_GVec,
       //m_SigmaMat_sp_firstcol.print("m_SigmaMat_sp_firstcol");
       //t_gtilde.print("t_gtilde");
       t_P2Vec = (m_SigmaMat_sp.cols(m_startin, m_endin)) * t_gtilde;
+
       var2m = dot(t_P2Vec, t_gtilde);
       //std::cout << "m_isVarPsadj " << m_isVarPsadj << std::endl;
 
@@ -796,7 +797,7 @@ if(t_isCondition){
   }
   t_pval_noSPA_c = pval_noSPA_c; 
 
-  double StdStat_c = std::abs(t_Tstat_c) / t_varT_c;
+  double StdStat_c = std::abs(t_Tstat_c) / sqrt(t_varT_c);
 
   if(abs(StdStat_c) > m_SPA_Cutoff && m_traitType != "quantitative" && t_varT_c > std::numeric_limits<double>::min()){
      bool t_isSPAConverge_c;
@@ -833,7 +834,6 @@ if(t_isCondition){
         }
   }else{
      t_pval_c = t_pval_noSPA_c;
-
   }
 } //if(t_isCondition){
 
@@ -1084,9 +1084,9 @@ void SAIGEClass::assignConditionFactors(
       arma::mat & t_VarInvMat_cond,
       arma::mat & t_VarMat_cond,
       arma::vec & t_Tstat_cond,
-      arma::vec & t_G2_Weight_cond,
+      arma::mat & t_G2_Weight_cond,
       arma::vec & t_MAF_cond,
-      arma::vec & t_qsum_cond,
+      arma::mat & t_qsum_cond,
       arma::mat & t_gsum_cond,
       arma::vec & t_p_cond
       ){
@@ -1095,9 +1095,12 @@ void SAIGEClass::assignConditionFactors(
 	m_VarMat_cond = t_VarMat_cond;
 	m_Tstat_cond = t_Tstat_cond;
 	m_MAF_cond = t_MAF_cond;
-	m_qsum_cond_Vec = t_qsum_cond;
+	m_qsum_cond_Mat = t_qsum_cond;
 	m_gsum_cond_Mat = t_gsum_cond;
 	m_G2_Weight_cond = t_G2_Weight_cond;
+
+	m_G2_Weight_cond.print("m_G2_Weight_cond");
+
 	m_p_cond = t_p_cond;
 	m_numMarker_cond = t_Tstat_cond.n_elem;
 }
