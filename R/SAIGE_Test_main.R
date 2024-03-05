@@ -45,7 +45,7 @@
 #' @param r.corr numeric. bewteen 0 and 1. parameters for gene-based tests. If r.corr = 1, only Burden tests will be performed. If r.corr = 0, SKAT-O tests will be performed and results for Burden tests and SKAT tests will be output too.  By default, 0. 
 #' @param markers_per_chunk_in_groupTest numeric. Number of markers in each chunk when calculating the variance covariance matrix in the set/group-based tests. By default, 100.
 #' @param condition character. For conditional analysis. Variant ids are in the format chr:pos_ref/alt and seperated by by comma. e.g."chr3:101651171:C:T,chr3:101651186:G:A". 
-#' @param weights_for_condition. vector of numeric. weights for conditioning markers for gene- or region-based tests. The length equals to the number of conditioning markers, e.g. c(1,2,3). If not specified, the default weights will be generated based on beta(MAF, 1, 25). Use weights.beta to change the parameters for the Beta distribution. 
+#' @param weights_for_condition. matrix of numeric. weights for conditioning markers for gene- or region-based tests. The nrow equals to the number of conditioning markers and the ncol equals to the number of sets of weights specified in the group file, e.g. c(1,2,3). If not specified, the default weights will be generated based on beta(MAF, 1, 25). Use weights.beta to change the parameters for the Beta distribution. 
 #' @param SPAcutoff by default = 2 (SPA test would be used when p value < 0.05 under the normal approximation)
 #' @param dosage_zerod_cutoff numeric. If is_imputed_data = TRUE, For variants with MAC <= dosage_zerod_MAC_cutoff, dosages <= dosageZerodCutoff with be set to 0. By derault, 0.2
 #' @param dosage_zerod_MAC_cutoff numeric. If is_imputed_data = TRUE, For variants with MAC <= dosage_zerod_MAC_cutoff, dosages <= dosageZerodCutoff with be set to 0. By derault, 10
@@ -868,37 +868,78 @@ print(varWeights_gxe)
 	print("condition_genoIndex")
 	print(condition_genoIndex)
 
+     if(isGroupTest){ 
 
 	if(!is.null(weights_for_condition)){
-		condition_weights = weights_for_condition
-		#print(condition_weights)
+		condition_weights = as.matrix(weights_for_condition)
+		print(condition_weights)
 		#print(condition_genoIndex$cond_genoIndex)
                 #condition_weights = as.numeric(unlist(strsplit(weights_for_condition, ",")))
-		if(length(condition_weights) != length(condition_genoIndex$cond_genoIndex)){
+		if(nrow(condition_weights) != length(condition_genoIndex$cond_genoIndex)){
 			stop("The length of the provided weights for conditioning markers is not equal to the number of conditioning markers\n")
 		}	
         }else{
-		condition_weights = rep(1, length(condition_genoIndex$cond_genoIndex))
-	}	
+		condition_weights = matrix(rep(0, length(condition_genoIndex$cond_genoIndex)), nrow=1)
+	}
+
+
+        if(!is.null(weights.beta)){
+                BetaDist_weight_mat = NULL
+                for(i in 1:length(weights.beta)){
+                        weightsbeta_val_vec = as.numeric(unlist(strsplit(weights.beta[i], split=",")))
+                        if(length(weightsbeta_val_vec) == 2){
+                                BetaDist_weight_mat = rbind(BetaDist_weight_mat, weightsbeta_val_vec)
+                        }else{
+                                stop("The ", i, "th element in weights.beta does not have 2 elements\n")
+                        }
+                }
+		BetaDist_weight_mat = as.matrix(BetaDist_weight_mat)
+        }else{
+		BetaDist_weight_mat = matrix(c(0, 0), ncol=2)
+	}
+
+
+
+    }else{ #if(isGroupTest){
+	BetaDist_weight_mat =  matrix(c(0, 0), ncol=2)
+	condition_weights = matrix(rep(1, length(condition_genoIndex$cond_genoIndex)), nrow=1)
+    }
+
 
 	condition_genoIndex_a = as.character(format(condition_genoIndex$cond_genoIndex, scientific = FALSE))
 	condition_genoIndex_prev_a = as.character(format(condition_genoIndex$cond_genoIndex_prev, scientific = FALSE)) 
 #	print("OKKK")
-	assign_conditionMarkers_factors(genoType, condition_genoIndex_prev_a, condition_genoIndex_a,  n, condition_weights)
+
+print("condition_genoIndex_prev_a")
+print(condition_genoIndex_prev_a)
+print("condition_genoIndex_a")
+print(condition_genoIndex_a)
+print("condition_weights")
+print(condition_weights)
+print("BetaDist_weight_mat")
+print(BetaDist_weight_mat)
+BetaDist_weight_mat = as.matrix(BetaDist_weight_mat)
+print("BetaDist_weight_mat")
+print(dim(BetaDist_weight_mat))
+
+
+
+	assign_conditionMarkers_factors(genoType, condition_genoIndex_prev_a, condition_genoIndex_a,  n, condition_weights, BetaDist_weight_mat, is_equal_weight_in_groupTest)
+
 #	print("OKKK2")
-if(obj.model$traitType[1] == "binary" & isGroupTest){
-	  outG2cond = RegionSetUpConditional_binary_InCPP(condition_weights)
-	G2condList_list = NULL
+   if(obj.model$traitType[1] == "binary" & isGroupTest){
+	 outG2cond = RegionSetUpConditional_binary_InCPP(condition_weights)
+	 G2condList_list = NULL
 	 for(oml in 1:length(obj.model.List)){
-	startcond = (oml-1)*length(condition_genoIndex$cond_genoIndex) + 1
-	endcond = oml*length(condition_genoIndex$cond_genoIndex)
+		startcond = (oml-1)*length(condition_genoIndex$cond_genoIndex) + 1
+		endcond = oml*length(condition_genoIndex$cond_genoIndex)
 
 	
-	  G2condList = get_newPhi_scaleFactor(q.sum = outG2cond$qsum_G2_cond[oml], mu.a = mu_sample[,oml], g.sum = outG2cond$gsum_G2_cond[,oml], p.new = outG2cond$pval_G2_cond[startcond:endcond], Score = outG2cond$Score_G2_cond[startcond:endcond], Phi = outG2cond$VarMat_G2_cond[,startcond:endcond], "SKAT-O")
-	  scaleFactorVec = as.vector(G2condList$scaleFactor)
-	  G2condList$scaleFactorVec = scaleFactorVec
-	  G2condList_list[[oml]] = G2condList
-	  assign_conditionMarkers_factors_binary_region_multiTrait(scaleFactorVec, oml-1)
+	  	G2condList = get_newPhi_scaleFactor(q.sum = outG2cond$qsum_G2_cond[oml], mu.a = mu_sample[,oml], g.sum = outG2cond$gsum_G2_cond[,oml], p.new = outG2cond$pval_G2_cond[startcond:endcond], Score = outG2cond$Score_G2_cond[startcond:endcond], Phi = outG2cond$VarMat_G2_cond[,startcond:endcond], "SKAT-O")
+	  	scaleFactorVec = as.vector(G2condList$scaleFactor)
+	  	G2condList$scaleFactorVec = scaleFactorVec
+	  	G2condList_list[[oml]] = G2condList
+	  	assign_conditionMarkers_factors_binary_region_multiTrait(scaleFactorVec, oml-1)
 	}  
 	#print(G2condList)
 	#print(scaleFactorVec)
@@ -1026,6 +1067,9 @@ if(obj.model$traitType[1] == "binary" & isGroupTest){
 			}
 		}
 	}
+
+print("condition_weights")
+print(condition_weights)
 
 	SAIGE.Region(mu,
 		     OutputFile,

@@ -77,10 +77,12 @@ class SAIGEClass
       arma::mat m_VarInvMat_cond;
       arma::mat m_VarMat_cond;
       arma::vec m_Tstat_cond;
-      arma::vec m_G2_Weight_cond;
+      //arma::vec m_G2_Weight_cond;
+      arma::mat m_G2_Weight_cond;
       arma::vec m_MAF_cond;
       double  m_qsum_cond;
      arma::vec  m_qsum_cond_Vec;
+     arma::mat  m_qsum_cond_Mat;
       arma::vec m_gsum_cond;
       arma::mat m_gsum_cond_Mat;
       arma::vec m_p_cond;
@@ -303,9 +305,9 @@ std::vector<std::ofstream> OutFile_single_vec;
       arma::mat & t_VarInvMat_cond,
             arma::mat & t_VarMat_cond,
       arma::vec & t_Tstat_cond,
-       arma::vec & t_G2_Weight_cond,
+       arma::mat & t_G2_Weight_cond,
       arma::vec & t_MAF_cond,
-        arma::vec & t_qsum_cond,
+        arma::mat & t_qsum_cond,
 	arma::mat & t_gsum_cond,
       arma::vec & t_p_cond);
 

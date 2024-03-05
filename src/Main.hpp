@@ -162,7 +162,7 @@ Rcpp::List mainRegionInCPP(
                            bool t_isImputation,
 			   arma::mat & t_Beta_param,
                            arma::mat & t_weight,
-                           arma::vec & t_weight_cond,
+                           arma::mat & t_weight_cond,
 			   bool t_isIncludeNoWeights,
                            bool t_isSingleinGroupTest,
                            bool t_isOutputMarkerList,
@@ -253,7 +253,9 @@ void assign_conditionMarkers_factors(
                            std::vector<std::string> & t_genoIndex_prev,
                            std::vector<std::string> & t_genoIndex,
                            unsigned int t_n,
-                           arma::vec & t_weight_cond
+                           arma::mat & t_weight_cond,
+			   arma::mat & t_Beta_param,
+			   bool is_equal_weight_in_groupTest
                            );
 
 

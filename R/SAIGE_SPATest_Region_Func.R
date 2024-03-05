@@ -119,8 +119,10 @@ checkGroupFile<-function(groupFile){
 		print(weightname)
         	while(isweight){
 			marker_group_line = readLines(gf, n = 1)
+			print(length(marker_group_line))
 			line = line + 1
 			if(length(marker_group_line) == 1){
+			    	
 			    if (length(marker_group_line) == 0) {
       				line = line - 1
       				stop("Error, group file has emply lines\n")
@@ -143,6 +145,8 @@ checkGroupFile<-function(groupFile){
 				a = a + 1
 				weightname = c(weightname, unlist(strsplit(type_new, split=":"))[2])
 			   }
+			}else{#if (length(marker_group_line) == 0) {
+				break
 			}
 		}
 		           cat("weightname b\n")

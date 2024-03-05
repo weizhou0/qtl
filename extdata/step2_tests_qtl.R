@@ -115,7 +115,7 @@ option_list <- list(
   make_option("--condition", type="character",default="",
     help="For conditional analysis. Variant ids are in the format chr:pos_ref/alt and seperated by by comma. e.g.chr3:101651171_C/T,chr3:101651186_G/A"),
   make_option("--weights_for_condition",type="character", default=NULL,
-    help="vector of float. weights for conditioning markers for gene- or region-based tests. The length equals to the number of conditioning markers, delimited by comma. e.g. '1,2,3. If not specified, the default weights will be generated based on beta(MAF, 1, 25). Use --weights.beta to change the parameters for the Beta distribution."),
+    help="vector of float. weights for conditioning markers for gene- or region-based tests. The length equals to the number of conditioning markers, delimited by ;. e.g. '1;2;3'. Multiple sets of weights can be specified, delimited by comma. e.g. '1;2;3,4;5;6' The number of sets needs to be equal to the number of custimized weights provided in the group file. If not specified, the default weights will be generated based on beta(MAF, 1, 25). Use --weights.beta to change the parameters for the Beta distribution."),
   make_option("--SPAcutoff", type="numeric", default=2,
     help=" If the test statistic lies within the standard deviation cutoff of the
 mean, p-value based on traditional score test is returned. Default value is 2."),
@@ -182,7 +182,12 @@ cateVarRatioMaxMACVecInclude <- convertoNumeric(x=strsplit(opt$cateVarRatioMaxMA
 if(is.null(opt$weights_for_condition)){
 	weights_for_condition=NULL
 }else{
-	weights_for_condition <- convertoNumeric(x=strsplit(opt$weights_for_condition,",")[[1]], "weights_for_condition")
+
+	weights_for_condition_list = unlist(strsplit(opt$weights_for_condition, ","))
+	weights_for_condition = NULL
+	for(i in 1:length(weights_for_condition_list)){
+		weights_for_condition = cbind(weights_for_condition, convertoNumeric(x=strsplit(weights_for_condition_list[[i]],";")[[1]], "weights_for_condition")
+	}
 }
 
 maxMAF_in_groupTest = convertoNumeric(x=strsplit(opt$maxMAF_in_groupTest,",")[[1]], "maxMAF_in_groupTest")

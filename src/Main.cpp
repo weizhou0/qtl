@@ -822,7 +822,7 @@ void mainMarkerInCPP(
         //if(t_P2Vec.n_elem == 0){
 	//
 	//
-	(ptr_gSAIGEobj->m_tauvec_mt).print("ptr_gSAIGEobj->m_tauvec_mt");
+	//(ptr_gSAIGEobj->m_tauvec_mt).print("ptr_gSAIGEobj->m_tauvec_mt");
 
                 if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
                         t_P2Vec = gtildeVec % ((ptr_gSAIGEobj->m_mu2_gxe_mt).col(i_mt)) *((ptr_gSAIGEobj->m_tauvec_mt)(0,i_mt));
@@ -838,7 +838,7 @@ void mainMarkerInCPP(
 	P2Mat_g.col(0) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec;
 	//std::cout << "HEREa1b" << std::endl;
 	VarMat_g = sqrt(ptr_gSAIGEobj->m_varRatioVal)*gtildeVec.t() * P2Mat_g;
-	VarMat_g.print("VarMat_g");
+	//VarMat_g.print("VarMat_g");
 	//std::cout << "HEREa1c" << std::endl;
 	VarInvMat_g = VarMat_g.i();
 	VarInvMat_g.print("VarInvMat_g");
@@ -1457,7 +1457,7 @@ Rcpp::List mainRegionInCPP(
 			   bool t_isImputation,
                            arma::mat & t_Beta_param,            // edited on 2021-08-19: to avoid repeated memory allocation of P1Mat and P2Mat
 			   arma::mat & t_weight,
-			   arma::vec & t_weight_cond,
+			   arma::mat & t_weight_cond,
 			   bool t_isIncludeNoWeights,
 			   bool t_isSingleinGroupTest,
 			   bool t_isOutputMarkerList, 
@@ -1466,6 +1466,9 @@ Rcpp::List mainRegionInCPP(
 			   bool t_isFastTest,
 			   bool t_isMoreOutput) 
 {
+
+
+  std::cout << "mainRegion" << std::endl;
 
   //create the output list
   Rcpp::List OutList = Rcpp::List::create();
@@ -1495,7 +1498,7 @@ Rcpp::List mainRegionInCPP(
   }
   arma::vec w0_vec(q_weight);
 
- 
+  
   unsigned int q_anno_maf = q_anno*q_maf;
   unsigned int q_anno_maf_weight = q_anno*q_maf*q_weight;
   arma::mat genoURMat(t_n, q_anno_maf_weight, arma::fill::zeros);
@@ -1512,17 +1515,25 @@ Rcpp::List mainRegionInCPP(
 
 
   //setting up conditional markers  
-  unsigned int q_cond = (ptr_gSAIGEobj->m_VarInvMat_cond).n_rows;	
+  unsigned int q_cond = (ptr_gSAIGEobj->m_VarInvMat_cond).n_rows;
+  unsigned int nw_cond = t_weight_cond.n_cols;
+
   arma::rowvec G1tilde_P_G2tilde_Vec(q_cond);
   //boost::math::beta_distribution<> beta_dist(g_weights_beta[0], g_weights_beta[1]);
-
   bool isCondition = ptr_gSAIGEobj->m_isCondition;
   arma::vec w0G2Vec_cond(q_cond);
   double w0G2_cond, MAFG2_cond;
   arma::mat P1Matsub, P2Matsub;
 
 
+  
+  t_weight_cond.print("t_weight_cond");
+
+  //arma::mat t_weight_cond_mat = ptr_gSAIGEobj->m_G2_Weight_cond;
+  arma::mat w0G2Mat_cond(q_cond, q_cond*q_weight);
+
   if(isCondition){
+  /*
 	for(unsigned int ci = 0; ci < q_cond; ci++){
 		//if(!(t_weight_cond.is_zero())){
 			w0G2_cond = t_weight_cond(ci);
@@ -1532,10 +1543,13 @@ Rcpp::List mainRegionInCPP(
 		//}	
 		w0G2Vec_cond.at(ci) = w0G2_cond;
 	}
-  }
 
-  arma::mat w0G2Mat_cond(q_cond, q_cond);
-  w0G2Mat_cond = w0G2Vec_cond * (w0G2Vec_cond.t());
+  */
+   	for(unsigned int ci = 0; ci < q_weight; ci++){    
+		w0G2Vec_cond = (ptr_gSAIGEobj->m_G2_Weight_cond).col(ci);			
+		w0G2Mat_cond.cols(q_cond*ci, q_cond*(ci+1)-1) = w0G2Vec_cond * (w0G2Vec_cond.t());
+	}
+  }
 
 
   arma::mat genoSumMat(t_n, q_anno_maf_weight, arma::fill::zeros); //for Phi_cc for binary traits and BURDEN test
@@ -1547,7 +1561,7 @@ Rcpp::List mainRegionInCPP(
   std::vector<double> Tstat_cVec(q_multTrait, arma::datum::nan);
   std::vector<double> varT_cVec(q_multTrait, arma::datum::nan);
   std::vector<double> pvalNA_cVec(q_multTrait, arma::datum::nan);
-  arma::mat G1tilde_P_G2tilde_Weighted_Mat(q_multTrait, q_cond);
+  arma::mat G1tilde_P_G2tilde_Weighted_Mat(q_multTrait, q_cond * q_weight);
   //group test output
   //arma::vec MAC_GroupVec = arma::zeros<vec>(q_anno_maf);
 
@@ -1895,7 +1909,19 @@ Rcpp::List mainRegionInCPP(
       	  pvalNA_cVec.at(j_mt) = pval_noSPA_c;
       	  Tstat_cVec.at(j_mt) = Tstat_c * (1 - 2*flip);
       	  varT_cVec.at(j_mt) = varT_c;
-	  G1tilde_P_G2tilde_Weighted_Mat.row(j_mt) = G1tilde_P_G2tilde_Vec % w0G2Vec_cond.t() * w0;	
+	  arma::vec G1tilde_P_G2tilde_Weighted_Vec_sub(q_cond * q_weight); 
+	  G1tilde_P_G2tilde_Weighted_Vec_sub.zeros();
+	   for(unsigned int j_wc = 0; j_wc < q_weight; j_wc++){
+	       w0G2Vec_cond = (ptr_gSAIGEobj->m_G2_Weight_cond).col(j_wc);
+		//(w0G2Vec_cond).print("w0G2Vec_cond");
+		//G1tilde_P_G2tilde_Vec.print("G1tilde_P_G2tilde_Vec");
+
+		G1tilde_P_G2tilde_Weighted_Vec_sub.subvec(j_wc*q_cond, (j_wc+1)*q_cond-1) = (G1tilde_P_G2tilde_Vec % (w0G2Vec_cond.t()) * (w0_vec(j_wc))).t();
+	         //std::cout << "w0 " << w0_vec(j_wc) << std::endl;
+
+	   }		
+	       G1tilde_P_G2tilde_Weighted_Mat.row(j_mt) = G1tilde_P_G2tilde_Weighted_Vec_sub.t();
+
         }
 
         if(t_regionTestType != "BURDEN"){
@@ -2163,7 +2189,12 @@ for(unsigned int r = 0; r < q_weight; r++){
 
 //for all UR variants
 if(i2 > 0){
-  int m1new = std::max(m1, q_anno_maf);
+  //int m1new = std::max(m1, q_anno_maf);
+  int m1new = std::max(m1, q_anno_maf_weight);
+
+  //genoURMat.print("genoURMat");
+  //std::cout << "m1new " << m1new << std::endl;
+
 
   if(t_regionTestType != "BURDEN"){
     P1Mat.resize(m1new * t_traitType.size(), P1Mat.n_cols);
@@ -2179,6 +2210,13 @@ if(i2 > 0){
    	jm = j*q_maf + m;
 	jmr = r*q_anno*q_maf + j*q_maf + m;
 	arma::vec genoURVec = genoURMat.col(jmr);
+
+	//std::cout << "jmr " << jmr << std::endl;
+	//genoURVec.print("genoURVec");
+		
+
+
+
 	int n = genoURVec.size();
 	arma::uvec indexForNonZero = arma::find(genoURVec != 0); 
 	i_ur = q0 + jmr;
@@ -2194,12 +2232,18 @@ if(i2 > 0){
     	  double MAF = std::min(altFreq, 1 - altFreq);
 	  double w0 = w0_vec(r);
 	  double MAC = MAF * 2 * t_n * (1 - missingRate);
+	  //std::cout << "MAC a " << MAC << std::endl;
 	  std::vector<uint32_t> indexForMissing;
     	  flip = imputeGenoAndFlip(genoURVec, altFreq, altCounts, indexForMissing, g_impute_method, g_dosage_zerod_cutoff, g_dosage_zerod_MAC_cutoff, MAC, indexZeroVec, indexNonZeroVec);
        	  for(unsigned int k = 0; k < indexForNonZero.n_elem; k++){
                 genoSumMat(indexForNonZero(k), jmr) = genoSumMat(indexForNonZero(k), jmr) + genoURVec(indexForNonZero(k)) * w0;
                 genoSumcount_noweight(jmr) = genoSumcount_noweight(jmr) + genoURVec(indexForNonZero(k));
           }
+	//genoURVec.print("genoURVec 2");
+	//MAC = arma::accu(genoURVec);
+	//std::cout << "MAC bb " << MAC << std::endl;
+
+
 
   	 if(t_regionTestType != "BURDEN"){
 	    arma::vec genoSumMatvec1 = genoSumMat.col(jmr);
@@ -2209,6 +2253,7 @@ if(i2 > 0){
           }//if(t_regionTestType != "BURDEN"){
 
 	  MAC = MAF * 2 * t_n * (1 - missingRate);   // checked on 08-10-2021
+	  //std::cout << "MAC b " << MAC << std::endl;
           arma::uvec indexZeroVec_arma, indexNonZeroVec_arma;
     for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
 	 if(t_regionTestType != "BURDEN" || t_isSingleinGroupTest){
@@ -2279,12 +2324,6 @@ if(i2 > 0){
         }
 
 
-
-
-
-
-
-
             BetaVec.at(i_i_mt) = Beta* (1 - 2*flip);
             seBetaVec.at(i_i_mt) = seBeta;
             pvalVec.at(i_i_mt) = pval;
@@ -2301,7 +2340,18 @@ if(i2 > 0){
               pvalNA_cVec.at(i_i_mt) = pval_noSPA_c;
               Tstat_cVec.at(i_i_mt) = Tstat_c * (1 - 2*flip);
               varT_cVec.at(i_i_mt) = varT_c;
-              G1tilde_P_G2tilde_Weighted_Mat.row(i_i_mt) = G1tilde_P_G2tilde_Vec % w0G2Vec_cond.t() * w0;
+
+	       arma::vec G1tilde_P_G2tilde_Weighted_Vec_sub(q_cond * q_weight);
+		for(unsigned int j_wc = 0; j_wc < q_weight; j_wc++){
+               		w0G2Vec_cond = (ptr_gSAIGEobj->m_G2_Weight_cond).col(j_wc);
+                	//(w0G2Vec_cond).print("w0G2Vec_cond");
+                	//G1tilde_P_G2tilde_Vec.print("G1tilde_P_G2tilde_Vec");
+                	G1tilde_P_G2tilde_Weighted_Vec_sub.subvec(j_wc*q_cond, (j_wc+1)*q_cond-1) = (G1tilde_P_G2tilde_Vec % (w0G2Vec_cond.t()) * (w0_vec(j_wc))).t();
+               		//std::cout << "w0 " << w0_vec(j_wc) << std::endl;
+
+           	}	
+		G1tilde_P_G2tilde_Weighted_Mat.row(i_i_mt) = G1tilde_P_G2tilde_Weighted_Vec_sub.t();
+              //G1tilde_P_G2tilde_Weighted_Mat.row(i_i_mt) = G1tilde_P_G2tilde_Vec % w0G2Vec_cond.t() * w0;
 	      //check cond
             }
         arma::vec dosage_case, dosage_ctrl;
@@ -2363,7 +2413,8 @@ if(i2 > 0){
 
       if(t_regionTestType != "BURDEN"){	
 
-	  
+	  //std::cout << "ptr_gSAIGEobj->m_varRatioVal " << ptr_gSAIGEobj->m_varRatioVal << std::endl; 
+	  //P2Vec.print("P2Vec");
 	  P1Mat.row(i_mt*m1new + i1InChunk_vec(i_mt)) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*gtildeVec.t();
           //P2Mat.col(i1InChunk) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*P2Vec;
           P2Mat.col(i_mt*m1new + i1InChunk_vec(i_mt)) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*P2Vec;
@@ -2464,14 +2515,12 @@ if(t_regionTestType != "BURDEN"){
 
   //std::cout << "HERERERE c 0" << std::endl;
   //VarMatsub.clear();
-  //std::cout << "i_mt " << i_mt << std::endl;
-  //std::cout << "i1 " << i1 << std::endl;
-  //nchunks_vec.print("nchunks_vec");
   if(nchunks_vec(i_mt) == 1){
     arma::mat VarMat_sub_0 = P1Mat.rows(i_mt*i1, (i_mt+1)*i1-1) * P2Mat.cols(i_mt*i1, (i_mt+1)*i1-1);
     //arma::vec VarMat_sub = VarMat_sub_0.col(0);
     //P1Mat.rows(i_mt*i1, (i_mt+1)*i1-1) * P2Mat.cols(i_mt*i1, (i_mt+1)*i1-1);
   //std::cout << "HERERERE c 0a" << std::endl;
+  //
     VarMat.submat(0, i_mt*i1, i1-1, ((i_mt+1)*i1-1)) = VarMat_sub_0; 
   }
 
@@ -2553,7 +2602,7 @@ if(t_regionTestType != "BURDEN"){
     
     VarMat.submat(0, i_mt*i1, i1-1, ((i_mt+1)*i1-1)) = VarMatsub;	
  
-	//VarMatsub.print("VarMatsub");
+//VarMatsub.print("VarMatsub");
 
 
     }//if(nchunks > 1)
@@ -2867,48 +2916,89 @@ for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
 
     OutList.push_back(VarMat, "VarMat");	
     OutList.push_back(MAFVec, "MAFVec");	
-    OutList.push_back(TstatVec_flip, "TstatVec_flip");	
+    OutList.push_back(TstatVec_flip, "TstatVec_flip");
   //arma::mat scaled_m_VarInvMat_cond;
     if(isCondition){
-  //std::cout << "okk5" << std::endl;
  /*  std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;	
    std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_cols " << G1tilde_P_G2tilde_Weighted_Mat.n_cols << std::endl;	
    std::cout << "(ptr_gSAIGEobj->m_VarInvMat_cond).n_rows " << (ptr_gSAIGEobj->m_VarInvMat_cond).n_rows  << std::endl;
    std::cout << "(ptr_gSAIGEobj->m_VarInvMat_cond).n_cols " << (ptr_gSAIGEobj->m_VarInvMat_cond).n_cols  << std::endl;
 */
-   arma::mat AdjCondMat(q_multTrait, q_cond);
-   arma::mat VarMatAdjCond(q_multTrait, q);
-   arma::vec TstatAdjCond(q_multTrait);
+   arma::mat AdjCondMat(q_multTrait, q_cond * q_weight);
+   arma::mat VarMatAdjCond(q_multTrait, q * q_weight);
+   arma::mat VarMatAdjCond_sub0(q, q * q_weight);
+   arma::mat TstatAdjCond(q_multTrait, q_weight);
    arma::mat AdjCondMat_sub(q, q_cond);
-   arma::mat VarInvMat_cond_sub(q_cond, q_cond);
+   arma::mat VarInvMat_cond_sub(q_cond, q_cond * q_weight);
    arma::mat VarMatAdjCond_sub(q,q);
    arma::vec TstatAdjCond_sub(q);
    arma::vec Tstat_cond_sub(q_cond);
    arma::mat G1tilde_P_G2tilde_Weighted_Mat_sub(q, q_cond);
+   arma::mat G1tilde_P_G2tilde_Weighted_Mat_sub0(q, q_cond * q_weight);
 unsigned int startt_qcond, endt_qcond;
+   arma::mat w0G2Mat_cond_sub(q_cond, q_cond);
+
    for(unsigned int i_mt = 0; i_mt < t_traitType.size(); i_mt++){
   	startt = i_mt*q;
   	endt = (i_mt+1)*q - 1;
 	startt_qcond = i_mt*q_cond;
 	endt_qcond = (i_mt+1)*q_cond - 1;
-	G1tilde_P_G2tilde_Weighted_Mat_sub = G1tilde_P_G2tilde_Weighted_Mat.rows(startt,endt);
 	VarInvMat_cond_sub = (ptr_gSAIGEobj->m_VarInvMat_cond).cols(startt_qcond, endt_qcond);
-	AdjCondMat_sub = G1tilde_P_G2tilde_Weighted_Mat_sub * (VarInvMat_cond_sub / (w0G2Mat_cond));
+   	Tstat_cond_sub = (ptr_gSAIGEobj->m_Tstat_cond).subvec(startt_qcond,endt_qcond);
+
+	//std::cout << "okk6a" << std::endl;
+
+	//std::cout << "G1tilde_P_G2tilde_Weighted_Mat " << G1tilde_P_G2tilde_Weighted_Mat.n_cols << " " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;
+
+	for(unsigned int j_wc = 0; j_wc < q_weight; j_wc++){
+		//w0G2Mat_cond = (ptr_gSAIGEobj->m_G2_Weight_cond).cols(j_wc*q_cond, (j_wc+1)*q_cond-1);
+
+		//w0G2Mat_cond.print("w0G2Mat_cond");
+
+		w0G2Mat_cond_sub = w0G2Mat_cond.cols(j_wc*q_cond, (j_wc+1)*q_cond-1);
+
+		G1tilde_P_G2tilde_Weighted_Mat_sub0 = G1tilde_P_G2tilde_Weighted_Mat.rows(startt,endt);
+		G1tilde_P_G2tilde_Weighted_Mat_sub =  G1tilde_P_G2tilde_Weighted_Mat_sub0.cols(j_wc*q_cond, (j_wc+1)*q_cond-1);
+	  	//std::cout << "okk6a 1" << std::endl;
+		//VarInvMat_cond_sub.print("VarInvMat_cond_sub");
+		//G1tilde_P_G2tilde_Weighted_Mat_sub.print("G1tilde_P_G2tilde_Weighted_Mat_sub");
+		//std::cout << "okk6a 1c" << std::endl;
+		
+		//arma::mat VarInvMat_cond_sub0 = VarInvMat_cond_sub / (w0G2Mat_cond_sub);
+		//std::cout << "okk6a 1d" << std::endl;
+		//VarInvMat_cond_sub0.print("VarInvMat_cond_sub0");
+		//std::cout << "okk6a 1a" << std::endl;
+
+		AdjCondMat_sub = G1tilde_P_G2tilde_Weighted_Mat_sub * (VarInvMat_cond_sub / (w0G2Mat_cond_sub));
+	  //std::cout << "okk6a 1b" << std::endl;
 	//w0G2Mat_cond.print("w0G2Mat_cond");
 	//(ptr_gSAIGEobj->m_VarInvMat_cond).print("ptr_gSAIGEobj->m_VarInvMat_cond");
 	//AdjCondMat_sub.print("AdjCondMat_sub");
 	//G1tilde_P_G2tilde_Weighted_Mat_sub.print("G1tilde_P_G2tilde_Weighted_Mat_sub");
-	AdjCondMat.rows(startt,endt) = AdjCondMat_sub;
+		AdjCondMat.rows(startt,endt).cols(j_wc*q_cond, (j_wc+1)*q_cond-1) = AdjCondMat_sub;
    //std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;	
-	VarMatAdjCond_sub = AdjCondMat_sub * (G1tilde_P_G2tilde_Weighted_Mat_sub.t());
+	  //std::cout << "okk6a 2" << std::endl;
+		VarMatAdjCond_sub = AdjCondMat_sub * (G1tilde_P_G2tilde_Weighted_Mat_sub.t());
 	//VarMatAdjCond_sub.print("VarMatAdjCond_sub");
-	VarMatAdjCond.rows(startt,endt) = VarMatAdjCond_sub;
-   //std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;
-   	Tstat_cond_sub = (ptr_gSAIGEobj->m_Tstat_cond).subvec(startt_qcond,endt_qcond);
-	TstatAdjCond_sub = AdjCondMat_sub * (Tstat_cond_sub % w0G2Vec_cond );
-	TstatAdjCond.subvec(startt, endt) = TstatAdjCond_sub;
+		//VarMatAdjCond_sub0.cols(j_wc*q, (j_wc+1)*q-1) = VarMatAdjCond_sub;
+
+		VarMatAdjCond.rows(startt,endt).cols(j_wc*q, (j_wc+1)*q-1) = VarMatAdjCond_sub;
+	  //std::cout << "okk6a 3" << std::endl;
+   	//std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;
+	//
+	
+		w0G2Vec_cond = (ptr_gSAIGEobj->m_G2_Weight_cond).col(j_wc);
+		TstatAdjCond_sub = AdjCondMat_sub * (Tstat_cond_sub % w0G2Vec_cond);
+		TstatAdjCond.col(j_wc).subvec(startt, endt) = TstatAdjCond_sub;
+	  //std::cout << "okk6a 4" << std::endl;
+	}
+	//VarMatAdjCond.rows(startt,endt) = VarMatAdjCond_sub0;
    //std::cout << "G1tilde_P_G2tilde_Weighted_Mat.n_rows " << G1tilde_P_G2tilde_Weighted_Mat.n_rows << std::endl;	
    }
+
+  //std::cout << "okk6" << std::endl;
+
+
       //arma::mat AdjCondMat = G1tilde_P_G2tilde_Weighted_Mat * (ptr_gSAIGEobj->m_VarInvMat_cond / (w0G2Mat_cond));
       //arma::mat VarMatAdjCond = AdjCondMat * (G1tilde_P_G2tilde_Weighted_Mat.t());
       //arma::vec TstatAdjCond = AdjCondMat * (ptr_gSAIGEobj->m_Tstat_cond % w0G2Vec_cond ); 
@@ -3062,8 +3152,8 @@ for(unsigned int j_mt = 0; j_mt < t_traitType.size(); j_mt++){
   OutList.push_back(annoMAFIndicatorMat, "annoMAFIndicatorMat");
  }
 
+ OutList.push_back(q_weight, "q_weight");
   //std::cout << "If only conduct Burden test g " << std::endl;
-
 
 return OutList;
 }
@@ -3076,7 +3166,9 @@ void assign_conditionMarkers_factors(
 			   std::vector<std::string> & t_genoIndex_prev,
                            std::vector<std::string> & t_genoIndex,
                            unsigned int t_n, 
-			   arma::vec & t_weight_cond
+			   arma::mat & t_weight_cond,
+			   arma::mat & t_Beta_param,
+			   bool is_equal_weight_in_groupTest
 			   )           // sample size
 {
   ptr_gSAIGEobj->set_flagSparseGRM_cur(ptr_gSAIGEobj->m_flagSparseGRM);
@@ -3095,8 +3187,30 @@ void assign_conditionMarkers_factors(
   arma::vec MAFVec(q*nt);
   arma::vec gyVec(q*nt);
   arma::vec w0G2_cond_Vec(q*nt);
+
+  unsigned int nw_cond = 0;
+  if(arma::accu(t_weight_cond) != 0.0){
+	nw_cond = t_weight_cond.n_cols;
+  }
+  unsigned int nw_beta = 0;
+  if(arma::accu(t_Beta_param) != 0.0){
+	nw_beta = t_Beta_param.n_rows;
+  }
+  unsigned int nw = nw_cond + nw_beta;
+  
+  if(is_equal_weight_in_groupTest){
+	nw = nw + 1;
+  }
+  
+  std::cout << "nw " << nw << std::endl;
+
+
+  arma::vec w0Beta_vec(t_Beta_param.n_rows);
+
+  arma::mat w0G2_cond_Mat(q*nt, nw);
+  arma::mat gyMat(q*nt, nw);
   arma::vec gsumVec(t_n, arma::fill::zeros);
-  arma::mat gsumMat(t_n, nt, arma::fill::zeros);
+  arma::mat gsumMat(t_n, nw, arma::fill::zeros);
   //boost::math::beta_distribution<> beta_dist(g_weights_beta[0], g_weights_beta[1]);
   arma::vec GVec(t_n);
   double Beta, seBeta, pval, pval_noSPA, Tstat, varT, gy, w0G2_cond;
@@ -3191,6 +3305,12 @@ void assign_conditionMarkers_factors(
   }
 
 
+  for(unsigned int iwb = 0; iwb < t_Beta_param.n_rows; iwb++){
+       boost::math::beta_distribution<> beta_dist(t_Beta_param(iwb,0), t_Beta_param(iwb,1));
+       w0Beta_vec(iwb) = boost::math::pdf(beta_dist, MAF);
+   }
+
+
   for(unsigned int i_mt = 0; i_mt < nt; i_mt++){
 
      ptr_gSAIGEobj->assign_for_itrait(i_mt);
@@ -3233,15 +3353,26 @@ void assign_conditionMarkers_factors(
 
       //std::cout << "after p value 2" << std::endl;
      //if(!t_weight_cond.is_zero()){
-     w0G2_cond = t_weight_cond(i);
-    //}else{
-//	 w0G2_cond = boost::math::pdf(beta_dist, MAF);
-  //  }
-     w0G2_cond_Vec(j_mt) = w0G2_cond;
-     gyVec(j_mt) = gy * w0G2_cond;
-     if(i_mt == 0){
-     	gsumVec = gsumVec + GVec * w0G2_cond;
+     //
+  for(unsigned int i_w = 0; i_w < nw; i_w++){
+    if(i_w < nw_cond){
+     w0G2_cond = t_weight_cond(i, i_w);
+    }else if(i_w >= nw_cond && i_w < nw_cond + nw_beta){
+     w0G2_cond = w0Beta_vec(i_w-nw_cond);
+    }else{
+     w0G2_cond = 1;	
+    }
+
+     w0G2_cond_Mat(j_mt, i_w) = w0G2_cond; 
+     gyMat(j_mt,i_w) = gy * w0G2_cond; 
+     //gyVec(j_mt) = gy * w0G2_cond;
+
+    if(i_mt == 0){
+     	//gsumVec = gsumVec + GVec * w0G2_cond;
+     	gsumMat.col(i_w) = gsumMat.col(i_w) + GVec * w0G2_cond;
      }
+  }//for(unsigned int i_w = 0; i_w < nw; i_w++){   
+
      //std::cout << "after p value 3" << std::endl;
      //gsumMat.col(i_mt) = gsumMat.col(i_mt) + GVec * w0G2_cond;
      TstatVec(j_mt) = Tstat;
@@ -3250,12 +3381,12 @@ void assign_conditionMarkers_factors(
      }
   }
 
-
- arma::mat VarMatsub, P1Matsub, P2Matsub;
- arma::vec qsumVec(nt*q);
- arma::mat gsumtildeMat(gsumVec.n_elem, nt); 
- arma::vec gsumtildeVec;
- arma::mat VarMat(q, q*nt);
+ 	arma::mat VarMatsub, P1Matsub, P2Matsub;
+ 	arma::vec qsumVec(nt*q);
+ 	arma::mat qsumMat(nt*q, nw);
+ 	arma::mat gsumtildeMat((gsumMat.n_rows), nt*nw); 
+ 	arma::vec gsumtildeVec;
+ 	arma::mat VarMat(q, q*nt);
 
  //gyVec.print("gyVec");
  for(unsigned int i_mt = 0; i_mt < nt; i_mt++){
@@ -3270,20 +3401,23 @@ void assign_conditionMarkers_factors(
      //std::cout << "P2Matsub.n_rows " << P2Matsub.n_rows << std::endl;
      //std::cout << "P2Matsub.n_cols " << P2Matsub.n_cols << std::endl;
 
-     //std::cout << "after p value 5" << std::endl;
      VarMatsub = P1Matsub * P2Matsub;
      VarMat.cols(i_mt*q, (i_mt+1)*q - 1) = VarMatsub;
      VarInvMat.cols(i_mt*q, (i_mt+1)*q - 1) = VarMatsub.i();
-     //std::cout << "after p value 6" << std::endl;
      
 
-
-     qsumVec(i_mt) = arma::accu(gyVec.subvec(i_mt*q, (i_mt+1)*q - 1));
-     ptr_gSAIGEobj->getadjG(gsumVec, gsumtildeVec);
-     //std::cout << "after p value 7" << std::endl;
-     gsumtildeMat.col(i_mt) = gsumtildeVec;
-     //std::cout << "after p value 8" << std::endl;
+     for(unsigned int i_w = 0; i_w < nw; i_w++){
+        gyVec  = gyMat.col(i_w);
+     	//qsumVec(i_mt) = arma::accu(gyVec.subvec(i_mt*q, (i_mt+1)*q - 1));
+     	qsumMat(i_mt, i_w) = arma::accu(gyVec.subvec(i_mt*q, (i_mt+1)*q - 1));
+	gsumVec = gsumMat.col(i_w);
+     	ptr_gSAIGEobj->getadjG(gsumVec, gsumtildeVec);
+     	gsumtildeMat.col(i_mt*nw+i_w) = gsumtildeVec;
+     }
 }
+
+
+
   //double qsum = arma::accu(gyVec);
 
 
@@ -3292,9 +3426,9 @@ void assign_conditionMarkers_factors(
 					VarInvMat,
 					VarMat,
 					TstatVec,
-				        w0G2_cond_Vec,	
+				        w0G2_cond_Mat,	
 					MAFVec,
-					qsumVec,
+					qsumMat,
 					gsumtildeMat,
 					pVec);
   ptr_gSAIGEobj->m_VarInvMat_cond_scaled_weighted.resize(q, q*nt);					

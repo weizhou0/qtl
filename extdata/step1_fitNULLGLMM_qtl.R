@@ -228,3 +228,78 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
 	    sampleCovarCol=scovars,
 	    isStoreSigma=opt$isStoreSigma
 	)
+
+if(!opt$isCovariateOffset){
+  load(paste0(opt$outputPrefix, ".rda))"
+  if(sum(modglmm$theta[2:length(modglmm$theta)]) == 0){
+	opt$isCovariateOffset = TRUE
+	set.seed(1)
+	fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
+            bedFile=opt$bedFile,
+            bimFile=opt$bimFile,
+            famFile=opt$famFile,
+            useSparseGRMtoFitNULL=opt$useSparseGRMtoFitNULL,
+            sparseGRMFile=opt$sparseGRMFile,
+            sparseGRMSampleIDFile=opt$sparseGRMSampleIDFile,
+            phenoFile = opt$phenoFile,
+            phenoCol = opt$phenoCol,
+            isRemoveZerosinPheno = opt$isRemoveZerosinPheno,
+            sampleIDColinphenoFile = opt$sampleIDColinphenoFile,
+            traitType = opt$traitType,
+            outputPrefix = opt$outputPrefix,
+            isCovariateOffset=opt$isCovariateOffset,
+            nThreads = opt$nThreads,
+            useSparseGRMforVarRatio = opt$useSparseGRMforVarRatio,
+            invNormalize = opt$invNormalize,
+            covarColList = covars,
+            qCovarCol = qcovars,
+            tol=opt$tol,
+            maxiter=opt$maxiter,
+            tolPCG=opt$tolPCG,
+            maxiterPCG=opt$maxiterPCG,
+            SPAcutoff = opt$SPAcutoff,
+            numMarkersForVarRatio = opt$numRandomMarkerforVarianceRatio,
+            skipModelFitting = opt$skipModelFitting,
+            skipVarianceRatioEstimation = opt$skipVarianceRatioEstimation,
+            memoryChunk = opt$memoryChunk,
+            tauInit = tauInit,
+            LOCO = opt$LOCO,
+            isLowMemLOCO = opt$isLowMemLOCO,
+            traceCVcutoff = opt$traceCVcutoff,
+            nrun = opt$nrun,
+            ratioCVcutoff = opt$ratioCVcutoff,
+            outputPrefix_varRatio = opt$outputPrefix_varRatio,
+            IsOverwriteVarianceRatioFile = opt$IsOverwriteVarianceRatioFile,
+            relatednessCutoff = opt$relatednessCutoff,
+            isCateVarianceRatio = opt$isCateVarianceRatio,
+            cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
+            cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
+            isCovariateTransform = opt$isCovariateTransform,
+            isDiagofKinSetAsOne = opt$isDiagofKinSetAsOne,
+            minMAFforGRM = opt$minMAFforGRM,
+            maxMissingRateforGRM = opt$maxMissingRateforGRM,
+            minCovariateCount=opt$minCovariateCount,
+            includeNonautoMarkersforVarRatio=opt$includeNonautoMarkersforVarRatio,
+            sexCol=opt$sexCol,
+            FemaleCode=opt$FemaleCode,
+            FemaleOnly=opt$FemaleOnly,
+            MaleCode=opt$MaleCode,
+            MaleOnly=opt$MaleOnly,
+            SampleIDIncludeFile=opt$SampleIDIncludeFile,
+            VmatFilelist=opt$VmatFilelist,
+            VmatSampleFilelist=opt$VmatSampleFilelist,
+            longlCol=opt$longlCol,
+            useGRMtoFitNULL=opt$useGRMtoFitNULL,
+            offsetCol=opt$offsetCol,
+            varWeightsCol=opt$varWeightsCol,
+            sampleCovarCol=scovars,
+            isStoreSigma=opt$isStoreSigma
+        )
+
+     load(paste0(opt$outputPrefix, ".rda))"
+       if(sum(modglmm$theta[2:length(modglmm$theta)]) == 0){
+		warning("All variance component parameters are estiamted to be zero. ")
+	}
+
+  }
+}

@@ -108,6 +108,9 @@ SAIGE.Region = function(mu,
 			is_fastTest,
 			pval_cutoff_for_fastTest,
 			is_output_moreDetails){
+
+  weight_cond = as.matrix(weight_cond)
+  cat("weight_cond ", weight_cond, "\n")
   cat("maxMAFlist ", maxMAFlist, "\n")
   cat("minMAFlist ", minMAFlist, "\n")
 
@@ -206,6 +209,7 @@ SAIGE.Region = function(mu,
   numberofWeightlists = region_list$numberofWeightlists
   nameofWeightlists = region_list$nameofWeightlists
   weightlist = nameofWeightlists
+
   #if(is_equal_weight_in_groupTest & is_weight_included){
   #  stop("is_equal_weight_in_groupTest = TRUE but weights are found in the group file.\n")
   #}
@@ -339,7 +343,8 @@ SAIGE.Region = function(mu,
 	if(is_weight_included){
 		WEIGHT = matrix(as.numeric(unlist(region$WEIGHT)),    # Convert to numeric matrix
 		                  ncol = length(region$WEIGHT))
-		
+		#print(dim(WEIGHT))
+		#print("dim(WEIGHT)")
 	}else{
 		WEIGHT = matrix(c(0,0), ncol=1)
 	}
@@ -358,6 +363,7 @@ SAIGE.Region = function(mu,
       }else{
         set_flagSparseGRM_cur_SAIGE(FALSE)
       }
+
       outList = mainRegionInCPP(genoType, region$genoIndex_prev, region$genoIndex, annoIndicatorMat, weightlist, maxMAFlist, minMAFlist,  OutputFile, traitType, n, P1Mat, P2Mat, regionTestType, isImputation, BetaDist_weight_mat, WEIGHT, weight_cond, is_equal_weight_in_groupTest, is_single_in_groupTest, is_output_markerList_in_groupTest, annolistsub, regionName, is_fastTest, is_output_moreDetails)	
 
       if(regionTestType == "BURDEN" & is_fastTest){
@@ -384,6 +390,9 @@ SAIGE.Region = function(mu,
 
 q_multTrait = length(outList$pvalVec)/length(traitType)
 
+
+cat("q_multTrait ", q_multTrait, "\n")
+
 for(tt in 1:length(traitType)){
 	tt_start = q_multTrait*(tt-1)+1
 	tt_end = q_multTrait*(tt)
@@ -399,10 +408,12 @@ for(tt in 1:length(traitType)){
 	#print("length(outList$pvalVec)")
 
 	#print("WEIGHT")
-	#print(WEIGHT)
+	#print(dim(WEIGHT))
 
         if(sum(WEIGHT) > 0){
-          AnnoWeights = c(WEIGHT, rep(1, outList$numofUR))
+          #AnnoWeights = c(WEIGHT, rep(1, outList$numofUR))
+	  WEIGHTUR = matrix(1, nrow=outList$numofUR, ncol=ncol(WEIGHT))
+          WEIGHT = rbind(WEIGHT, WEIGHTUR)
         }
       }
 
@@ -422,17 +433,6 @@ for(tt in 1:length(traitType)){
             gyVec= outList$gyVec[tt_start:tt_end][noNAIndices]
           }
 
-          if(isCondition){#check later
-            VarMatAdjCond = outList$VarMatAdjCond[tt_start:tt_end,][noNAIndices,noNAIndices]
-            TstatAdjCond = outList$TstatAdjCond[tt_start:tt_end][noNAIndices]
-	    print(dim(outList$G1tilde_P_G2tilde_Weighted_Mat))
-	    cat("tt_start ", tt_start, "\n")
-	    cat("tt_end ", tt_end, "\n")
-	
-            G1tilde_P_G2tilde_Weighted_Mat = outList$G1tilde_P_G2tilde_Weighted_Mat[tt_start:tt_end,,drop=F][noNAIndices,,drop=F]
-
-            weightMat_G2_G2 = outList$G2_Weight_cond %*% t(outList$G2_Weight_cond)
-          }	  
         
        ### Get annotation maf indicators
 
@@ -487,6 +487,11 @@ for(tt in 1:length(traitType)){
 
  #       weightMat = AnnoWeights %*% t(AnnoWeights)
 
+	#print("WEIGHT")
+	#print(WEIGHT)
+	#print("noNAIndices")
+	#print(noNAIndices)
+
 	if(sum(WEIGHT) > 0){
 		AnnoWeightsMat = WEIGHT[noNAIndices,]
 	}else{
@@ -514,11 +519,24 @@ for(tt in 1:length(traitType)){
 	wadjVarSMat_cond_list = list()
 
 
+	#print("dim(outList$G2_Weight_cond)")
+	#print(dim(outList$G2_Weight_cond))
+
+       if(isCondition){#check later
+            VarMatAdjCond = outList$VarMatAdjCond[tt_start:tt_end,][noNAIndices,noNAIndices]
+            TstatAdjCond = outList$TstatAdjCond[tt_start:tt_end][noNAIndices]
+	    #print(dim(outList$G1tilde_P_G2tilde_Weighted_Mat))
+	    #cat("tt_start ", tt_start, "\n")
+	    #cat("tt_end ", tt_end, "\n")	
+            G1tilde_P_G2tilde_Weighted_Mat = outList$G1tilde_P_G2tilde_Weighted_Mat[tt_start:tt_end,,drop=F][noNAIndices,,drop=F]
+            weightMat_G2_G2 = outList$G2_Weight_cond %*% t(outList$G2_Weight_cond)
+        }	  
+
        if(isCondition){  #check  
     	 #weightMat_G1_G2 = AnnoWeights %*% t(outList$G2_Weight_cond)
-	for(ia in 1:ncol(AnnoWeightsMat)){
-    	 	weightMat_G1_G2_Mat[[ia]] = AnnoWeightsMat[,ia] %*% t(outList$G2_Weight_cond)
-	 }
+	    for(ia in 1:ncol(AnnoWeightsMat)){
+    	 	weightMat_G1_G2_Mat[[ia]] = AnnoWeightsMat[,ia] %*% t(outList$G2_Weight_cond[,ia])
+	    }
        }
 
 
@@ -529,7 +547,6 @@ for(tt in 1:length(traitType)){
 	#cat("startvarMat ", startvarMat, "\n")
 	#cat("endvarMat ", endvarMat, "\n")
 
-
 	for(ia in 1:ncol(AnnoWeightsMat)){	
                 AnnoWeights = AnnoWeightsMat[,ia]
                 wStatVec = StatVec * AnnoWeights
@@ -539,14 +556,25 @@ for(tt in 1:length(traitType)){
                 wStatMat = cbind(wStatMat, wStatVec)
                 wadjVarSMat_list[[ia]] = wadjVarSMat
 		if(isCondition){
-	  		wStatVec_cond = wStatVec - outList$TstatAdjCond[tt_start:tt_end][noNAIndices]
-			print(dim(outList$VarMatAdjCond))
-			print(dim(wadjVarSMat))
-			print(length(wStatVec))
-			print(length(outList$TstatAdjCond))
-			print(tt_start)
-			print(tt_end)
-          		wadjVarSMat_cond = wadjVarSMat - outList$VarMatAdjCond[tt_start:tt_end,][noNAIndices,noNAIndices]
+			#print("dim(outList$VarMatAdjCond)")
+			#print(dim(outList$VarMatAdjCond))
+			#print(dim(outList$TstatAdjCond))
+			#print(length(outList$TstatAdjCond))
+			#cat("ia ", ia, "\n")
+			#print(noNAIndices)
+
+			#print(outList$TstatAdjCond[tt_start:tt_end, ia])
+
+	  		wStatVec_cond = wStatVec - as.vector(outList$TstatAdjCond[tt_start:tt_end, ia][noNAIndices])
+			#print(dim(wadjVarSMat))
+			#print(length(wStatVec))
+			#print(tt_start)
+			#print(tt_end)
+
+			tt_start_w = q_multTrait*(ia-1)+1
+			tt_end_w = q_multTrait*(ia)
+
+          		wadjVarSMat_cond = wadjVarSMat - outList$VarMatAdjCond[tt_start:tt_end,tt_start_w:tt_end_w][noNAIndices,noNAIndices]
 			wStatVec_cond_Mat = cbind(wStatVec_cond_Mat, wStatVec_cond)
 			wadjVarSMat_cond_list[[ia]] = wadjVarSMat_cond	
      		}
@@ -566,6 +594,9 @@ for(tt in 1:length(traitType)){
 #	print("annoMAFIndicatorMat")
 #	print(dim(annoMAFIndicatorMat))
     annoMAFIndVec = c()
+#print("wadjVarSMat_cond_list")
+#print(wadjVarSMat_cond_list)
+
   for(r in 1:length(weightlist)){
     for(j in 1:length(annolistsub)){
 	AnnoName = annolistsub[j]
@@ -626,6 +657,8 @@ for(tt in 1:length(traitType)){
 
 			#print("AnnoWeights[tempPos]")
 			#print(AnnoWeights[tempPos])
+
+			#print(p.new)
 			Pvalue_ACATV = get_CCT_pvalue(p.new, AnnoWeights[tempPos])	
 			if(is_SKATO){	
 				groupOutList = get_SKAT_pvalue(Score, Phi, r.corr, regionTestType)
@@ -679,12 +712,18 @@ for(tt in 1:length(traitType)){
 				Score_cond = wStatVec_cond[tempPos]
 				Phi_cond = wadjVarSMat_cond[tempPos, tempPos]
 			}
+			#print("Score_cond")
+			#print(Score_cond)
+			#print("Phi_cond")
+			#print(Phi_cond)
 			P_cond = pchisq(Score_cond^2/diag(Phi_cond), df=1, lower.tail=F)
 			#groupOutList_cond = get_SKAT_pvalue(Score_cond, Phi_cond, r.corr, regionTestType)
 			#groupOutList_cond = get_SKAT_pvalue_Burden_SKAT_ACATV(Score_cond, Phi_cond, P_cond, AnnoWeights)
 
+			#print(P_cond)
+			#print(AnnoWeights[tempPos])
 			Pvalue_ACATV_cond = get_CCT_pvalue(P_cond, AnnoWeights[tempPos])
-
+			
 			if(is_SKATO){
 				groupOutList_cond = get_SKAT_pvalue(Score_cond, Phi_cond, r.corr, regionTestType)
 				Pvalue_ACATO_cond = get_CCT_pvalue(c(Pvalue_ACATV_cond, groupOutList_cond$Pvalue_SKATO))	
@@ -719,8 +758,6 @@ for(tt in 1:length(traitType)){
 	   if(isPolyRegion){
 		annoMAFIndVec = c(annoMAFIndVec, annoMAFIndVec.temp)
 		resultDF = pval.Region.temp
-		print("pval.Region.temp")
-		print(pval.Region.temp)
 		#resultDF$Region = regionName
 		#resultDF$Group = AnnoName
 		resultDF$min_MAF = minMAFName	
@@ -857,9 +894,6 @@ if(is_fastTest){
        annoMAFIndicatorMat = annoMAFIndicatorMat[noNAIndices, , drop=F]
        MAFVec = outList$MAFVec[noNAIndices]
        #AnnoWeights = dbeta(MAFVec,1,25)
-
-	print("AnnoWeights")
-	print(AnnoWeights)
 
        #if(sum(WEIGHT) > 0){
  #	 #AnnoWeights = AnnoWeights[varTestedIndices] 
@@ -1027,8 +1061,6 @@ if(is_fastTest){
 	     }#if(isCondition){
 		pval.Region = rbind.data.frame(pval.Region, resultDF)
 		pval.Region.temp = rbind.data.frame(pval.Region.temp, resultDF)
-		print("pval.Region.temp a")
-		print(pval.Region.temp)
 	   }else{#if(length(tempPos) > 0){
 		isPolyRegion = FALSE
 	   }	
@@ -1409,6 +1441,7 @@ SAIGE.getRegionList_new = function(marker_group_line,
 	  	geneList = c(geneList, gene)
 	  }
   }
+
     if(nline_per_gene == 2){
     	colnames(RegionData) = c("REGION", "SNP", "ANNO")
     }else if(nline_per_gene == 3){
@@ -1561,6 +1594,7 @@ if(nrow(RegionData) != 0){
   }
 
   annoIndicatorMat_rmind = which(rowSums(annoIndicatorMat) == 0)
+
   if(length(annoIndicatorMat_rmind) > 0){
     SNP = SNP[-annoIndicatorMat_rmind]
 

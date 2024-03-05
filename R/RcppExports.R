@@ -73,8 +73,8 @@ mainRegionInCPP <- function(t_genoType, t_genoIndex_prev, t_genoIndex, annoIndic
     .Call('_SAIGEQTL_mainRegionInCPP', PACKAGE = 'SAIGEQTL', t_genoType, t_genoIndex_prev, t_genoIndex, annoIndicatorMat, t_weightlistvec, maxMAFVec, minMAFVec, t_outputFile, t_traitType, t_n, P1Mat, P2Mat, t_regionTestType, t_isImputation, t_Beta_param, t_weight, t_weight_cond, t_isIncludeNoWeights, t_isSingleinGroupTest, t_isOutputMarkerList, annoStringVec, regionName, t_isFastTest, t_isMoreOutput)
 }
 
-assign_conditionMarkers_factors <- function(t_genoType, t_genoIndex_prev, t_genoIndex, t_n, t_weight_cond) {
-    invisible(.Call('_SAIGEQTL_assign_conditionMarkers_factors', PACKAGE = 'SAIGEQTL', t_genoType, t_genoIndex_prev, t_genoIndex, t_n, t_weight_cond))
+assign_conditionMarkers_factors <- function(t_genoType, t_genoIndex_prev, t_genoIndex, t_n, t_weight_cond, t_Beta_param, is_equal_weight_in_groupTest) {
+    invisible(.Call('_SAIGEQTL_assign_conditionMarkers_factors', PACKAGE = 'SAIGEQTL', t_genoType, t_genoIndex_prev, t_genoIndex, t_n, t_weight_cond, t_Beta_param, is_equal_weight_in_groupTest))
 }
 
 assign_conditionMarkers_factors_binary_region <- function(scalefactor_G2_cond) {

@@ -1067,7 +1067,6 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
 
 	}
 
-	print("CHECK HERE")
 
         #if((skipVarianceRatioEstimation & useSparseGRMtoFitNULL)){
                 family = fit0$family
