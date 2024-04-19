@@ -1081,8 +1081,10 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
 		W = W * modglmm$varWeights;
                 tauVecNew = modglmm$theta
                 Sigma_iX =  getSigma_X_multiV(W, tauVecNew, modglmm$X, maxiterPCG, tolPCG, LOCO=FALSE)
-                Sigma_iXXSigma_iX = Sigma_iX%*%(solve(t(modglmm$X)%*%Sigma_iX))
-                modglmm$Sigma_iXXSigma_iX = Sigma_iXXSigma_iX
+                if (!isShrinkModelOutput) {
+                  Sigma_iXXSigma_iX = Sigma_iX%*%(solve(t(modglmm$X)%*%Sigma_iX))
+                  modglmm$Sigma_iXXSigma_iX = Sigma_iXXSigma_iX
+                }
         #}
     
         modglmm$useSparseGRMforVarRatio = useSparseGRMforVarRatio 	   
