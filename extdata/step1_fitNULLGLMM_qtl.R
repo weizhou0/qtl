@@ -232,8 +232,8 @@ if(!opt$isCovariateOffset){
   load(paste0(opt$outputPrefix, ".rda"), envir = my_env)
   modglmm = my_env$modglmm
   print(modglmm$theta)
-  if(sum(modglmm$theta[2:length(modglmm$theta)]) == 0){
-  	cat("All variance component parameter estiamtes are 0, now try including all covariates as offset\n")
+  if(sum(modglmm$theta[2:length(modglmm$theta)]) <= 0 || sum(modglmm$theta[2:length(modglmm$theta)]) > 1){
+  	cat("All variance component parameter estiamtes are out of bounds, now try including all covariates as offset\n")
 	opt$isCovariateOffset = TRUE
 	set.seed(1)
 	fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
@@ -302,8 +302,8 @@ if(!opt$isCovariateOffset){
        load(paste0(opt$outputPrefix, ".offset.rda"), envir = my_env)
        modglmm = my_env$modglmm
        print(modglmm$theta)
-       if(sum(modglmm$theta[2:length(modglmm$theta)]) == 0){
-		cat("All variance component parameters are estiamted to be zero.\n")
+       if(sum(modglmm$theta[2:length(modglmm$theta)]) <= 0 || sum(modglmm$theta[2:length(modglmm$theta)]) > 1){
+		cat("All variance component parameter estiamtes are out of bounds.\n")
 		file.remove(paste0(opt$outputPrefix, ".offset.rda"))
 		if (file.exists(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))) {
 		  file.remove(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))
