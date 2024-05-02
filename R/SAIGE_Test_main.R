@@ -879,7 +879,7 @@ print(varWeights_gxe)
 			stop("The length of the provided weights for conditioning markers is not equal to the number of conditioning markers\n")
 		}	
         }else{
-		condition_weights = matrix(rep(0, length(condition_genoIndex$cond_genoIndex)), nrow=1)
+		condition_weights = matrix(rep(0, length(condition_genoIndex$cond_genoIndex)), ncol=1)
 	}
 
 
@@ -902,7 +902,7 @@ print(varWeights_gxe)
 
     }else{ #if(isGroupTest){
 	BetaDist_weight_mat =  matrix(c(0, 0), ncol=2)
-	condition_weights = matrix(rep(1, length(condition_genoIndex$cond_genoIndex)), nrow=1)
+	condition_weights = matrix(rep(0, length(condition_genoIndex$cond_genoIndex)), ncol=1)
     }
 
 

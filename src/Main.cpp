@@ -3294,7 +3294,6 @@ void assign_conditionMarkers_factors(
 
   arma::vec gtildeVec;
 
-  //std::cout << "herebefore " << std::endl;
   bool isSingleVarianceRatio;
   if(ptr_gSAIGEobj->m_varRatio_null_mt.n_rows == 1){
         //ptr_gSAIGEobj->assignSingleVarianceRatio(ptr_gSAIGEobj->m_flagSparseGRM_cur, true);
@@ -3305,11 +3304,12 @@ void assign_conditionMarkers_factors(
   }
 
 
+ if(nw_beta > 0){
   for(unsigned int iwb = 0; iwb < t_Beta_param.n_rows; iwb++){
        boost::math::beta_distribution<> beta_dist(t_Beta_param(iwb,0), t_Beta_param(iwb,1));
        w0Beta_vec(iwb) = boost::math::pdf(beta_dist, MAF);
    }
-
+  }
 
   for(unsigned int i_mt = 0; i_mt < nt; i_mt++){
 
@@ -3338,7 +3338,6 @@ void assign_conditionMarkers_factors(
 
   }
 
-      //std::cout << "after p value" << std::endl;
       ptr_gSAIGEobj->getadjG(GVec, gtildeVec);
       P1Mat.row(j_mt) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*gtildeVec.t();
       P2Mat.col(j_mt) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*P2Vec;
@@ -3346,14 +3345,13 @@ void assign_conditionMarkers_factors(
       //P2Mat.col(i) = P2Vec;
       MAFVec(j_mt) = MAF;
       //w0G2_cond = boost::math::pdf(beta_dist, MAF);
-      //t_weight_cond.print();
+      t_weight_cond.print("t_weight_cond");
       if(MAF == 0.0){
 	std::cerr << "ERROR: Conditioning marker is monomorphic\n";
       }	      
 
-      //std::cout << "after p value 2" << std::endl;
      //if(!t_weight_cond.is_zero()){
-     //
+     
   for(unsigned int i_w = 0; i_w < nw; i_w++){
     if(i_w < nw_cond){
      w0G2_cond = t_weight_cond(i, i_w);
@@ -3366,11 +3364,12 @@ void assign_conditionMarkers_factors(
      w0G2_cond_Mat(j_mt, i_w) = w0G2_cond; 
      gyMat(j_mt,i_w) = gy * w0G2_cond; 
      //gyVec(j_mt) = gy * w0G2_cond;
-
+   //if(is_groupTest){
     if(i_mt == 0){
      	//gsumVec = gsumVec + GVec * w0G2_cond;
      	gsumMat.col(i_w) = gsumMat.col(i_w) + GVec * w0G2_cond;
      }
+    //}
   }//for(unsigned int i_w = 0; i_w < nw; i_w++){   
 
      //std::cout << "after p value 3" << std::endl;
@@ -3387,7 +3386,6 @@ void assign_conditionMarkers_factors(
  	arma::mat gsumtildeMat((gsumMat.n_rows), nt*nw); 
  	arma::vec gsumtildeVec;
  	arma::mat VarMat(q, q*nt);
-
  //gyVec.print("gyVec");
  for(unsigned int i_mt = 0; i_mt < nt; i_mt++){
      //std::cout << "after p value 4" << std::endl;
@@ -3406,6 +3404,7 @@ void assign_conditionMarkers_factors(
      VarInvMat.cols(i_mt*q, (i_mt+1)*q - 1) = VarMatsub.i();
      
 
+   //if(is_groupTest){
      for(unsigned int i_w = 0; i_w < nw; i_w++){
         gyVec  = gyMat.col(i_w);
      	//qsumVec(i_mt) = arma::accu(gyVec.subvec(i_mt*q, (i_mt+1)*q - 1));
@@ -3413,13 +3412,12 @@ void assign_conditionMarkers_factors(
 	gsumVec = gsumMat.col(i_w);
      	ptr_gSAIGEobj->getadjG(gsumVec, gsumtildeVec);
      	gsumtildeMat.col(i_mt*nw+i_w) = gsumtildeVec;
-     }
+     //}
 }
 
-
+}
 
   //double qsum = arma::accu(gyVec);
-
 
   ptr_gSAIGEobj->assignConditionFactors(
 		   			P2Mat,
@@ -3431,6 +3429,7 @@ void assign_conditionMarkers_factors(
 					qsumMat,
 					gsumtildeMat,
 					pVec);
+	
   ptr_gSAIGEobj->m_VarInvMat_cond_scaled_weighted.resize(q, q*nt);					
 }
 
