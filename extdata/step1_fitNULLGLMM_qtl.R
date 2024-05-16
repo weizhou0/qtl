@@ -4,11 +4,6 @@ options(stringsAsFactors=F)
 
 ## load R libraries
 
-#library(SAIGE)
-#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test2/")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_SAIGE-QTL")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_SPA_smallMemory")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_0.2.0")
 library(SAIGEQTL)
 
 require(optparse) #install.packages("optparse")
@@ -137,7 +132,9 @@ option_list <- list(
        make_option("--varWeightsCol", type="character", default=NULL,
    help="variance weight column"),
   make_option("--isStoreSigma", type="logical", default=TRUE,
-   help="Optional. Whether to store the inv Sigma matrix. [default, 'TRUE']")
+   help="Optional. Whether to store the inv Sigma matrix. [default, 'TRUE']"),
+  make_option("--isShrinkModelOutput", type="logical", default=TRUE,
+   help="Optional. Whether to remove unnecessary objects for step2 from the model output. [default, 'TRUE']")
 )
 
 
@@ -226,12 +223,17 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
 	    offsetCol=opt$offsetCol,
 	    varWeightsCol=opt$varWeightsCol,
 	    sampleCovarCol=scovars,
-	    isStoreSigma=opt$isStoreSigma
+	    isStoreSigma=opt$isStoreSigma,
+      isShrinkModelOutput=opt$isShrinkModelOutput
 	)
 
 if(!opt$isCovariateOffset){
-  load(paste0(opt$outputPrefix, ".rda))"
-  if(sum(modglmm$theta[2:length(modglmm$theta)]) == 0){
+  my_env = new.env()
+  load(paste0(opt$outputPrefix, ".rda"), envir = my_env)
+  modglmm = my_env$modglmm
+  print(modglmm$theta)
+  if(sum(modglmm$theta[2:length(modglmm$theta)]) <= 0 || sum(modglmm$theta[2:length(modglmm$theta)]) > 1){
+  	cat("All variance component parameter estiamtes are out of bounds, now try including all covariates as offset\n")
 	opt$isCovariateOffset = TRUE
 	set.seed(1)
 	fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
@@ -246,7 +248,7 @@ if(!opt$isCovariateOffset){
             isRemoveZerosinPheno = opt$isRemoveZerosinPheno,
             sampleIDColinphenoFile = opt$sampleIDColinphenoFile,
             traitType = opt$traitType,
-            outputPrefix = opt$outputPrefix,
+            outputPrefix = paste0(opt$outputPrefix, ".offset"),
             isCovariateOffset=opt$isCovariateOffset,
             nThreads = opt$nThreads,
             useSparseGRMforVarRatio = opt$useSparseGRMforVarRatio,
@@ -293,13 +295,35 @@ if(!opt$isCovariateOffset){
             offsetCol=opt$offsetCol,
             varWeightsCol=opt$varWeightsCol,
             sampleCovarCol=scovars,
-            isStoreSigma=opt$isStoreSigma
+            isStoreSigma=opt$isStoreSigma,
+            isShrinkModelOutput=opt$isShrinkModelOutput
         )
+       my_env = new.env()
+       load(paste0(opt$outputPrefix, ".offset.rda"), envir = my_env)
+       modglmm = my_env$modglmm
+       print(modglmm$theta)
+       if(sum(modglmm$theta[2:length(modglmm$theta)]) <= 0 || sum(modglmm$theta[2:length(modglmm$theta)]) > 1){
+		cat("All variance component parameter estiamtes are out of bounds.\n")
+		file.remove(paste0(opt$outputPrefix, ".offset.rda"))
+		if (file.exists(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))) {
+		  file.remove(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))
+		  #Delete file if it exists
+		}else{
+		  if (file.exists(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))) {
+                    file.remove(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))
+                  }
+		}
+	}else{
 
-     load(paste0(opt$outputPrefix, ".rda))"
-       if(sum(modglmm$theta[2:length(modglmm$theta)]) == 0){
-		warning("All variance component parameters are estiamted to be zero. ")
+		file.rename(paste0(opt$outputPrefix, ".offset.rda"), paste0(opt$outputPrefix, ".rda"))
+		if (file.exists(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))) {
+                  file.rename(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"), paste0(opt$outputPrefix, ".varianceRatio.txt"))
+                  #Delete file if it exists
+                }else{
+                  if (file.exists(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))) {
+                    file.rename(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"), paste0(opt$outputPrefix_varRatio, ".varianceRatio.txt"))
+                  }
+                }
 	}
-
   }
 }

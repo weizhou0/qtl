@@ -46,6 +46,7 @@
 #' @param sexCol character. Coloumn name for sex in the phenotype file, e.g Sex. By default, '' 
 #' @param isCovariateOffset logical. Whether to estimate fixed effect coeffciets. By default, FALSE.  
 #' @param isStoreSigma logical. Whether to store sigma matrix. By default, FALSE. If number of individuals is greater than 10,000, this option may use large memory
+#' @param isShrinkModelOutput logical. remove unnecessary objects for step2 from the model output. By default, FALSE.
 #' @return a file ended with .rda that contains the glmm model information, a file ended with .varianceRatio.txt that contains the variance ratio values, and a file ended with #markers.SPAOut.txt that contains the SPAGMMAT tests results for the markers used for estimating the variance ratio.
 #' @export
 fitNULLGLMM_multiV = function(plinkFile = "",
@@ -112,7 +113,8 @@ fitNULLGLMM_multiV = function(plinkFile = "",
 		VcellmatFilelist = "",
 		VcellmatSampleFilelist = "", 
 		useGRMtoFitNULL=TRUE, 
-		isStoreSigma = FALSE)
+		isStoreSigma = FALSE,
+		isShrinkModelOutput = FALSE)
 {
 
     ##set up output files
@@ -1078,8 +1080,10 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
 		W = W * modglmm$varWeights;
                 tauVecNew = modglmm$theta
                 Sigma_iX =  getSigma_X_multiV(W, tauVecNew, modglmm$X, maxiterPCG, tolPCG, LOCO=FALSE)
-                Sigma_iXXSigma_iX = Sigma_iX%*%(solve(t(modglmm$X)%*%Sigma_iX))
-                modglmm$Sigma_iXXSigma_iX = Sigma_iXXSigma_iX
+                if (!isShrinkModelOutput) {
+                  Sigma_iXXSigma_iX = Sigma_iX%*%(solve(t(modglmm$X)%*%Sigma_iX))
+                  modglmm$Sigma_iXXSigma_iX = Sigma_iXXSigma_iX
+                }
         #}
     
         modglmm$useSparseGRMforVarRatio = useSparseGRMforVarRatio 	   
@@ -1327,6 +1331,26 @@ file.remove(paste0(outputPrefix, "_", phenoCol, "_size_temp"))
     }
     closeGenoFile_plink()
 
+    # clean up saved model (as in ReadModel)
+    if (isShrinkModelOutput) {
+      load(modelOut)
+      modglmm$Y = NULL
+      modglmm$linear.predictors = NULL
+      modglmm$coefficients = NULL
+      modglmm$cov = NULL
+      if (sum(duplicated(modglmm$sampleID)) > 0) {
+        modglmm$obj.noK$Sigma_iXXSigma_iX <- matrix(1)
+        modglmm$X <- NULL
+        if (is.null(modglmm$eMat)) {
+          modglmm$obj.noK$XV <- NULL
+          modglmm$obj.noK$XVX <- NULL
+          modglmm$obj.noK$XXVX_inv <- NULL
+          modglmm$obj.noK$XVX_inv <- NULL
+          modglmm$obj.noK$XVX_inv_XV <- NULL
+        }
+      }
+      save(modglmm, file = modelOut)
+    }
 }
 
 
