@@ -639,3 +639,14 @@ writeOutputFileIndex <- function(OutputFileIndex,
     write.table(message5, OutputFileIndex, quote = F, sep = "\t", append = T, col.names = F, row.names = F)
   }
 }
+
+fastSave <- function(modglmm, file, n.cores = NULL) {
+  if (require(fastSave) & system("command -v pigz", wait = T, ignore.stdout = TRUE, ignore.stderr = TRUE) == 0) {
+    if (is.null(n.cores)) {
+      n.cores <- parallel::detectCores()
+    }
+    fastSave::save.pigz(modglmm, file = file, n.cores = n.cores)
+  } else {
+    save(modglmm, file = file)
+  }
+}
