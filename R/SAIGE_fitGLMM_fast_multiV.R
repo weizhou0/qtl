@@ -237,7 +237,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
       stop("ERROR! bim file does not exsit\n")
     } else {
       if (LOCO) {
-        chrVec <- data.table:::fread(bimFile, header = F, data.table = F, select = 1)
+        chrVec <- data.table::fread(bimFile, header = F, data.table = F, select = 1)
         updatechrList <- updateChrStartEndIndexVec(chrVec)
         LOCO <- updatechrList$LOCO
         chromosomeStartIndexVec <- updatechrList$chromosomeStartIndexVec
@@ -253,8 +253,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     if (!file.exists(famFile)) {
       stop("ERROR! fam file does not exsit\n")
     } else {
-      sampleListwithGenov0 <- data.table:::fread(famFile, header = F, , colClasses = list(character = 1:4))
-      sampleListwithGenov0 <- data.frame(sampleListwithGenov0)
+      sampleListwithGenov0 <- data.table::fread(famFile, header = F, colClasses = list(character = 1:4), data.table = FALSE)
       colnames(sampleListwithGenov0) <- c(
         "FIDgeno", "IIDgeno",
         "father", "mother", "sex", "phe"
@@ -269,7 +268,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     }
   } else {
     if (useSparseGRMtoFitNULL | useSparseGRMforVarRatio) {
-      sampleListwithGenov0 <- data.table:::fread(sparseGRMSampleIDFile,
+      sampleListwithGenov0 <- data.table::fread(sparseGRMSampleIDFile,
         header = F, , colClasses = c("character"), data.table = F
       )
       colnames(sampleListwithGenov0) <- c("IIDgeno")
@@ -305,7 +304,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     ## check whether the phenotype file is large
     cmd <- paste0("du ", phenoFile, "| awk '{print $1}' > ", outputPrefix, "_", phenoCol, "_size_temp")
     system(cmd)
-    datasize <- data.table:::fread(paste0(outputPrefix, "_", phenoCol, "_size_temp"), header = F, data.table = F)
+    datasize <- data.table::fread(paste0(outputPrefix, "_", phenoCol, "_size_temp"), header = F, data.table = F)
     isphenoFileLarge <- FALSE
     if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
       if (datasize[1, 1] > 200000) {
@@ -318,15 +317,9 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     }
 
     if (isphenoFileLarge) {
-      if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
-        cmd <- paste0("gunzip -c ", phenoFile, "| head -n 1 | sed 's/\\t/\\n/g' | sed 's/\ /\\n/g' | awk '{print $1\"\\t\"NR}' > ", outputPrefix, "_", phenoCol, "_lineNum_temp")
-        system(cmd)
-      } else {
-        cmd <- paste0("cat ", phenoFile, "| head -n 1 | sed 's/\\t/\\n/g' | sed 's/\ /\\n/g' | awk '{print $1\"\\t\"NR}' > ", outputPrefix, "_", phenoCol, "_lineNum_temp")
-        system(cmd)
-      }
-
-      # print(cmd)
+      catcmd <- ifelse(grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile), "gunzip -c ", "cat ")
+      cmd <- paste0(catcmd, phenoFile, " | head -n 1 | sed 's/[\\t ]/\\n/g' | awk '{print $1\"\\t\"NR}' > ", outputPrefix, "_", phenoCol, "_lineNum_temp")
+      system(cmd)
 
       checkColListDataFrame <- data.frame(colna = checkColList)
       phenoFilephenoCol_lineNum <- data.table::fread(paste0(outputPrefix, "_", phenoCol, "_lineNum_temp"), header = F, data.table = F)
@@ -335,20 +328,12 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
 
       write.table(phenoFilephenoCol_lineNum_checkColList[, 2], paste0(outputPrefix, "_", phenoCol, "_colnames_subset_temp"), quote = F, col.names = F, row.names = F)
 
-
-      if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
-        cmdb <- paste0("cut -f $(tr '\\n' ',' < ", outputPrefix, "_", phenoCol, "_colnames_subset_temp | sed 's/,$//') <(gunzip -c", phenoFile, ")> ", outputPrefix, "_", phenoCol, "_subcols_temp")
-      } else {
-        cmdb <- paste0("cut -f $(tr '\\n' ',' < ", outputPrefix, "_", phenoCol, "_colnames_subset_temp | sed 's/,$//') ", phenoFile, "> ", outputPrefix, "_", phenoCol, "_subcols_temp")
-      }
-
-      # print(cmdb)
+      cmdb <- paste0(catcmd, phenoFile, " | cut -f $(tr '\\n' ',' < ", outputPrefix, "_", phenoCol, "_colnames_subset_temp | sed 's/,$//') > ", outputPrefix, "_", phenoCol, "_subcols_temp")
       system(cmdb)
 
       phenoFiletemp <- paste0(outputPrefix, "_", phenoCol, "_subcols_temp")
 
-
-      data <- data.table:::fread(phenoFiletemp,
+      data <- data.table::fread(phenoFiletemp,
         header = T,
         stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table = F
       )
@@ -360,7 +345,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     } else { # !isphenoFileLarge
 
       if (grepl(".gz$", phenoFile) | grepl(".bgz$", phenoFile)) {
-        data <- data.table:::fread(
+        data <- data.table::fread(
           cmd = paste0(
             "gunzip -c ",
             phenoFile
@@ -368,7 +353,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
           colClasses = list(character = sampleIDColinphenoFile), data.table = F, select = checkColList
         )
       } else {
-        data <- data.table:::fread(phenoFile,
+        data <- data.table::fread(phenoFile,
           header = T,
           stringsAsFactors = FALSE, colClasses = list(character = sampleIDColinphenoFile), data.table = F, select = checkColList
         )
@@ -392,7 +377,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
       if (!file.exists(SampleIDIncludeFile)) {
         stop("ERROR! SampleIDIncludeFile ", SampleIDIncludeFile, " does not exsit\n")
       } else {
-        sampleIDInclude <- data.table:::fread(SampleIDIncludeFile, header = F, stringsAsFactors = FALSE, colClasses = c("character"), data.table = F)
+        sampleIDInclude <- data.table::fread(SampleIDIncludeFile, header = F, stringsAsFactors = FALSE, colClasses = c("character"), data.table = F)
         sampleIDInclude <- as.vector(sampleIDInclude[!duplicated(sampleIDInclude), ])
         cat(length(sampleIDInclude), " non-duplicated sample IDs were found in SampleIDIncludeFile\n")
         data <- data[which(as.vector(data[, which(colnames(data) == sampleIDColinphenoFile)]) %in% sampleIDInclude), , drop = F]
@@ -470,7 +455,6 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     cat("formula is ", formula, "\n")
     formula.null <- as.formula(formula)
     mmat <- model.matrix(formula.null, data, na.action = NULL)
-    mmat <- data.frame(mmat)
     mmat <- cbind(mmat, data[, which(colnames(data) == phenoCol), drop = F])
     colnames(mmat)[ncol(mmat)] <- phenoCol
 
@@ -516,7 +500,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     }
     if (sparseGRMSampleIDFile != "") {
       # if((useSparseGRMtoFitNULL & !skipVarianceRatioEstimation) | useSparseGRMforVarRatio){
-      sampleListwithGenov0 <- data.table:::fread(sparseGRMSampleIDFile,
+      sampleListwithGenov0 <- data.table::fread(sparseGRMSampleIDFile,
         header = F, , colClasses = c("character"), data.table = F
       )
       colnames(sampleListwithGenov0) <- c("IIDgeno")
@@ -647,7 +631,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     formulaNewList <- paste0(formulaNewList, collapse = "")
     formulaNewList <- paste0(formulaNewList, "-1")
     formula.new <- as.formula(paste0(formulaNewList, collapse = ""))
-    data.new <- data.frame(cbind(out.transform$Y, out.transform$X1))
+    data.new <- as.data.frame(cbind(out.transform$Y, out.transform$X1))
     colnames(data.new) <- c(phenoCol, out.transform$Param.transform$X_name)
     cat("colnames(data.new) is ", colnames(data.new), "\n")
     cat(
@@ -1020,7 +1004,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
         isDiagofKinSetAsOne = isDiagofKinSetAsOne,
         isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL, isSparseGRMIdentity = isSparseGRMIdentity
       ))
-      modglmm$obj.glm.null$model <- data.frame(modglmm$obj.glm.null$model)
+      modglmm$obj.glm.null$model <- as.data.frame(modglmm$obj.glm.null$model)
     } else {
       system.time(modglmm <- glmmkin.ai_PCG_Rcpp_multiV_NB(bedFile, bimFile, famFile, Xorig, isCovariateOffset,
         fit0,
@@ -1125,7 +1109,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     tauVecNew <- modglmm$theta
     Sigma_iX <- getSigma_X_multiV(W, tauVecNew, modglmm$X, maxiterPCG, tolPCG, LOCO = FALSE)
     if (!isShrinkModelOutput) {
-      Sigma_iXXSigma_iX <- Sigma_iX %*% (solve(t(modglmm$X) %*% Sigma_iX))
+      Sigma_iXXSigma_iX <- Sigma_iX %*% solve(crossprod(modglmm$X, Sigma_iX))
       modglmm$Sigma_iXXSigma_iX <- Sigma_iXXSigma_iX
     }
     # }
@@ -1184,7 +1168,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
       modglmm$chromosomeStartIndexVec <- NULL
       modglmm$chromosomeEndIndexVec <- NULL
       modelOut <- paste(c(outputPrefix, "_noLOCO.rda"), collapse = "")
-      save(modglmm, file = modelOut)
+      fastSave(modglmm, file = modelOut)
       modglmm$LOCO <- TRUE
       modglmm$Y <- NULL
       eta0 <- modglmm$linear.predictors
@@ -1252,7 +1236,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
               modglmm$LOCOResult[[j1]] <- list(NULL)
             }
           }
-          save(modglmm, file = modelOutbychr)
+          fastSave(modglmm, file = modelOutbychr)
           modglmm$LOCOResult[[j]] <- list(NULL)
           gc()
         } else {
@@ -1269,7 +1253,6 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
       # modglmm$I_longl_vec = b - 1
       # modglmm$T_longl_mat = I_mat * (dataMerge_sort$longlVar)
       modglmm$T_longl_vec <- dataMerge_sort$longlVar
-      save(modglmm, file = modelOut)
     }
 
 
@@ -1338,7 +1321,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     if (LOCO) {
       MsubIndVec <- getQCdMarkerIndex()
       print(length(MsubIndVec))
-      chrVec <- data.table:::fread(bimFile, header = F)[, 1]
+      chrVec <- data.table::fread(bimFile, header = F)[, 1]
       print(length(chrVec))
       chrVec <- chrVec[which(MsubIndVec == TRUE)]
       updatechrList <- updateChrStartEndIndexVec(chrVec)
@@ -1346,9 +1329,9 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
       chromosomeStartIndexVec <- updatechrList$chromosomeStartIndexVec
       chromosomeEndIndexVec <- updatechrList$chromosomeEndIndexVec
       set_Diagof_StdGeno_LOCO()
+      load(modelOut)
     }
     cat("Start estimating variance ratios\n")
-    load(modelOut)
     extractVarianceRatio_multiV(
       obj.glmm.null = modglmm,
       obj.glm.null = fit0, maxiterPCG = maxiterPCG,
@@ -1373,7 +1356,6 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
 
   # clean up saved model (as in ReadModel)
   if (isShrinkModelOutput) {
-    load(modelOut)
     modglmm$Y <- NULL
     modglmm$linear.predictors <- NULL
     modglmm$coefficients <- NULL
@@ -1389,7 +1371,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
         modglmm$obj.noK$XVX_inv_XV <- NULL
       }
     }
-    save(modglmm, file = modelOut)
+    fastSave(modglmm, file = modelOut)
   }
 }
 
@@ -1428,7 +1410,7 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
   if (file.exists(testOut)) {
     file.remove(testOut)
   }
-  bimPlink <- data.frame(data.table:::fread(bimFile, header = F))
+  bimPlink <- data.table::fread(bimFile, header = F, data.table = FALSE)
   if (sum(sapply(bimPlink[, 1], is.numeric)) != nrow(bimPlink)) {
     stop("ERROR: chromosome column in plink bim file is no numeric!\n")
   }
@@ -1573,8 +1555,7 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
 
 
   b <- as.numeric(factor(obj.glmm.null$sampleID, levels = unique(obj.glmm.null$sampleID)))
-  I_mat <- Matrix::sparseMatrix(i = 1:length(b), j = b, x = rep(1, length(b)))
-  I_mat <- 1.0 * I_mat
+  I_mat <- Matrix::sparseMatrix(i = seq_along(b), j = b, x = rep(1, length(b)))
 
   freqVec <- getAlleleFreqVec()
   Nnomissing <- length(mu)
@@ -1585,10 +1566,10 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
   # var_weights_sample = var_weights[uniqsampleind]
 
 
-  Vsample0 <- as.vector(t(obj.noK$V) %*% I_mat)
+  Vsample0 <- as.vector(crossprod(obj.noK$V, I_mat))
   Xsample0 <- obj.glmm.null$sampleXMat
   XVsample0 <- t(Xsample0 * Vsample0)
-  XVXsample0 <- t(Xsample0) %*% (t(XVsample0))
+  XVXsample0 <- crossprod(Xsample0, t(XVsample0))
   XVXsample_inv0 <- solve(XVXsample0)
   XXVXsample_inv0 <- Xsample0 %*% XVXsample_inv0
   XVX_inv_XVsample0 <- XXVXsample_inv0 * Vsample0
@@ -1705,7 +1686,7 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
             Sigma_iG <- getSigma_G_multiV(W, tauVecNew, G, maxiterPCG, tolPCG, LOCO = FALSE)
             Sigma_iX <- Sigma_iX_noLOCO
 
-            var1 <- t(G) %*% Sigma_iG - t(G) %*% Sigma_iX %*% (solve(t(X) %*% Sigma_iX)) %*% t(X) %*% Sigma_iG
+            var1 <- crossprod(G, Sigma_iG) - crossprod(G, Sigma_iX) %*% solve(crossprod(X, Sigma_iX)) %*% crossprod(X, Sigma_iG)
             cat("AC ", AC, "\n")
             S <- innerProduct(G, obj.glmm.null$residuals * var_weights)
             cat("S is ", S, "\n")
@@ -1748,7 +1729,7 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
                 getildeMat <- cbind(getildeMat, GE_tilde)
 
                 Sigma_iGE <- getSigma_G_multiV(W, tauVecNew, GE_tilde, maxiterPCG, tolPCG, LOCO = FALSE)
-                var1GE <- t(GE_tilde) %*% Sigma_iGE - t(GE_tilde) %*% Sigma_iX %*% (solve(t(X) %*% Sigma_iX)) %*% t(X) %*% Sigma_iGE
+                var1GE <- crossprod(GE_tilde, Sigma_iGE) - crossprod(GE_tilde, Sigma_iX) %*% solve(crossprod(X, Sigma_iX)) %*% crossprod(X, Sigma_iGE)
                 var1GE_vec <- c(var1GE_vec, var1GE)
                 S_GE <- innerProduct(GE_tilde, obj.glmm.null$residuals * var_weights)
                 p_exact_GE <- pchisq(S_GE^2 / var1GE, df = 1, lower.tail = F)
@@ -1763,7 +1744,7 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
                 if (useSparseGRMforVarRatio) {
                   set_isSparseGRM(useSparseGRMforVarRatio)
                   Sigma_iGE_sparse <- getSigma_G_noV(W, tauVecNew, GE_tilde, maxiterPCG, tolPCG, LOCO = FALSE)
-                  var2_a_GE <- t(GE_tilde) %*% Sigma_iGE_sparse
+                  var2_a_GE <- crossprod(GE_tilde, Sigma_iGE_sparse)
                   var2sparseGRM_GE <- var2_a_GE[1, 1]
                   var2sparseGE_vec <- c(var2sparseGE_vec, var2sparseGRM_GE)
                 } else {
@@ -1774,7 +1755,7 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
                       tauVal <- tauVecNew[2]
                     }
                     Sigma_iGE_sparse <- getSigma_G_V(W, tauVal, tauVecNew[1], GE_tilde, maxiterPCG, tolPCG)
-                    var2_a_GE <- t(GE_tilde) %*% Sigma_iGE_sparse
+                    var2_a_GE <- crossprod(GE_tilde, Sigma_iGE_sparse)
                     var2sparseGRM_GE <- var2_a_GE[1, 1]
                     var2sparseGE_vec <- c(var2sparseGE_vec, var2sparseGRM_GE)
                   } else {
@@ -1786,7 +1767,7 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
 
 
             G_noXadj <- as.vector(G0sample - mean(G0sample))
-            G0_sample_tilde <- G0sample - XXVXsample_inv0 %*% (XVsample0 %*% G0sample)
+            G0_sample_tilde <- G0sample - XXVXsample_inv0 %*% XVsample0 %*% G0sample
 
             # if(useSparseGRMforVarRatio){
             # 	set_isSparseGRM(useSparseGRMforVarRatio)
@@ -1808,11 +1789,11 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
               # var2_a = t(G) %*% Sigma_iG
               if (isStoreSigma) {
                 Sigma_iG <- (obj.glmm.null$spSigma) %*% G0_sample_tilde
-                var2_a <- t(G0_sample_tilde) %*% Sigma_iG
+                var2_a <- crossprod(G0_sample_tilde, Sigma_iG)
               } else {
                 G0_sample_tilde_I <- as.vector(I_mat %*% G0_sample_tilde)
                 Sigma_iG <- getSigma_G_multiV(W, tauVecNew, G0_sample_tilde_I, maxiterPCG, tolPCG, LOCO = FALSE)
-                var2_a <- t(G0_sample_tilde_I) %*% Sigma_iG
+                var2_a <- crossprod(G0_sample_tilde_I, Sigma_iG)
               }
               var2sparseGRM <- var2_a[1, 1]
               cat("var2sparseGRM Here ", var2sparseGRM, "\n")
@@ -1824,15 +1805,17 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
 
 
             if (obj.glmm.null$traitType == "binary") {
-              var2null <- innerProduct(mu * (1 - mu) * var_weights, G * G)
-              var2null_sample <- innerProduct(as.vector(t(mu * (1 - mu) * var_weights) %*% I_mat), G0_sample_tilde * G0_sample_tilde)
-              var2null_noXadj <- innerProduct(as.vector(t(mu * (1 - mu) * var_weights) %*% I_mat), G_noXadj * G_noXadj)
+              tmpW <- mu * (1 - mu) * var_weights
+              tmpWI <- as.vector(crossprod(tmpW, I_mat))
+              var2null <- innerProduct(tmpW, G * G)
+              var2null_sample <- innerProduct(tmpWI, G0_sample_tilde * G0_sample_tilde)
+              var2null_noXadj <- innerProduct(tmpWI, G_noXadj * G_noXadj)
               var2nullGE_vec <- NULL
               if (!is.null(obj.glmm.null$eMat)) {
                 for (ne in 1:ncol(obj.glmm.null$eMat)) {
                   GE_tilde <- getildeMat[, ne]
                   # GE_sample_tilde = getilde_sample0_Mat[,ne]
-                  var22nullGE <- innerProduct(mu * (1 - mu) * var_weights, GE_tilde * GE_tilde)
+                  var22nullGE <- innerProduct(tmpW, GE_tilde * GE_tilde)
                   # var22nullGE = innerProduct(as.vector(t(mu*(1-mu)*var_weights) %*% I_mat), as.vector(GE_sample_tilde*GE_sample_tilde))
 
 
@@ -1843,7 +1826,7 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
             } else if (obj.glmm.null$traitType == "quantitative") {
               var2null <- innerProduct(G, G * var_weights)
               var2null_sample <- innerProduct(G0_sample_tilde, G0_sample_tilde * var_weights)
-              var2null_noXadj <- innerProduct(G_noXadj, G_noXadj * as.vector(t(var_weights) %*% I_mat))
+              var2null_noXadj <- innerProduct(G_noXadj, G_noXadj * as.vector(crossprod(var_weights, I_mat)))
               var2nullGE_vec <- NULL
               if (!is.null(obj.glmm.null$eMat)) {
                 for (ne in 1:ncol(obj.glmm.null$eMat)) {
@@ -1855,21 +1838,23 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
                 }
               }
             } else if (obj.glmm.null$traitType == "count") {
-              var2null <- innerProduct(mu * var_weights, G * G)
+              tmpW <- mu * var_weights
+              tmpWI <- as.vector(crossprod(tmpW, I_mat))
+              var2null <- innerProduct(tmpW, G * G)
               # cat("mean(G0_sample_tilde) ", mean(G0_sample_tilde), "\n")
               # var2null_new = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), G0_sample_tilde*G0_sample_tilde)
-              var2null_sample <- innerProduct(as.vector(t(mu * var_weights) %*% I_mat), G0_sample_tilde * G0_sample_tilde)
+              var2null_sample <- innerProduct(tmpWI, G0_sample_tilde * G0_sample_tilde)
               # cat("var2null ", var2null, "\n")
               # cat("var2null_new ", var2null_new, "\n")
-              muI <- as.vector(t(mu) %*% I_mat) * as.vector(var_weights)
-              var2null_noXadj <- innerProduct(as.vector(t(mu * var_weights) %*% I_mat), G_noXadj * G_noXadj)
+              # muI <- as.vector(crossprod(mu, I_mat)) * as.vector(var_weights)
+              var2null_noXadj <- innerProduct(tmpWI, G_noXadj * G_noXadj)
               var2nullGE_vec <- NULL
               if (!is.null(obj.glmm.null$eMat)) {
                 for (ne in 1:ncol(obj.glmm.null$eMat)) {
                   GE_tilde <- getildeMat[, ne]
                   # GE_sample_tilde = getilde_sample0_Mat[,ne]
                   # cat("mean(GE_sample_tilde) ", mean(GE_sample_tilde), "\n")
-                  var22nullGE <- innerProduct(mu * var_weights, GE_tilde * GE_tilde)
+                  var22nullGE <- innerProduct(tmpW, GE_tilde * GE_tilde)
                   # var22nullGE = innerProduct(as.vector(t(mu*var_weights) %*% I_mat), as.vector(GE_sample_tilde*GE_sample_tilde))
                   # cat("var22nullGE_old ", var22nullGE_old, "\n")
                   # cat("var22nullGE ", var22nullGE, "\n")
@@ -1879,15 +1864,15 @@ extractVarianceRatio_multiV <- function(obj.glmm.null,
               }
             } else if (obj.glmm.null$traitType == "count_nb") {
               var2null <- innerProduct(W, G * G) ## To update
-              var2null_sample <- innerProduct(as.vector(t(W) %*% I_mat), G0_sample_tilde * G0_sample_tilde)
-              var2null_noXadj <- innerProduct(as.vector(t(W) %*% I_mat), G_noXadj * G_noXadj)
+              var2null_sample <- innerProduct(as.vector(crossprod(W, I_mat)), G0_sample_tilde * G0_sample_tilde)
+              var2null_noXadj <- innerProduct(as.vector(crossprod(W, I_mat)), G_noXadj * G_noXadj)
               var2nullGE_vec <- NULL
               if (!is.null(obj.glmm.null$eMat)) {
                 for (ne in 1:ncol(obj.glmm.null$eMat)) {
                   # GE_tilde = getildeMat[,ne]
                   GE_sample_tilde <- getilde_sample0_Mat[, ne]
                   # var22nullGE = innerProduct(W, GE_tilde*GE_tilde)
-                  var22nullGE <- innerProduct(as.vector(t(W) %*% I_mat), as.vector(GE_sample_tilde * GE_sample_tilde))
+                  var22nullGE <- innerProduct(as.vector(crossprod(W, I_mat)), as.vector(GE_sample_tilde * GE_sample_tilde))
                   var2nullGE_vec <- c(var2nullGE_vec, var22nullGE)
                 }
               }
@@ -2031,7 +2016,7 @@ glmmkin.ai_PCG_Rcpp_multiV <- function(bedFile, bimFile, famFile, Xorig, isCovar
   # print(subSampleInGeno)
 
   print(head(subPheno))
-  set_dup_sample_index(as.numeric(factor(subPheno$IID, levels = unique(subPheno$IID))))
+  set_dup_sample_index_inR(as.numeric(factor(subPheno$IID, levels = unique(subPheno$IID))))
 
 
   print("length(indicatorGenoSamplesWithPheno)")
@@ -2050,7 +2035,7 @@ glmmkin.ai_PCG_Rcpp_multiV <- function(bedFile, bimFile, famFile, Xorig, isCovar
 
   if (LOCO) {
     MsubIndVec <- getQCdMarkerIndex()
-    chrVec <- data.table:::fread(bimFile, header = F)[, 1]
+    chrVec <- data.table::fread(bimFile, header = F)[, 1]
     chrVec <- chrVec[which(MsubIndVec == TRUE)]
     updatechrList <- updateChrStartEndIndexVec(chrVec)
     LOCO <- updatechrList$LOCO
