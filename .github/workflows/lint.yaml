@@ -76,7 +76,9 @@ jobs:
             ${{ runner.os }}-
 
       - name: Style
-        run: styler::style_pkg()
+        run: |
+          styler::style_pkg()
+          styler::style_dir("extdata")
         shell: Rscript {0}
 
       - name: Commit and push changes
