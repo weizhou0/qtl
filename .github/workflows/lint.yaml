@@ -48,7 +48,7 @@ jobs:
         with:
           extra-packages: any::lintr, any::styler, any::roxygen2, local::.
           needs: lint, styler
-      
+
       - name: Enable styler cache
         run: styler::cache_activate()
         shell: Rscript {0}
