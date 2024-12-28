@@ -691,4 +691,20 @@ void addNewKat( arma::sp_mat & t_Kmat);
 
 arma::sp_fmat gettI_Sigma_I_multiV(arma::fvec& wVec, arma::fvec& tauVec, int maxiterPCG, float tolPCG, bool LOCO);
 
+arma::fcolvec getCrossprod_multiV_eMat(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+
+arma::fvec getCrossprodMatAndKin_eMat(arma::fcolvec& bVec, bool LOCO);
+
+arma::fvec getCrossprodMatAndKin_eMat_Imat(arma::fcolvec& bVec, bool LOCO);
+
+arma::fvec getCrossprodMatAndI_eMat(arma::fcolvec& bVec, bool LOCO);
+
+arma::fvec getCrossprodMatAndI_eMat_Imat(arma::fcolvec& bVec, bool LOCO);
+
+arma::fvec getDiagOfSigma_multiV_eMat(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+
+arma::fvec getprod_eMat(arma::fvec& bVec);
+
+Rcpp::List fitglmmaiRPCG_multiV_eMat(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec &wVec,  arma::fvec & tauVec, arma::ivec & fixtauVec, arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
+int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOCO);
 #endif
