@@ -8159,3 +8159,308 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
 }
 
 
+
+// [[Rcpp::export]]
+Rcpp::List getAIScore_multiV_eMat(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, arma::ivec & fixtauVec,
+arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
+int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
+        fixtauVec.print("fixtauVec");
+
+        int q2 = arma::sum(fixtauVec==0);
+        arma::uvec idxtau = arma::find(fixtauVec==0);
+        arma::fvec tau0;
+        unsigned int k1 = g_num_Kmat;
+        arma::fmat AI(k1,k1);
+        arma::fvec YPAPY(k1);
+        YPAPY.zeros();
+        arma::fvec Trace(k1);
+        Trace.zeros();
+        //std::cout << "k1 " << k1 << std::endl;
+        arma::fmat Sigma_iXt = Sigma_iX.t();
+        arma::fmat Xmatt = Xmat.t();
+
+        //Sigma_iY.print("Sigma_iY");
+        //Sigma_iX.print("Sigma_iX");
+        //cov.print("cov");
+        //Sigma_iXt.print("Sigma_iXt");
+        //Yvec.print("Yvec");
+
+        arma::fvec PY1 = Sigma_iY - Sigma_iX * (cov * (Sigma_iXt * Yvec));
+
+        //PY1.print("PY1");
+        //arma::fvec APY = getCrossprodMatAndKin(PY1);
+        //float YPAPY = dot(PY1, APY);
+        //arma::fvec A0PY = PY1; ////Quantitative
+        //float YPA0PY = dot(PY1, A0PY); ////Quantitative
+        //arma::fvec Trace = GetTrace_q(Sigma_iX, Xmat, wVec, tauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff);
+        unsigned int n = PY1.n_elem;
+        //arma::fvec PA0PY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, A0PY, maxiterPCG, tolPCG);
+        //arma::fvec PA0PY = PA0PY_1 - Sigma_iX * (cov1 * (Sigma_iXt * PA0PY_1));
+        arma::fvec PAPY_1, PAPY,  APY;
+        arma::fmat APYmat(n, k1);
+
+        //if(q2>0){
+        //
+        arma::fvec crossProd1, GRM_I_bvec, Ibvec, Tbvec, GRM_T_bvec, crossProdGRM_TGIb, crossProdGRM_IGTb, V_I_bvec, V_T_bvec, crossProdV_TGIb, crossProdV_IGTb, crossProdGRM_TIb, crossProdGRM_ITb;
+
+
+        if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
+                for(int i=0; i<k1; i++){
+                    if(fixtauVec(i) == 0){
+                        if(i==0){
+                                APY = PY1;
+                        }else if(i==1){
+                                if(g_isGRM){
+                                        APY = getCrossprodMatAndKin_eMat(PY1, LOCO);
+                                }else{
+					APY = getCrossprodMatAndI_eMat(PY1, LOCO);
+                                }
+                        }else{
+				APY = getprod_eMat(PY1);	
+                        }
+                        APYmat.col(i) = APY;
+                        PAPY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, APY, maxiterPCG, tolPCG, LOCO);
+                        PAPY = PAPY_1 - Sigma_iX * (cov * (Sigma_iXt * PAPY_1));
+                        for(int j=0; j<=i; j++){
+                                AI(i,j) = arma::dot(APYmat.col(j), PAPY);
+                                if(j !=i){
+                                        AI(j,i) = AI(i,j);
+                                }
+                        }
+                        YPAPY(i) = arma::dot(PY1, APYmat.col(i));
+                     }
+                }
+        }else{
+                //Ibvec = g_I_longl_mat.t() * PY1;
+                //std::cout << "Ibvec.n_elem " << Ibvec.n_elem << std::endl;
+
+                //if(g_isGRM){
+                //        GRM_I_bvec = getCrossprodMatAndKin(Ibvec, LOCO);
+                //}
+
+               std::cout << "g_I_longl_mat.n_rows " << g_I_longl_mat.n_rows << std::endl;
+               if(g_T_longl_mat.n_rows == 0){
+                  for(int i=0; i<k1; i++){
+                    if(fixtauVec(i) == 0){
+                        if(i==0){
+                                APY = PY1;
+                        }else if(i==1){
+                                if(g_isGRM){
+                                  //std::cout << "GRM_I_bvec.n_elem " << GRM_I_bvec.n_elem << std::endl;
+                                  APY = getCrossprodMatAndKin_eMat_Imat(PY1, LOCO);
+				  
+				  //APY = g_I_longl_mat * GRM_I_bvec;
+                                }else{
+				  APY = getCrossprodMatAndI_eMat_Imat(PY1, LOCO);
+                                  //APY = g_I_longl_mat * Ibvec;
+                                }
+                        }else {
+			
+				  APY = getprod_eMat(PY1);
+			}
+                        APYmat.col(i) = APY;
+                        PAPY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, APY, maxiterPCG, tolPCG, LOCO);
+                        PAPY = PAPY_1 - Sigma_iX * (cov * (Sigma_iXt * PAPY_1));
+                        for(int j=0; j<=i; j++){
+                                AI(i,j) = arma::dot(APYmat.col(j), PAPY);
+                                if(j !=i){
+                                        AI(j,i) = AI(i,j);
+                                }
+                        }
+                        YPAPY(i) = arma::dot(PY1, APYmat.col(i));
+                     }
+                  }
+
+                }
+        }
+
+        AI.print("AI");
+        YPAPY.print("YPAPY");
+        arma::fmat AI_update = AI.submat(idxtau, idxtau);
+        arma::fvec YPAPY_update = YPAPY.elem(idxtau);
+        YPAPY.print("YPAPY");
+
+        //vector with length=q2
+        Trace = GetTrace_multiV_eMat(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO);
+        //YPAPY_update.print("YPAPY_update");
+        Trace.print("Trace");
+        //arma::fvec PAPY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, APY, maxiterPCG, tolPCG);
+        //arma::fvec PAPY = PAPY_1 - Sigma_iX * (cov1 * (Sigma_iXt * PAPY_1));
+        return Rcpp::List::create(Named("YPAPY") = YPAPY_update, Named("Trace") = Trace,Named("PY") = PY1,Named("AI") = AI_update);
+}
+
+// [[Rcpp::export]]
+arma::fvec GetTrace_multiV_eMat(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec & fixtauVec, arma::fmat& cov1,  int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
+
+        set_seed(200);
+
+        int q2 = arma::sum(fixtauVec==0);
+        arma::uvec idxtau = arma::find(fixtauVec==0);
+
+        idxtau.print("idxtau");
+
+        arma::fmat Sigma_iXt = Sigma_iX.t();
+        int Nnomissing = wVec.n_elem;;
+        //unsigned int k = Kmat_vec.size();
+        //unsigned int k1 = k + 2;
+        unsigned int  k1 = g_num_Kmat;
+        arma::fmat temp_mat(nrun, k1);
+        arma::fmat temp_mat_update(nrun, q2);
+        arma::fvec temp_vec(nrun);
+        arma::fvec temp_vec_double(Nnomissing);
+        temp_mat.zeros();
+        temp_mat_update.zeros();
+
+        arma::fvec Sigma_iu;
+        arma::fvec Pu;
+        arma::fmat Au_mat(Nnomissing, k1);
+        arma::fvec uVec;
+        Rcpp::NumericVector uVec0;
+
+        int nrun_trace_start = 0;
+        int nrun_trace_end = nrun;
+        arma::fvec traceCV(q2);
+        traceCV.fill(traceCVcutoff + 0.1);
+
+        arma::uvec covarianceidxVec;
+        arma::fvec traceCVsub;
+        arma::uvec indexsubvec =  { 1, 2 };
+        if(g_covarianceidxMat.n_cols > 0){
+             covarianceidxVec = arma::vectorise(g_covarianceidxMat.cols(indexsubvec));
+             covarianceidxVec = covarianceidxVec - 1;
+        }
+        bool isConverge = false;
+        //while((traceCV > cutoff_trace) | (traceCV0 > cutoff_trace)){
+        //while( arma::any(traceCV > traceCVcutoff) ){
+        //
+        //
+        arma::fvec crossProd1, GRM_I_bvec, Ibvec, Tbvec, GRM_T_bvec, crossProdGRM_TGIb, crossProdGRM_IGTb, V_I_bvec, V_T_bvec, crossProdV_TGIb, crossProdV_IGTb, crossProdGRM_TIb, crossProdGRM_ITb;
+        while( !isConverge ){
+                for(int i = nrun_trace_start; i < nrun_trace_end; i++){
+                        uVec0 = nb(Nnomissing);
+                        uVec = as<arma::fvec>(uVec0);
+                        uVec = uVec*2 - 1;
+
+                        //std::cout << "GetTrace_multiV Here 1" << std::endl;
+                        Sigma_iu = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, uVec, maxiterPCG, tolPCG, LOCO);
+                        Pu = Sigma_iu - Sigma_iX * (cov1 *  (Sigma_iXt * uVec));
+
+                        if(fixtauVec(0) == 0)   {
+                                Au_mat.col(0) = uVec;
+                                temp_mat(i,0) = dot(Au_mat.col(0), Pu);
+                        }
+                        // conversion for ops with sp_mat
+                     if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
+                        if(fixtauVec(1)  == 0){
+                                if(g_isGRM){
+                                        temp_vec_double = getCrossprodMatAndKin_eMat(uVec, LOCO);
+                                }else{
+                                        temp_vec_double = getCrossprodMatAndI_eMat(uVec, LOCO);
+                                }else{
+                                }
+                                Au_mat.col(1) = temp_vec_double;
+                                temp_mat(i,1) = dot(temp_vec_double, Pu);
+                        }
+
+
+				
+			int j = 2;
+			Au_mat.col(j) = getprod_eMat(uVec);
+			temp_mat(i,j) = dot(Au_mat.col(j), Pu);
+                   }else{  //uVec
+                        if(g_T_longl_mat.n_rows == 0){
+                           if(g_isGRM){
+                                if(fixtauVec(1) == 0) {
+					temp_vec_double = getCrossprodMatAndKin_eMat_Imat(uVec, LOCO);	
+                                        Au_mat.col(1) = temp_vec_double;
+                                        temp_mat(i,1) = dot(temp_vec_double, Pu);
+                                }
+
+                        	Au_mat.col(2) = getprod_eMat(uVec);
+                        	temp_mat(i,2) = dot(Au_mat.col(j), Pu);
+
+
+                           }else{
+
+                                if(fixtauVec(1) == 0){
+					temp_vec_double = getCrossprodMatAndI_eMat_Imat(uVec, LOCO);
+                                        Au_mat.col(1) = temp_vec_double;
+                                        temp_mat(i,1) = dot(temp_vec_double, Pu);
+                                }
+                        	
+				Au_mat.col(2) = getprod_eMat(uVec);
+                        	temp_mat(i,2) = dot(Au_mat.col(j), Pu);
+
+                           }
+                        }
+
+
+        	}//}else{  if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){
+
+
+
+                        uVec.clear();
+                        Pu.clear();
+                        Sigma_iu.clear();
+
+                } // end for i
+                temp_mat_update = temp_mat.cols(idxtau);
+
+                std::cout << "dim temp_mat_update" << temp_mat_update.n_rows << " " << temp_mat_update.n_cols << std::endl;;
+                // update trace cv vector
+                for(int k=0; k<q2; k++){
+                        temp_vec = temp_mat_update.col(k);
+                        traceCV(k) = calCV(temp_vec);
+                }
+                //traceCV.print("traceCV");
+                //traceCVcutoff = 1.0;
+                // if not converge, increase nrun_trace and rerun
+                //temp_mat.print("temp_mat");
+                //
+
+                if(g_covarianceidxMat.n_cols > 0){
+                        traceCVsub = traceCV.elem(covarianceidxVec);
+                        //if(arma::any(traceCVsub > traceCVcutoff)){
+                        if(arma::any(traceCV > traceCVcutoff)){
+                                isConverge = false;
+                        }else{
+                                isConverge = true;
+                        }
+                }else{
+                        if( arma::any(traceCV > traceCVcutoff) ){
+                                isConverge = false;
+                        }else{
+                                isConverge = true;
+                        }
+                }
+
+
+
+                if( !isConverge){
+                        nrun_trace_start = nrun_trace_end;
+                        nrun_trace_end = nrun_trace_end + 10;
+                        temp_mat.resize(nrun_trace_end,k1);
+                        temp_mat_update.resize(nrun_trace_end,q2);
+                        //std::cout << "arma::mean(temp_mat0): " << arma::mean(temp_mat0) << std::endl;
+                        Rcout << "CV for trace random estimator using "<< nrun_trace_start << " runs is " << traceCV <<  " > " << traceCVcutoff << std::endl;
+                        Rcout << "try " << nrun_trace_end << "runs" << std::endl;
+                } // end if arma::any(traceCV > traceCVcutoff)
+
+        } // end while  arma::any(traceCV > traceCVcutoff)
+        Au_mat.clear();
+        Pu.clear();
+        Sigma_iu.clear();
+        uVec.clear();
+        temp_vec.clear();
+
+        arma::fvec traVec(q2);
+        for(int i=0; i<q2; i++){
+                traVec(i) = arma::mean(temp_mat_update.col(i));
+        }
+        temp_mat.clear();
+        temp_mat_update.clear();
+        return(traVec);
+}
+
+
+
