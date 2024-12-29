@@ -169,6 +169,10 @@ set_T_longl_mat_SAIGEtest <- function(t_Tlongmat, t_T_longl_vec) {
     invisible(.Call('_SAIGEQTL_set_T_longl_mat_SAIGEtest', PACKAGE = 'SAIGEQTL', t_Tlongmat, t_T_longl_vec))
 }
 
+set_EMat <- function(t_EMat) {
+    invisible(.Call('_SAIGEQTL_set_EMat', PACKAGE = 'SAIGEQTL', t_EMat))
+}
+
 getCrossprodMatAndKin <- function(bVec, LOCO) {
     .Call('_SAIGEQTL_getCrossprodMatAndKin', PACKAGE = 'SAIGEQTL', bVec, LOCO)
 }
@@ -511,6 +515,46 @@ assign_g_outputFilePrefix <- function(t_outputFilePrefix) {
 
 assign_g_outputFilePrefix0 <- function(t_outputFilePrefix) {
     invisible(.Call('_SAIGEQTL_assign_g_outputFilePrefix0', PACKAGE = 'SAIGEQTL', t_outputFilePrefix))
+}
+
+getCrossprod_multiV_eMat <- function(bVec, wVec, tauVec, LOCO) {
+    .Call('_SAIGEQTL_getCrossprod_multiV_eMat', PACKAGE = 'SAIGEQTL', bVec, wVec, tauVec, LOCO)
+}
+
+getCrossprodMatAndKin_eMat <- function(bVec, LOCO) {
+    .Call('_SAIGEQTL_getCrossprodMatAndKin_eMat', PACKAGE = 'SAIGEQTL', bVec, LOCO)
+}
+
+getCrossprodMatAndKin_eMat_Imat <- function(bVec, LOCO) {
+    .Call('_SAIGEQTL_getCrossprodMatAndKin_eMat_Imat', PACKAGE = 'SAIGEQTL', bVec, LOCO)
+}
+
+getCrossprodMatAndI_eMat <- function(bVec, LOCO) {
+    .Call('_SAIGEQTL_getCrossprodMatAndI_eMat', PACKAGE = 'SAIGEQTL', bVec, LOCO)
+}
+
+getCrossprodMatAndI_eMat_Imat <- function(bVec, LOCO) {
+    .Call('_SAIGEQTL_getCrossprodMatAndI_eMat_Imat', PACKAGE = 'SAIGEQTL', bVec, LOCO)
+}
+
+getDiagOfSigma_multiV_eMat <- function(wVec, tauVec, LOCO) {
+    .Call('_SAIGEQTL_getDiagOfSigma_multiV_eMat', PACKAGE = 'SAIGEQTL', wVec, tauVec, LOCO)
+}
+
+getprod_eMat <- function(bVec) {
+    .Call('_SAIGEQTL_getprod_eMat', PACKAGE = 'SAIGEQTL', bVec)
+}
+
+fitglmmaiRPCG_multiV_eMat <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO) {
+    .Call('_SAIGEQTL_fitglmmaiRPCG_multiV_eMat', PACKAGE = 'SAIGEQTL', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO)
+}
+
+getAIScore_multiV_eMat <- function(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
+    .Call('_SAIGEQTL_getAIScore_multiV_eMat', PACKAGE = 'SAIGEQTL', Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
+}
+
+GetTrace_multiV_eMat <- function(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO) {
+    .Call('_SAIGEQTL_GetTrace_multiV_eMat', PACKAGE = 'SAIGEQTL', Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
 }
 
 SKAT_META_Optimal_Get_Q_Rcpp <- function(Score, r_all) {

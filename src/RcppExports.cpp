@@ -602,6 +602,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// set_EMat
+void set_EMat(arma::mat& t_EMat);
+RcppExport SEXP _SAIGEQTL_set_EMat(SEXP t_EMatSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type t_EMat(t_EMatSEXP);
+    set_EMat(t_EMat);
+    return R_NilValue;
+END_RCPP
+}
 // getCrossprodMatAndKin
 arma::fvec getCrossprodMatAndKin(arma::fcolvec& bVec, bool LOCO);
 RcppExport SEXP _SAIGEQTL_getCrossprodMatAndKin(SEXP bVecSEXP, SEXP LOCOSEXP) {
@@ -1622,6 +1632,160 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// getCrossprod_multiV_eMat
+arma::fcolvec getCrossprod_multiV_eMat(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+RcppExport SEXP _SAIGEQTL_getCrossprod_multiV_eMat(SEXP bVecSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fcolvec& >::type bVec(bVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getCrossprod_multiV_eMat(bVec, wVec, tauVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getCrossprodMatAndKin_eMat
+arma::fvec getCrossprodMatAndKin_eMat(arma::fcolvec& bVec, bool LOCO);
+RcppExport SEXP _SAIGEQTL_getCrossprodMatAndKin_eMat(SEXP bVecSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fcolvec& >::type bVec(bVecSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getCrossprodMatAndKin_eMat(bVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getCrossprodMatAndKin_eMat_Imat
+arma::fvec getCrossprodMatAndKin_eMat_Imat(arma::fcolvec& bVec, bool LOCO);
+RcppExport SEXP _SAIGEQTL_getCrossprodMatAndKin_eMat_Imat(SEXP bVecSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fcolvec& >::type bVec(bVecSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getCrossprodMatAndKin_eMat_Imat(bVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getCrossprodMatAndI_eMat
+arma::fvec getCrossprodMatAndI_eMat(arma::fcolvec& bVec, bool LOCO);
+RcppExport SEXP _SAIGEQTL_getCrossprodMatAndI_eMat(SEXP bVecSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fcolvec& >::type bVec(bVecSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getCrossprodMatAndI_eMat(bVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getCrossprodMatAndI_eMat_Imat
+arma::fvec getCrossprodMatAndI_eMat_Imat(arma::fcolvec& bVec, bool LOCO);
+RcppExport SEXP _SAIGEQTL_getCrossprodMatAndI_eMat_Imat(SEXP bVecSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fcolvec& >::type bVec(bVecSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getCrossprodMatAndI_eMat_Imat(bVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getDiagOfSigma_multiV_eMat
+arma::fvec getDiagOfSigma_multiV_eMat(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO);
+RcppExport SEXP _SAIGEQTL_getDiagOfSigma_multiV_eMat(SEXP wVecSEXP, SEXP tauVecSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getDiagOfSigma_multiV_eMat(wVec, tauVec, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getprod_eMat
+arma::fvec getprod_eMat(arma::fvec& bVec);
+RcppExport SEXP _SAIGEQTL_getprod_eMat(SEXP bVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type bVec(bVecSEXP);
+    rcpp_result_gen = Rcpp::wrap(getprod_eMat(bVec));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fitglmmaiRPCG_multiV_eMat
+Rcpp::List fitglmmaiRPCG_multiV_eMat(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec& fixtauVec, arma::fvec& Sigma_iY, arma::fmat& Sigma_iX, arma::fmat& cov, int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOCO);
+RcppExport SEXP _SAIGEQTL_fitglmmaiRPCG_multiV_eMat(SEXP YvecSEXP, SEXP XmatSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP fixtauVecSEXP, SEXP Sigma_iYSEXP, SEXP Sigma_iXSEXP, SEXP covSEXP, SEXP nrunSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP tolSEXP, SEXP traceCVcutoffSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type Yvec(YvecSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Xmat(XmatSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< arma::ivec& >::type fixtauVec(fixtauVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type Sigma_iY(Sigma_iYSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Sigma_iX(Sigma_iXSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type cov(covSEXP);
+    Rcpp::traits::input_parameter< int >::type nrun(nrunSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tol(tolSEXP);
+    Rcpp::traits::input_parameter< float >::type traceCVcutoff(traceCVcutoffSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(fitglmmaiRPCG_multiV_eMat(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, tol, traceCVcutoff, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getAIScore_multiV_eMat
+Rcpp::List getAIScore_multiV_eMat(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec& fixtauVec, arma::fvec& Sigma_iY, arma::fmat& Sigma_iX, arma::fmat& cov, int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO);
+RcppExport SEXP _SAIGEQTL_getAIScore_multiV_eMat(SEXP YvecSEXP, SEXP XmatSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP fixtauVecSEXP, SEXP Sigma_iYSEXP, SEXP Sigma_iXSEXP, SEXP covSEXP, SEXP nrunSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP traceCVcutoffSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type Yvec(YvecSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Xmat(XmatSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< arma::ivec& >::type fixtauVec(fixtauVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type Sigma_iY(Sigma_iYSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Sigma_iX(Sigma_iXSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type cov(covSEXP);
+    Rcpp::traits::input_parameter< int >::type nrun(nrunSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type traceCVcutoff(traceCVcutoffSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(getAIScore_multiV_eMat(Yvec, Xmat, wVec, tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
+// GetTrace_multiV_eMat
+arma::fvec GetTrace_multiV_eMat(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wVec, arma::fvec& tauVec, arma::ivec& fixtauVec, arma::fmat& cov1, int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO);
+RcppExport SEXP _SAIGEQTL_GetTrace_multiV_eMat(SEXP Sigma_iXSEXP, SEXP XmatSEXP, SEXP wVecSEXP, SEXP tauVecSEXP, SEXP fixtauVecSEXP, SEXP cov1SEXP, SEXP nrunSEXP, SEXP maxiterPCGSEXP, SEXP tolPCGSEXP, SEXP traceCVcutoffSEXP, SEXP LOCOSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fmat >::type Sigma_iX(Sigma_iXSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type Xmat(XmatSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type wVec(wVecSEXP);
+    Rcpp::traits::input_parameter< arma::fvec& >::type tauVec(tauVecSEXP);
+    Rcpp::traits::input_parameter< arma::ivec& >::type fixtauVec(fixtauVecSEXP);
+    Rcpp::traits::input_parameter< arma::fmat& >::type cov1(cov1SEXP);
+    Rcpp::traits::input_parameter< int >::type nrun(nrunSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiterPCG(maxiterPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type tolPCG(tolPCGSEXP);
+    Rcpp::traits::input_parameter< float >::type traceCVcutoff(traceCVcutoffSEXP);
+    Rcpp::traits::input_parameter< bool >::type LOCO(LOCOSEXP);
+    rcpp_result_gen = Rcpp::wrap(GetTrace_multiV_eMat(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SKAT_META_Optimal_Get_Q_Rcpp
 Rcpp::List SKAT_META_Optimal_Get_Q_Rcpp(const arma::vec& Score, const arma::vec& r_all);
 RcppExport SEXP _SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp(SEXP ScoreSEXP, SEXP r_allSEXP) {
@@ -2394,6 +2558,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGEQTL_set_I_longl_mat_SAIGEtest", (DL_FUNC) &_SAIGEQTL_set_I_longl_mat_SAIGEtest, 2},
     {"_SAIGEQTL_set_T_longl_mat", (DL_FUNC) &_SAIGEQTL_set_T_longl_mat, 2},
     {"_SAIGEQTL_set_T_longl_mat_SAIGEtest", (DL_FUNC) &_SAIGEQTL_set_T_longl_mat_SAIGEtest, 2},
+    {"_SAIGEQTL_set_EMat", (DL_FUNC) &_SAIGEQTL_set_EMat, 1},
     {"_SAIGEQTL_getCrossprodMatAndKin", (DL_FUNC) &_SAIGEQTL_getCrossprodMatAndKin, 2},
     {"_SAIGEQTL_getCrossprod_multiV", (DL_FUNC) &_SAIGEQTL_getCrossprod_multiV, 4},
     {"_SAIGEQTL_getDiagOfSigma_multiV", (DL_FUNC) &_SAIGEQTL_getDiagOfSigma_multiV, 3},
@@ -2480,6 +2645,16 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGEQTL_assign_g_outputFilePrefixSingle", (DL_FUNC) &_SAIGEQTL_assign_g_outputFilePrefixSingle, 1},
     {"_SAIGEQTL_assign_g_outputFilePrefix", (DL_FUNC) &_SAIGEQTL_assign_g_outputFilePrefix, 1},
     {"_SAIGEQTL_assign_g_outputFilePrefix0", (DL_FUNC) &_SAIGEQTL_assign_g_outputFilePrefix0, 1},
+    {"_SAIGEQTL_getCrossprod_multiV_eMat", (DL_FUNC) &_SAIGEQTL_getCrossprod_multiV_eMat, 4},
+    {"_SAIGEQTL_getCrossprodMatAndKin_eMat", (DL_FUNC) &_SAIGEQTL_getCrossprodMatAndKin_eMat, 2},
+    {"_SAIGEQTL_getCrossprodMatAndKin_eMat_Imat", (DL_FUNC) &_SAIGEQTL_getCrossprodMatAndKin_eMat_Imat, 2},
+    {"_SAIGEQTL_getCrossprodMatAndI_eMat", (DL_FUNC) &_SAIGEQTL_getCrossprodMatAndI_eMat, 2},
+    {"_SAIGEQTL_getCrossprodMatAndI_eMat_Imat", (DL_FUNC) &_SAIGEQTL_getCrossprodMatAndI_eMat_Imat, 2},
+    {"_SAIGEQTL_getDiagOfSigma_multiV_eMat", (DL_FUNC) &_SAIGEQTL_getDiagOfSigma_multiV_eMat, 3},
+    {"_SAIGEQTL_getprod_eMat", (DL_FUNC) &_SAIGEQTL_getprod_eMat, 1},
+    {"_SAIGEQTL_fitglmmaiRPCG_multiV_eMat", (DL_FUNC) &_SAIGEQTL_fitglmmaiRPCG_multiV_eMat, 14},
+    {"_SAIGEQTL_getAIScore_multiV_eMat", (DL_FUNC) &_SAIGEQTL_getAIScore_multiV_eMat, 13},
+    {"_SAIGEQTL_GetTrace_multiV_eMat", (DL_FUNC) &_SAIGEQTL_GetTrace_multiV_eMat, 11},
     {"_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp", (DL_FUNC) &_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp, 2},
     {"_SAIGEQTL_SKAT_META_Optimal_Get_Q_Res_Rcpp", (DL_FUNC) &_SAIGEQTL_SKAT_META_Optimal_Get_Q_Res_Rcpp, 2},
     {"_SAIGEQTL_Get_Lambda_Rcpp", (DL_FUNC) &_SAIGEQTL_Get_Lambda_Rcpp, 3},

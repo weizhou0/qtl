@@ -615,3 +615,21 @@ checkPerfectSep <- function(formula, data, minCovariateCount) {
 
   return(colnamesDelete)
 }
+
+preprocess_E <- function(E, epsilon = 1e-6, rank_approx = NULL) {
+  # Centering
+  E <- sweep(E, 2, colMeans(E), "-")
+  
+  # Scaling
+  E <- sweep(E, 2, apply(E, 2, sd), "/")
+  
+  # Regularization
+  if (!is.null(rank_approx)) {
+    svd_decomp <- svd(E)
+    U_k <- svd_decomp$u[, 1:rank_approx]
+    Sigma_k <- diag(svd_decomp$d[1:rank_approx])
+    E <- U_k %*% Sigma_k
+  }
+  
+  return(E)
+}
