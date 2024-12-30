@@ -8009,12 +8009,13 @@ arma::fvec getDiagOfSigma_multiV_eMat(arma::fvec& wVec, arma::fvec& tauVec, bool
 	        diagVec = diagVec + tauVec(tauind) * diagVecG_I;
 		tauind = tauind + 1;
 
+		/*
 		for(unsigned int i = 0; i < g_EEt_eigenvalVec.n_elem; i++){
                 	diagVec0 = diagVec0 + (g_EEt_eigenvalVec(i)) * diagVecG_I % arma::square(g_EEt_eigenvecMat.col(i));
               	}
                 diagVec = diagVec + tauVec(tauind) * diagVec0;
                 tauind = tauind + 1;
-
+		*/
            }else{ //if(g_isGRM && g_isSparseGRM){
                 //std::cout << "else(g_isGRM && g_isSparseGRM){" << std::endl;
                 diagVecG.ones(g_n_unique);
@@ -8031,8 +8032,8 @@ arma::fvec getDiagOfSigma_multiV_eMat(arma::fvec& wVec, arma::fvec& tauVec, bool
 		//for(unsigned int i = 0; i < g_EEt_eigenvalVec.n_elem; i++){
                 //	diagVec0 = diagVec0 + (g_EEt_eigenvalVec(i)) * diagVecG_I % arma::square(g_EEt_eigenvecMat.col(i));
               	//}
-                diagVec = diagVec + tauVec(tauind) * g_EEt_diagVec;
-                tauind = tauind + 1;
+                //diagVec = diagVec + tauVec(tauind) * g_EEt_diagVec;
+                //tauind = tauind + 1;
                 //std::cout << "getDiagOfSigma_multiV Here0" << std::endl;
 
            }
@@ -8053,9 +8054,11 @@ arma::fvec getDiagOfSigma_multiV_eMat(arma::fvec& wVec, arma::fvec& tauVec, bool
 
 // [[Rcpp::export]]
 arma::fvec getprod_eMat(arma::fvec& bVec){
-	//arma::fvec Etb = (g_EMat.t()) * bVec;
-	//arma::fvec EEtb = g_EMat  * Etb;
-	//return(EEtb);
+	arma::fvec Etb = (g_EMat.t()) * bVec;
+	Etb.print("Etb");
+	arma::fvec EEtb = g_EMat  * Etb;
+	return(EEtb);
+	/*
         arma::fcolvec bVec_1, IbVec, GRM_I_bvec, rossProdVecGRM_1, crossProdVecGRM, crossProdVecGRM_1, crossProdVec;
         crossProdVec.zeros(bVec.n_elem);
 	double bVal_0, bVal_1;
@@ -8073,7 +8076,8 @@ arma::fvec getprod_eMat(arma::fvec& bVec){
                 crossProdVecGRM.zeros();
                 crossProdVecGRM_1.zeros();
         }
-        return(crossProdVec);	
+        return(crossProdVec);
+	*/
 }
 
 
@@ -8311,14 +8315,15 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
                                 }else{
                                   APY = g_I_longl_mat * Ibvec;
                                 }
-                        }else if(i==2){
+                        /*}else if(i==2){
                                 if(g_isGRM){
                                   //std::cout << "GRM_I_bvec.n_elem " << GRM_I_bvec.n_elem << std::endl;
                                   APY = getCrossprodMatAndKin_eMat_Imat(PY1, LOCO);
                                 }else{
 				  APY = getCrossprodMatAndI_eMat_Imat(PY1, LOCO);
                                 }
-                        }else if(i == 3){	
+                        }*/
+			}else if(i == 2){	
 				  APY = getprod_eMat(PY1);
 			}
                         APYmat.col(i) = APY;
@@ -8450,35 +8455,37 @@ arma::fvec GetTrace_multiV_eMat(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fve
                                         temp_mat(i,1) = dot(temp_vec_double, Pu);
                                 }
 
-
+				/*
                                 if(fixtauVec(2) == 0) {
 					temp_vec_double = getCrossprodMatAndKin_eMat_Imat(uVec, LOCO);	
                                         Au_mat.col(2) = temp_vec_double;
                                         temp_mat(i,2) = dot(temp_vec_double, Pu);
-                                }
-
-				if(fixtauVec(3) == 0) {
+                                }*/
+/*
+				if(fixtauVec(2) == 0) {
 					temp_vec_double = getprod_eMat(uVec);
-                        		Au_mat.col(3) = temp_vec_double;
-                        		temp_mat(i,3) = dot(temp_vec_double, Pu);
+                        		Au_mat.col(2) = temp_vec_double;
+                        		temp_mat(i,2) = dot(temp_vec_double, Pu);
 				}
-
+*/
                            }else{
                                  if(fixtauVec(1) == 0)   {
                                         temp_vec_double = g_I_longl_mat * Ibvec;
                                         Au_mat.col(1) = temp_vec_double;
                                         temp_mat(i,1) = dot(temp_vec_double, Pu);
                                 }
+				/*
                                 if(fixtauVec(2) == 0){
 					temp_vec_double = getCrossprodMatAndI_eMat_Imat(uVec, LOCO);
                                         Au_mat.col(2) = temp_vec_double;
                                         temp_mat(i,2) = dot(temp_vec_double, Pu);
-                                }
-                                if(fixtauVec(3) == 0){
+                                }*/
+                                /*if(fixtauVec(2) == 0){
                         		temp_vec_double = getprod_eMat(uVec);	
-					Au_mat.col(3) = temp_vec_double;
-                        		temp_mat(i,3) = dot(temp_vec_double, Pu);
+					Au_mat.col(2) = temp_vec_double;
+                        		temp_mat(i,2) = dot(temp_vec_double, Pu);
 				}
+*/
 
                            }
                         }
@@ -8513,16 +8520,16 @@ arma::fvec GetTrace_multiV_eMat(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fve
                                 isConverge = true;
                         }
                 }else{
-                        //if( arma::any(traceCV > traceCVcutoff) ){
-                        //        isConverge = false;
-                        //}else{
-                        //        isConverge = true;
-                        //}
-                        if( arma::any(traceCV < traceCVcutoff) ){
+                        if( arma::any(traceCV > traceCVcutoff) ){
+                                isConverge = false;
+                        }else{
+                                isConverge = true;
+                        }
+                        /*if( arma::any(traceCV < traceCVcutoff) ){
                                 isConverge = true;
                         }else{
                                 isConverge = false;
-                        }
+                        }*/
                 }
 
 
@@ -8544,14 +8551,79 @@ arma::fvec GetTrace_multiV_eMat(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fve
         uVec.clear();
         temp_vec.clear();
 
+
+
+
+
+  arma::fmat P_U(g_EEt_eigenvecMat.n_cols, g_EEt_eigenvecMat.n_cols, arma::fill::zeros); // Result is 3x3
+  for (size_t i = 0; i < g_EEt_eigenvecMat.n_cols; ++i) {
+    // Extract column vector of U
+    arma::fvec u_i = g_EEt_eigenvecMat.col(i);
+
+    //                        Sigma_iu = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, uVec, maxiterPCG, tolPCG, LOCO);
+    // Compute Pb using the external function
+    arma::fvec Sigma_iu = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, u_i, maxiterPCG, tolPCG, LOCO);
+    arma::fvec Pu = Sigma_iu - Sigma_iX * (cov1 *  (Sigma_iXt * u_i));
+
+
+    // Compute u_i^T (Pb) and store in P_U(i, i)
+    for (size_t j = 0; j < g_EEt_eigenvecMat.n_cols; ++j) {
+      arma::fvec u_j = g_EEt_eigenvecMat.col(j);
+      P_U(i, j) = arma::dot(u_j, Pu);
+    }
+  }
+
+  // Compute trace: sum over sigma^2 * P_U diagonal
+  float trace_value = 0.0;
+  for (size_t i = 0; i < g_EEt_eigenvalVec.n_elem; ++i) {
+    trace_value += g_EEt_eigenvalVec(i) * P_U(i, i);
+  }	
+
+
+
         arma::fvec traVec(q2);
+        //for(int i=0; i<q2-1; i++){
         for(int i=0; i<q2; i++){
                 traVec(i) = arma::mean(temp_mat_update.col(i));
         }
+
+traVec(q2-1) = trace_value;
+
+traVec.print("traVec");
         temp_mat.clear();
         temp_mat_update.clear();
         return(traVec);
 }
 
+/*
+double trace_EE_P() {
+  // Perform SVD of E
+  //arma::mat U, V;
+  //arma::vec s; // Singular values
+  //arma::svd(U, s, V, E); // E = U * diagmat(s) * V.t()
+
+  // Compute P_U = U^T * P * U implicitly
+  arma::fmat P_U(g_EEt_eigenvecMat.n_cols, g_EEt_eigenvecMat.n_cols, arma::fill::zeros); // Result is 3x3
+  for (size_t i = 0; i < g_EEt_eigenvecMat.n_cols; ++i) {
+    // Extract column vector of U
+    arma::fvec u_i = U.col(i);
+
+    // Compute Pb using the external function
+    arma::fvec Sigma_iu = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, u_i, maxiterPCG, tolPCG, LOCO);
+    arma::fvec Pu = Sigma_iu - Sigma_iX * (cov1 *  (Sigma_iXt * u_i));
 
 
+    // Compute u_i^T (Pb) and store in P_U(i, i)
+    for (size_t j = 0; j < U.n_cols; ++j) {
+      arma::vec u_j = U.col(j);
+      P_U(i, j) = arma::dot(u_j, Pu);
+    }
+  }
+
+  // Compute trace: sum over sigma^2 * P_U diagonal
+  double trace_value = 0.0;
+  for (size_t i = 0; i < g_EEt_eigenvalVec.n_elem; ++i) {
+    trace_value += g_EEt_eigenvalVec(i) * P_U(i, i);
+  }
+  return trace_value;
+}*/
