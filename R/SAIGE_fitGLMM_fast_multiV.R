@@ -554,20 +554,35 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     print(head(dataMerge_sort))
     # dataMerge_sort = dataMerge
 
-    eMat = NULL
     if (length(eCovarCol) > 0) {
       cat(eCovarCol, "are environmental covariates\n")
       eMat <- dataMerge_sort[, which(colnames(dataMerge_sort) %in% eCovarCol), drop = F]
       for (em in 1:ncol(eMat)) {
-        eMat[, em] <- (eMat[, em] - mean(eMat[, em])) / (sd(eMat[, em]))
+        eMat[, em] <- (eMat[, em] - mean(eMat[, em])) / (sqrt(ncol(eMat))*sd(eMat[, em]))
       }
     eMat = as.matrix(eMat)
-    eMat = preprocess_E(eMat)
+    print("HERE set_EMat")
+    #eMat = preprocess_E(eMat)
     set_EMat(eMat) 
-    }
     ##remove e cov from the covariates list
+    print("Here covarColList 0 ")
+    print(covarColList)
     covarColList =  covarColList[!(covarColList %in% eCovarCol)]
+    formula <- paste0(phenoCol, "~", paste0(covarColList,
+      collapse = "+"
+    ))
+    formula.null <- as.formula(formula)
+    print("eCovarCol")
+    print(eCovarCol)
 
+
+    }else{
+
+      eMat = NULL
+    }
+
+    print("Here covarColList")
+    print(covarColList)
 
     rm(mmat)
     rm(mmat_nomissing)
@@ -626,6 +641,11 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     ])))
     dataMerge_sort[, which(colnames(dataMerge_sort) == phenoCol)] <- invPheno
   }
+
+  #if(length(eCovarCol) > 0){
+  #      dataMerge_sort <- dataMerge_sort[, !(names(dataMerge_sort) %in%
+  #	      eCovarCol)]
+  #}
   print("Test4")
   print(head(dataMerge_sort))
   if (traitType == "binary" & (length(covarColList) > 0)) {
@@ -783,7 +803,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
 
   cat("numofV ", numofV, "\n")
 
-if(nrow(eMat) == 0){  
+if(is.null(eMat)){  
   if (any(duplicated(dataMerge_sort$IID))) {
     print("HERE")
     if (longlCol == "") {
@@ -833,7 +853,7 @@ if(nrow(eMat) == 0){
   cat("num_Kmat ", num_Kmat, "\n")
 
 
-  if(nrow(eMat) > 0){
+  if(!is.null(eMat)){
         print("dim(eMat)")
   	print(dim(eMat))
   #	k = 3
@@ -1027,7 +1047,7 @@ if(nrow(eMat) == 0){
   # }
   print("isStoreSigma")
   print(isStoreSigma)
-  # set_store_sigma(isStoreSigma)
+  #set_store_sigma(isStoreSigma)
 
   if (!skipModelFitting) {
     # setisUseSparseSigmaforNullModelFitting(useSparseGRMtoFitNULL)
@@ -1059,6 +1079,10 @@ if(nrow(eMat) == 0){
         isLowMemLOCO = isLowMemLOCO, covarianceIdxMat = covarianceIdxMat, isStoreSigma = isStoreSigma, useSparseGRMtoFitNULL = useSparseGRMtoFitNULL, useGRMtoFitNULL = useGRMtoFitNULL, isSparseGRMIdentity = isSparseGRMIdentity
       ))
     }else{ #if(length(eCovarCol) == 0){
+
+     print("glmmkin.ai_PCG_Rcpp_multiV_eMat")
+     print(fit0)
+
       system.time(modglmm <- glmmkin.ai_PCG_Rcpp_multiV_eMat(bedFile, bimFile, famFile, Xorig, isCovariateOffset,
         fit0,
         tau = tau, fixtau = fixtau, maxiter = maxiter,
@@ -1157,10 +1181,11 @@ if(nrow(eMat) == 0){
 
     if (length(eCovarCol) > 0) {
       cat(eCovarCol, "are environmental covariates\n")
-      modglmm$eMat <- data.new[, which(colnames(data.new) %in% eCovarCol), drop = F]
-      for (em in 1:ncol(modglmm$eMat)) {
-        modglmm$eMat[, em] <- (modglmm$eMat[, em] - mean(modglmm$eMat[, em])) / (sd(modglmm$eMat[, em]))
-      }
+      modglmm$eMat = eMat
+      #modglmm$eMat <- data.new[, which(colnames(data.new) %in% eCovarCol), drop = F]
+      #for (em in 1:ncol(modglmm$eMat)) {
+      #  modglmm$eMat[, em] <- (modglmm$eMat[, em] - mean(modglmm$eMat[, em])) / (sd(modglmm$eMat[, em]))
+      #}
     }
 #####
 
@@ -2647,9 +2672,9 @@ glmmkin.ai_PCG_Rcpp_multiV_eMat <- function(bedFile, bimFile, famFile, Xorig, is
   # }
 
 
-  # if(isStoreSigma){
-  #  gen_sp_Sigma_multiV(W, tau)
-  # }
+   #if(isStoreSigma){
+   #  gen_sp_Sigma_multiV(W, tau)
+   #}
 
   if (isSparseGRMIdentity) {
     tau[2] <- 0

@@ -4644,6 +4644,7 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
     int Nnomissing = wVec.n_elem;
     arma::fvec xVec(Nnomissing);
     xVec.zeros();
+    std::cout << "g_isStoreSigma " << g_isStoreSigma << std::endl;
     //std::cout << "Nnomissing " << Nnomissing << std::endl;
     if(g_isStoreSigma){
         //std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
@@ -4816,7 +4817,9 @@ arma::sp_fmat gettI_Sigma_I_multiV(arma::fvec& wVec, arma::fvec& tauVec, int max
 // [[Rcpp::export]]
 arma::fvec  getSigma_G_multiV(arma::fvec& wVec, arma::fvec& tauVec,arma::fvec& Gvec, int maxiterPCG, float tolPCG, bool LOCO){
         arma::fvec Sigma_iG;
+	std::cout << "getSigma_G_multiV " << std::endl;
         Sigma_iG = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, Gvec, maxiterPCG, tolPCG, LOCO);
+	std::cout << "getSigma_G_multiV after" << std::endl;
         return(Sigma_iG);
 }
 

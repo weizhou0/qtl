@@ -186,7 +186,7 @@ if(is.null(opt$weights_for_condition)){
 	weights_for_condition_list = unlist(strsplit(opt$weights_for_condition, ","))
 	weights_for_condition = NULL
 	for(i in 1:length(weights_for_condition_list)){
-		weights_for_condition = cbind(weights_for_condition, convertoNumeric(x=strsplit(weights_for_condition_list[[i]],";")[[1]], "weights_for_condition")
+		weights_for_condition = cbind(weights_for_condition, convertoNumeric(x=strsplit(weights_for_condition_list[[i]],";")[[1]], "weights_for_condition"))
 	}
 }
 
