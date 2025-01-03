@@ -835,12 +835,12 @@ if(is.null(eMat)){
   }
 }else{ #if(nrow(eMat) == 0){
   if (any(duplicated(dataMerge_sort$IID))) {
-    num_Kmat <- numofV + 3
+    num_Kmat <- numofV + 4
   }else{
     if (useGRMtoFitNULL) {
-      num_Kmat <- numofV + 3
+      num_Kmat <- numofV + 4
     }else{
-      num_Kmat <- numofV + 2
+      num_Kmat <- numofV + 3
     }
   }
 }
