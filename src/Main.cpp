@@ -4662,6 +4662,10 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
 	}else{	
         	minvVec = 1/getDiagOfSigma_multiV(wVec, tauVec, LOCO);
 	}
+
+	//minvVec.print("minvVec");
+
+
 	//std::cout << "getPCG1ofSigmaAndVector_multiV start 1" << std::endl;
         zVec = minvVec % rVec;
 
@@ -4670,7 +4674,9 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
         arma::fvec pVec = zVec;
 
 	//std::cout << "getPCG1ofSigmaAndVector_multiV start 2" << std::endl;
-
+	//pVec.print("pVec");
+	//tauVec.print("tauVec");
+	//wVec.print("wVec");
         int iter = 0;
 	arma::fcolvec ApVec;
         while (sumr2 > tolPCG && iter < maxiterPCG) {
@@ -4683,7 +4689,7 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
 		}
 		        //std::cout << "getPCG1ofSigmaAndVector_multiV Here3" << std::endl;
                 arma::fvec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
-
+		//ApVec.print("ApVec");
                 float a = preA(0);
                 xVec = xVec + a * pVec;
                 r1Vec = rVec - a * ApVec;
@@ -7805,6 +7811,77 @@ void assign_g_outputFilePrefix0( std::string t_outputFilePrefix){
 	g_outputFilePrefix0 = t_outputFilePrefix;
 }
 
+
+
+// [[Rcpp::export]]
+arma::fcolvec getCrossprod_multiV_eMat(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO){
+
+        arma::fcolvec crossProdVec;
+        // Added by SLEE, 04/16/2017
+        if(tauVec(1) == 0 && tauVec.n_elem == 2){
+                crossProdVec = tauVec(0)*(bVec % (1/wVec));
+                return(crossProdVec);
+        }
+        //
+        arma::fvec crossProd1, GRM_I_bvec, Ibvec, Tbvec, GRM_T_bvec, crossProdGRM_TGIb, crossProdGRM_IGTb, V_I_bvec, V_T_bvec, crossProdV_TGIb, crossProdV_IGTb, crossProdGRM_TIb, crossProdGRM_ITb;
+
+        unsigned int tau_ind = 0;
+        if(g_I_longl_mat.n_rows == 0 && g_T_longl_mat.n_rows == 0){ //it must have specified GRM
+                if(g_isGRM){
+                  crossProd1 = getCrossprodMatAndKin(bVec, LOCO);
+                  crossProdVec = tauVec(0)*(bVec % (1/wVec)) + tauVec(1)*crossProd1;
+                  tau_ind = tau_ind + 2;
+                }else{
+                  crossProdVec = tauVec(0)*(bVec % (1/wVec));
+                  tau_ind = tau_ind + 1;
+                }
+        }else{
+                Ibvec = g_I_longl_mat.t() * bVec;
+                if(g_isGRM){
+                  GRM_I_bvec = getCrossprodMatAndKin(Ibvec, LOCO);
+                  crossProd1 = g_I_longl_mat * GRM_I_bvec;
+                  crossProdVec = tauVec(0)*(bVec % (1/wVec)) + tauVec(1)*crossProd1;
+                  tau_ind = tau_ind + 2;
+                }else{
+                  //crossProdVec = tauVec(0)*(bVec % (1/wVec));
+                  crossProd1 = g_I_longl_mat * Ibvec;
+                  crossProdVec = tauVec(0)*(bVec % (1/wVec)) + tauVec(1)*crossProd1;
+                  tau_ind = tau_ind + 2;
+                }
+
+
+        }
+
+/*
+        if(g_I_longl_mat.n_rows == 0){
+                if(g_isGRM){
+                  crossProd1 = getCrossprodMatAndKin_eMat(bVec, LOCO);
+                }else{
+                  crossProd1 = getCrossprodMatAndI_eMat(bVec, LOCO);
+                }
+        }else{
+                Ibvec = g_I_longl_mat.t() * bVec;
+                if(g_isGRM){
+                  crossProd1 = getCrossprodMatAndKin_eMat_Imat(bVec, LOCO);
+                }else{
+                  crossProd1 = getCrossprodMatAndI_eMat_Imat(bVec, LOCO);
+                }
+
+                crossProdVec = crossProdVec + tauVec(tau_ind)*crossProd1;
+                tau_ind = tau_ind + 1;
+        }
+*/
+        arma::fvec Etb = (g_EMat.t()) * bVec;
+        arma::fvec EEtb = g_EMat  * Etb;
+
+        crossProdVec  = crossProdVec + tauVec(tau_ind) * EEtb;
+        tau_ind = tau_ind + 1;
+
+        return(crossProdVec);
+}
+
+
+/*
 // [[Rcpp::export]]
 arma::fcolvec getCrossprod_multiV_eMat(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec& tauVec, bool LOCO){
 
@@ -7835,7 +7912,10 @@ arma::fcolvec getCrossprod_multiV_eMat(arma::fcolvec& bVec, arma::fvec& wVec, ar
                   crossProdVec = tauVec(0)*(bVec % (1/wVec)) + tauVec(1)*crossProd1;
                   tau_ind = tau_ind + 2;
                 }else{
-                  crossProdVec = tauVec(0)*(bVec % (1/wVec));
+		  //crossProd1 = tauVec(1) * (g_I_longl_mat * Ibvec);
+                  //crossProdVec = tauVec(0)*(bVec % (1/wVec)) + tauVec(1)*crossProd1;
+                  //tau_ind = tau_ind + 2;
+ 		  crossProdVec = tauVec(0)*(bVec % (1/wVec));
                   tau_ind = tau_ind + 1;
                 }
 	}
@@ -7848,17 +7928,19 @@ arma::fcolvec getCrossprod_multiV_eMat(arma::fcolvec& bVec, arma::fvec& wVec, ar
                   crossProd1 = getCrossprodMatAndI_eMat(bVec, LOCO);
                 }
         }else{
-                //Ibvec = g_I_longl_mat.t() * bVec;
+		crossProdVec  = crossProdVec + tauVec(tau_ind) * (g_I_longl_mat * Ibvec);
+		tau_ind = tau_ind + 1;
+                Ibvec = g_I_longl_mat.t() * bVec;
                 if(g_isGRM){
 		  crossProd1 = getCrossprodMatAndKin_eMat_Imat(bVec, LOCO);
                 }else{
 		  crossProd1 = getCrossprodMatAndI_eMat_Imat(bVec, LOCO);
                 }
-
+	
         }
 
-        crossProdVec = crossProdVec + tauVec(tau_ind)*crossProd1;
-        tau_ind = tau_ind + 1;
+        //crossProdVec = crossProdVec + tauVec(tau_ind)*crossProd1;
+        //tau_ind = tau_ind + 1;
 
 	arma::fvec Etb = (g_EMat.t()) * bVec;
 	arma::fvec EEtb = g_EMat  * Etb;
@@ -7867,7 +7949,7 @@ arma::fcolvec getCrossprod_multiV_eMat(arma::fcolvec& bVec, arma::fvec& wVec, ar
 	tau_ind = tau_ind + 1;
         return(crossProdVec);
 }
-
+*/
 
 
 // [[Rcpp::export]]
@@ -8587,9 +8669,9 @@ arma::fvec GetTrace_multiV_eMat(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fve
                 traVec(i) = arma::mean(temp_mat_update.col(i));
         }
 
-traVec(q2-1) = trace_value;
+	traVec(q2-1) = trace_value;
 
-traVec.print("traVec");
+	traVec.print("traVec");
         temp_mat.clear();
         temp_mat_update.clear();
         return(traVec);
