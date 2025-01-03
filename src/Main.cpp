@@ -8577,8 +8577,6 @@ arma::fvec GetTrace_multiV_eMat(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fve
 			if(fixtauVec(1)  == 0){
 				if(g_isGRM){
 					temp_vec_double = getCrossprodMatAndKin(uVec, LOCO);
-				}else{
-					temp_vec_double = getprod_eMat(uVec);
 				}
 				Au_mat.col(1) = temp_vec_double;
 				temp_mat(i,1) = dot(temp_vec_double, Pu);
