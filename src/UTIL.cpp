@@ -196,3 +196,27 @@ double add_logp(double p1, double p2)
         double result = maxp+std::log(1+std::exp(minp-maxp));
         return(result);
 }
+
+double calculatePearsonCorrelation(arma::vec& x, arma::vec& y) {
+    // Ensure vectors have the same size
+    if (x.n_elem != y.n_elem) {
+        throw std::invalid_argument("Vectors must have the same size");
+    }
+
+    // Calculate means
+    double mean_x = arma::mean(x);
+    double mean_y = arma::mean(y);
+
+    // Calculate covariance
+    double covariance = arma::dot(x - mean_x, y - mean_y) / (x.n_elem - 1);
+    // Calculate standard deviations
+    double stddev_x = arma::stddev(x);
+    double stddev_y = arma::stddev(y);
+    std::cout << "covariance " << covariance << std::endl;
+    std::cout << "stddev_x " << stddev_x << std::endl;
+    std::cout << "stddev_y " << stddev_y << std::endl;
+
+    // Calculate Pearson correlation
+    return covariance / (stddev_x * stddev_y);
+}
+

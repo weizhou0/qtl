@@ -567,11 +567,11 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     ##remove e cov from the covariates list
     print("Here covarColList 0 ")
     print(covarColList)
-    covarColList =  covarColList[!(covarColList %in% eCovarCol)]
-    formula <- paste0(phenoCol, "~", paste0(covarColList,
-      collapse = "+"
-    ))
-    formula.null <- as.formula(formula)
+    #covarColList =  covarColList[!(covarColList %in% eCovarCol)]
+    #formula <- paste0(phenoCol, "~", paste0(covarColList,
+    #  collapse = "+"
+    #))
+    #formula.null <- as.formula(formula)
     print("eCovarCol")
     print(eCovarCol)
 
@@ -835,12 +835,12 @@ if(is.null(eMat)){
   }
 }else{ #if(nrow(eMat) == 0){
   if (any(duplicated(dataMerge_sort$IID))) {
-    num_Kmat <- numofV + 4
+    num_Kmat <- numofV + 3
   }else{
     if (useGRMtoFitNULL) {
-      num_Kmat <- numofV + 4
-    }else{
       num_Kmat <- numofV + 3
+    }else{
+      num_Kmat <- numofV + 2
     }
   }
 }

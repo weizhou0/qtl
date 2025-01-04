@@ -58,5 +58,6 @@ double sum_arma1(arma::vec& X);
 
 double add_logp(double p1, double p2);
 
+double calculatePearsonCorrelation(arma::vec& x, arma::vec& y);
 #endif
 
