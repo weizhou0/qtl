@@ -2,13 +2,7 @@
 
 #options(stringsAsFactors=F, scipen = 999)
 options(stringsAsFactors=F)
-#library(SAIGE)
-#library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test/")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_SPA")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_SPA_smallMemory")
-#library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test_2.1.2_rareCategoryVR_0128_sparseVworks")
 library(SAIGEQTL)
-
 
 BLASctl_installed <- require(RhpcBLASctl)
 library(optparse)
@@ -145,6 +139,8 @@ mean, p-value based on traditional score test is returned. Default value is 2.")
     help="Whether to use the sparse GRM"),
   make_option("--pval_cutoff_for_fastTest", type="numeric", default=0.05,
     help="p-value cutoff for using sparse V in Step 2"),
+  make_option("--pval_cutoff_for_gxe", type="numeric", default=0.001,
+      help="p-value cutoff for dynamitc eQTL"),
   make_option("--max_MAC_for_ER", type="numeric", default=4,
     help="p-values of genetic variants with MAC <= max_MAC_for_ER will be calculated via efficient resampling. [default=4]"),
   make_option("--is_EmpSPA", type="logical", default=FALSE,
@@ -179,6 +175,8 @@ convertoNumeric = function(x,stringOutput){
 
 cateVarRatioMinMACVecExclude <- convertoNumeric(x=strsplit(opt$cateVarRatioMinMACVecExclude,",")[[1]], "cateVarRatioMinMACVecExclude")
 cateVarRatioMaxMACVecInclude <- convertoNumeric(x=strsplit(opt$cateVarRatioMaxMACVecInclude,",")[[1]], "cateVarRatioMaxMACVecInclude")
+
+
 if(is.null(opt$weights_for_condition)){
 	weights_for_condition=NULL
 }else{
@@ -235,7 +233,7 @@ for(i in 1:length(weights.beta.list)){
 print("opt$r.corr")
 print(opt$r.corr)
 
-
+if(packageVersion("SAIGEQTL")>="0.2.2"){
 SPAGMMATtest(vcfFile=opt$vcfFile,
              vcfFileIndex=opt$vcfFileIndex,
              vcfField=opt$vcfField,
@@ -296,12 +294,79 @@ SPAGMMATtest(vcfFile=opt$vcfFile,
 	     is_noadjCov = opt$is_noadjCov, 
 	     is_sparseGRM = opt$is_sparseGRM,
              pval_cutoff_for_fastTest = opt$pval_cutoff_for_fastTest,
+	     pval_cutoff_for_gxe = opt$pval_cutoff_for_gxe,
              max_MAC_use_ER = opt$max_MAC_for_ER,
 	     is_EmpSPA = opt$is_EmpSPA,
 	     is_fastTest = opt$is_fastTest
 )
 
+}else{
+SPAGMMATtest(vcfFile=opt$vcfFile,
+             vcfFileIndex=opt$vcfFileIndex,
+             vcfField=opt$vcfField,
+             savFile=opt$savFile,
+             savFileIndex=opt$savFileIndex,
+             bgenFile=opt$bgenFile,
+             bgenFileIndex=opt$bgenFileIndex,
+             sampleFile=opt$sampleFile,
+             bedFile=opt$bedFile,
+             bimFile=opt$bimFile,
+             famFile=opt$famFile,
+             AlleleOrder=opt$AlleleOrder,
+             idstoIncludeFile = opt$idstoIncludeFile,
+             rangestoIncludeFile = opt$rangestoIncludeFile,
+             chrom=opt$chrom,
+             is_imputed_data=opt$is_imputed_data,
+             min_MAF = opt$minMAF,
+             min_MAC = opt$minMAC,
+             min_Info = opt$minInfo,
+             max_missing = opt$maxMissing,
+             impute_method = opt$impute_method,
+             LOCO=opt$LOCO,
+             GMMATmodelFile=opt$GMMATmodelFile,
+             varianceRatioFile=opt$varianceRatioFile,
+             GMMATmodel_varianceRatio_multiTraits_File=opt$GMMATmodel_varianceRatio_multiTraits_File,
+             SAIGEOutputFile=opt$SAIGEOutputFile,
+             markers_per_chunk=opt$markers_per_chunk,
+             groups_per_chunk=opt$groups_per_chunk,
+             markers_per_chunk_in_groupTest=opt$markers_per_chunk_in_groupTest,
+             is_output_moreDetails =opt$is_output_moreDetails,
+             is_overwrite_output = opt$is_overwrite_output,
+             maxMAF_in_groupTest = maxMAF_in_groupTest,
+             minMAF_in_groupTest_Exclude = minMAF_in_groupTest_Exclude,
+             maxMAC_in_groupTest = maxMAC_in_groupTest,
+             minMAC_in_groupTest_Exclude = minMAC_in_groupTest_Exclude,
+             minGroupMAC_in_BurdenTest = opt$minGroupMAC_in_BurdenTest,
+             annotation_in_groupTest = annotation_in_groupTest,
+             groupFile = opt$groupFile,
+             sparseGRMFile=opt$sparseGRMFile,
+             sparseGRMSampleIDFile=opt$sparseGRMSampleIDFile,
+             relatednessCutoff=opt$relatednessCutoff,
+             MACCutoff_to_CollapseUltraRare = opt$MACCutoff_to_CollapseUltraRare,
+             cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
+             cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
+             weights.beta = weights.beta,
+             r.corr = opt$r.corr,
+             condition = opt$condition,
+             weights_for_condition = weights_for_condition,
+             SPAcutoff = opt$SPAcutoff,
+             dosage_zerod_cutoff = opt$dosage_zerod_cutoff,
+             dosage_zerod_MAC_cutoff = opt$dosage_zerod_MAC_cutoff,
+             is_Firth_beta = opt$is_Firth_beta,
+             pCutoffforFirth = opt$pCutoffforFirth,
+             is_single_in_groupTest = opt$is_single_in_groupTest,
+             is_SKATO = opt$is_SKATO,
+             is_equal_weight_in_groupTest = opt$is_equal_weight_in_groupTest,
+             is_output_markerList_in_groupTest = opt$is_output_markerList_in_groupTest,
+             is_noadjCov = opt$is_noadjCov,
+             is_sparseGRM = opt$is_sparseGRM,
+             pval_cutoff_for_fastTest = opt$pval_cutoff_for_fastTest,
+             max_MAC_use_ER = opt$max_MAC_for_ER,
+             is_EmpSPA = opt$is_EmpSPA,
+             is_fastTest = opt$is_fastTest
+)
 
+}
 
 if(BLASctl_installed){
   # Restore originally configured BLAS thread count

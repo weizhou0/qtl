@@ -4,6 +4,10 @@
 *		date: 12/05/2011
 *
 ****************************************************************/
+
+
+#define UseDouble 0             /* all floating point double */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -15,14 +19,14 @@
 typedef int BOOL;
 
 
-#define pinew 3.14159265358979
+#define pi 3.14159265358979
 #define log28 .0866  /*  log(2.0) / 8.0  */
 
 //extern "C" {
-//
+
 static double sigsq, lmax, lmin, mean, c;
 static double intl, ersm;
-static int count0, r, lim;  static BOOL ndtsrt, fail;
+static int count, r, lim;  static BOOL ndtsrt, fail;
 static int *n,*th; static double *lb,*nc;
 static jmp_buf env;
 
@@ -34,9 +38,9 @@ static double exp1(double x)               /* to avoid underflows  */
    static void counter(void)
    /*  count number of calls to errbd, truncation, cfe */
    {
-      extern int count0,lim;
-      count0 = count0 + 1;
-      if ( count0 > lim ) longjmp(env,1);
+      extern int count,lim;
+      count = count + 1;
+      if ( count > lim ) longjmp(env,1);
    }
 
    static double square(double x)  { return x*x; }
@@ -154,8 +158,8 @@ static double exp1(double x)               /* to avoid underflows  */
       }
       sum1 = 0.5 * sum1;
       prod2 = prod1 + prod2;  prod3 = prod1 + prod3;
-      x = exp1(-sum1 - 0.25 * prod2) / pinew;
-      y = exp1(-sum1 - 0.25 * prod3) / pinew;
+      x = exp1(-sum1 - 0.25 * prod2) / pi;
+      y = exp1(-sum1 - 0.25 * prod3) / pi;
       err1 =  ( s  ==  0 )  ? 1.0 : x * 2.0 / s;
       err2 =  ( prod3 > 1.0 )  ? 2.5 * y : 1.0;
       if (err2 < err1) err1 = err2;
@@ -195,7 +199,7 @@ static double exp1(double x)               /* to avoid underflows  */
       int k, j, nj;
       extern double intl,ersm; extern double sigsq,c;
       extern int *n; extern double *lb,*nc; extern int r;
-      inpi = interv / pinew;
+      inpi = interv / pi;
       for ( k = nterm; k>=0; k--)
       {
          u = (k + 0.5) * interv;
@@ -247,11 +251,11 @@ static double exp1(double x)               /* to avoid underflows  */
    l:
       if (sum1 > 100.0)
       { fail = TRUE; return 1.0; } else
-      return pow(2.0,(sum1 / 4.0)) / (pinew * square(axl));
+      return pow(2.0,(sum1 / 4.0)) / (pi * square(axl));
    }
 
 
-void  qfc_1(double* lb1, double* nc1, int* n1, int *r1, double *sigma, double *c1, int *lim1, double *acc, double* trace, int* ifault, double *res)
+extern "C" void qfc_1(double* lb1, double* nc1, int* n1, int *r1, double *sigma, double *c1, int *lim1, double *acc, double* trace, int* ifault, double *res)
 
 /*  distribution function of a linear combination of non-central
    chi-squared random variables :
@@ -282,6 +286,7 @@ output:
    trace[6]         cycles to locate integration parameters     */
 
 {
+      //printf("qfc_1 test!\n");
       int j, nj, nt, ntm;  double acc1, almx, xlim, xnt, xntm;
       double utx, tausq, sd, intv, intv1, x, up, un, d1, d2, lj, ncj;
       extern double sigsq, lmax, lmin, mean;
@@ -290,30 +295,47 @@ output:
       extern int *n,*th; extern double *lb,*nc;
       double qfval = -1.0;
       static int rats[]={1,2,4,8};
+      //printf("qfc_2 test!\n");
 
       if (setjmp(env) != 0) { *ifault=4; goto endofproc; }
       r=r1[0]; lim=lim1[0]; c=c1[0];
       n=n1; lb=lb1; nc=nc1;
       for ( j = 0; j<7; j++ )  trace[j] = 0.0;
-      *ifault = 0; count0 = 0;
+      *ifault = 0; count = 0;
       intl = 0.0; ersm = 0.0;
       qfval = -1.0; acc1 = acc[0]; ndtsrt = TRUE;  fail = FALSE;
       xlim = (double)lim;
       th=(int*)malloc(r*(sizeof(int)));
       if (! th) { *ifault=5;  goto  endofproc; } 
 
+
       /* find mean, sd, max and min of lb,
          check that parameter values are valid */
       sigsq = square(sigma[0]); sd = sigsq;
       lmax = 0.0; lmin = 0.0; mean = 0.0;
-      for (j=0; j<r; j++ )
+     
+      //printf("sd here a  %10.2f\n", sd);
+     
+     for (j=0; j<r; j++ )
       {
          nj = n[j];  lj = lb[j];  ncj = nc[j];
+      //printf("j here a  %d\n", j);
+      //printf("nj here a  %d\n", nj);
+      //printf("lj here a  %10.2f\n", lj);
+      //printf("ncj here a  %10.2f\n", ncj);
+      //printf("sd here a  %10.2f\n", sd);
+
+
          if ( nj < 0  ||  ncj < 0.0 ) { *ifault = 3;  goto  endofproc;  }
+
+	 //printf("sd here b0  %10.2f\n", sd);
          sd  = sd  + square(lj) * (2 * nj + 4.0 * ncj);
+         //printf("sd here b  %10.2f\n", sd);
          mean = mean + lj * (nj + ncj);
          if (lmax < lj) lmax = lj ; else if (lmin > lj) lmin = lj;
       }
+
+
       if ( sd == 0.0  )
       {  qfval = (c > 0.0) ? 1.0 : 0.0; goto  endofproc;  }
       if ( lmin == 0.0 && lmax == 0.0 && sigma[0] == 0.0 )
@@ -338,24 +360,45 @@ output:
          }
       }
       trace[4] = utx;  acc1 = 0.5 * acc1;
+        //printf("up a  %10.2f\n", up);
+        //printf("un a %10.2f\n", un);
+        //printf("utx a  %10.2f\n", utx);
+        //printf("sd a  %10.2f\n", sd);
+
+
 
       /* find RANGE of distribution, quit if outside this */
    l1:
       d1 = ctff(acc1, &up) - c;
+
+        //printf("up b  %10.2f\n", up);
+        //printf("d1 b  %10.2f\n", d1);
+
       if (d1 < 0.0) { qfval = 1.0; goto endofproc; }
       d2 = c - ctff(acc1, &un);
+	//printf("un b %10.2f\n", un);
+        //printf("d2 b  %10.2f\n", d2);
+
+
       if (d2 < 0.0) { qfval = 0.0; goto endofproc; }
       /* find integration interval */
-      intv = 2.0 * pinew / ((d1 > d2) ? d1 : d2);
+      intv = 2.0 * pi / ((d1 > d2) ? d1 : d2);
       /* calculate number of terms required for main and
          auxillary integrations */
       xnt = utx / intv;  xntm = 3.0 / sqrt(acc1);
+
+        //printf("xnt %10.2f\n", xnt);
+        //printf("utx %10.2f\n", utx);
+        //printf("intv %10.2f\n", intv);
+        //printf("xntm %10.2f\n", xntm);
+
+
       if (xnt > xntm * 1.5)
       {
          /* parameters for auxillary integration */
          if (xntm > xlim) { *ifault = 1; goto endofproc; }
          ntm = (int)floor(xntm+0.5);
-         intv1 = utx / ntm;  x = 2.0 * pinew / intv1;
+         intv1 = utx / ntm;  x = 2.0 * pi / intv1;
          if (x <= fabs(c)) goto l2;
          /* calculate convergence factor */
          tausq = .33 * acc1 / (1.1 * (cfe(c - x) + cfe(c + x)));
@@ -387,7 +430,7 @@ output:
 
    endofproc :
       free((char*)th);
-      trace[6] = (double)count0;
+      trace[6] = (double)count;
       res[0] = qfval;
       return;
 }

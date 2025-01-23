@@ -33,6 +33,8 @@ option_list <- list(
     help="List of covariates (comma separated)"),
   make_option("--sampleCovarColList", type="character", default="",
     help="List of covariates that are on sample level (comma separated)"),
+  make_option("--dynamicCovarColList", type="character", default="",
+    help="List of covariates that are for dynamic qtls (comma separated)"), 
   make_option("--longlCol", type="character", default="",
     help=""),	      
   make_option("--qCovarColList", type="character", default="",
@@ -147,6 +149,9 @@ print(opt)
 covars <- strsplit(opt$covarColList,",")[[1]]
 qcovars <- strsplit(opt$qCovarColList,",")[[1]]
 scovars <- strsplit(opt$sampleCovarColList,",")[[1]]
+ecovars <- strsplit(opt$dynamicCovarColList,",")[[1]]
+
+
 convertoNumeric = function(x,stringOutput){
         y= tryCatch(expr = as.numeric(x),warning = function(w) {return(NULL)})
         if(is.null(y)){
@@ -224,7 +229,8 @@ fitNULLGLMM_multiV(plinkFile=opt$plinkFile,
 	    varWeightsCol=opt$varWeightsCol,
 	    sampleCovarCol=scovars,
 	    isStoreSigma=opt$isStoreSigma,
-      isShrinkModelOutput=opt$isShrinkModelOutput
+      isShrinkModelOutput=opt$isShrinkModelOutput,
+      eCovarCol=ecovars
 	)
 
 if(!opt$isCovariateOffset){
@@ -296,7 +302,8 @@ if(!opt$isCovariateOffset){
             varWeightsCol=opt$varWeightsCol,
             sampleCovarCol=scovars,
             isStoreSigma=opt$isStoreSigma,
-            isShrinkModelOutput=opt$isShrinkModelOutput
+            isShrinkModelOutput=opt$isShrinkModelOutput,
+	          eCovarCol=ecovars
         )
        my_env = new.env()
        load(paste0(opt$outputPrefix, ".offset.rda"), envir = my_env)

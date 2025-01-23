@@ -493,10 +493,6 @@ get_sp_Sigma_to_R <- function() {
     .Call('_SAIGEQTL_get_sp_Sigma_to_R', PACKAGE = 'SAIGEQTL')
 }
 
-get_SKAT_pvalue_Rcpp <- function(Score, Phi, r_corr) {
-    .Call('_SAIGEQTL_get_SKAT_pvalue_Rcpp', PACKAGE = 'SAIGEQTL', Score, Phi, r_corr)
-}
-
 mainMarkerInCPP_multi <- function(t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth) {
     invisible(.Call('_SAIGEQTL_mainMarkerInCPP_multi', PACKAGE = 'SAIGEQTL', t_genoType, t_traitType, t_genoIndex_prev, t_genoIndex, t_isMoreOutput, t_isImputation, t_isFirth))
 }
@@ -557,60 +553,52 @@ GetTrace_multiV_eMat <- function(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, 
     .Call('_SAIGEQTL_GetTrace_multiV_eMat', PACKAGE = 'SAIGEQTL', Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO)
 }
 
-SKAT_META_Optimal_Get_Q_Rcpp <- function(Score, r_all) {
-    .Call('_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp', PACKAGE = 'SAIGEQTL', Score, r_all)
+call_qfc <- function(lambdas, noncentral, df, r, sigma, q, lim, acc) {
+    .Call('_SAIGEQTL_call_qfc', PACKAGE = 'SAIGEQTL', lambdas, noncentral, df, r, sigma, q, lim, acc)
 }
 
-SKAT_META_Optimal_Get_Q_Res_Rcpp <- function(Score_res, r_all) {
-    .Call('_SAIGEQTL_SKAT_META_Optimal_Get_Q_Res_Rcpp', PACKAGE = 'SAIGEQTL', Score_res, r_all)
+Get_Davies_PVal <- function(Q, W, Q_resampling, isFast) {
+    .Call('_SAIGEQTL_Get_Davies_PVal', PACKAGE = 'SAIGEQTL', Q, W, Q_resampling, isFast)
 }
 
-Get_Lambda_Rcpp <- function(K, isFast, maxK) {
-    .Call('_SAIGEQTL_Get_Lambda_Rcpp', PACKAGE = 'SAIGEQTL', K, isFast, maxK)
+SKAT_davies <- function(q, lambda, h, delta, sigma, lim, acc) {
+    .Call('_SAIGEQTL_SKAT_davies', PACKAGE = 'SAIGEQTL', q, lambda, h, delta, sigma, lim, acc)
 }
 
-SKAT_META_Optimal_Param_Rcpp <- function(Phi, r_all) {
-    .Call('_SAIGEQTL_SKAT_META_Optimal_Param_Rcpp', PACKAGE = 'SAIGEQTL', Phi, r_all)
+SKAT_Optimal_Integrate_Func_Davies <- function(x, pmin_q, param_m, r_all) {
+    .Call('_SAIGEQTL_SKAT_Optimal_Integrate_Func_Davies', PACKAGE = 'SAIGEQTL', x, pmin_q, param_m, r_all)
 }
 
-SKAT_Optimal_Each_Q_Rcpp <- function(Q_all, r_all, lambda_all, method) {
-    .Call('_SAIGEQTL_SKAT_Optimal_Each_Q_Rcpp', PACKAGE = 'SAIGEQTL', Q_all, r_all, lambda_all, method)
+Met_SKAT_Get_Pvalue <- function(Score, Phi, r_corr, method, isFast) {
+    .Call('_SAIGEQTL_Met_SKAT_Get_Pvalue', PACKAGE = 'SAIGEQTL', Score, Phi, r_corr, method, isFast)
 }
 
-Get_Liu_Params_Mod_Rcpp <- function(c1) {
-    .Call('_SAIGEQTL_Get_Liu_Params_Mod_Rcpp', PACKAGE = 'SAIGEQTL', c1)
+Get_Liu_Params <- function(c1) {
+    .Call('_SAIGEQTL_Get_Liu_Params', PACKAGE = 'SAIGEQTL', c1)
 }
 
-SKAT_Optimal_Integrate_Func_Davies_Rcpp <- function(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all) {
-    .Call('_SAIGEQTL_SKAT_Optimal_Integrate_Func_Davies_Rcpp', PACKAGE = 'SAIGEQTL', x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all)
+Get_Liu_PVal <- function(Q, W, Q_resampling) {
+    .Call('_SAIGEQTL_Get_Liu_PVal', PACKAGE = 'SAIGEQTL', Q, W, Q_resampling)
 }
 
-SKAT_Optimal_Integrate_Func_single_Davies_Rcpp <- function(x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all) {
-    .Call('_SAIGEQTL_SKAT_Optimal_Integrate_Func_single_Davies_Rcpp', PACKAGE = 'SAIGEQTL', x, pmin_q, tau, MuQ, lambda, VarQ, VarRemain, r_all)
+forceSymmetric <- function(K) {
+    .Call('_SAIGEQTL_forceSymmetric', PACKAGE = 'SAIGEQTL', K)
 }
 
-Get_Liu_Params_Mod_Lambda_Rcpp <- function(lambda, df1) {
-    .Call('_SAIGEQTL_Get_Liu_Params_Mod_Lambda_Rcpp', PACKAGE = 'SAIGEQTL', lambda, df1)
+get_SKAT_pvalue_cpp <- function(Score, Phi, r_corr, Pvalue_SKATO, Pvalue_Burden, Pvalue_SKAT, BETA_Burden, SE_Burden, error_code) {
+    invisible(.Call('_SAIGEQTL_get_SKAT_pvalue_cpp', PACKAGE = 'SAIGEQTL', Score, Phi, r_corr, Pvalue_SKATO, Pvalue_Burden, Pvalue_SKAT, BETA_Burden, SE_Burden, error_code))
 }
 
-Get_Liu_PVal_MOD_Lambda_Zero_Rcpp <- function(Q, muQ, muX, sigmaQ, sigmaX, l, d) {
-    .Call('_SAIGEQTL_Get_Liu_PVal_MOD_Lambda_Zero_Rcpp', PACKAGE = 'SAIGEQTL', Q, muQ, muX, sigmaQ, sigmaX, l, d)
+get_jointScore_pvalue <- function(Score, Phi) {
+    .Call('_SAIGEQTL_get_jointScore_pvalue', PACKAGE = 'SAIGEQTL', Score, Phi)
 }
 
-Get_Liu_PVal_MOD_Lambda_Rcpp <- function(Q_all, lambda, df1, log_p) {
-    .Call('_SAIGEQTL_Get_Liu_PVal_MOD_Lambda_Rcpp', PACKAGE = 'SAIGEQTL', Q_all, lambda, df1, log_p)
+SPA_ER_kernel_related_Phiadj_fast_new_cpp <- function(p_new, Score, Phi, p_value_burden, regionTestType, scaleFactor) {
+    invisible(.Call('_SAIGEQTL_SPA_ER_kernel_related_Phiadj_fast_new_cpp', PACKAGE = 'SAIGEQTL', p_new, Score, Phi, p_value_burden, regionTestType, scaleFactor))
 }
 
-Get_PValue_Lambda_Rcpp <- function(lambda, Q, df1) {
-    .Call('_SAIGEQTL_Get_PValue_Lambda_Rcpp', PACKAGE = 'SAIGEQTL', lambda, Q, df1)
-}
-
-Get_Liu_PVal_Rcpp <- function(Q, W, Q_resampling) {
-    .Call('_SAIGEQTL_Get_Liu_PVal_Rcpp', PACKAGE = 'SAIGEQTL', Q, W, Q_resampling)
-}
-
-Get_Liu_Params_Rcpp <- function(c1) {
-    .Call('_SAIGEQTL_Get_Liu_Params_Rcpp', PACKAGE = 'SAIGEQTL', c1)
+get_newPhi_scaleFactor_cpp <- function(q_sum, mu_a, g_sum, p_new, Score, Phi, regionTestType, scaleFactor) {
+    invisible(.Call('_SAIGEQTL_get_newPhi_scaleFactor_cpp', PACKAGE = 'SAIGEQTL', q_sum, mu_a, g_sum, p_new, Score, Phi, regionTestType, scaleFactor))
 }
 
 SPA <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPAConverge) {
@@ -619,6 +607,10 @@ SPA <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, pval, isSPACon
 
 SPA_fast <- function(mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, traitType, pval, isSPAConverge) {
     invisible(.Call('_SAIGEQTL_SPA_fast', PACKAGE = 'SAIGEQTL', mu, g, q, qinv, pval_noadj, logp, gNA, gNB, muNA, muNB, NAmu, NAsigma, tol, traitType, pval, isSPAConverge))
+}
+
+SPA_pval <- function(mu, g, q, qinv, pval_noadj, tol, logp, traitType, isSPAConverge) {
+    .Call('_SAIGEQTL_SPA_pval', PACKAGE = 'SAIGEQTL', mu, g, q, qinv, pval_noadj, tol, logp, traitType, isSPAConverge)
 }
 
 Korg_Binom <- function(t1, mu, g) {

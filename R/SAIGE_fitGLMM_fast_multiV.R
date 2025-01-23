@@ -561,19 +561,19 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
         eMat[, em] <- (eMat[, em] - mean(eMat[, em])) / (sqrt(ncol(eMat))*sd(eMat[, em]))
       }
     eMat = as.matrix(eMat)
-    print("HERE set_EMat")
+    #print("HERE set_EMat")
     #eMat = preprocess_E(eMat)
     set_EMat(eMat) 
     ##remove e cov from the covariates list
-    print("Here covarColList 0 ")
+    #print("Here covarColList 0 ")
     print(covarColList)
     #covarColList =  covarColList[!(covarColList %in% eCovarCol)]
     #formula <- paste0(phenoCol, "~", paste0(covarColList,
     #  collapse = "+"
     #))
     #formula.null <- as.formula(formula)
-    print("eCovarCol")
-    print(eCovarCol)
+    #print("eCovarCol")
+    #print(eCovarCol)
 
 
     }else{
@@ -581,8 +581,8 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
       eMat = NULL
     }
 
-    print("Here covarColList")
-    print(covarColList)
+    #print("Here covarColList")
+    #print(covarColList)
 
     rm(mmat)
     rm(mmat_nomissing)
@@ -1261,6 +1261,40 @@ if(is.null(eMat)){
     # save(modglmm, file = modelOut)
     tau <- modglmm$theta
     alpha0 <- modglmm$coefficients
+
+    #Sigma_iX
+ if(FALSE){   
+    if (!is.null(modglmm$eMat)) {
+      etileMat = NULL
+      P2Mat_E = NULL
+      Scorevec_E = NULL
+      VarMat_E = matrix(0, nrow=ncol(eMat), ncol=ncol(eMat))
+      #if(isShrinkModelOutput){Sigma_iXXSigma_iX <- Sigma_iX %*% (solve(t(modglmm$X) %*% Sigma_iX))}
+	for (ne in 1:ncol(eMat)) {
+		evec = eMat[, ne]
+		evec_tilde <- evec - modglmm$obj.noK$XXVX_inv %*% (modglmm$obj.noK$XV %*% evec)
+		etileMat = cbind(etileMat, evec_tilde)
+	}
+
+
+
+      for (ne in 1:ncol(eMat)) {
+      	evec_tilde = etileMat[, ne]
+	S_E <- innerProduct(evec_tilde, modglmm$residuals * modglmm$varWeights)
+	Scorevec_E = c(Scorevec_E, S_E)
+	Sigma_iE <- getSigma_G_multiV(W, tauVecNew, evec_tilde, maxiterPCG, tolPCG, LOCO = FALSE)
+	for(ne2 in 1:ncol(eMat)){
+		evec_tilde2 = etileMat[, ne2]
+		varE = t(evec_tilde2) %*% Sigma_iE  - t(evec_tilde2)%*% Sigma_iX %*% (solve(t(modglmm$X) %*% Sigma_iX)) %*% t(modglmm$X) %*% Sigma_iE	 
+		VarMat_E[ne, ne2] = varE
+	}
+      }
+      modglmm$etileMat = etileMat
+      modglmm$Scorevec_E = Scorevec_E
+      modglmm$VarMat_E = VarMat_E
+    }  
+
+}# if(FALSE){
 
 
     if (!is.null(out.transform) & is.null(fit0$offset)) {

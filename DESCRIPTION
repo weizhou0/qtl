@@ -1,8 +1,8 @@
 Package: SAIGEQTL
 Type: Package
 Title: scalable and accurate expression quantitative trait locus mapping for single-cell studies
-Version: 0.2.2
-Date: 2025-1-4
+Version: 0.2.3
+Date: 2025-1-20
 Author: Wei Zhou, Anna Cuomo
 Maintainer: Wei Zhou <wzhou@broadinstitute.org> 
 Description:an R package that implements the Scalable and Accurate Implementation of Generalized Poisson mixed model for eQTL mapping at the single-cell level.  
@@ -16,4 +16,4 @@ SystemRequirements: GNU make
 RoxygenNote: 7.1.2
 NeedsCompilation: yes
 Encoding: UTF-8
-Packaged: 2024-2-18 EST
+Packaged: 2025-1-20 EST

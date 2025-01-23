@@ -1099,7 +1099,6 @@ void SAIGEClass::assignConditionFactors(
 	m_gsum_cond_Mat = t_gsum_cond;
 	m_G2_Weight_cond = t_G2_Weight_cond;
 
-	m_G2_Weight_cond.print("m_G2_Weight_cond");
 
 	m_p_cond = t_p_cond;
 	m_numMarker_cond = t_Tstat_cond.n_elem;
@@ -2250,8 +2249,8 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
 //std::cout << "here is_gtilde 2" << std::endl;
         arma::mat tempgP2 = t_gtilde.t() * (m_P2Mat_cond.cols(m_startic, m_endic));
 //std::cout << "here is_gtilde 3" << std::endl;
-	std::cout << "t_Tstat " << t_Tstat << std::endl;
-	std::cout << "t_Tstat_ctemp(0) " << t_Tstat_ctemp(0) << std::endl;
+	//std::cout << "t_Tstat " << t_Tstat << std::endl;
+	//std::cout << "t_Tstat_ctemp(0) " << t_Tstat_ctemp(0) << std::endl;
 	//m_Tstat_cond.print("m_Tstat_cond");
 	//t_G1tilde_P_G2tilde.print("t_G1tilde_P_G2tilde");
 	//m_VarInvMat_cond.print("m_VarInvMat_cond");
@@ -2260,23 +2259,23 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
         arma::vec t_varT_ctemp = t_G1tilde_P_G2tilde * (m_VarInvMat_cond.cols(m_startic, m_endic)) * (t_G1tilde_P_G2tilde.t());
 //std::cout << "here is_gtilde 5" << std::endl;
         t_varT_c = t_var1 - t_varT_ctemp(0);
-        std::cout << "t_varT_c " << t_varT_c << " t_var1 " << t_var1 << " t_varT_ctemp(0) " << t_varT_ctemp(0) << std::endl;
+        //std::cout << "t_varT_c " << t_varT_c << " t_var1 " << t_var1 << " t_varT_ctemp(0) " << t_varT_ctemp(0) << std::endl;
 //	std::cout << "t_Tstat_c " << t_Tstat_c << " t_Tstat " << t_Tstat << " t_Tstat_ctemp(0) " << t_Tstat_ctemp(0) << std::endl;
 //std::cout << "here is_gtilde 6" << std::endl;
 
     double S_c = t_Tstat_c;
     double stat_c = S_c*S_c/t_varT_c;
      //std::cout << "here is_gtilde 7" << std::endl;
-     std::cout << "t_varT_c " << t_varT_c << std::endl; 		
-     std::cout << "t_Tstat_c " << t_Tstat_c << std::endl; 		
+     //std::cout << "t_varT_c " << t_varT_c << std::endl; 		
+     //std::cout << "t_Tstat_c " << t_Tstat_c << std::endl; 		
 
 
      //std::cout << "t_var1 " << t_var1 << std::endl; 		
      //std::cout << "t_varT_ctemp(0) " << t_varT_ctemp(0) << std::endl; 	
-     std::cout << "std::numeric_limits<double>::min() " << std::numeric_limits<double>::min() << std::endl;
+     //std::cout << "std::numeric_limits<double>::min() " << std::numeric_limits<double>::min() << std::endl;
 	double pval_noSPA_c; 
-     std::cout << "std::pow(std::numeric_limits<double>::min()) " << std::numeric_limits<double>::min() << std::endl;
-     std::cout << "t_varT_c " << t_varT_c << std::endl;
+     //std::cout << "std::pow(std::numeric_limits<double>::min()) " << std::numeric_limits<double>::min() << std::endl;
+     //std::cout << "t_varT_c " << t_varT_c << std::endl;
      if (t_varT_c <= std::numeric_limits<double>::min() || t_varT_c <= std::pow(10, -5)){
      //if (t_varT_c <= 10^-10){
         t_pval_noSPA_c = 1;
@@ -2291,7 +2290,7 @@ void SAIGEClass::getMarkerPval_gxe(arma::vec & t_GVec,
         boost::math::chi_squared chisq_dist(1);
         t_pval_noSPA_c = boost::math::cdf(complement(chisq_dist, stat_c));
 
-    std::cout << "t_pval_noSPA_c " << t_pval_noSPA_c << std::endl;
+    //std::cout << "t_pval_noSPA_c " << t_pval_noSPA_c << std::endl;
     char pValueBuf_c[100];
     if (t_pval_noSPA_c != 0)
         sprintf(pValueBuf_c, "%.6E", t_pval_noSPA_c);
@@ -2458,7 +2457,7 @@ void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,
 
     S = dot(t_gtilde, m_res_gxe_mt.col(m_itrait) % m_varWeights_gxe_mt.col(m_itrait));
 
-    std::cout << "S scoreTest_gxe " << S << std::endl;
+    //std::cout << "S scoreTest_gxe " << S << std::endl;
 
     S = S/m_tauvec_mt(0,m_itrait);
 
@@ -2489,11 +2488,11 @@ void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,
     }
 
     var2 = var2m(0,0);
-    std::cout << "var2 Scoretest_gxe " << var2 << std::endl;
+    //std::cout << "var2 Scoretest_gxe " << var2 << std::endl;
     //std::cout << "m_varRatioVal " << m_varRatioVal << std::endl;
     //double var1 = var2 * m_varRatioVal;
     double var1 = var2 * varRatioVal_var2;
-    std::cout << "var1 Scoretest_gxe " << var1 << std::endl;
+    //std::cout << "var1 Scoretest_gxe " << var1 << std::endl;
     double stat = S*S/var1;
     //double t_pval;
     //std::cout << "S " << S << std::endl;
@@ -2506,7 +2505,7 @@ void SAIGEClass::scoreTest_gxe(arma::vec & t_GVec,
         boost::math::chi_squared chisq_dist(1);
         t_pval = boost::math::cdf(complement(chisq_dist, stat));
     }
-    std::cout << "t_pval Scoretest_gxe " << t_pval << std::endl;
+    //std::cout << "t_pval Scoretest_gxe " << t_pval << std::endl;
 /*
     char pValueBuf[100];
     if (t_pval != 0)

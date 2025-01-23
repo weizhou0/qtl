@@ -23,13 +23,14 @@
 #include "UTIL.hpp"
 #include "CCT.hpp"
 #include "GENO_null.hpp"
-#include "SKATO.hpp"
+#include "SKAT_funcs.hpp"
 
 
 #include <Rcpp.h>
 #include "getMem.hpp"
 
 #include <boost/math/distributions/beta.hpp>
+#include <boost/algorithm/string/join.hpp>
 
 // global objects for different genotype formats
 
@@ -216,6 +217,8 @@ void setRegion_GlobalVarsInCPP(
 
 
 
+
+
 //////// ---------- Main function for marker-level analysis --------- ////////////
                            //std::vector<uint32_t> & t_genoIndex,
 
@@ -265,7 +268,7 @@ void mainMarkerInCPP(
   std::vector<std::string> pval_ge_cStrVec(q, "NA");
   std::vector<std::string> pval_noSPA_ge_cStrVec(q, "NA"); 
   std::vector<double> pval_SKATO_ge_cVec(q, arma::datum::nan);
-  std::vector<double> pval_SKAT_ge_cVec(q, arma::datum::nan);
+  std::vector<std::string> pval_SKAT_ge_cVec(q, "NA");
   //std::vector<std::string> Tstat_ge_cStrVec(q, arma::datum::nan);
   //std::vector<std::string> varT_ge_cStrVec(q, arma::datum::nan);
   
@@ -500,7 +503,7 @@ void mainMarkerInCPP(
       if(ptr_gSAIGEobj->m_isCondition){
            ptr_gSAIGEobj->m_numMarker_cond = (ptr_gSAIGEobj->m_condition_genoIndex).size();
       }else{
-            ptr_gSAIGEobj->m_numMarker_cond = 0;
+           ptr_gSAIGEobj->m_numMarker_cond = 0;
       }
    }
    ptr_gSAIGEobj->assign_for_itrait(i_mt);
@@ -753,9 +756,12 @@ void mainMarkerInCPP(
     	std::string pval_noSPA_c_ge_str;
     	std::string pval_c_ge_str;
     	arma::vec t_GVec1;
-    	arma::mat P1Matge(3, nrow_e);
-    	arma::mat P2Matge(nrow_e, 3);	
-    	arma::mat VarMatge;
+	//for SKAT test
+    	arma::mat P1Matge(ne, nrow_e);
+    	arma::mat P2Matge(nrow_e, ne);	
+    	arma::mat VarMatge(ne, ne);
+	//
+
     	arma::vec Score_c_ge_vec(ne);
 	//arma::vec mu_old = ptr_gSAIGEobj->m_mu_mt.col(i_mt);
         //arma::vec mu_new = mu_old % arma::exp(Beta * gtildeVec);
@@ -846,7 +852,6 @@ void mainMarkerInCPP(
 	//VarMat_g.print("VarMat_g");
 	//std::cout << "HEREa1c" << std::endl;
 	VarInvMat_g = VarMat_g.i();
-	VarInvMat_g.print("VarInvMat_g");
 	//std::cout << "HEREa2" << std::endl;
 
   	ptr_gSAIGEobj->assignConditionFactors(
@@ -864,26 +869,31 @@ void mainMarkerInCPP(
 	double Beta_ge, seBeta_ge, pval_ge, Tstat_ge, varT_ge, pval_noSPA_ge, Beta_c_ge, seBeta_c_ge, pval_c_ge, Tstat_c_ge, varT_c_ge, pval_noSPA_c_ge, gy_ge, altFreq_ge;
 	arma::vec gtildeVec_ge, t_P2Vec_ge, t_GEVec;
 	arma::rowvec G1tilde_P_G2tilde_Vec_ge;
+	arma::mat G1tilde_P_G2tilde_Mat_ge(ne, TstatVec_g.n_elem);
 	bool isSPAConverge_ge, is_gtilde_ge, is_region_ge, is_Firth_ge, is_FirthConverge_ge;
-	//(ptr_gSAIGEobj->m_varRatio_null_eg).print("ptr_gSAIGEobj->m_varRatio_null_eg");
 	unsigned int ksub;
     	for(unsigned int k = 0; k < ne; k++){
       	    ksub = i_mt * ne + k;
-	    //std::cout << "ksub " << ksub << std::endl;
 	    evec = g_emat.col(ksub);
-	    //evec.ones();
-
-	    std::cout << "evec(0) " << evec(0) << std::endl;
-	    std::cout << "t_GVec1(0) " << t_GVec1(0) << std::endl;
 	    t_GEVec = t_GVec1 % evec;
-	    std::cout << "t_GEVec(0) " << t_GEVec(0) << std::endl;
-	    std::cout << "t_GEVec.n_elem " << t_GEVec.n_elem << std::endl;
-	    std::cout << "t_GVec1.n_elem " << t_GVec1.n_elem << std::endl;
+
+	    //if(info == "1:170085453:C:A"){
+	    //if(info == "1:169802760:G:T"){
+	    	//t_GVec1.save("geno_1_170085453_C_A.csv", arma::csv_ascii);	
+	    //	t_GVec1.save("geno_1_169802760_G_T.csv", arma::csv_ascii);	
+	    	//evec.save("pseudotime_1_170085453_C_A.csv", arma::csv_ascii);	
+	    	//(ptr_gSAIGEobj->m_y_mt).save("SELL_1_170085453_C_A.csv", arma::csv_ascii);	
+	    //}	
+		
+
+	    //std::cout << "t_GEVec(0) " << t_GEVec(0) << std::endl;
+	    //std::cout << "t_GEVec.n_elem " << t_GEVec.n_elem << std::endl;
+	    //std::cout << "t_GVec1.n_elem " << t_GVec1.n_elem << std::endl;
 	    //t_GEVec = gtildeVec % evec;
 	    //
 	    //
-	    double corGandGE = calculatePearsonCorrelation(t_GVec1, evec);
-	    std::cout << "corGandGE " << corGandGE << std::endl;
+	    //double corGandGE = calculatePearsonCorrelation(t_GVec1, evec);
+	    //std::cout << "corGandGE " << corGandGE << std::endl;
 	    //
 	    altFreq_ge = arma::mean(t_GEVec)/2;
 	    is_gtilde_ge = false;
@@ -915,11 +925,9 @@ void mainMarkerInCPP(
     //std::string buffAsStdStr_c = pValueBuf;
     //std::string& pval_c_ge_c = buffAsStdStr_c;	
      
-
+			G1tilde_P_G2tilde_Mat_ge.row(k) = G1tilde_P_G2tilde_Vec_ge;
 			//pval_c_ge_vec.at(k) = std::to_string(pval_c_ge);
-			pval_c_ge_vec.at(k) = pValueBuf;
-	
-			std::cout << "Beta_c_ge " << Beta_c_ge << std::endl;
+			pval_c_ge_vec.at(k) = pValueBuf;	
 			//Beta_c_ge_vec.at(k) = std::to_string(Beta_c_ge);
 			Beta_c_ge_vec.at(k) = std::to_string(Beta_c_ge);
 			//seBeta_c_ge_vec.at(k) = std::to_string(seBeta_c_ge);
@@ -928,27 +936,53 @@ void mainMarkerInCPP(
 			//pval_noSPA_c_ge_vec.at(k) = std::to_string(pval_noSPA_c_ge);
 			pval_noSPA_c_ge_vec.at(k) = pValueBuf;
 			Score_c_ge_vec(k) = Tstat_c_ge;
-
-//	     		P1Matge.row(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*(gtildeVec_ge.t());
+	if(ne > 1){ 
+	  P1Matge.row(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*(gtildeVec_ge.t());
 	//std::cout << "HEREa5a" << std::endl;
-
-//      if(t_P2Vec_ge.n_elem == 0){
-//                if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
-//                        t_P2Vec_ge = gtildeVec_ge % ((ptr_gSAIGEobj->m_mu2_gxe_mt).col(i_mt)) *((ptr_gSAIGEobj->m_tauvec_mt)(0,i_mt));
-//                }else{
-//                        t_P2Vec_ge = ptr_gSAIGEobj->getSigma_G_V(gtildeVec_ge, 500, 1e-5);
-//                }
-//        }
+	/*
+	if(t_P2Vec_ge.n_elem == 0){
+                if(!ptr_gSAIGEobj->m_flagSparseGRM_cur){
+                        t_P2Vec_ge = gtildeVec_ge % ((ptr_gSAIGEobj->m_mu2_gxe_mt).col(i_mt)) *((ptr_gSAIGEobj->m_tauvec_mt)(0,i_mt));
+                }else{
+                        t_P2Vec_ge = ptr_gSAIGEobj->getSigma_G_V(gtildeVec_ge, 500, 1e-5);
+                }
+        }
+	*/
 //	//std::cout << "HEREa5b" << std::endl;
 
 
+	     
+	     P2Matge.col(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec_ge;
 
-//	     P2Matge.col(k) = sqrt(ptr_gSAIGEobj->m_varRatioVal)*t_P2Vec_ge;
+	}
+
         }
         //std::cout << "HEREa5c" << std::endl;
-	//VarMatge = P1Matge * P2Matge;
-	//arma::vec r_corr = {0.0000, 0.0100, 0.0400, 0.0900, 0.2500, 0.5000, 1.0000};
-	//arma::vec r_corr = {0.000}; //SKAT test
+	//
+	if(ne > 1){
+	VarMatge = P1Matge * P2Matge;
+	arma::mat VarMatge_temp = G1tilde_P_G2tilde_Mat_ge * (ptr_gSAIGEobj->m_VarInvMat_cond).cols((ptr_gSAIGEobj->m_startic), (ptr_gSAIGEobj->m_endic)) * ((G1tilde_P_G2tilde_Mat_ge).t());
+	arma::mat VarMatge_c = VarMatge - VarMatge_temp;
+	arma::vec r_corr = {0.000}; //SKAT test
+	double Pvalue_SKATO, Pvalue_Burden, Pvalue_SKAT, BETA_Burden, SE_Burden;
+	int error_code;
+	get_SKAT_pvalue_cpp(Score_c_ge_vec,
+                VarMatge_c,
+                r_corr,
+                Pvalue_SKATO,
+                Pvalue_Burden,
+                Pvalue_SKAT,
+                BETA_Burden,
+                SE_Burden,
+                error_code
+                );
+	char pValueBuf2[100];	
+	sprintf(pValueBuf2, "%.6E", Pvalue_SKAT);
+	pval_SKAT_ge_cVec.at(j_mt) = pValueBuf2;
+
+	}
+
+
 	//arma::vec r_corr = {1.000};
         //std::cout << "HEREa6" << std::endl;
 	//Score_c_ge_vec.save("/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/realdata/oneK1K/AnnaCuomo_Yavar/input_files/step2/score_example.txt", arma::csv_ascii);
@@ -956,10 +990,12 @@ void mainMarkerInCPP(
 	//Rcpp::List groupOutListge = get_SKAT_pvalue_Rcpp(Score_c_ge_vec, VarMatge, r_corr);
         //std::cout << "HEREa7" << std::endl;
 	if(ne > 1){     
-            Beta_c_ge_str = join(Beta_c_ge_vec, ",");
-            seBeta_c_ge_str = join(seBeta_c_ge_vec, ",");
-            pval_c_ge_str = join(pval_c_ge_vec, ",");
-            pval_noSPA_c_ge_str = join(pval_noSPA_c_ge_vec, ",");
+            //Beta_c_ge_str = join(Beta_c_ge_vec, ",");
+	    Beta_c_ge_str = boost::algorithm::join(Beta_c_ge_vec, ",");
+            seBeta_c_ge_str = boost::algorithm::join(seBeta_c_ge_vec, ",");
+            pval_c_ge_str = boost::algorithm::join(pval_c_ge_vec, ",");
+            pval_noSPA_c_ge_str = boost::algorithm::join(pval_noSPA_c_ge_vec, ",");
+	    
 	}else{
 	    Beta_c_ge_str = Beta_c_ge_vec.at(0);
 	    seBeta_c_ge_str = seBeta_c_ge_vec.at(0);
@@ -967,8 +1003,8 @@ void mainMarkerInCPP(
 	    pval_noSPA_c_ge_str = pval_noSPA_c_ge_vec.at(0);
 	}
 
-	std::cout << "Beta_c_ge_str " << Beta_c_ge_str << std::endl;
-	std::cout << "seBeta_c_ge_str " << seBeta_c_ge_str << std::endl;
+	//std::cout << "Beta_c_ge_str " << Beta_c_ge_str << std::endl;
+	//std::cout << "seBeta_c_ge_str " << seBeta_c_ge_str << std::endl;
 
 	Beta_ge_cStrVec.at(j_mt) = Beta_c_ge_str;
 	seBeta_ge_cStrVec.at(j_mt) = seBeta_c_ge_str;
@@ -976,7 +1012,6 @@ void mainMarkerInCPP(
 	pval_noSPA_ge_cStrVec.at(j_mt) = pval_noSPA_c_ge_str;
 	//pval_SKATO_ge_cVec.at(i) = Rcpp::as<double>(groupOutListge["Pvalue_SKATO"]);
 	//pval_SKAT_ge_cVec.at(j_mt) = Rcpp::as<double>(groupOutListge["Pvalue_SKAT"]);
-
 
     }//if(g_isgxe){
 
@@ -3796,7 +3831,7 @@ void writeOutfile_single(bool t_isMoreOutput,
 			std::vector<std::string> & seBeta_ge_cStrVec,
 			std::vector<std::string> & pval_ge_cStrVec,
 			std::vector<std::string> & pval_noSPA_ge_cStrVec,
-			std::vector<double> & pval_SKAT_ge_cVec,
+			std::vector<std::string> & pval_SKAT_ge_cVec,
 			unsigned int itt,
 			unsigned int nmarkers
 ){
@@ -7361,6 +7396,7 @@ std::string join(std::vector<std::string> const &strings, std::string delim)
 
 
 
+/*
 // [[Rcpp::export]]
 Rcpp::List get_SKAT_pvalue_Rcpp(arma::vec & Score, arma::mat &  Phi, arma::vec & r_corr) {
   //std::cout << "get_SKAT_pvalue_Rcpp0" << std::endl;
@@ -7438,6 +7474,8 @@ out_SKAT_List = Met_SKAT_Get_Pvalue_Rcpp(Score, Phi, r_corr, method, Score_Resam
                       Named("Pvalue_SKAT") = Pvalue[1]);
 }
 
+
+*/
 //////// ---------- Main function for marker-level analysis - vectorize--------- ////////////
 
 
@@ -7506,7 +7544,7 @@ void mainMarkerInCPP_multi(
   std::vector<std::string> pval_ge_cStrVec(q, "NA");
   std::vector<std::string> pval_noSPA_ge_cStrVec(q, "NA");
   std::vector<double> pval_SKATO_ge_cVec(q, arma::datum::nan);
-  std::vector<double> pval_SKAT_ge_cVec(q, arma::datum::nan);
+  std::vector<std::string> pval_SKAT_ge_cVec(q, "NA");
   //std::vector<std::string> Tstat_ge_cStrVec(q, arma::datum::nan);
   //std::vector<std::string> varT_ge_cStrVec(q, arma::datum::nan);
 
