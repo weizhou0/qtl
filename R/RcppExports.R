@@ -513,6 +513,14 @@ assign_g_outputFilePrefix0 <- function(t_outputFilePrefix) {
     invisible(.Call('_SAIGEQTL_assign_g_outputFilePrefix0', PACKAGE = 'SAIGEQTL', t_outputFilePrefix))
 }
 
+set_g_omp_num_threads <- function(t_omp_num_threads) {
+    invisible(.Call('_SAIGEQTL_set_g_omp_num_threads', PACKAGE = 'SAIGEQTL', t_omp_num_threads))
+}
+
+getprodImatImattbVec <- function(bVec) {
+    .Call('_SAIGEQTL_getprodImatImattbVec', PACKAGE = 'SAIGEQTL', bVec)
+}
+
 SKAT_META_Optimal_Get_Q_Rcpp <- function(Score, r_all) {
     .Call('_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp', PACKAGE = 'SAIGEQTL', Score, r_all)
 }

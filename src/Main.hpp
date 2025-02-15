@@ -691,4 +691,13 @@ void addNewKat( arma::sp_mat & t_Kmat);
 
 arma::sp_fmat gettI_Sigma_I_multiV(arma::fvec& wVec, arma::fvec& tauVec, int maxiterPCG, float tolPCG, bool LOCO);
 
+void set_g_omp_num_threads(unsigned int t_omp_num_threads);
+
+arma::fvec getprodImatbVec(arma::fvec & bVec);
+
+arma::fvec getprodImattbVec(arma::fvec & bVec);
+
+arma::fvec getprodImatImattbVec(arma::fvec & bVec);
+
+
 #endif

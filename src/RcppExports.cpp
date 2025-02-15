@@ -1622,6 +1622,27 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// set_g_omp_num_threads
+void set_g_omp_num_threads(unsigned int t_omp_num_threads);
+RcppExport SEXP _SAIGEQTL_set_g_omp_num_threads(SEXP t_omp_num_threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< unsigned int >::type t_omp_num_threads(t_omp_num_threadsSEXP);
+    set_g_omp_num_threads(t_omp_num_threads);
+    return R_NilValue;
+END_RCPP
+}
+// getprodImatImattbVec
+arma::fvec getprodImatImattbVec(arma::fvec& bVec);
+RcppExport SEXP _SAIGEQTL_getprodImatImattbVec(SEXP bVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type bVec(bVecSEXP);
+    rcpp_result_gen = Rcpp::wrap(getprodImatImattbVec(bVec));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SKAT_META_Optimal_Get_Q_Rcpp
 Rcpp::List SKAT_META_Optimal_Get_Q_Rcpp(const arma::vec& Score, const arma::vec& r_all);
 RcppExport SEXP _SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp(SEXP ScoreSEXP, SEXP r_allSEXP) {
@@ -2480,6 +2501,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGEQTL_assign_g_outputFilePrefixSingle", (DL_FUNC) &_SAIGEQTL_assign_g_outputFilePrefixSingle, 1},
     {"_SAIGEQTL_assign_g_outputFilePrefix", (DL_FUNC) &_SAIGEQTL_assign_g_outputFilePrefix, 1},
     {"_SAIGEQTL_assign_g_outputFilePrefix0", (DL_FUNC) &_SAIGEQTL_assign_g_outputFilePrefix0, 1},
+    {"_SAIGEQTL_set_g_omp_num_threads", (DL_FUNC) &_SAIGEQTL_set_g_omp_num_threads, 1},
+    {"_SAIGEQTL_getprodImatImattbVec", (DL_FUNC) &_SAIGEQTL_getprodImatImattbVec, 1},
     {"_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp", (DL_FUNC) &_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp, 2},
     {"_SAIGEQTL_SKAT_META_Optimal_Get_Q_Res_Rcpp", (DL_FUNC) &_SAIGEQTL_SKAT_META_Optimal_Get_Q_Res_Rcpp, 2},
     {"_SAIGEQTL_Get_Lambda_Rcpp", (DL_FUNC) &_SAIGEQTL_Get_Lambda_Rcpp, 3},

@@ -48,8 +48,10 @@ static NullGENO::NullGenoClass* ptr_gNULLGENOobj = NULL;
 bool isUseSparseSigmaforModelFitting = false;
 std::vector<arma::sp_fmat> Kmat_vec;
 arma::sp_fmat g_I_longl_mat;
+arma::sp_fmat g_I_longl_mat_t;
 arma::sp_fmat g_T_longl_mat;
 arma::uvec g_I_longl_vec;
+arma::uvec g_I_start_indices;
 arma::fvec g_T_longl_vec;
 arma::sp_fmat g_spGRM;
 arma::sp_fmat g_spSigma;
@@ -65,7 +67,7 @@ arma::uvec g_covarianceidxMat_col2;
 arma::uvec g_covarianceidxMat_col3;
 arma::uvec g_covarianceidxMat_notcol1;
 //arma::fvec g_var_weights;
-
+unsigned int g_omp_num_threads;
 
 
 //Step 2
@@ -4238,6 +4240,18 @@ void set_I_longl_mat(arma::sp_mat & t_Ilongmat, arma::vec & t_I_longl_vec){
         arma::uvec t_I_longl_vec_new = arma::conv_to< arma::uvec >::from(t_I_longl_vec);
         g_I_longl_vec = t_I_longl_vec_new;
 
+	g_I_longl_mat_t = g_I_longl_mat.t();
+
+	arma::uvec unique_vals = arma::unique(g_I_longl_vec); // Automatically sorted
+	g_I_start_indices.set_size(unique_vals.n_elem); // Storage for start indices
+        // Find start indices for each unique value
+        for (size_t i = 0; i < unique_vals.n_elem; ++i) {
+                g_I_start_indices(i) = arma::as_scalar(arma::find(g_I_longl_vec == unique_vals(i), 1, "first"));
+        }
+        g_I_start_indices.insert_rows(g_I_start_indices.n_elem, 1);
+        g_I_start_indices[g_I_start_indices.n_elem-1] = g_I_longl_mat.n_rows;
+        //g_I_start_indices.print("g_I_start_indices");
+
 }
 
 // [[Rcpp::export]]
@@ -4251,7 +4265,6 @@ void set_I_longl_mat_SAIGEtest(arma::sp_mat & t_Ilongmat, arma::vec & t_I_longl_
         arma::uvec t_I_longl_vec_new = arma::conv_to< arma::uvec >::from(t_I_longl_vec);
         ptr_gSAIGEobj->g_I_longl_vec = t_I_longl_vec_new;
 	std::cout << "ok3 " << std::endl;
-
 }
 
 
@@ -4315,8 +4328,8 @@ arma::fcolvec getCrossprod_multiV(arma::fcolvec& bVec, arma::fvec& wVec, arma::f
 		  tau_ind = tau_ind + 1;
 	        }		
         }else{
-                Ibvec = g_I_longl_mat.t() * bVec;
 		if(g_isGRM){
+                  Ibvec = g_I_longl_mat_t * bVec;
                   GRM_I_bvec = getCrossprodMatAndKin(Ibvec, LOCO);
                   crossProd1 = g_I_longl_mat * GRM_I_bvec;
                   crossProdVec = tauVec(0)*(bVec % (1/wVec)) + tauVec(1)*crossProd1;
@@ -4353,7 +4366,9 @@ arma::fcolvec getCrossprod_multiV(arma::fcolvec& bVec, arma::fvec& wVec, arma::f
                 }
 
         }else{ //if(g_T_longl_mat.n_rows == 0 && g_I_longl_mat.n_rows == 0){
-                crossProdVec  = crossProdVec + tauVec(tau_ind) * (g_I_longl_mat * Ibvec);
+                arma::fvec ImatImattbVec = getprodImatImattbVec(bVec);
+		crossProdVec  = crossProdVec + tauVec(tau_ind) * ImatImattbVec;
+		//crossProdVec  = crossProdVec + tauVec(tau_ind) * (g_I_longl_mat * Ibvec);
                 tau_ind = tau_ind + 1;
 
                 if(g_T_longl_mat.n_rows > 0){
@@ -4466,17 +4481,13 @@ arma::fvec getDiagOfSigma_multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO
                 }
 	    }else{
 		//std::cout << "else(g_isGRM && g_isSparseGRM){" << std::endl;
-		diagVecG.ones(g_n_unique);
-		//std::cout << "g_n_unique "  <<  g_n_unique << std::endl;
-		//std::cout << "2 else(g_isGRM && g_isSparseGRM){" << std::endl;
-		diagVecG_I = diagVecG.elem(g_I_longl_vec);
-		//diagVecG_I = diagVecG * g_I_longl_mat;
-
-		//std::cout << "tauind " << tauind << std::endl;
-                diagVec = diagVec + tauVec(tauind) * diagVecG_I;
+                diagVec = diagVec + tauVec(tauind);
 		tauind = tauind + 1;
 		//std::cout << "getDiagOfSigma_multiV Here0" << std::endl;
 		if(g_T_longl_mat.n_rows > 0){
+		  //diagVecG.ones(g_n_unique);
+		  //diagVecG_I = diagVecG.elem(g_I_longl_vec);
+		  diagVecG_I.ones(g_I_longl_vec.n_elem);
                   //std::cout << "getDiagOfSigma_multiV Here1" << std::endl;
                   diagVecG_IT = diagVecG_I % g_T_longl_vec;
                   //std::cout << "getDiagOfSigma_multiV Here2" << std::endl;
@@ -4548,7 +4559,7 @@ void gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
 	}	
    }else{
        if(g_isGRM && g_isSparseGRM){	   
-         GRM_Imat = g_spGRM * (g_I_longl_mat.t());
+         GRM_Imat = g_spGRM * g_I_longl_mat_t;
          g_spSigma = g_I_longl_mat * GRM_Imat;
          g_spSigma = g_spSigma * tauVec(1);
 	 g_spSigma.diag() = g_spSigma.diag() + dtVec;
@@ -4576,12 +4587,12 @@ void gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
              }
          }
    }else{
-       g_spSigma = g_spSigma + tauVec(tau_ind) * g_I_longl_mat * (g_I_longl_mat.t());
+       g_spSigma = g_spSigma + tauVec(tau_ind) * g_I_longl_mat * g_I_longl_mat_t;
        tau_ind = tau_ind + 1;
 
        if(g_T_longl_mat.n_rows > 0){
 
-           g_spSigma = g_spSigma + tauVec(tau_ind) * (g_T_longl_mat * (g_I_longl_mat.t()) + g_I_longl_mat * (g_T_longl_mat.t()));
+           g_spSigma = g_spSigma + tauVec(tau_ind) * (g_T_longl_mat * g_I_longl_mat_t + g_I_longl_mat * g_T_longl_mat.t());
            tau_ind = tau_ind + 1;
            g_spSigma = g_spSigma + tauVec(tau_ind) * (g_T_longl_mat * (g_T_longl_mat.t()));
            tau_ind = tau_ind + 1;
@@ -4591,7 +4602,7 @@ void gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
 
        if(Kmat_vec.size() > 0){
            for(unsigned int i = 0; i < Kmat_vec.size(); i++){
-                GRM_Imat = Kmat_vec[i] * (g_I_longl_mat.t());
+                GRM_Imat = Kmat_vec[i] * g_I_longl_mat_t;
                 g_spSigma = g_spSigma + tauVec(tau_ind) * (g_I_longl_mat * GRM_Imat);
                 tau_ind = tau_ind + 1;
                 if(g_T_longl_mat.n_rows > 0){
@@ -4765,15 +4776,9 @@ arma::sp_fmat gettI_Sigma_I_multiV(arma::fvec& wVec, arma::fvec& tauVec, int max
 
         for(int i = 0; i < uniqN; i++){
                 ImatVecTemp = arma::vectorise(g_I_longl_mat.col(i));
-                //std::cout << "i " << i << std::endl;
-                //std::cout << "wVec.n_elem " << wVec.n_elem << std::endl;
-                //std::cout << "XmatVecTemp.n_elem " << XmatVecTemp.n_elem << std::endl;
-                //std::cout << "Nnomissing " << Nnomissing << std::endl;
-                //arma::fvec Sigma_iX1_temp = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, XmatVecTemp, maxiterPCG, tolPCG, LOCO);
-                //std::cout << "Sigma_iX1_temp.n_elem " << Sigma_iX1_temp.n_elem << std::endl;
 		Sigma_Ivec = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, ImatVecTemp, maxiterPCG, tolPCG, LOCO);
 		
-                ISigma_iI.col(i) = (g_I_longl_mat.t()) * Sigma_Ivec;
+                ISigma_iI.col(i) = g_I_longl_mat_t * Sigma_Ivec;
         }
 	arma::sp_fmat ISigma_iI_sp = arma::conv_to < arma::sp_fmat >::from(ISigma_iI); 
         return(ISigma_iI_sp);
@@ -5131,23 +5136,9 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
         arma::fmat Sigma_iXt = Sigma_iX.t();
         arma::fmat Xmatt = Xmat.t();
 
-        //Sigma_iY.print("Sigma_iY");
-        //Sigma_iX.print("Sigma_iX");
-        //cov.print("cov");
-        //Sigma_iXt.print("Sigma_iXt");
-        //Yvec.print("Yvec");
-
         arma::fvec PY1 = Sigma_iY - Sigma_iX * (cov * (Sigma_iXt * Yvec));
 
-        //PY1.print("PY1");
-        //arma::fvec APY = getCrossprodMatAndKin(PY1);
-        //float YPAPY = dot(PY1, APY);
-        //arma::fvec A0PY = PY1; ////Quantitative
-        //float YPA0PY = dot(PY1, A0PY); ////Quantitative
-        //arma::fvec Trace = GetTrace_q(Sigma_iX, Xmat, wVec, tauVec, cov1, nrun, maxiterPCG, tolPCG, traceCVcutoff);
         unsigned int n = PY1.n_elem;
-        //arma::fvec PA0PY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, A0PY, maxiterPCG, tolPCG);
-        //arma::fvec PA0PY = PA0PY_1 - Sigma_iX * (cov1 * (Sigma_iXt * PA0PY_1));
         arma::fvec PAPY_1, PAPY,  APY;
         arma::fmat APYmat(n, k1);
 
@@ -5193,10 +5184,9 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
                      }
                 }
         }else{
-               Ibvec = g_I_longl_mat.t() * PY1;
-                std::cout << "Ibvec.n_elem " << Ibvec.n_elem << std::endl;
 
                 if(g_isGRM){
+               		Ibvec = g_I_longl_mat_t * PY1;
                         GRM_I_bvec = getCrossprodMatAndKin(Ibvec, LOCO);
                 }
 
@@ -5208,12 +5198,13 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
                                 APY = PY1;
                         }else if(i==1){
 				if(g_isGRM){
-                                  std::cout << "GRM_I_bvec.n_elem " << GRM_I_bvec.n_elem << std::endl;
                                   APY = g_I_longl_mat * GRM_I_bvec;
 				}else{
-				  APY = g_I_longl_mat * Ibvec;
+				  //APY = g_I_longl_mat * Ibvec;
+				  APY = getprodImatImattbVec(PY1);
 				}	
                         }else if (i == 2){
+               			Ibvec = g_I_longl_mat_t * PY1;
 				if(g_isGRM){
                                   APY = g_I_longl_mat * Ibvec;
 				}else{
@@ -5224,6 +5215,7 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
 				}	
                                 //APY = Kmat_vec[i-2]*PY1;
                         }else{
+               		     Ibvec = g_I_longl_mat_t * PY1;
 			     if(g_isGRM){	
                                 if(Kmat_vec.size() > 0){
                                         V_I_bvec = Kmat_vec[i-3]*Ibvec;
@@ -5444,7 +5436,8 @@ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wV
 
 			}	
                    }else{
-                        Ibvec = g_I_longl_mat.t() * uVec;
+                        //Ibvec = g_I_longl_mat_t * uVec;
+			Ibvec = getprodImattbVec(uVec);
 			//std::cout << "GetTrace_multiV Here 2" << std::endl;
                         if(g_isGRM){
                                 GRM_I_bvec = getCrossprodMatAndKin(Ibvec, LOCO);
@@ -6221,7 +6214,7 @@ arma::fcolvec getCrossprod_noV(arma::fcolvec& bVec, arma::fvec& wVec, arma::fvec
                   tau_ind = tau_ind + 2;
         }else{
 
-                  Ibvec = g_I_longl_mat.t() * bVec;
+                  Ibvec = g_I_longl_mat_t * bVec;
 
                   GRM_I_bvec = getCrossprodMatAndKin(Ibvec, LOCO);
                   crossProd1 = g_I_longl_mat * GRM_I_bvec;
@@ -6261,7 +6254,7 @@ arma::fcolvec getCrossprod_V(arma::fcolvec& bVec, arma::fvec& wVec, float tauVal
                   tau_ind = tau_ind + 2;
         }else{
 
-                  Ibvec = g_I_longl_mat.t() * bVec;
+                  Ibvec = g_I_longl_mat_t * bVec;
 
                   GRM_I_bvec = Ibvec;
                   crossProd1 = g_I_longl_mat * GRM_I_bvec;
@@ -7767,4 +7760,100 @@ void assign_g_outputFilePrefix( std::string t_outputFilePrefix){
 // [[Rcpp::export]]
 void assign_g_outputFilePrefix0( std::string t_outputFilePrefix){
 	g_outputFilePrefix0 = t_outputFilePrefix;
+}
+
+
+// [[Rcpp::export]]
+void set_g_omp_num_threads(unsigned int t_omp_num_threads){
+	g_omp_num_threads = t_omp_num_threads;
+}
+
+
+// [[Rcpp::export]]
+arma::fvec getprodImatbVec(arma::fvec & bVec){
+    auto n = g_I_start_indices.n_elem - 1;
+    arma::fvec resultVec(bVec.n_elem, arma::fill::zeros);
+    if(g_omp_num_threads > 1){
+        omp_set_num_threads(g_omp_num_threads);
+        #pragma omp parallel
+        {
+                auto thread_idx = omp_get_thread_num();
+                for(int j = thread_idx; j < n; j += g_omp_num_threads) {
+                        float sum = 0;
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j + 1];
+                        for(size_t k = start; k < end; k++) {
+				resultVec[k] = bVec[j];
+                                //sum += bVec[k];
+                        }
+                        //for(size_t k = start; k < end; k++) {
+                        //resultVec[j] = sum;
+                        //}
+                }
+        }
+     }else{
+        arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
+        resultVec = g_I_longl_mat * resultVec0;
+     }
+        return(resultVec);
+}
+
+
+
+
+// [[Rcpp::export]]
+arma::fvec getprodImattbVec(arma::fvec & bVec){
+    auto n = g_I_start_indices.n_elem - 1;
+    arma::fvec resultVec(n, arma::fill::zeros);
+    if(g_omp_num_threads > 1){
+        omp_set_num_threads(g_omp_num_threads);
+        #pragma omp parallel
+        {
+                auto thread_idx = omp_get_thread_num();
+                for(int j = thread_idx; j < n; j += g_omp_num_threads) {
+                        float sum = 0;
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j + 1];
+                        for(size_t k = start; k < end; k++) {
+                                sum += bVec[k];
+                        }
+                        //for(size_t k = start; k < end; k++) {
+                        resultVec[j] = sum;
+                        //}
+                }
+        }
+     }else{
+        arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
+        resultVec = g_I_longl_mat * resultVec0;
+     }
+        return(resultVec);
+}
+
+
+// [[Rcpp::export]]
+arma::fvec getprodImatImattbVec(arma::fvec & bVec){
+    arma::fvec resultVec(bVec.n_elem, arma::fill::zeros);
+    if(g_omp_num_threads > 1){
+        omp_set_num_threads(g_omp_num_threads);
+        auto n = g_I_start_indices.n_elem - 1;
+        #pragma omp parallel
+        {
+                auto thread_idx = omp_get_thread_num();
+                for(int j = thread_idx; j < n; j += g_omp_num_threads) {
+                        float sum = 0;
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j + 1];
+                        for(size_t k = start; k < end; k++) {
+                                sum += bVec[k];
+                        }
+                        for(size_t k = start; k < end; k++) {
+                                resultVec[k] += sum;
+                        }
+                }
+        }
+     }else{
+	arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
+	resultVec = g_I_longl_mat * resultVec0;
+     }
+        return(resultVec);
 }

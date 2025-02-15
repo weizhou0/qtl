@@ -30,7 +30,9 @@ for (pack in req_packages) {
 
 github_packages <- c(
   "cysouw/qlcMatrix",
-  "leeshawn/MetaSKAT"
+  "leeshawn/MetaSKAT",
+  "barkasn/fastSave",
+  "futureverse/furrr"
 )
 for (pack in github_packages) {
   if (!require(pack, character.only = TRUE)) {

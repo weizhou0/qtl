@@ -4,7 +4,8 @@ options(stringsAsFactors = F)
 
 ## load R libraries
 
-library(SAIGEQTL)
+#library(SAIGEQTL)
+library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/qtl_github/install")
 
 require(optparse) # install.packages("optparse")
 
@@ -278,6 +279,13 @@ tauInit <- convertoNumeric(strsplit(opt$tauInit, ",")[[1]], "tauInit")
 cateVarRatioMinMACVecExclude <- convertoNumeric(x = strsplit(opt$cateVarRatioMinMACVecExclude, ",")[[1]], "cateVarRatioMinMACVecExclude")
 cateVarRatioMaxMACVecInclude <- convertoNumeric(x = strsplit(opt$cateVarRatioMaxMACVecInclude, ",")[[1]], "cateVarRatioMaxMACVecInclude")
 
+BLASctl_installed <- require(RhpcBLASctl)
+if (BLASctl_installed) {
+  # Set number of threads for BLAS to 1, this step does not benefit from multithreading or multiprocessing
+	original_num_threads <- blas_get_num_procs()
+	blas_set_num_threads(1)
+}
+
 
 # set seed
 set.seed(1)
@@ -444,4 +452,10 @@ if (!opt$isCovariateOffset) {
       }
     }
   }
+}
+
+
+if (BLASctl_installed) {
+  # Restore originally configured BLAS thread count
+    blas_set_num_threads(original_num_threads)
 }
