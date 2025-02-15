@@ -517,6 +517,14 @@ set_g_omp_num_threads <- function(t_omp_num_threads) {
     invisible(.Call('_SAIGEQTL_set_g_omp_num_threads', PACKAGE = 'SAIGEQTL', t_omp_num_threads))
 }
 
+getprodImatbVec <- function(bVec) {
+    .Call('_SAIGEQTL_getprodImatbVec', PACKAGE = 'SAIGEQTL', bVec)
+}
+
+getprodImattbVec <- function(bVec) {
+    .Call('_SAIGEQTL_getprodImattbVec', PACKAGE = 'SAIGEQTL', bVec)
+}
+
 getprodImatImattbVec <- function(bVec) {
     .Call('_SAIGEQTL_getprodImatImattbVec', PACKAGE = 'SAIGEQTL', bVec)
 }

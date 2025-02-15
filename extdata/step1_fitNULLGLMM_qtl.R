@@ -4,8 +4,7 @@ options(stringsAsFactors = F)
 
 ## load R libraries
 
-#library(SAIGEQTL)
-library(SAIGEQTL, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/qtl_github/install")
+library(SAIGEQTL)
 
 require(optparse) # install.packages("optparse")
 

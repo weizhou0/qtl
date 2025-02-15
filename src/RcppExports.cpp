@@ -1632,6 +1632,28 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// getprodImatbVec
+arma::fvec getprodImatbVec(arma::fvec& bVec);
+RcppExport SEXP _SAIGEQTL_getprodImatbVec(SEXP bVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type bVec(bVecSEXP);
+    rcpp_result_gen = Rcpp::wrap(getprodImatbVec(bVec));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getprodImattbVec
+arma::fvec getprodImattbVec(arma::fvec& bVec);
+RcppExport SEXP _SAIGEQTL_getprodImattbVec(SEXP bVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::fvec& >::type bVec(bVecSEXP);
+    rcpp_result_gen = Rcpp::wrap(getprodImattbVec(bVec));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getprodImatImattbVec
 arma::fvec getprodImatImattbVec(arma::fvec& bVec);
 RcppExport SEXP _SAIGEQTL_getprodImatImattbVec(SEXP bVecSEXP) {
@@ -2502,6 +2524,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGEQTL_assign_g_outputFilePrefix", (DL_FUNC) &_SAIGEQTL_assign_g_outputFilePrefix, 1},
     {"_SAIGEQTL_assign_g_outputFilePrefix0", (DL_FUNC) &_SAIGEQTL_assign_g_outputFilePrefix0, 1},
     {"_SAIGEQTL_set_g_omp_num_threads", (DL_FUNC) &_SAIGEQTL_set_g_omp_num_threads, 1},
+    {"_SAIGEQTL_getprodImatbVec", (DL_FUNC) &_SAIGEQTL_getprodImatbVec, 1},
+    {"_SAIGEQTL_getprodImattbVec", (DL_FUNC) &_SAIGEQTL_getprodImattbVec, 1},
     {"_SAIGEQTL_getprodImatImattbVec", (DL_FUNC) &_SAIGEQTL_getprodImatImattbVec, 1},
     {"_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp", (DL_FUNC) &_SAIGEQTL_SKAT_META_Optimal_Get_Q_Rcpp, 2},
     {"_SAIGEQTL_SKAT_META_Optimal_Get_Q_Res_Rcpp", (DL_FUNC) &_SAIGEQTL_SKAT_META_Optimal_Get_Q_Res_Rcpp, 2},

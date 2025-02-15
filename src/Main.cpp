@@ -4778,7 +4778,8 @@ arma::sp_fmat gettI_Sigma_I_multiV(arma::fvec& wVec, arma::fvec& tauVec, int max
                 ImatVecTemp = arma::vectorise(g_I_longl_mat.col(i));
 		Sigma_Ivec = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, ImatVecTemp, maxiterPCG, tolPCG, LOCO);
 		
-                ISigma_iI.col(i) = g_I_longl_mat_t * Sigma_Ivec;
+                //ISigma_iI.col(i) = g_I_longl_mat_t * Sigma_Ivec;
+                ISigma_iI.col(i) = getprodImattbVec(Sigma_Ivec);
         }
 	arma::sp_fmat ISigma_iI_sp = arma::conv_to < arma::sp_fmat >::from(ISigma_iI); 
         return(ISigma_iI_sp);
@@ -5469,7 +5470,8 @@ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wV
 			   }else{
 
                                 if(fixtauVec(1) == 0){
-                                        temp_vec_double = g_I_longl_mat * Ibvec;
+                                        //temp_vec_double = g_I_longl_mat * Ibvec;
+                                        temp_vec_double = getprodImatbVec(Ibvec);
                                         Au_mat.col(1) = temp_vec_double;
                                         temp_mat(i,1) = dot(temp_vec_double, Pu);
                                 }
@@ -5477,7 +5479,8 @@ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wV
                                 for(int j=2; j<k1;j++){
                                         if(fixtauVec(j) == 0){
                                                 V_I_bvec = Kmat_vec[j-2] * Ibvec;
-                                                temp_vec_double = g_I_longl_mat * V_I_bvec;
+                                                //temp_vec_double = g_I_longl_mat * V_I_bvec;
+                                                temp_vec_double = getprodImatbVec(V_I_bvec);
                                                 Au_mat.col(j) = temp_vec_double;
                                                 temp_mat(i,j) = dot(temp_vec_double, Pu);
                                         }
@@ -7770,32 +7773,28 @@ void set_g_omp_num_threads(unsigned int t_omp_num_threads){
 
 
 // [[Rcpp::export]]
-arma::fvec getprodImatbVec(arma::fvec & bVec){
+arma::fvec getprodImatbVec(arma::fvec & bVec) {
     auto n = g_I_start_indices.n_elem - 1;
-    arma::fvec resultVec(bVec.n_elem, arma::fill::zeros);
-    if(g_omp_num_threads > 1){
+    arma::fvec resultVec(g_I_longl_mat.n_rows, arma::fill::zeros);
+
+    if (g_omp_num_threads > 1) {
         omp_set_num_threads(g_omp_num_threads);
-        #pragma omp parallel
-        {
-                auto thread_idx = omp_get_thread_num();
-                for(int j = thread_idx; j < n; j += g_omp_num_threads) {
-                        float sum = 0;
-                        size_t start = g_I_start_indices[j];
-                        size_t end = g_I_start_indices[j + 1];
-                        for(size_t k = start; k < end; k++) {
-				resultVec[k] = bVec[j];
-                                //sum += bVec[k];
-                        }
-                        //for(size_t k = start; k < end; k++) {
-                        //resultVec[j] = sum;
-                        //}
-                }
+        
+	#pragma omp parallel for
+        for (int j = 0; j < n; j++) {
+	    float sum;
+            size_t start = g_I_start_indices[j];
+            size_t end = g_I_start_indices[j + 1];
+            sum = bVec[j];
+            for (size_t k = start; k < end; k++) {
+		resultVec[k] = sum;  // This could still lead to overwrites if `k` is shared across threads
+            }
         }
-     }else{
-        arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
-        resultVec = g_I_longl_mat * resultVec0;
-     }
-        return(resultVec);
+    } else {
+        	resultVec = g_I_longl_mat * bVec;
+    	}
+
+    return resultVec;
 }
 
 
@@ -7823,8 +7822,7 @@ arma::fvec getprodImattbVec(arma::fvec & bVec){
                 }
         }
      }else{
-        arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
-        resultVec = g_I_longl_mat * resultVec0;
+        resultVec = g_I_longl_mat_t * bVec;
      }
         return(resultVec);
 }
