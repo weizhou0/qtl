@@ -140,7 +140,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     useSparseGRMtoFitNULL <- FALSE
     useSparseGRMforVarRatio <- FALSE
     LOCO <- FALSE
-    #nThreads <- 1
+    # nThreads <- 1
     cat("No GRM will be used to fit the NULL model and nThreads is set to 1\n")
   }
 
@@ -182,10 +182,10 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
   if (useSparseGRMtoFitNULL) {
     # useSparseGRMforVarRatio = FALSE
     LOCO <- FALSE
-    #nThreads <- 1
-    #if (bedFile != "") {
+    # nThreads <- 1
+    # if (bedFile != "") {
     #  cat("sparse GRM will be used to fit the NULL model and nThreads is set to 1\n")
-    #}
+    # }
     cat("Leave-one-chromosome-out is not applied\n")
   }
 
