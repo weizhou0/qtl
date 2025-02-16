@@ -281,8 +281,8 @@ cateVarRatioMaxMACVecInclude <- convertoNumeric(x = strsplit(opt$cateVarRatioMax
 BLASctl_installed <- require(RhpcBLASctl)
 if (BLASctl_installed) {
   # Set number of threads for BLAS to 1, this step does not benefit from multithreading or multiprocessing
-	original_num_threads <- blas_get_num_procs()
-	blas_set_num_threads(1)
+  original_num_threads <- blas_get_num_procs()
+  blas_set_num_threads(1)
 }
 
 
@@ -456,5 +456,5 @@ if (!opt$isCovariateOffset) {
 
 if (BLASctl_installed) {
   # Restore originally configured BLAS thread count
-    blas_set_num_threads(original_num_threads)
+  blas_set_num_threads(original_num_threads)
 }
