@@ -65,6 +65,10 @@ option_list <- list(
     type = "character", default = "IID",
     help = "Required. Column name of sample IDs in the phenotype file, e.g. IID"
   ),
+  make_option("--cellIDColinphenoFile",
+    type = "character", default = "barcode",
+    help = "Column name of cell IDs in the phenotype file, e.g. barcode"
+  ),
   make_option("--tol",
     type = "numeric", default = 0.02,
     help = "Optional. Tolerance for fitting the null GLMM to converge [default=0.02]."
@@ -249,6 +253,10 @@ option_list <- list(
   make_option("--isShrinkModelOutput",
     type = "logical", default = TRUE,
     help = "Optional. Whether to remove unnecessary objects for step2 from the model output. [default, 'TRUE']"
+  ),
+  make_option("--isExportResiduals",
+    type = "logical", default = FALSE,
+    help = "Optional. Whether to export residual vector. [default, 'FALSE']"
   )
 )
 
@@ -281,8 +289,8 @@ cateVarRatioMaxMACVecInclude <- convertoNumeric(x = strsplit(opt$cateVarRatioMax
 BLASctl_installed <- require(RhpcBLASctl)
 if (BLASctl_installed) {
   # Set number of threads for BLAS to 1, this step does not benefit from multithreading or multiprocessing
-	original_num_threads <- blas_get_num_procs()
-	blas_set_num_threads(1)
+  original_num_threads <- blas_get_num_procs()
+  blas_set_num_threads(1)
 }
 
 
@@ -300,6 +308,7 @@ fitNULLGLMM_multiV(
   phenoCol = opt$phenoCol,
   isRemoveZerosinPheno = opt$isRemoveZerosinPheno,
   sampleIDColinphenoFile = opt$sampleIDColinphenoFile,
+  cellIDColinphenoFile = opt$cellIDColinphenoFile,
   traitType = opt$traitType,
   outputPrefix = opt$outputPrefix,
   isCovariateOffset = opt$isCovariateOffset,
@@ -349,7 +358,8 @@ fitNULLGLMM_multiV(
   varWeightsCol = opt$varWeightsCol,
   sampleCovarCol = scovars,
   isStoreSigma = opt$isStoreSigma,
-  isShrinkModelOutput = opt$isShrinkModelOutput
+  isShrinkModelOutput = opt$isShrinkModelOutput,
+  isExportResiduals = opt$isExportResiduals
 )
 
 if (!opt$isCovariateOffset) {
@@ -373,6 +383,7 @@ if (!opt$isCovariateOffset) {
       phenoCol = opt$phenoCol,
       isRemoveZerosinPheno = opt$isRemoveZerosinPheno,
       sampleIDColinphenoFile = opt$sampleIDColinphenoFile,
+      cellIDColinphenoFile = opt$cellIDColinphenoFile,
       traitType = opt$traitType,
       outputPrefix = paste0(opt$outputPrefix, ".offset"),
       isCovariateOffset = opt$isCovariateOffset,
@@ -422,7 +433,8 @@ if (!opt$isCovariateOffset) {
       varWeightsCol = opt$varWeightsCol,
       sampleCovarCol = scovars,
       isStoreSigma = opt$isStoreSigma,
-      isShrinkModelOutput = opt$isShrinkModelOutput
+      isShrinkModelOutput = opt$isShrinkModelOutput,
+      isExportResiduals = opt$isExportResiduals
     )
     my_env <- new.env()
     load(paste0(opt$outputPrefix, ".offset.rda"), envir = my_env)
@@ -456,5 +468,5 @@ if (!opt$isCovariateOffset) {
 
 if (BLASctl_installed) {
   # Restore originally configured BLAS thread count
-    blas_set_num_threads(original_num_threads)
+  blas_set_num_threads(original_num_threads)
 }
