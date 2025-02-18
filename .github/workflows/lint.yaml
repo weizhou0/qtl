@@ -29,7 +29,7 @@ jobs:
           sudo apt-get update && \
           sudo apt-get install -y \
           cmake \
-          libopenblas-base
+          libopenblas-dev
 
           # https://github.com/parandor/samples/blob/2028ca7a23757a4df2344404fa68684cf1cd6f92/.github/workflows/build_libraries.yaml#L24
           # Install Python packages using pip
@@ -48,7 +48,7 @@ jobs:
         with:
           extra-packages: any::lintr, any::styler, any::roxygen2, local::.
           needs: lint, styler
-      
+
       - name: Enable styler cache
         run: styler::cache_activate()
         shell: Rscript {0}
@@ -89,8 +89,8 @@ jobs:
             git config --local user.name "$GITHUB_ACTOR"
             git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
             git commit ${FILES_TO_COMMIT[*]} -m "Style code (GHA)"
-            git pull --ff-only
-            git push origin
+            git pull origin main --ff-only
+            git push origin main
           else
             echo "No changes to commit."
           fi

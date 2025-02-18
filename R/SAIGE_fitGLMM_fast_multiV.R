@@ -9,6 +9,7 @@
 #' @param qCovarCol vector of characters. Categorical covariates to be used in the null model. All categorical covariates listed in qCovarCol must be also in covarColList,  e,g c("Sex").
 #' @param eCovarCol vector of characters. Covariates of environmental factors/cell context to be used in the null model. All covariates listed in eCovarCol must be also in covarColList,  e,g c("cellType").
 #' @param sampleIDColinphenoFile character. Column name for the sample IDs in the phenotype file e.g. "IID".
+#' @param cellIDColinphenoFile character. Column name for the cell IDs in the phenotype file e.g. "barcode".
 #' @param tol numeric. The tolerance for fitting the null model to converge. By default, 0.02.
 #' @param maxiter integer. The maximum number of iterations used to fit the null GLMMM. By default, 20.
 #' @param tolPCG numeric. The tolerance for PCG to converge. By default, 1e-5.
@@ -47,6 +48,7 @@
 #' @param isCovariateOffset logical. Whether to estimate fixed effect coeffciets. By default, FALSE.
 #' @param isStoreSigma logical. Whether to store sigma matrix. By default, FALSE. If number of individuals is greater than 10,000, this option may use large memory
 #' @param isShrinkModelOutput logical. remove unnecessary objects for step2 from the model output. By default, FALSE.
+#' @param isExportResiduals logical. export a residual vector. By default, FALSE.
 #' @return a file ended with .rda that contains the glmm model information, a file ended with .varianceRatio.txt that contains the variance ratio values, and a file ended with #markers.SPAOut.txt that contains the SPAGMMAT tests results for the markers used for estimating the variance ratio.
 #' @export
 fitNULLGLMM_multiV <- function(plinkFile = "",
@@ -66,6 +68,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
                                varWeightsCol = NULL,
                                longlCol = "",
                                sampleIDColinphenoFile = "",
+                               cellIDColinphenoFile = "",
                                tol = 0.02,
                                maxiter = 20,
                                tolPCG = 1e-5,
@@ -114,7 +117,8 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
                                VcellmatSampleFilelist = "",
                                useGRMtoFitNULL = TRUE,
                                isStoreSigma = FALSE,
-                               isShrinkModelOutput = FALSE) {
+                               isShrinkModelOutput = FALSE,
+                               isExportResiduals = FALSE) {
   ## set up output files
   modelOut <- paste0(outputPrefix, ".rda")
 
@@ -140,7 +144,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     useSparseGRMtoFitNULL <- FALSE
     useSparseGRMforVarRatio <- FALSE
     LOCO <- FALSE
-    #nThreads <- 1
+    # nThreads <- 1
     cat("No GRM will be used to fit the NULL model and nThreads is set to 1\n")
   }
 
@@ -182,10 +186,10 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
   if (useSparseGRMtoFitNULL) {
     # useSparseGRMforVarRatio = FALSE
     LOCO <- FALSE
-    #nThreads <- 1
-    #if (bedFile != "") {
+    # nThreads <- 1
+    # if (bedFile != "") {
     #  cat("sparse GRM will be used to fit the NULL model and nThreads is set to 1\n")
-    #}
+    # }
     cat("Leave-one-chromosome-out is not applied\n")
   }
 
@@ -289,6 +293,11 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
       checkColList <- c(phenoCol, covarColList, sampleIDColinphenoFile)
     } else {
       checkColList <- c(phenoCol, covarColList, sampleIDColinphenoFile, longlCol)
+    }
+
+    if (cellIDColinphenoFile != "") {
+      cat(cellIDColinphenoFile, "is the cell ID column\n")
+      checkColList <- c(checkColList, cellIDColinphenoFile)
     }
 
     if (length(offsetCol) > 0) {
@@ -484,6 +493,9 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
     }
 
     mmat$IID <- data[, which(sampleIDColinphenoFile == colnames(data))]
+    if (cellIDColinphenoFile != "") {
+      mmat$barcode <- data[, which(cellIDColinphenoFile == colnames(data))]
+    }
     if (longlCol != "") {
       mmat$longlVar <- data[, which(longlCol == colnames(data))]
     }
@@ -1372,7 +1384,31 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
         modglmm$obj.noK$XVX_inv_XV <- NULL
       }
     }
-    fastSave(modglmm, file = modelOut)
+  }
+  fastSave(modglmm, file = modelOut)
+
+  if (isExportResiduals) {
+    b <- as.numeric(factor(modglmm$sampleID, levels = unique(modglmm$sampleID)))
+    I_mat <- 1.0 * Matrix::sparseMatrix(i = seq_along(b), j = b, x = rep(1, length(b)))
+    res_sample <- as.vector(t(I_mat) %*% modglmm$residuals)
+    data.table::fwrite(
+      data.frame(sampleID = unique(modglmm$sampleID), residuals = res_sample),
+      paste0(outputPrefix, ".sample.residuals.txt"),
+      quote = FALSE,
+      sep = "\t",
+      col.names = TRUE,
+      row.names = FALSE,
+      na = "NA"
+    )
+    data.table::fwrite(
+      data.frame(barcode = modglmm$barcode, residuals = modglmm$residuals),
+      paste0(outputPrefix, ".residuals.txt"),
+      quote = FALSE,
+      sep = "\t",
+      col.names = TRUE,
+      row.names = FALSE,
+      na = "NA"
+    )
   }
 }
 
@@ -2318,10 +2354,10 @@ glmmkin.ai_PCG_Rcpp_multiV <- function(bedFile, bimFile, famFile, Xorig, isCovar
 
   if (!isCovariateOffset) {
     obj.noK <- ScoreTest_NULL_Model(mu_rescaled, mu2_rescaled, y_rescaled, X)
-    glmmResult <- list(theta = tau, coefficients = alpha, linear.predictors = eta, fitted.values = mu, Y = Y, residuals = res, cov = cov, converged = converged, sampleID = subPheno$IID, obj.noK = obj.noK, y = y, X = X, traitType = traitType, isCovariateOffset = isCovariateOffset)
+    glmmResult <- list(theta = tau, coefficients = alpha, linear.predictors = eta, fitted.values = mu, Y = Y, residuals = res, cov = cov, converged = converged, sampleID = subPheno$IID, barcode = subPheno$barcode, obj.noK = obj.noK, y = y, X = X, traitType = traitType, isCovariateOffset = isCovariateOffset)
   } else {
     obj.noK <- ScoreTest_NULL_Model(mu_rescaled, mu2_rescaled, y_rescaled, Xorig)
-    glmmResult <- list(theta = tau, coefficients = alpha, linear.predictors = eta, fitted.values = mu, Y = Y, residuals = res, cov = cov, converged = converged, sampleID = subPheno$IID, obj.noK = obj.noK, y = y, X = Xorig, traitType = traitType, isCovariateOffset = isCovariateOffset)
+    glmmResult <- list(theta = tau, coefficients = alpha, linear.predictors = eta, fitted.values = mu, Y = Y, residuals = res, cov = cov, converged = converged, sampleID = subPheno$IID, barcode = subPheno$barcode, obj.noK = obj.noK, y = y, X = Xorig, traitType = traitType, isCovariateOffset = isCovariateOffset)
   }
 
   glmmResult$varWeights <- var_weights
