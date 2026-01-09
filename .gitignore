@@ -29,3 +29,5 @@ test_output/compare_outputs.R
 *.log
 .saigeqtl_config
 CLAUDE.md
+test_standard_install.R
+.test_standard_install.R.swp
