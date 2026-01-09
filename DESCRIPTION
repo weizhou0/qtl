@@ -7,12 +7,12 @@ Author: Wei Zhou, Anna Cuomo
 Maintainer: Wei Zhou <wzhou@broadinstitute.org> 
 Description:an R package that implements the Scalable and Accurate Implementation of Generalized Poisson mixed model for eQTL mapping at the single-cell level.  
 License: GPL (>= 2)
-Imports: Rcpp (>= 1.0.7), RcppParallel, Matrix, data.table, RcppArmadillo (>= 0.10.7.5), RcppNumerical, furrr, dbplyr, dplyr, RSQLite, RhpcBLASctl, methods, optparse, nlme, MASS, SPAtest
+Imports: Rcpp (>= 1.0.7), RcppParallel, Matrix, data.table, RcppArmadillo (>= 0.9.900.2.0), RcppNumerical, furrr, dbplyr, dplyr, RSQLite, RhpcBLASctl, methods, optparse, nlme, MASS, SPAtest
 Suggests: R.utils, SKAT, fastSave
-LinkingTo: Rcpp, RcppArmadillo (>= 0.10.7.5), RcppParallel, BH, RcppEigen, RcppNumerical
+LinkingTo: Rcpp, RcppArmadillo (>= 0.9.900.2.0), RcppParallel, BH, RcppEigen, RcppNumerical
 Remotes: cysouw/qlcMatrix, leeshawn/MetaSKAT, barkasn/fastSave
 Depends: R (>= 3.5.0)
-SystemRequirements: GNU make, OpenMP (optional for parallel processing)
+SystemRequirements: GNU make, C++11, OpenMP (optional for parallel processing)
 RoxygenNote: 7.1.2
 NeedsCompilation: yes
 Encoding: UTF-8
