@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Configuration script for SAIGEQTL
+# Detects whether to use pixi environment or standard installation
+
+echo "Configuring SAIGEQTL installation..."
+
+# Initialize variables
+PIXI_INCLUDES=""
+PIXI_LIBS=""
+ARMADILLO_FLAGS=""
+CXX_STANDARD=""
+
+# Check C++ compiler version for RcppArmadillo compatibility
+CXX_VERSION=$(g++ --version 2>/dev/null | head -n1 | grep -oE '[0-9]+\.[0-9]+' | head -n1)
+if [ -n "$CXX_VERSION" ]; then
+    CXX_MAJOR=$(echo $CXX_VERSION | cut -d. -f1)
+    echo "Detected C++ compiler: g++ version $CXX_VERSION"
+    
+    if [ "$CXX_MAJOR" -lt 8 ]; then
+        echo "  Using legacy Armadillo configuration for GCC < 8"
+        ARMADILLO_FLAGS="-DARMA_DONT_USE_WRAPPER"
+        CXX_STANDARD="-std=c++11"
+    else
+        echo "  Using current Armadillo configuration for GCC >= 8"
+        ARMADILLO_FLAGS="-DARMA_USE_CURRENT"
+        CXX_STANDARD="-std=c++14"
+    fi
+else
+    echo "  Could not detect compiler version, using legacy configuration"
+    ARMADILLO_FLAGS="-DARMA_DONT_USE_WRAPPER"
+    CXX_STANDARD="-std=c++11"
+fi
+
+# Check if we're in a pixi environment
+if [ -n "$PIXI_PROJECT_ROOT" ] || [ -d ".pixi" ] || [ -f "pixi.toml" ]; then
+    echo "Detected pixi environment - using enhanced dependencies"
+    
+    # Check for pixi environment paths
+    if [ -d ".pixi/envs/default/include" ]; then
+        PIXI_INCLUDES="-isystem .pixi/envs/default/include"
+        echo "  Found pixi include path: .pixi/envs/default/include"
+    fi
+    
+    # Check for cget dependencies (optional for pixi users)
+    if [ -d "thirdParty/cget/include" ]; then
+        PIXI_INCLUDES="$PIXI_INCLUDES -I thirdParty/cget/include -I thirdParty/cget/lib -I thirdParty/cget/lib64"
+        PIXI_LIBS="-L thirdParty/cget/lib/ -L thirdParty/cget/lib64/ -lsuperlu -lzstd"
+        echo "  Found cget dependencies"
+    fi
+    
+else
+    echo "Standard R installation detected - using system dependencies"
+    echo "  Ensure system has: BLAS, LAPACK, OpenMP"
+    echo "  Full functionality available with system libraries"
+fi
+
+# Create Makevars from template
+sed -e "s|@PIXI_INCLUDES@|$PIXI_INCLUDES|g" \
+    -e "s|@PIXI_LIBS@|$PIXI_LIBS|g" \
+    -e "s|@ARMADILLO_FLAGS@|$ARMADILLO_FLAGS|g" \
+    -e "s|@CXX_STANDARD@|$CXX_STANDARD|g" \
+    src/Makevars.in > src/Makevars
+
+echo "Configuration complete!"
+echo "  CXX_STANDARD: $CXX_STANDARD"
+echo "  ARMADILLO_FLAGS: $ARMADILLO_FLAGS"
+echo "  PIXI_INCLUDES: $PIXI_INCLUDES"
+echo "  PIXI_LIBS: $PIXI_LIBS"

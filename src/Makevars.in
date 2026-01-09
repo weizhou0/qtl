@@ -1,9 +1,9 @@
 PKG_CPPFLAGS = \
--std=c++14 \
+@CXX_STANDARD@ \
 @PIXI_INCLUDES@ \
--D SQLITE_ENABLE_COLUMN_METADATA -O3 -fpic -Wall -Wextra -pedantic  -DARMA_64BIT_WORD=1 -D__STDC_FORMAT_MACROS -fopenmp
+-D SQLITE_ENABLE_COLUMN_METADATA -O3 -fpic -Wall -Wextra -pedantic  -DARMA_64BIT_WORD=1 -D__STDC_FORMAT_MACROS -fopenmp @ARMADILLO_FLAGS@
 
-CXX_STD = CXX14
+CXX_STD = CXX11
 
 PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) @PIXI_LIBS@ -fopenmp
 PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()")

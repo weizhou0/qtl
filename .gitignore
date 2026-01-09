@@ -14,7 +14,6 @@ extdata/GMMAT*
 extdata/*log
 extdata/*rda
 extdata/*varianceRatio.txt
-configure
 extdata/step1_multiV_singleV.lo
 extdata/temp111.cpp
 extdata/NB.R
