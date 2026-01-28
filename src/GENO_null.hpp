@@ -8,6 +8,7 @@
 #include <RcppArmadillo.h>
 //[[Rcpp::depends(RcppParallel)]]
 #include <RcppParallel.h>
+#include <tbb/concurrent_vector.h>
 #include <omp.h>
 #include <string>
 #include <iostream>
