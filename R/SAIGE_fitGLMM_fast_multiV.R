@@ -120,7 +120,8 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
                                isStoreSigma = FALSE,
                                isShrinkModelOutput = FALSE,
                                isExportResiduals = FALSE,
-                               varRatioBatchSize = 10) {
+                               varRatioBatchSize = 10,
+                               solverMethod = "auto") {
       start_0 <- proc.time()
   ## set up output files
   modelOut <- paste0(outputPrefix, ".rda")
@@ -1122,6 +1123,11 @@ print(start_7 - start_0)
 
     set_isSparseGRM(useSparseGRMtoFitNULL)
     set_useGRMtoFitNULL(useGRMtoFitNULL)
+    
+    # Configure and initialize solver for the job
+    cat("Configuring solver: solverMethod=", solverMethod, "\n")
+    setSolverMethod(solverMethod)
+    initializeSolverForJob(nrow(dataMerge_sort))
 
     if (traitType != "count_nb") {
       system.time(modglmm <- glmmkin.ai_PCG_Rcpp_multiV(bedFile, bimFile, famFile, Xorig, isCovariateOffset,

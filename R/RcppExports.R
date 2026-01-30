@@ -21,6 +21,22 @@ closeOutfile_single_LDmat <- function() {
     invisible(.Call('_SAIGEQTL_closeOutfile_single_LDmat', PACKAGE = 'SAIGEQTL'))
 }
 
+setSolverMethod <- function(solverMethod = "auto") {
+    invisible(.Call('_SAIGEQTL_setSolverMethod', PACKAGE = 'SAIGEQTL', solverMethod))
+}
+
+computeHybridSolverCosts <- function(N) {
+    invisible(.Call('_SAIGEQTL_computeHybridSolverCosts', PACKAGE = 'SAIGEQTL', N))
+}
+
+initializeSolverForJob <- function(N) {
+    invisible(.Call('_SAIGEQTL_initializeSolverForJob', PACKAGE = 'SAIGEQTL', N))
+}
+
+initializeHybridSolverForJob <- function(N) {
+    invisible(.Call('_SAIGEQTL_initializeHybridSolverForJob', PACKAGE = 'SAIGEQTL', N))
+}
+
 setAssocTest_GlobalVarsInCPP <- function(t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_outputFilePrefix, t_MACCutoffforER) {
     invisible(.Call('_SAIGEQTL_setAssocTest_GlobalVarsInCPP', PACKAGE = 'SAIGEQTL', t_impute_method, t_missing_cutoff, t_min_maf_marker, t_min_mac_marker, t_min_info_marker, t_dosage_zerod_cutoff, t_dosage_zerod_MAC_cutoff, t_outputFilePrefix, t_MACCutoffforER))
 }

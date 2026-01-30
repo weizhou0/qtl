@@ -3,7 +3,6 @@
 
 #include <RcppArmadillo.h>
 #include <RcppEigen.h>
-#include <RcppEigen.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
@@ -78,6 +77,46 @@ RcppExport SEXP _SAIGEQTL_closeOutfile_single_LDmat() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     closeOutfile_single_LDmat();
+    return R_NilValue;
+END_RCPP
+}
+// setSolverMethod
+void setSolverMethod(std::string solverMethod);
+RcppExport SEXP _SAIGEQTL_setSolverMethod(SEXP solverMethodSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type solverMethod(solverMethodSEXP);
+    setSolverMethod(solverMethod);
+    return R_NilValue;
+END_RCPP
+}
+// computeHybridSolverCosts
+void computeHybridSolverCosts(int N);
+RcppExport SEXP _SAIGEQTL_computeHybridSolverCosts(SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    computeHybridSolverCosts(N);
+    return R_NilValue;
+END_RCPP
+}
+// initializeSolverForJob
+void initializeSolverForJob(int N);
+RcppExport SEXP _SAIGEQTL_initializeSolverForJob(SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    initializeSolverForJob(N);
+    return R_NilValue;
+END_RCPP
+}
+// initializeHybridSolverForJob
+void initializeHybridSolverForJob(int N);
+RcppExport SEXP _SAIGEQTL_initializeHybridSolverForJob(SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    initializeHybridSolverForJob(N);
     return R_NilValue;
 END_RCPP
 }
@@ -2400,6 +2439,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGEQTL_LDmatRegionInCPP", (DL_FUNC) &_SAIGEQTL_LDmatRegionInCPP, 9},
     {"_SAIGEQTL_openOutfile_single_LDmat", (DL_FUNC) &_SAIGEQTL_openOutfile_single_LDmat, 1},
     {"_SAIGEQTL_closeOutfile_single_LDmat", (DL_FUNC) &_SAIGEQTL_closeOutfile_single_LDmat, 0},
+    {"_SAIGEQTL_setSolverMethod", (DL_FUNC) &_SAIGEQTL_setSolverMethod, 1},
+    {"_SAIGEQTL_computeHybridSolverCosts", (DL_FUNC) &_SAIGEQTL_computeHybridSolverCosts, 1},
+    {"_SAIGEQTL_initializeSolverForJob", (DL_FUNC) &_SAIGEQTL_initializeSolverForJob, 1},
+    {"_SAIGEQTL_initializeHybridSolverForJob", (DL_FUNC) &_SAIGEQTL_initializeHybridSolverForJob, 1},
     {"_SAIGEQTL_setAssocTest_GlobalVarsInCPP", (DL_FUNC) &_SAIGEQTL_setAssocTest_GlobalVarsInCPP, 9},
     {"_SAIGEQTL_setAssocTest_GlobalVarsInCPP_GbyE", (DL_FUNC) &_SAIGEQTL_setAssocTest_GlobalVarsInCPP_GbyE, 10},
     {"_SAIGEQTL_setMarker_GlobalVarsInCPP", (DL_FUNC) &_SAIGEQTL_setMarker_GlobalVarsInCPP, 2},

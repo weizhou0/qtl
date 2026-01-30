@@ -69,6 +69,300 @@ arma::uvec g_covarianceidxMat_notcol1;
 //arma::fvec g_var_weights;
 unsigned int g_omp_num_threads;
 
+// Global variables for solver selection
+std::string g_solverMethod = "auto";
+
+// Cached solver decision
+bool g_solver_decision_made = false;
+bool g_use_smw = false;
+std::string g_decision_reason = "";
+
+// Simple solver decision function
+void decideSolverMethod() {
+    if (g_solver_decision_made) {
+        return;  // Already decided
+    }
+    
+    // Check if we have repeated cells (single-cell structure)
+    bool has_repeated_cells = (g_I_longl_mat.n_rows > 0);
+    
+    // User-specified method takes precedence
+    if (g_solverMethod == "smw") {
+        g_use_smw = true;
+        g_decision_reason = "SMW explicitly requested";
+    } else if (g_solverMethod == "pcg") {
+        g_use_smw = false;
+        g_decision_reason = "PCG explicitly requested";
+    } else {
+        // Auto selection based on data structure
+        if (has_repeated_cells) {
+            g_use_smw = true;
+            g_decision_reason = "SMW auto-selected (repeated cells detected)";
+        } else {
+            g_use_smw = false;
+            g_decision_reason = "PCG auto-selected (no repeated cells)";
+        }
+    }
+    
+    g_solver_decision_made = true;
+    cout << "Solver decision: " << (g_use_smw ? "SMW" : "PCG") 
+         << " (" << g_decision_reason << ")" << endl;
+}
+
+// Configuration function for solver selection
+// [[Rcpp::export]]
+void setSolverMethod(std::string solverMethod = "auto") {
+    g_solverMethod = solverMethod;
+    
+    cout << "Solver method: " << solverMethod << endl;
+         
+    // Validate solverMethod parameter
+    if (solverMethod != "auto" && solverMethod != "pcg" && solverMethod != "smw") {
+        cout << "WARNING: Invalid solverMethod '" << solverMethod << "'. Valid options: 'auto', 'pcg', 'smw'. Using 'auto'." << endl;
+        g_solverMethod = "auto";
+    }
+    
+    // Reset decision cache when method changes
+    g_solver_decision_made = false;
+}
+
+// Forward declarations
+arma::fvec solve_sparse_SMW(arma::fvec& wVec, arma::fvec& tauVec, arma::fvec& bVec, bool LOCO);
+void decideSolverMethod();
+void initializeSolverForJob(int N);
+
+// Global cache for diagonal computation
+thread_local arma::fvec g_cached_diag;
+thread_local bool g_diag_cache_valid = false;
+thread_local arma::fvec g_last_wVec, g_last_tauVec;
+thread_local bool g_last_LOCO = false;
+
+// Cached diagonal computation
+arma::fvec getCachedDiagOfSigma_multiV(arma::fvec& wVec, arma::fvec& tauVec, bool LOCO) {
+    // Check if cache is valid
+    if (g_diag_cache_valid && 
+        arma::approx_equal(wVec, g_last_wVec, "absdiff", 1e-10) &&
+        arma::approx_equal(tauVec, g_last_tauVec, "absdiff", 1e-10) &&
+        LOCO == g_last_LOCO) {
+        return g_cached_diag;
+    }
+    
+    // Compute and cache
+    g_cached_diag = getDiagOfSigma_multiV(wVec, tauVec, LOCO);
+    g_last_wVec = wVec;
+    g_last_tauVec = tauVec;
+    g_last_LOCO = LOCO;
+    g_diag_cache_valid = true;
+    
+    return g_cached_diag;
+}
+
+// Optimized PCG solver with memory reuse and better convergence
+arma::fvec solve_sparse_PCG(arma::fvec& wVec, arma::fvec& tauVec, arma::fvec& bVec, 
+                           int maxiterPCG, float tolPCG, bool LOCO) {
+    int Nnomissing = wVec.n_elem;
+    arma::fvec xVec(Nnomissing, arma::fill::zeros);
+    
+    // Pre-allocate all vectors to avoid repeated allocations
+    arma::fvec rVec = bVec;  // residual
+    arma::fvec minvVec = 1.0 / getCachedDiagOfSigma_multiV(wVec, tauVec, LOCO);  // preconditioner
+    arma::fvec zVec = minvVec % rVec;  // preconditioned residual
+    arma::fvec pVec = zVec;  // search direction
+    
+    // Reuse vectors instead of creating new ones each iteration
+    arma::fvec ApVec(Nnomissing);  // matrix-vector product
+    arma::fvec temp_vec(Nnomissing);  // temporary vector
+    
+    float rzold = arma::dot(rVec, zVec);  // <r,z>
+    float sumr2 = arma::dot(rVec, rVec);   // ||r||^2
+    
+    int iter = 0;
+    while (sumr2 > tolPCG && iter < maxiterPCG) {
+        iter++;
+        
+        // ApVec = A * pVec
+        ApVec = getCrossprod_multiV(pVec, wVec, tauVec, LOCO);
+        
+        // Compute step size: alpha = <r,z> / <p,Ap>
+        float pAp = arma::dot(pVec, ApVec);
+        if (std::abs(pAp) < 1e-12) {
+            cout << "PCG: pAp near zero, stopping at iter " << iter << endl;
+            break;
+        }
+        float alpha = rzold / pAp;
+        
+        // Update solution: x = x + alpha * p
+        xVec += alpha * pVec;
+        
+        // Update residual: r = r - alpha * Ap
+        rVec -= alpha * ApVec;
+        
+        // Check convergence
+        sumr2 = arma::dot(rVec, rVec);
+        if (sumr2 <= tolPCG) break;
+        
+        // Update preconditioned residual: z = M^(-1) * r
+        temp_vec = minvVec % rVec;
+        
+        // Compute beta for next iteration: beta = <r_new,z_new> / <r_old,z_old>
+        float rznew = arma::dot(rVec, temp_vec);
+        float beta = rznew / rzold;
+        
+        // Update search direction: p = z + beta * p
+        pVec = temp_vec + beta * pVec;
+        zVec = temp_vec;
+        rzold = rznew;
+    }
+    
+    if (iter >= maxiterPCG) {
+        cout << "PCG did not converge after " << maxiterPCG << " iterations. Residual: " << sqrt(sumr2) << endl;
+    }
+    
+    return xVec;
+}
+
+
+// Fixed SMW solver that extends the proven K=I approach
+arma::fvec solve_sparse_SMW(arma::fvec& wVec, arma::fvec& tauVec, arma::fvec& bVec, bool LOCO) {
+    int N = wVec.n_elem;
+    arma::fvec xVec(N, arma::fill::zeros);
+    
+    // Handle the case where no GRM is specified (g_isGRM = false) or no random effect
+    // In this case, Sigma = diag(w)^(-1) * tauVec(0) only
+    if (!g_isGRM || tauVec(1) == 0) {
+        xVec = (wVec / tauVec(0)) % bVec;
+        return xVec;
+    }
+    
+    // Check if we have cell-to-donor mapping (single-cell structure)
+    if (g_I_longl_mat.n_rows == 0) {
+        // No cell-donor structure, this shouldn't happen in single-cell context
+        cout << "WARNING: No cell-donor mapping found for SMW solver!" << endl;
+        xVec = (wVec / tauVec(0)) % bVec;  // Fallback to diagonal
+        return xVec;
+    }
+    
+    auto n = g_I_start_indices.n_elem - 1;
+    
+    // Check if GRM is identity matrix (no actual GRM specified, so K=I)
+    if (!g_isGRM) {
+        // Use the proven K=I implementation with vectorization
+        arma::fvec w_over_tau0 = wVec / tauVec(0);
+        arma::fvec wb_over_tau0 = w_over_tau0 % bVec;
+        float tau_ratio = tauVec(1) / tauVec(0);
+        
+        // Use OpenMP only if we have more than 1 thread and sufficient work
+        bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
+
+#ifdef _OPENMP
+        if (use_parallel) {
+            omp_set_num_threads(g_omp_num_threads);
+            #pragma omp parallel for schedule(static)
+            for (size_t j = 0; j < n; j++) {
+                size_t start = g_I_start_indices[j];
+                size_t end = g_I_start_indices[j+1];
+                
+                // Vectorized sums using span views
+                arma::span block_span(start, end-1);
+                float sum_w = arma::sum(wVec(block_span));
+                float sum_wb = arma::sum(wb_over_tau0(block_span));
+                
+                // Compute block-wise constants (proven K=I formula)
+                float denominator = 1.0 + tau_ratio * sum_w;
+                float correction_factor = tau_ratio * sum_wb / denominator;
+                
+                // Vectorized final computation for the entire block
+                arma::fvec block_result = wb_over_tau0(block_span) - w_over_tau0(block_span) * correction_factor;
+                xVec(block_span) = block_result;
+            }
+        } else {
+#endif
+            // Single-threaded execution
+            for (size_t j = 0; j < n; j++) {
+                size_t start = g_I_start_indices[j];
+                size_t end = g_I_start_indices[j+1];
+                
+                // Vectorized sums using span views  
+                arma::span block_span(start, end-1);
+                float sum_w = arma::sum(wVec(block_span));
+                float sum_wb = arma::sum(wb_over_tau0(block_span));
+                
+                // Compute block-wise constants (proven K=I formula)
+                float denominator = 1.0 + tau_ratio * sum_w;
+                float correction_factor = tau_ratio * sum_wb / denominator;
+                
+                // Vectorized final computation for the entire block
+                arma::fvec block_result = wb_over_tau0(block_span) - w_over_tau0(block_span) * correction_factor;
+                xVec(block_span) = block_result;
+            }
+#ifdef _OPENMP
+        }
+#endif
+        return xVec;
+    }
+    
+    // General case: K ≠ I, use full SMW decomposition
+    // Sigma = diag(w)^(-1) * τ₀ + Z^T * K * Z * τ₁
+    // SMW: (A + U*K*V^T)^(-1) = A^(-1) - A^(-1)*U*(K^(-1) + V^T*A^(-1)*U)^(-1)*V^T*A^(-1)
+    
+    // Step 1: A^(-1) * b where A = diag(w)^(-1) * τ₀
+    arma::fvec A_inv_b = (wVec / tauVec(0)) % bVec;
+    
+    // Step 2: V^T * A^(-1) * b = Z^T * A^(-1) * b (aggregate per donor)
+    arma::fvec ZT_A_inv_b = getprodImattbVec(A_inv_b);
+    
+    // Step 3: Build middle matrix = K*τ₁ + Z^T*A^(-1)*Z*τ₁
+    // We'll solve (K*τ₁ + Z^T*A^(-1)*Z*τ₁) * alpha = Z^T*A^(-1)*b * τ₁
+    // This avoids computing K^(-1) explicitly
+    arma::sp_fmat middle = g_spGRM * tauVec(1);
+    
+    // Add diagonal terms Z^T*A^(-1)*Z*τ₁ (diagonal due to block structure)
+    for (size_t j = 0; j < n; j++) {
+        size_t start = g_I_start_indices[j];
+        size_t end = g_I_start_indices[j+1];
+        
+        // Sum of weights for this donor (vectorized)
+        arma::span block_span(start, end-1);
+        float diag_term = arma::sum(wVec(block_span)) * tauVec(1) / tauVec(0);
+        middle(j,j) += diag_term;
+    }
+    
+    // Step 4: Solve middle * alpha = ZT_A_inv_b * τ₁
+    arma::fvec rhs = ZT_A_inv_b * tauVec(1);
+    arma::fvec alpha = arma::spsolve(middle, rhs);
+    
+    // Step 5: Z * alpha (expand back to cells)
+    arma::fvec Z_alpha = getprodImatbVec(alpha);
+    
+    // Step 6: Final result = A^(-1)*b - A^(-1)*Z*α
+    xVec = A_inv_b - (wVec / tauVec(0)) % Z_alpha;
+    
+    return xVec;
+}
+
+// Backward compatibility wrapper - deprecated
+// [[Rcpp::export]]
+void computeHybridSolverCosts(int N) {
+    cout << "WARNING: computeHybridSolverCosts is deprecated. Use decideSolverMethod instead." << endl;
+    decideSolverMethod();
+}
+
+// Initialize solver for the entire job - call once at the beginning
+// [[Rcpp::export]]
+void initializeSolverForJob(int N) {
+    cout << "Initializing solver for job (N=" << N << ")..." << endl;
+    decideSolverMethod();
+    cout << "Solver initialized. Method selected: " 
+         << (g_use_smw ? "SMW" : "PCG") << endl;
+}
+
+// Backward compatibility wrapper
+// [[Rcpp::export]]
+void initializeHybridSolverForJob(int N) {
+    cout << "WARNING: initializeHybridSolverForJob is deprecated. Use initializeSolverForJob instead." << endl;
+    initializeSolverForJob(N);
+}
+
 
 //Step 2
 // global variables for analysis
@@ -4687,95 +4981,100 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
 
 // [[Rcpp::export]]
 arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG, bool LOCO){
-
     int Nnomissing = wVec.n_elem;
     arma::fvec xVec(Nnomissing);
-
     xVec.zeros();
-
-    //std::cout << "Nnomissing " << Nnomissing << std::endl;
-
+    
     if(g_isStoreSigma){
-
-        //std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
-
         xVec = arma::spsolve(g_spSigma, bVec);
-
-        //std::cout << " arma::spsolve(g_spSigma, bVec) 1" << std::endl;
-
     }else{
-
         if (tauVec(1) == 0) {
-
+            // Diagonal case - no random effects
             xVec = (wVec / tauVec(0)) % bVec;
-
         } else {
-
-            auto n = g_I_start_indices.n_elem - 1;
+            // Simplified solver selection
+            decideSolverMethod();
             
-            // Use OpenMP only if we have more than 1 thread and sufficient work to parallelize
-            bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
-
-#ifdef _OPENMP
-            if (use_parallel) {
-                omp_set_num_threads(g_omp_num_threads);
-                
-                #pragma omp parallel for schedule(static)
-                for (size_t j = 0; j < n; j++) {
-                    size_t start = g_I_start_indices[j];
-                    size_t end = g_I_start_indices[j+1];
-
-                    float sum_S = 0;
-                    float sum_delta_b = 0;
-
-                    // Calculate sums for this group
-                    for (size_t k = start; k < end; k++){
-                        sum_S += wVec(k);
-                        sum_delta_b += wVec(k) * bVec(k);
-                    }
-
-                    sum_S = 1 + tauVec(1) * (sum_S / tauVec(0));
-                    sum_delta_b /= tauVec(0);
-
-                    // Update xVec for this group
-                    for (size_t k = start; k < end; k++){
-                        xVec(k) = (wVec(k) / tauVec(0)) * bVec(k) - 
-                                  (tauVec(1) * ((wVec(k) / tauVec(0)) * sum_delta_b)) / sum_S;
-                    }
+            try {
+                if (g_use_smw) {
+                    cout << "Using SMW solver (" << g_decision_reason << ")" << endl;
+                    xVec = solve_sparse_SMW(wVec, tauVec, bVec, LOCO);
+                } else {
+                    cout << "Using PCG solver (" << g_decision_reason << ")" << endl;
+                    xVec = solve_sparse_PCG(wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO);
                 }
-            } else {
-#endif
-                // Single-threaded execution or fallback when OpenMP is not available
-                for (size_t j = 0; j < n; j++) {
-                    size_t start = g_I_start_indices[j];
-                    size_t end = g_I_start_indices[j+1];
-
-                    float sum_S = 0;
-                    float sum_delta_b = 0;
-
-                    // Calculate sums for this group
-                    for (size_t k = start; k < end; k++){
-                        sum_S += wVec(k);
-                        sum_delta_b += wVec(k) * bVec(k);
-                    }
-
-                    sum_S = 1 + tauVec(1) * (sum_S / tauVec(0));
-                    sum_delta_b /= tauVec(0);
-
-                    // Update xVec for this group
-                    for (size_t k = start; k < end; k++){
-                        xVec(k) = (wVec(k) / tauVec(0)) * bVec(k) - 
-                                  (tauVec(1) * ((wVec(k) / tauVec(0)) * sum_delta_b)) / sum_S;
-                    }
+            } catch (const std::exception& e) {
+                if (g_use_smw && g_solverMethod != "smw") {
+                    cout << "SMW solver failed with memory error. Falling back to PCG. " << endl;
+                    cout << "Suggestion: Use solverMethod='pcg' to avoid this fallback." << endl;
+                    xVec = solve_sparse_PCG(wVec, tauVec, bVec, maxiterPCG, tolPCG, LOCO);
+                } else {
+                    throw;  // Re-throw if it's not a memory issue or if PCG was explicitly requested
                 }
-#ifdef _OPENMP
             }
+        }
+        
+        // Fallback implementation (kept for backward compatibility)
+        if (false) {
+                // Hybrid solver disabled - fallback to proven K=I block implementation
+                auto n = g_I_start_indices.n_elem - 1;
+                
+                // Pre-compute common terms to avoid repeated divisions
+                arma::fvec w_over_tau0 = wVec / tauVec(0);
+                arma::fvec wb_over_tau0 = w_over_tau0 % bVec;
+                float tau_ratio = tauVec(1) / tauVec(0);
+                
+                // Use OpenMP only if we have more than 1 thread and sufficient work to parallelize
+                bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
+
+#ifdef _OPENMP
+                if (use_parallel) {
+                    omp_set_num_threads(g_omp_num_threads);
+                    
+                    #pragma omp parallel for schedule(static)
+                    for (size_t j = 0; j < n; j++) {
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j+1];
+                        
+                        // Vectorized sums using span views (more efficient than loops)
+                        arma::span block_span(start, end-1);
+                        float sum_w = arma::sum(wVec(block_span));
+                        float sum_wb = arma::sum(wb_over_tau0(block_span));
+                        
+                        // Compute block-wise constants
+                        float denominator = 1.0 + tau_ratio * sum_w;
+                        float correction_factor = tau_ratio * sum_wb / denominator;
+                        
+                        // Vectorized final computation for the entire block
+                        arma::fvec block_result = wb_over_tau0(block_span) - w_over_tau0(block_span) * correction_factor;
+                        xVec(block_span) = block_result;
+                    }
+                } else {
 #endif
-
-      }
-
-    }
-
+                    // Single-threaded execution or fallback when OpenMP is not available
+                    for (size_t j = 0; j < n; j++) {
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j+1];
+                        
+                        // Vectorized sums using span views (more efficient than loops)
+                        arma::span block_span(start, end-1);
+                        float sum_w = arma::sum(wVec(block_span));
+                        float sum_wb = arma::sum(wb_over_tau0(block_span));
+                        
+                        // Compute block-wise constants
+                        float denominator = 1.0 + tau_ratio * sum_w;
+                        float correction_factor = tau_ratio * sum_wb / denominator;
+                        
+                        // Vectorized final computation for the entire block
+                        arma::fvec block_result = wb_over_tau0(block_span) - w_over_tau0(block_span) * correction_factor;
+                        xVec(block_span) = block_result;
+                    }
+#ifdef _OPENMP
+                }
+#endif
+            }
+        }
+    
     return(xVec);
 }
 

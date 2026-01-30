@@ -1,9 +1,11 @@
+PIXI_ENV_PATH = $(shell cd .. && pwd)/.pixi/envs/default
+
 PKG_CPPFLAGS = \
 -std=c++14 \
--isystem ../.pixi/envs/default/include \
--I ../.pixi/envs/default/lib/R/library/RcppNumerical/include \
--I ../.pixi/envs/default/lib/R/library/RcppArmadillo/include \
--I ../.pixi/envs/default/lib/R/library/RcppEigen/include \
+-isystem $(PIXI_ENV_PATH)/include \
+-I $(PIXI_ENV_PATH)/lib/R/library/RcppNumerical/include \
+-I $(PIXI_ENV_PATH)/lib/R/library/RcppArmadillo/include \
+-I $(PIXI_ENV_PATH)/lib/R/library/RcppEigen/include \
 -I ../thirdParty/cget/include \
 -I ../thirdParty/cget/lib \
 -I ../thirdParty/cget/lib64 \

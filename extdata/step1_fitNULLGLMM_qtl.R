@@ -260,6 +260,10 @@ option_list <- list(
   make_option("--library",
     type = "character", default = "",
     help = "Optional. Path to custom R library directory where SAIGEQTL package is installed. If not specified, uses default R library paths."
+  ),
+  make_option("--solverMethod",
+    type = "character", default = "auto",
+    help = "Optional. Solver method selection: 'auto' (automatic selection based on data structure), 'pcg' (Preconditioned Conjugate Gradient), 'smw' (Sherman-Morrison-Woodbury). When 'auto': SMW for repeated cells, PCG for non-repeated cells. [default='auto']"
   )
 )
 
@@ -390,6 +394,31 @@ args_list$isExportResiduals <- opt$isExportResiduals
 # Conditionally add varRatioBatchSize if supported
 if (varRatioBatchSize_supported) {
   args_list$varRatioBatchSize <- opt$varRatioBatchSize
+}
+
+# Check hybrid solver parameter support and add accordingly
+func_formals <- names(formals(fitNULLGLMM_multiV))
+newer_params_added <- c()
+newer_params_skipped <- c()
+
+
+# Add solverMethod parameter
+if ("solverMethod" %in% func_formals) {
+  args_list$solverMethod <- opt$solverMethod
+  newer_params_added <- c(newer_params_added, "solverMethod")
+} else {
+  newer_params_skipped <- c(newer_params_skipped, "solverMethod")
+}
+
+# Keep the old parameters for backward compatibility but mark them as deprecated
+
+
+# Report parameter compatibility status
+if (length(newer_params_added) > 0) {
+  cat("Using hybrid solver parameters:", paste(newer_params_added, collapse=", "), "\n")
+}
+if (length(newer_params_skipped) > 0) {
+  cat("Hybrid solver parameters not supported in this version (skipped):", paste(newer_params_skipped, collapse=", "), "\n")
 }
 
 cat("Final number of arguments:", length(args_list), "\n")
