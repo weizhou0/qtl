@@ -1,0 +1,37 @@
+@echo off
+REM Windows Configuration Script for SAIGEQTL
+
+echo === SAIGEQTL Windows Configuration ===
+
+REM Check for Rtools
+where /q gcc
+if %ERRORLEVEL% NEQ 0 (
+    echo Warning: GCC compiler not found in PATH
+    echo Please ensure Rtools is properly installed and in PATH
+) else (
+    echo GCC compiler found
+)
+
+REM Use GitHub-compatible Makevars for Windows
+if exist "src\Makevars.github" (
+    echo Using GitHub-compatible Makevars for Windows
+    copy "src\Makevars.github" "src\Makevars.win"
+) else (
+    echo Creating minimal Windows Makevars
+    (
+    echo PKG_CPPFLAGS = -std=c++14 -D SQLITE_ENABLE_COLUMN_METADATA -O2 -DARMA_64BIT_WORD=1 -D__STDC_FORMAT_MACROS
+    echo.
+    echo CXX_STD = CXX14
+    echo.
+    echo PKG_LIBS = $(LAPACK_LIBS^) $(BLAS_LIBS^) $(FLIBS^)
+    echo PKG_LIBS += $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "RcppParallel::RcppParallelLibs(^)".
+    echo.
+    echo OBJECTS = RcppExports.o GENO_null.o getMem.o VCF.o BGEN.o PLINK.o SAIGE_test.o SPA_binary.o SPA.o SPA_survival.o UTIL.o Main.o test.o CCT.o Binary_HyperGeo.o Binary_ComputeExact.o Binary_global.o Binary_ComputeExactSKATO.o Binary_resampling.o Binary_Permu_SKAT.o ER_binary_func.o LDmat.o SKATO.o qfc.o
+    echo.
+    echo all: $(SHLIB^)
+    echo $(SHLIB^): $(OBJECTS^) Makevars.win
+    ) > "src\Makevars.win"
+)
+
+echo Windows configuration complete!
+echo.

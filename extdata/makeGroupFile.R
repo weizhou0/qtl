@@ -1,14 +1,9 @@
-#!/usr/bin/env -S pixi run --manifest-path /app/pixi.toml Rscript
+#!/usr/bin/env -S pixi run --manifest-path ../pixi.toml Rscript
 
 options(stringsAsFactors = F)
 
 ## load R libraries
-# library(SAIGE, lib.loc="../../install_0.93")
-# library(SAIGE, lib.loc="/humgen/atgu1/fin/wzhou/projects/eQTL_method_dev/tool_dev/installs_test")
-library(SAIGEQTL)
 require(optparse) # install.packages("optparse")
-
-print(sessionInfo())
 
 ## set list of cmd line arguments
 
@@ -79,6 +74,10 @@ opt <- args$options
 print(opt)
 
 set.seed(1)
+
+## Load SAIGEQTL after argument parsing (so --help works even if package not installed)
+library(SAIGEQTL)
+print(sessionInfo())
 
 # if(opt$plinkFile != ""){
 #        bimFile = paste0(opt$plinkFile, ".bim")

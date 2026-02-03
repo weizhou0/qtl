@@ -1,0 +1,119 @@
+name: Auto Release and Docker Build
+
+on:
+  push:
+    branches: main
+    paths:
+      - 'DESCRIPTION'  # Trigger when version in DESCRIPTION changes
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 0.3.5)'
+        required: true
+        type: string
+
+jobs:
+  check-version-change:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.version_check.outputs.should_release }}
+      new_version: ${{ steps.version_check.outputs.new_version }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need previous commit to compare
+
+      - name: Check for version change
+        id: version_check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "new_version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            echo "Manual release triggered for version ${{ github.event.inputs.version }}"
+          else
+            # Check if DESCRIPTION version changed
+            if git diff HEAD~1 HEAD --name-only | grep -q "DESCRIPTION"; then
+              # Extract current version from DESCRIPTION
+              NEW_VERSION=$(grep "^Version:" DESCRIPTION | cut -d' ' -f2)
+              OLD_VERSION=$(git show HEAD~1:DESCRIPTION | grep "^Version:" | cut -d' ' -f2)
+              
+              if [[ "$NEW_VERSION" != "$OLD_VERSION" ]]; then
+                echo "should_release=true" >> $GITHUB_OUTPUT
+                echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+                echo "Version changed from $OLD_VERSION to $NEW_VERSION"
+              else
+                echo "should_release=false" >> $GITHUB_OUTPUT
+                echo "Version unchanged: $NEW_VERSION"
+              fi
+            else
+              echo "should_release=false" >> $GITHUB_OUTPUT
+              echo "DESCRIPTION not modified"
+            fi
+          fi
+
+  create-release:
+    needs: check-version-change
+    if: needs.check-version-change.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Create Git Tag
+        run: |
+          VERSION=${{ needs.check-version-change.outputs.new_version }}
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          
+          # Create and push tag
+          git tag -a "v${VERSION}" -m "Release version ${VERSION}"
+          git push origin "v${VERSION}"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.check-version-change.outputs.new_version }}
+          release_name: SAIGEQTL v${{ needs.check-version-change.outputs.new_version }}
+          body: |
+            ## SAIGEQTL v${{ needs.check-version-change.outputs.new_version }}
+            
+            ### Installation Options:
+            
+            **🐳 Docker (Recommended - Zero Setup):**
+            ```bash
+            docker run --rm weizhou0/saigeqtl:${{ needs.check-version-change.outputs.new_version }} step1_fitNULLGLMM_qtl.R --help
+            ```
+            
+            **📦 Conda:**
+            ```bash
+            conda install -c aryarm r-saigeqtl
+            ```
+            
+            **⚡ Binary (Linux):**
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/weizhou0/qtl/main/install_binary.R | Rscript -
+            ```
+            
+            **📋 R remotes:**
+            ```r
+            remotes::install_github("weizhou0/SAIGEQTL")
+            ```
+            
+            See [INSTALLATION.md](https://github.com/weizhou0/SAIGEQTL/blob/main/INSTALLATION.md) for complete installation guide.
+          draft: false
+          prerelease: false
+
+  # This will trigger the docker.yaml workflow automatically via the tag creation
+  notify-completion:
+    needs: [check-version-change, create-release]
+    if: needs.check-version-change.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify completion
+        run: |
+          echo "🚀 Release v${{ needs.check-version-change.outputs.new_version }} created!"
+          echo "📦 Docker images will be built automatically"
+          echo "🎉 Installation guide updated automatically"

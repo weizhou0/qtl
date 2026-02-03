@@ -3,7 +3,6 @@
 
 #include <RcppArmadillo.h>
 #include <RcppEigen.h>
-#include <RcppEigen.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
@@ -1194,6 +1193,16 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< bool >::type isstoreSigma(isstoreSigmaSEXP);
     set_store_sigma(isstoreSigma);
+    return R_NilValue;
+END_RCPP
+}
+// set_solverMethod
+void set_solverMethod(int solverMethod);
+RcppExport SEXP _SAIGEQTL_set_solverMethod(SEXP solverMethodSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type solverMethod(solverMethodSEXP);
+    set_solverMethod(solverMethod);
     return R_NilValue;
 END_RCPP
 }
@@ -2483,6 +2492,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SAIGEQTL_set_useGRMtoFitNULL", (DL_FUNC) &_SAIGEQTL_set_useGRMtoFitNULL, 1},
     {"_SAIGEQTL_set_isSparseGRM", (DL_FUNC) &_SAIGEQTL_set_isSparseGRM, 1},
     {"_SAIGEQTL_set_store_sigma", (DL_FUNC) &_SAIGEQTL_set_store_sigma, 1},
+    {"_SAIGEQTL_set_solverMethod", (DL_FUNC) &_SAIGEQTL_set_solverMethod, 1},
     {"_SAIGEQTL_set_num_Kmat", (DL_FUNC) &_SAIGEQTL_set_num_Kmat, 1},
     {"_SAIGEQTL_get_numofV", (DL_FUNC) &_SAIGEQTL_get_numofV, 0},
     {"_SAIGEQTL_set_covarianceidx_Mat", (DL_FUNC) &_SAIGEQTL_set_covarianceidx_Mat, 0},

@@ -1,0 +1,271 @@
+name: Build Pre-compiled Binaries
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [published]
+
+env:
+  R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  # Build source package first
+  source-package:
+    runs-on: ubuntu-latest
+    outputs:
+      pkg-version: ${{ steps.get-version.outputs.version }}
+      pkg-name: ${{ steps.get-version.outputs.name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.0'
+          use-public-rspm: true
+          
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libopenblas-dev liblapack-dev libcurl4-openssl-dev libssl-dev libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+          
+      - name: Install R dependencies
+        run: |
+          install.packages(c("remotes", "devtools", "pkgbuild"))
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+        
+      - name: Get package info
+        id: get-version
+        run: |
+          desc <- read.dcf("DESCRIPTION")
+          echo "version=${desc[,'Version']}" >> $GITHUB_OUTPUT
+          echo "name=${desc[,'Package']}" >> $GITHUB_OUTPUT
+        shell: Rscript {0}
+        
+      - name: Build source package
+        run: |
+          pkgbuild::build(binary = FALSE, dest_path = ".")
+        shell: Rscript {0}
+        
+      - name: Upload source package
+        uses: actions/upload-artifact@v3
+        with:
+          name: source-package
+          path: "*.tar.gz"
+
+  # Build binary packages for different platforms
+  binary-packages:
+    needs: source-package
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux builds
+          - os: ubuntu-20.04
+            r-version: '4.1'
+            platform: 'linux-x86_64'
+            r-suffix: '4.1'
+          - os: ubuntu-20.04  
+            r-version: '4.2'
+            platform: 'linux-x86_64'
+            r-suffix: '4.2'
+          - os: ubuntu-22.04
+            r-version: '4.3'
+            platform: 'linux-x86_64'
+            r-suffix: '4.3'
+            
+          # macOS builds  
+          - os: macos-11
+            r-version: '4.1'
+            platform: 'darwin-x86_64'
+            r-suffix: '4.1'
+          - os: macos-12
+            r-version: '4.2'
+            platform: 'darwin-x86_64'
+            r-suffix: '4.2'
+          - os: macos-13
+            r-version: '4.3'
+            platform: 'darwin-x86_64'
+            r-suffix: '4.3'
+          - os: macos-14
+            r-version: '4.3'
+            platform: 'darwin-arm64'
+            r-suffix: '4.3-arm64'
+            
+          # Windows builds
+          - os: windows-2019
+            r-version: '4.1'
+            platform: 'windows-x86_64'
+            r-suffix: '4.1'
+          - os: windows-2022
+            r-version: '4.2'
+            platform: 'windows-x86_64'
+            r-suffix: '4.2'
+          - os: windows-2022
+            r-version: '4.3'
+            platform: 'windows-x86_64'
+            r-suffix: '4.3'
+            
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.r-version }}
+          use-public-rspm: true
+          
+      - name: Setup Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+        
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libopenblas-dev liblapack-dev libcurl4-openssl-dev libssl-dev libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+          
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          # Install additional dependencies if needed
+          brew install openblas lapack
+          
+      - name: Setup Windows dependencies
+        if: runner.os == 'Windows'
+        run: |
+          # Rtools should be automatically available
+          echo "Rtools setup complete"
+          
+      - name: Query R dependencies
+        run: |
+          install.packages(c("remotes", "devtools", "pkgbuild"))
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
+        
+      - name: Restore R package cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ matrix.os }}-${{ matrix.r-version }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ matrix.os }}-${{ matrix.r-version }}-
+          
+      - name: Install R dependencies
+        run: |
+          remotes::install_deps(dependencies = TRUE, upgrade = "never")
+        shell: Rscript {0}
+        
+      - name: Configure build environment
+        run: |
+          # Run the configure script to set up compilation
+          if (file.exists("configure")) {
+            if (.Platform$OS.type == "windows") {
+              shell("configure.win")
+            } else {
+              system("bash configure")
+            }
+          }
+        shell: Rscript {0}
+        
+      - name: Build binary package
+        run: |
+          binary_path <- pkgbuild::build(binary = TRUE, dest_path = ".")
+          cat("Binary package:", binary_path, "\n")
+          
+          # Rename with platform info for clarity
+          pkg_info <- read.dcf("DESCRIPTION")
+          pkg_name <- pkg_info[,"Package"]
+          pkg_version <- pkg_info[,"Version"]
+          
+          file_ext <- if (.Platform$OS.type == "windows") ".zip" else ".tgz"
+          new_name <- sprintf("%s_%s_R-%s_%s%s", 
+                            pkg_name, pkg_version, 
+                            "${{ matrix.r-suffix }}", 
+                            "${{ matrix.platform }}", 
+                            file_ext)
+          file.rename(binary_path, new_name)
+          cat("Renamed to:", new_name, "\n")
+        shell: Rscript {0}
+        
+      - name: Test binary package
+        run: |
+          # Install the binary package and test basic functionality
+          pkg_files <- list.files(".", pattern = ".*\\.(tgz|zip)$", full.names = TRUE)
+          install.packages(pkg_files[1], repos = NULL, type = "binary")
+          
+          # Basic functionality test
+          library(SAIGEQTL)
+          cat("Package loaded successfully!\n")
+          
+          # Test a basic function if available
+          if (exists("fitNULLGLMM_multiV")) {
+            cat("Main function available: fitNULLGLMM_multiV\n")
+          }
+        shell: Rscript {0}
+        
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: binary-${{ matrix.platform }}-r${{ matrix.r-suffix }}
+          path: "*_R-*.*"
+          
+  # Create comprehensive release with all binaries
+  create-release:
+    if: github.event_name == 'release'
+    needs: [source-package, binary-packages]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        
+      - name: Display structure
+        run: find . -type f -name "*.t*z*" -o -name "*.zip"
+        
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            source-package/*.tar.gz
+            binary-*/*_R-*.*
+          body: |
+            ## SAIGEQTL Pre-compiled Binaries
+            
+            This release includes pre-compiled binaries for multiple platforms and R versions.
+            
+            ### Installation Instructions
+            
+            **Method 1: Install appropriate binary directly**
+            ```r
+            # Download the binary for your platform and R version
+            # Then install with:
+            install.packages("path/to/binary", repos = NULL, type = "binary")
+            ```
+            
+            **Method 2: Use smart installer**
+            ```r
+            source("https://raw.githubusercontent.com/weizhou0/qtl/main/install.R")
+            ```
+            
+            ### Available Platforms
+            - Linux (Ubuntu 20.04, 22.04) - R 4.1, 4.2, 4.3
+            - macOS (Intel and Apple Silicon) - R 4.1, 4.2, 4.3
+            - Windows - R 4.1, 4.2, 4.3
+            
+            ### Platform Naming Convention
+            - `linux-x86_64`: Linux 64-bit
+            - `darwin-x86_64`: macOS Intel
+            - `darwin-arm64`: macOS Apple Silicon (M1/M2)
+            - `windows-x86_64`: Windows 64-bit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

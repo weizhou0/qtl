@@ -1,5 +1,5 @@
 bgzip -c genotype_10markers.missingness.vcf > genotype_10markers.missingness.vcf.gz
-tabix -p vcf genotype_10markers.missingness.vcf.gz
+pixi tabix -p vcf genotype_10markers.missingness.vcf.gz
 
 
 /net/dumbo/home/zhowei/tools/qctool/build/release/qctool_v2.0.1 -g genotype_10markers.missingness.vcf -bgen-bits 8 -og genotype_10markers.missingness.bgen
@@ -13,3 +13,15 @@ tabix -p vcf ${infile}.gz
 
 /humgen/atgu1/fin/wzhou/tools/bgen.tgz/build/apps/bgenix -index -g genotype_100markers_2chr.bgen 
 
+/humgen/atgu1/fin/wzhou/tools/plink2 --bfile n.indep_100_n.cell_1 --export vcf bgz --out n.indep_100_n.cell_1
+
+cp n.indep_100_n.cell_1.bim n.indep_100_n.cell_1_full.bim
+cp n.indep_100_n.cell_1.bed n.indep_100_n.cell_1_full.bed
+cp n.indep_100_n.cell_1.fam n.indep_100_n.cell_1_full.fam
+head -n 1000 n.indep_100_n.cell_1_full.bim | awk '{print $2}' > markersub.list
+/humgen/atgu1/fin/wzhou/tools/plink2 --bfile n.indep_100_n.cell_1_full --extract markersub.list --make-bed --out n.indep_100_n.cell_1
+
+/humgen/atgu1/fin/wzhou/tools/plink2 --bfile n.indep_100_n.cell_1 --export vcf-iid bgz --out n.indep_100_n.cell_1
+bcftools index -c n.indep_100_n.cell_1.vcf.gz
+/humgen/atgu1/fin/wzhou/tools/plink2 --vcf n.indep_100_n.cell_1.vcf.gz --export bgen-1.2 bits=8 ref-first --out n.indep_100_n.cell_1
+/humgen/atgu1/fin/wzhou/tools/bgen.tgz/build/apps/bgenix -index -g n.indep_100_n.cell_1.bgen

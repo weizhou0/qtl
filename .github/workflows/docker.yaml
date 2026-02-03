@@ -3,8 +3,10 @@ name: docker
 on:
   push:
     branches: main
+    tags: ['v*.*.*']  # Trigger on version tags like v0.3.4
   release:
     types: [published]
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   push-latest:
@@ -26,9 +28,25 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-      - name: Build and push with tag
+      
+      - name: Extract version
+        id: version
+        run: |
+          # Extract version from tag (e.g. v0.3.4 -> 0.3.4)
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Building version: ${VERSION}"
+      
+      - name: Build and push versioned tag
         uses: ./.github/actions/docker-build
         with:
-          tag: ${{ github.ref_name }}
+          tag: ${{ steps.version.outputs.version }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          token: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push latest (on release)
+        uses: ./.github/actions/docker-build
+        with:
+          tag: latest
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           token: ${{ secrets.DOCKERHUB_TOKEN }}

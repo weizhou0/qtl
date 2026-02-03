@@ -18,6 +18,7 @@
 #include <ctime>// include this header for calculating execution time
 #include <cassert>
 #include <boost/date_time.hpp> // for gettimeofday and timeval
+#include <tbb/concurrent_vector.h>
 #include "getMem.hpp"
 using namespace Rcpp;
 using namespace std;

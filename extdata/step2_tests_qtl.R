@@ -1,15 +1,11 @@
-#!/usr/bin/env -S pixi run --manifest-path /app/pixi.toml Rscript
+#!/usr/bin/env -S pixi run --manifest-path ../pixi.toml Rscript
 
 # options(stringsAsFactors=F, scipen = 999)
 options(stringsAsFactors = F)
-library(SAIGEQTL)
 
-
-BLASctl_installed <- require(RhpcBLASctl)
 library(optparse)
 library(data.table)
 library(methods)
-print(sessionInfo())
 
 option_list <- list(
   make_option("--vcfFile",
@@ -264,6 +260,10 @@ mean, p-value based on traditional score test is returned. Default value is 2."
   make_option("--is_EmpSPA",
     type = "logical", default = FALSE,
     help = "Whether to use empirical SPA"
+  ),
+  make_option("--library",
+    type = "character", default = "",
+    help = "Optional. Path to custom R library directory where SAIGEQTL package is installed. If not specified, uses default R library paths."
   )
 )
 
@@ -272,6 +272,23 @@ parser <- OptionParser(usage = "%prog [options]", option_list = option_list)
 
 args <- parse_args(parser, positional_arguments = 0)
 opt <- args$options
+
+# Set custom library path if provided
+if (!is.null(opt$library) && opt$library != "") {
+  .libPaths(c(opt$library, .libPaths()))
+  cat("Using custom library path:", opt$library, "\n")
+}
+
+# Load SAIGEQTL with custom library path if specified
+if (!is.null(opt$library) && opt$library != "") {
+  library(SAIGEQTL, lib.loc = opt$library)
+} else {
+  library(SAIGEQTL)
+}
+
+BLASctl_installed <- require(RhpcBLASctl)
+print(sessionInfo())
+
 print(opt)
 
 

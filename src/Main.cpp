@@ -69,6 +69,9 @@ arma::uvec g_covarianceidxMat_notcol1;
 //arma::fvec g_var_weights;
 unsigned int g_omp_num_threads;
 
+// Solver method: 0 = auto, 1 = pcg, 2 = smw
+int g_solverMethod = 0;
+bool g_solver_logged = false;
 
 //Step 2
 // global variables for analysis
@@ -4621,68 +4624,137 @@ void gen_sp_Sigma_multiV(arma::fvec& wVec,  arma::fvec& tauVec){
 }
 
 
-
 // [[Rcpp::export]]
 arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec, arma::fvec& bVec, int maxiterPCG, float tolPCG, bool LOCO){
-    //std::cout << "getPCG1ofSigmaAndVector_multiV start" << std::endl;
-    // Start Timers
-    //double wall0 = get_wall_time();
-    //double cpu0  = get_cpu_time();
+
     int Nnomissing = wVec.n_elem;
     arma::fvec xVec(Nnomissing);
+
     xVec.zeros();
-    //std::cout << "Nnomissing " << Nnomissing << std::endl;
+
     if(g_isStoreSigma){
-        //std::cout << " arma::spsolve(g_spSigma, bVec) 0" << std::endl;
         xVec = arma::spsolve(g_spSigma, bVec);
-        //std::cout << " arma::spsolve(g_spSigma, bVec) 1" << std::endl;
     }else{
-        arma::fvec rVec = bVec;
-        arma::fvec r1Vec;
-        arma::fvec crossProdVec(Nnomissing);
-        arma::fvec zVec(Nnomissing);
-        arma::fvec minvVec(Nnomissing);
-	//std::cout << "getPCG1ofSigmaAndVector_multiV Here1" << std::endl;
-        minvVec = 1/getDiagOfSigma_multiV(wVec, tauVec, LOCO);
-	//std::cout << "getPCG1ofSigmaAndVector_multiV start 1" << std::endl;
-        zVec = minvVec % rVec;
 
-        float sumr2 = sum(rVec % rVec);
-        arma::fvec z1Vec(Nnomissing);
-        arma::fvec pVec = zVec;
+        if (tauVec(1) == 0) {
+            xVec = (wVec / tauVec(0)) % bVec;
+        } else {
 
-	//std::cout << "getPCG1ofSigmaAndVector_multiV start 2" << std::endl;
+            // g_solverMethod: 1 = pcg, 2 = smw
+            if (!g_solver_logged) {
+                if (g_solverMethod == 1) {
+                    cout << "[C++] Executing PCG solver for null model fitting..." << endl;
+                } else {
+                    cout << "[C++] Executing SMW solver for null model fitting..." << endl;
+                }
+                g_solver_logged = true;
+            }
 
-        int iter = 0;
-        while (sumr2 > tolPCG && iter < maxiterPCG) {
-		iter = iter + 1;
-		        //std::cout << "getPCG1ofSigmaAndVector_multiV Here2" << std::endl;
-                arma::fcolvec ApVec = getCrossprod_multiV(pVec, wVec, tauVec, LOCO);
-		        //std::cout << "getPCG1ofSigmaAndVector_multiV Here3" << std::endl;
-                arma::fvec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
+            if (g_solverMethod == 1) {
+                // PCG (Preconditioned Conjugate Gradient) method
+                arma::fvec rVec = bVec;
+                arma::fvec r1Vec;
+                arma::fvec zVec(Nnomissing);
+                arma::fvec minvVec(Nnomissing);
+                minvVec = 1/getDiagOfSigma_multiV(wVec, tauVec, LOCO);
+                zVec = minvVec % rVec;
 
-                float a = preA(0);
-                xVec = xVec + a * pVec;
-                r1Vec = rVec - a * ApVec;
-                z1Vec = minvVec % r1Vec;
+                float sumr2 = sum(rVec % rVec);
+                arma::fvec z1Vec(Nnomissing);
+                arma::fvec pVec = zVec;
 
-                arma::fvec Prebet = (z1Vec.t() * r1Vec)/(zVec.t() * rVec);
-                float bet = Prebet(0);
-                pVec = z1Vec+ bet*pVec;
-                zVec = z1Vec;
-                rVec = r1Vec;
-                sumr2 = sum(rVec % rVec);
+                int iter = 0;
+                while (sumr2 > tolPCG && iter < maxiterPCG) {
+                    iter = iter + 1;
+                    arma::fcolvec ApVec = getCrossprod_multiV(pVec, wVec, tauVec, LOCO);
+                    arma::fvec preA = (rVec.t() * zVec)/(pVec.t() * ApVec);
+
+                    float a = preA(0);
+                    xVec = xVec + a * pVec;
+                    r1Vec = rVec - a * ApVec;
+                    z1Vec = minvVec % r1Vec;
+
+                    arma::fvec Prebet = (z1Vec.t() * r1Vec)/(zVec.t() * rVec);
+                    float bet = Prebet(0);
+                    pVec = z1Vec+ bet*pVec;
+                    zVec = z1Vec;
+                    rVec = r1Vec;
+                    sumr2 = sum(rVec % rVec);
+                }
+
+                if (iter >= maxiterPCG){
+                    cout << "pcg did not converge. You may increase maxiter number." << endl;
+                }
+                cout << "iter from getPCG1ofSigmaAndVector " << iter << endl;
+
+            } else {
+                // SMW (Sherman-Morrison-Woodbury) method (g_solverMethod == 2 or default)
+                auto n = g_I_start_indices.n_elem - 1;
+
+                // Use OpenMP only if we have more than 1 thread and sufficient work to parallelize
+                bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
+
+#ifdef _OPENMP
+                if (use_parallel) {
+                    omp_set_num_threads(g_omp_num_threads);
+
+                    #pragma omp parallel for schedule(static)
+                    for (size_t j = 0; j < n; j++) {
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j+1];
+
+                        float sum_S = 0;
+                        float sum_delta_b = 0;
+
+                        // Calculate sums for this group
+                        for (size_t k = start; k < end; k++){
+                            sum_S += wVec(k);
+                            sum_delta_b += wVec(k) * bVec(k);
+                        }
+
+                        sum_S = 1 + tauVec(1) * (sum_S / tauVec(0));
+                        sum_delta_b /= tauVec(0);
+
+                        // Update xVec for this group
+                        for (size_t k = start; k < end; k++){
+                            xVec(k) = (wVec(k) / tauVec(0)) * bVec(k) -
+                                      (tauVec(1) * ((wVec(k) / tauVec(0)) * sum_delta_b)) / sum_S;
+                        }
+                    }
+                } else {
+#endif
+                    // Single-threaded execution or fallback when OpenMP is not available
+                    for (size_t j = 0; j < n; j++) {
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j+1];
+
+                        float sum_S = 0;
+                        float sum_delta_b = 0;
+
+                        // Calculate sums for this group
+                        for (size_t k = start; k < end; k++){
+                            sum_S += wVec(k);
+                            sum_delta_b += wVec(k) * bVec(k);
+                        }
+
+                        sum_S = 1 + tauVec(1) * (sum_S / tauVec(0));
+                        sum_delta_b /= tauVec(0);
+
+                        // Update xVec for this group
+                        for (size_t k = start; k < end; k++){
+                            xVec(k) = (wVec(k) / tauVec(0)) * bVec(k) -
+                                      (tauVec(1) * ((wVec(k) / tauVec(0)) * sum_delta_b)) / sum_S;
+                        }
+                    }
+#ifdef _OPENMP
+                }
+#endif
+            }
         }
+    }
 
-        if (iter >= maxiterPCG){
-                cout << "pcg did not converge. You may increase maxiter number." << endl;
-
-        }
-        cout << "iter from getPCG1ofSigmaAndVector " << iter << endl;
-} 
-        return(xVec);
+    return(xVec);
 }
-
 
 
 // [[Rcpp::export]]
@@ -4805,20 +4877,20 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
         arma::uvec idxtau = arma::find(fixtauVec==0);
         arma::fvec tau0 = tauVec;
 
-        std::cout << "check 1" << std::endl;
+        //std::cout << "check 1" << std::endl;
         Rcpp::List re = getAIScore_multiV(Yvec, Xmat,wVec,  tauVec, fixtauVec, Sigma_iY, Sigma_iX, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO);
 
-        std::cout << "check 2" << std::endl;
+        //std::cout << "check 2" << std::endl;
 
         arma::fvec YPAPY = re["YPAPY"];
         arma::fvec Trace = re["Trace"];
         arma::fvec score1 = YPAPY - Trace;
-        score1.print("score1");
-        YPAPY.print("YPAPY");
-        Trace.print("Trace");
+        //score1.print("score1");
+        //YPAPY.print("YPAPY");
+        //Trace.print("Trace");
         arma::fmat AI1 = re["AI"];
         arma::fvec Dtau(AI1.n_cols);
-        score1.print("score");
+        //score1.print("score");
         try{
                 Dtau = arma::solve(AI1, score1, arma::solve_opts::allow_ugly);
         }
@@ -4892,8 +4964,8 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
                 tauupdateidx = tauUpdateValue(tauVec);
                 float step = 1.0;
                  while ( arma::any(tauVec.elem(g_covarianceidxMat_notcol1) < 0.0) || tauVec(0) < 0.0 || arma::any(tauupdateidx == 0)){
-                 tauVec.print("tauVec");
-                 tauupdateidx.print("tauupdateidx");
+                 //tauVec.print("tauVec");
+                 //tauupdateidx.print("tauupdateidx");
                         step = step*0.5;
                         tauVec = tau0 + step*Dtau_k1;
                         tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
@@ -4931,9 +5003,9 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
 // [[Rcpp::export]]
 arma::fvec getMeanDiagofKmat(bool LOCO){
 
-		                  std::cout << "Here3a" << std::endl;	
+		  //                std::cout << "Here3a" << std::endl;	
 	arma::fvec mean_diag_kins_vec(g_num_Kmat - 1);
-		                  std::cout << "Here3b" << std::endl;	
+		  //                std::cout << "Here3b" << std::endl;	
 
         arma::sp_vec diagVecG0;
         arma::sp_fvec diagVecV0;
@@ -4976,11 +5048,11 @@ arma::fvec getMeanDiagofKmat(bool LOCO){
                 mean_diag_kins_vec(0) = arma::mean(diagVec);
                 tauind = tauind + 1;
             }*/
-		                  std::cout << "Here3c" << std::endl;	
-		std::cout << "g_T_longl_mat.n_rows " << g_T_longl_mat.n_rows << std::endl;
+		   //               std::cout << "Here3c" << std::endl;	
+		//std::cout << "g_T_longl_mat.n_rows " << g_T_longl_mat.n_rows << std::endl;
             if(g_T_longl_mat.n_rows > 0){
-		std::cout << "g_isGRM " << g_isGRM << std::endl;
-		std::cout << "g_isSparseGRM " << g_isSparseGRM << std::endl;
+		//std::cout << "g_isGRM " << g_isGRM << std::endl;
+		//std::cout << "g_isSparseGRM " << g_isSparseGRM << std::endl;
 
 	        if(g_isGRM && g_isSparseGRM){
 			//g_spGRM.print("g_spGRM");		
@@ -4995,51 +5067,51 @@ arma::fvec getMeanDiagofKmat(bool LOCO){
                   diagVecG_T = diagVecG_IT % g_T_longl_vec;
                   diagVecG_IT = 2 * diagVecG_IT;
                   diagVec = diagVecG_IT;
-                  std::cout << "Here1" << std::endl;
+                  //std::cout << "Here1" << std::endl;
                   mean_diag_kins_vec(tauind) = arma::mean(diagVec);
                   tauind = tauind + 1;
-                  std::cout << "Here2" << std::endl;
+                  //std::cout << "Here2" << std::endl;
                   diagVec = diagVecG_T;
-		  std::cout << "tauind " << tauind << std::endl;
+		  //std::cout << "tauind " << tauind << std::endl;
                   mean_diag_kins_vec(tauind) = arma::mean(diagVec);
-                  std::cout << "Here2" << std::endl;
+                  //std::cout << "Here2" << std::endl;
                   tauind = tauind + 1;
 		}  
 
                   //diagVecV = diagVecG;
-		std::cout << "g_n_unique " << g_n_unique << std::endl;
+		  //std::cout << "g_n_unique " << g_n_unique << std::endl;
                   diagVecV.ones(g_n_unique);
 		  //diagVecV.print("diagVecV");
                   diagVecV_I = diagVecV.elem(g_I_longl_vec);
                   diagVec = diagVecV_I;
                   mean_diag_kins_vec(tauind) = arma::mean(diagVec);
-		  std::cout << "Here2a" << std::endl;
+		  //std::cout << "Here2a" << std::endl;
                   tauind = tauind + 1;
                   diagVecV_IT = diagVecV_I % g_T_longl_vec;
                   diagVecV_T = diagVecV_IT % g_T_longl_vec;
                   diagVecV_IT = 2 * diagVecV_IT;
                   diagVec = diagVecV_IT;
-		  std::cout << "Here2b" << std::endl;
+		  //std::cout << "Here2b" << std::endl;
 
                   mean_diag_kins_vec(tauind) = arma::mean(diagVec);
                   tauind = tauind + 1;
-                  std::cout << "Here2" << std::endl;
+                  //std::cout << "Here2" << std::endl;
                   diagVec = diagVecV_T;
                   mean_diag_kins_vec(tauind) = arma::mean(diagVec);
                   tauind = tauind + 1;
 
 
            }else{
-		                  std::cout << "Here3d" << std::endl;	
+		 //                 std::cout << "Here3d" << std::endl;	
 		if(g_isGRM && g_isSparseGRM){	
-		                  std::cout << "Here3e" << std::endl;	
+		 //                 std::cout << "Here3e" << std::endl;	
                   diagVecG = arma::diagvec(g_spGRM);
                   diagVecG_I = diagVecG.elem(g_I_longl_vec);
                   diagVec = diagVecG_I;
                   mean_diag_kins_vec(0) = arma::mean(diagVec);
                   tauind = tauind + 1;
 	  	}
-		                  std::cout << "Here3" << std::endl;	
+		 //                 std::cout << "Here3" << std::endl;	
 		  diagVecV = diagVecG;
                   diagVecV.ones();
                   diagVecV_I = diagVecV.elem(g_I_longl_vec);
@@ -5122,7 +5194,7 @@ arma::ivec tauUpdateValue(arma::fvec & t_tau0Vec){
 Rcpp::List getAIScore_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec& wVec,  arma::fvec& tauVec, arma::ivec & fixtauVec,
 arma::fvec& Sigma_iY, arma::fmat & Sigma_iX, arma::fmat & cov,
 int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
-	fixtauVec.print("fixtauVec");
+	//fixtauVec.print("fixtauVec");
 
         int q2 = arma::sum(fixtauVec==0);
         arma::uvec idxtau = arma::find(fixtauVec==0);
@@ -5191,7 +5263,7 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
                         GRM_I_bvec = getCrossprodMatAndKin(Ibvec, LOCO);
                 }
 
-                std::cout << "g_I_longl_mat.n_rows " << g_I_longl_mat.n_rows << std::endl;
+               //std::cout << "g_I_longl_mat.n_rows " << g_I_longl_mat.n_rows << std::endl;
                if(g_T_longl_mat.n_rows == 0){
                   for(int i=0; i<k1; i++){
                     if(fixtauVec(i) == 0){
@@ -5327,16 +5399,16 @@ int nrun, int maxiterPCG, float tolPCG, float traceCVcutoff, bool LOCO){
                 }
         }
 
-        AI.print("AI");
-	YPAPY.print("YPAPY");
+        //AI.print("AI");
+	//YPAPY.print("YPAPY");
         arma::fmat AI_update = AI.submat(idxtau, idxtau);
         arma::fvec YPAPY_update = YPAPY.elem(idxtau);
-	YPAPY.print("YPAPY");
+	//YPAPY.print("YPAPY");
 
         //vector with length=q2
         Trace = GetTrace_multiV(Sigma_iX, Xmat, wVec, tauVec, fixtauVec, cov, nrun, maxiterPCG, tolPCG, traceCVcutoff, LOCO);
         //YPAPY_update.print("YPAPY_update");
-        Trace.print("Trace");
+        //Trace.print("Trace");
         //arma::fvec PAPY_1 = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, APY, maxiterPCG, tolPCG);
         //arma::fvec PAPY = PAPY_1 - Sigma_iX * (cov1 * (Sigma_iXt * PAPY_1));
         return Rcpp::List::create(Named("YPAPY") = YPAPY_update, Named("Trace") = Trace,Named("PY") = PY1,Named("AI") = AI_update);
@@ -5352,7 +5424,7 @@ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wV
         int q2 = arma::sum(fixtauVec==0);
         arma::uvec idxtau = arma::find(fixtauVec==0);
 
-        idxtau.print("idxtau");
+        //idxtau.print("idxtau");
 
         arma::fmat Sigma_iXt = Sigma_iX.t();
         int Nnomissing = wVec.n_elem;;
@@ -5619,7 +5691,7 @@ arma::fvec GetTrace_multiV(arma::fmat Sigma_iX, arma::fmat& Xmat, arma::fvec& wV
                 } // end for i
                 temp_mat_update = temp_mat.cols(idxtau);
 
-                std::cout << "dim temp_mat_update" << temp_mat_update.n_rows << " " << temp_mat_update.n_cols << std::endl;;
+                //std::cout << "dim temp_mat_update" << temp_mat_update.n_rows << " " << temp_mat_update.n_cols << std::endl;;
                 // update trace cv vector
                 for(int k=0; k<q2; k++){
                         temp_vec = temp_mat_update.col(k);
@@ -5682,10 +5754,10 @@ Rcpp::List getCoefficients_multiV(arma::fvec& Yvec, arma::fmat& Xmat, arma::fvec
 
         int Nnomissing = wVec.n_elem;
         arma::fvec Sigma_iY;
-	std::cout << "before Sigma_iY" << std::endl;
-	std::cout << "Yvec.n_elem " << Yvec.n_elem << std::endl;
+	//std::cout << "before Sigma_iY" << std::endl;
+	//std::cout << "Yvec.n_elem " << Yvec.n_elem << std::endl;
         Sigma_iY = getPCG1ofSigmaAndVector_multiV(wVec, tauVec, Yvec, maxiterPCG, tolPCG, LOCO);
-        std::cout << "after Sigma_iY" << std::endl;
+        //std::cout << "after Sigma_iY" << std::endl;
         int colNumX = Xmat.n_cols;
         arma::fmat Sigma_iX(Nnomissing,colNumX);
         arma::fvec XmatVecTemp;
@@ -6437,6 +6509,20 @@ void set_isSparseGRM(bool t_isSparseGRM){
 void set_store_sigma(bool isstoreSigma){
         //g_longl_vec = arma::conv_to< arma::fvec >::from(longlVec);
         g_isStoreSigma = isstoreSigma;
+}
+
+// [[Rcpp::export]]
+void set_solverMethod(int solverMethod){
+        // 0 = auto (determined by R), 1 = pcg, 2 = smw
+        g_solverMethod = solverMethod;
+        g_solver_logged = false;  // Reset log flag so we log when actually executing
+        if (solverMethod == 1) {
+                cout << "[C++] Solver method set to: PCG (Preconditioned Conjugate Gradient)" << endl;
+        } else if (solverMethod == 2) {
+                cout << "[C++] Solver method set to: SMW (Sherman-Morrison-Woodbury)" << endl;
+        } else {
+                cout << "[C++] Solver method set to: " << solverMethod << " (unknown)" << endl;
+        }
 }
 
 // [[Rcpp::export]]
@@ -7777,22 +7863,39 @@ arma::fvec getprodImatbVec(arma::fvec & bVec) {
     auto n = g_I_start_indices.n_elem - 1;
     arma::fvec resultVec(g_I_longl_mat.n_rows, arma::fill::zeros);
 
-    if (g_omp_num_threads > 1) {
+    // Use OpenMP only if we have more than 1 thread and sufficient work to parallelize
+    bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
+    
+#ifdef _OPENMP
+    if (use_parallel) {
         omp_set_num_threads(g_omp_num_threads);
         
-	#pragma omp parallel for
-        for (int j = 0; j < n; j++) {
-	    float sum;
+        #pragma omp parallel for schedule(static)
+        for (size_t j = 0; j < n; j++) {
+            float sum = bVec[j];
             size_t start = g_I_start_indices[j];
             size_t end = g_I_start_indices[j + 1];
-            sum = bVec[j];
+            
+            // Each thread works on its own range of indices, preventing race conditions
             for (size_t k = start; k < end; k++) {
-		resultVec[k] = sum;  // This could still lead to overwrites if `k` is shared across threads
+                resultVec[k] = sum;
             }
         }
     } else {
-        	resultVec = g_I_longl_mat * bVec;
-    	}
+#endif
+        // Single-threaded execution or fallback when OpenMP is not available
+        for (size_t j = 0; j < n; j++) {
+            float sum = bVec[j];
+            size_t start = g_I_start_indices[j];
+            size_t end = g_I_start_indices[j + 1];
+            
+            for (size_t k = start; k < end; k++) {
+                resultVec[k] = sum;
+            }
+        }
+#ifdef _OPENMP
+    }
+#endif
 
     return resultVec;
 }

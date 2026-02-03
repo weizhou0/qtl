@@ -1,0 +1,27 @@
+# Ignore compiled object files (incompatible between macOS and Linux)
+src/*.o
+src/*.so
+src/symbols.rds
+
+# Ignore pixi environment
+.pixi/
+
+# Ignore local development files
+*.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Ignore thirdParty (Docker uses pixi environment instead)
+thirdParty/
+
+# Ignore git
+.git/
+.gitignore
+
+# Ignore Docker readme (not needed in image)
+docker/readme.md
+
+# Ignore test output
+*.rda
+*.txt

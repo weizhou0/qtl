@@ -1,0 +1,314 @@
+name: Build Pre-compiled Binaries (Pixi)
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build (e.g., 0.3.5)'
+        required: true
+        type: string
+
+env:
+  CONDA_OVERRIDE_GLIBC: "2.28"
+
+jobs:
+  build-linux-pixi:
+    runs-on: ubuntu-latest
+    outputs:
+      binary_filename: ${{ steps.build.outputs.binary_filename }}
+      pkg_version: ${{ steps.build.outputs.pkg_version }}
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        
+      - name: Extract version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            # Extract from tag (v0.3.4 -> 0.3.4)
+            VERSION=${GITHUB_REF#refs/tags/v}
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Building version: ${VERSION}"
+
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@v0.5.1
+        with:
+          pixi-version: latest
+
+      - name: Setup pixi environment
+        run: |
+          echo "Installing pixi environment..."
+          pixi install --verbose
+          echo "✅ Pixi environment ready"
+
+      - name: Verify pixi environment
+        run: |
+          echo "=== Pixi Environment Info ==="
+          pixi info
+          
+          echo "=== R Version ==="
+          pixi run R --version
+          
+          echo "=== Compiler Info ==="
+          pixi run gcc --version
+          pixi run g++ --version
+          
+          echo "=== BLAS/LAPACK ==="
+          pixi run R -e "sessionInfo()" 2>/dev/null | grep -A5 -B5 "BLAS\|LAPACK" || echo "BLAS/LAPACK info not found"
+
+      - name: Build binary package with pixi
+        id: build
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          echo "=== Building SAIGEQTL Binary with Pixi ==="
+          
+          # Create binaries directory
+          mkdir -p binaries
+          
+          # Get package info from DESCRIPTION
+          PKG_NAME=$(pixi run R --slave -e "cat(read.dcf('DESCRIPTION')[,'Package'])")
+          PKG_VERSION=$(pixi run R --slave -e "cat(read.dcf('DESCRIPTION')[,'Version'])")
+          
+          # Get R version for filename
+          R_VERSION=$(pixi run R --slave -e "cat(paste(R.Version()\$major, strsplit(R.Version()\$minor, '\\\\.')[[1]][1], sep='.'))")
+          
+          echo "Package: $PKG_NAME"
+          echo "Version: $PKG_VERSION" 
+          echo "R Version: $R_VERSION"
+          
+          # Install required build packages in pixi environment
+          echo "=== Installing build dependencies ==="
+          pixi run R -e "
+          if (!requireNamespace('remotes', quietly = TRUE)) {
+            install.packages('remotes', repos='https://cloud.r-project.org')
+          }
+          if (!requireNamespace('pkgbuild', quietly = TRUE)) {
+            install.packages('pkgbuild', repos='https://cloud.r-project.org')  
+          }
+          if (!requireNamespace('devtools', quietly = TRUE)) {
+            install.packages('devtools', repos='https://cloud.r-project.org')
+          }
+          "
+          
+          # Install package dependencies
+          echo "=== Installing package dependencies ==="
+          pixi run R -e "
+          cat('Installing package dependencies...\n')
+          remotes::install_deps(dependencies = TRUE, upgrade = 'never')
+          cat('✅ Dependencies installed\n')
+          "
+          
+          # Build the binary package using pixi environment
+          echo "=== Building binary package ==="
+          pixi run R -e "
+          cat('Building binary package...\n')
+          
+          # Build binary package
+          binary_path <- pkgbuild::build(binary = TRUE, dest_path = '.')
+          cat('Built binary:', binary_path, '\n')
+          
+          # Create standardized filename
+          pkg_info <- read.dcf('DESCRIPTION')
+          pkg_name <- pkg_info[,'Package']
+          pkg_version <- pkg_info[,'Version'] 
+          r_version <- paste(R.Version()\$major, strsplit(R.Version()\$minor, '\\\\.')[[1]][1], sep='.')
+          
+          # Standard filename format: PACKAGE_VERSION_R-RVERSION_PLATFORM.tgz
+          new_filename <- sprintf('%s_%s_R-%s_linux-x86_64.tgz',
+                                 pkg_name, pkg_version, r_version)
+          
+          # Move to binaries directory with new name
+          final_path <- file.path('binaries', new_filename)
+          file.rename(binary_path, final_path)
+          
+          cat('✅ Final binary:', final_path, '\n')
+          
+          # Write outputs for GitHub Actions
+          writeLines(new_filename, 'binary_filename.txt')
+          writeLines(pkg_version, 'pkg_version.txt')
+          "
+          
+          # Read outputs
+          BINARY_FILENAME=$(cat binary_filename.txt)
+          PKG_VERSION=$(cat pkg_version.txt)
+          
+          echo "binary_filename=${BINARY_FILENAME}" >> $GITHUB_OUTPUT
+          echo "pkg_version=${PKG_VERSION}" >> $GITHUB_OUTPUT
+          
+          echo "✅ Binary built: binaries/${BINARY_FILENAME}"
+
+      - name: Test binary package
+        run: |
+          BINARY_FILE="binaries/${{ steps.build.outputs.binary_filename }}"
+          
+          echo "=== Testing Binary Package ==="
+          echo "Testing: $BINARY_FILE"
+          
+          # Test installation in clean environment
+          TEST_LIB="/tmp/test_saigeqtl_binary"
+          mkdir -p "$TEST_LIB"
+          
+          pixi run R -e "
+          test_lib <- '$TEST_LIB'
+          binary_file <- '$BINARY_FILE'
+          
+          cat('Installing binary to test library...\n')
+          install.packages(binary_file, lib = test_lib, repos = NULL, type = 'source')
+          
+          cat('Loading package...\n')
+          library(SAIGEQTL, lib.loc = test_lib)
+          
+          # Test basic functionality
+          version <- as.character(packageVersion('SAIGEQTL'))
+          cat('✅ SAIGEQTL version:', version, '\n')
+          
+          # Check main functions exist
+          main_functions <- c('fitNULLGLMM_multiV', 'SPAGMMATtest')
+          for (func in main_functions) {
+            if (exists(func)) {
+              cat('✅', func, 'available\n')
+            } else {
+              cat('❌', func, 'missing\n')
+              quit(status = 1)
+            }
+          }
+          
+          # Check total function count
+          funcs <- ls('package:SAIGEQTL')
+          cat('✅ Total functions:', length(funcs), '\n')
+          
+          if (length(funcs) < 200) {
+            cat('⚠️ Warning: Function count seems low\n')
+          }
+          
+          cat('🎉 Binary test completed successfully!\n')
+          "
+          
+          echo "✅ Binary package test passed"
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: saigeqtl-${{ steps.build.outputs.pkg_version }}-linux-pixi
+          path: binaries/${{ steps.build.outputs.binary_filename }}
+          retention-days: 90
+
+      - name: Show build summary
+        run: |
+          echo "=== Build Summary ==="
+          echo "Package: SAIGEQTL"
+          echo "Version: ${{ steps.build.outputs.pkg_version }}"
+          echo "Binary: ${{ steps.build.outputs.binary_filename }}"
+          echo "Built with: Pixi environment"
+          echo "R Version: $(pixi run R --version | head -n1)"
+          echo "Compiler: $(pixi run gcc --version | head -n1)"
+          echo ""
+          echo "File info:"
+          ls -lh binaries/${{ steps.build.outputs.binary_filename }}
+
+  # Commit binary to repository
+  commit-binary:
+    needs: build-linux-pixi
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: saigeqtl-${{ needs.build-linux-pixi.outputs.pkg_version }}-linux-pixi
+          path: binaries/
+
+      - name: Commit binary to repository
+        run: |
+          VERSION="${{ needs.build-linux-pixi.outputs.pkg_version }}"
+          BINARY_FILE="${{ needs.build-linux-pixi.outputs.binary_filename }}"
+          
+          echo "=== Committing Binary to Repository ==="
+          
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Add binary file
+          git add "binaries/$BINARY_FILE"
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🤖 Add pixi-built binary for v${VERSION}
+
+Built with pixi environment:
+- File: $BINARY_FILE
+- Compatible: R 4.4+, GLIBC 2.28+, Linux x86_64  
+- Optimized libraries via pixi
+- Install: curl -fsSL https://raw.githubusercontent.com/weizhou0/qtl/main/install_binary.R | Rscript -
+
+[skip ci]"
+            
+            git push origin main
+            echo "✅ Binary committed to repository"
+          fi
+
+  # Upload to GitHub Release
+  upload-to-release:
+    needs: build-linux-pixi
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    
+    steps:
+      - name: Download binary
+        uses: actions/download-artifact@v4
+        with:
+          name: saigeqtl-${{ needs.build-linux-pixi.outputs.pkg_version }}-linux-pixi
+
+      - name: Upload to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ needs.build-linux-pixi.outputs.binary_filename }}
+          asset_name: ${{ needs.build-linux-pixi.outputs.binary_filename }}
+          asset_content_type: application/gzip
+
+  notification:
+    needs: [build-linux-pixi, commit-binary, upload-to-release]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Build status notification
+        run: |
+          VERSION="${{ needs.build-linux-pixi.outputs.pkg_version }}"
+          BINARY_FILE="${{ needs.build-linux-pixi.outputs.binary_filename }}"
+          
+          if [[ "${{ needs.build-linux-pixi.result }}" == "success" ]]; then
+            echo "🎉 Pixi binary build successful!"
+            echo ""
+            echo "📦 Created: ${BINARY_FILE}"
+            echo "🔧 Built with: Pixi environment (optimized libraries)"
+            echo "🐧 Platform: Linux x86_64"
+            echo "📋 Available in repository and GitHub release"
+            echo ""
+            echo "Users can install with:"
+            echo "⚡ curl -fsSL https://raw.githubusercontent.com/weizhou0/qtl/main/install_binary.R | Rscript -"
+            echo "🐳 docker run --rm weizhou0/saigeqtl:${VERSION} step1_fitNULLGLMM_qtl.R --help"
+          else
+            echo "❌ Binary build failed"
+            echo "🔍 Check workflow logs for details"
+            echo "💡 Docker and source installations still available"
+          fi

@@ -1,20 +1,19 @@
 Package: SAIGEQTL
 Type: Package
 Title: scalable and accurate expression quantitative trait locus mapping for single-cell studies
-Version: 0.3.2
-Date: 2025-7-28
-Author: Wei Zhou, Anna Cuomo
+Version: 0.3.4.2
+Date: 2025-12-08
+Author: Wei Zhou, Anna Cuomo, Linfeng Hu
 Maintainer: Wei Zhou <wzhou@broadinstitute.org> 
 Description:an R package that implements the Scalable and Accurate Implementation of Generalized Poisson mixed model for eQTL mapping at the single-cell level.  
 License: GPL (>= 2)
-Imports: Rcpp (>= 1.0.7), RcppParallel, Matrix, data.table, RcppArmadillo (>= 0.10.7.5), RcppNumerical, furrr, fastSave, dbplyr
-Suggests: R.utils
-LinkingTo: Rcpp, RcppArmadillo (>= 0.10.7.5), RcppParallel, data.table, SPAtest (== 3.1.2),
-        RcppEigen, Matrix, methods, BH, optparse, SKAT, MetaSKAT, qlcMatrix, RhpcBLASctl, RSQLite, dplyr, nlme, MASS, RcppEigen, RcppNumerical
-Remotes: cysouw/qlcMatrix, leeshawn/MetaSKAT, barkasn/fastSave
+Imports: Rcpp (>= 1.0.7), RcppParallel, Matrix, data.table, RcppArmadillo (>= 0.10.7.5), RcppNumerical, dbplyr, methods, optparse, RSQLite, dplyr, nlme, MASS, RhpcBLASctl
+Suggests: R.utils, furrr
+LinkingTo: Rcpp, RcppArmadillo (>= 0.10.7.5), RcppParallel, RcppEigen, BH
+Remotes: cysouw/qlcMatrix, leeshawn/MetaSKAT, barkasn/fastSave, leeshawn/SPAtest
 Depends: R (>= 3.5.0)
 SystemRequirements: GNU make
 RoxygenNote: 7.1.2
 NeedsCompilation: yes
 Encoding: UTF-8
-Packaged: 2025-07-14 EST
+Packaged: 2025-12-08 EST

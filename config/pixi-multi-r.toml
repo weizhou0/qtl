@@ -1,0 +1,146 @@
+[workspace]
+channels = ["conda-forge", "bioconda"]
+name = "SAIGEQTL"
+platforms = ["linux-64", "osx-64"]
+version = "0.3.4"
+
+# Define multiple environments for different R versions
+[environments]
+r41 = ["r41"]
+r42 = ["r42"] 
+r43 = ["r43"]
+r44 = ["r44"]
+
+# Common tasks for all environments
+[tasks]
+install-github-deps = "Rscript -e 'if(!require(remotes)) install.packages(\"remotes\"); remotes::install_github(c(\"cysouw/qlcMatrix\", \"leeshawn/MetaSKAT\", \"barkasn/fastSave\"))'"
+
+# Build tasks for each R version
+build-r41 = "Rscript -e 'source(\"build_binary.R\"); main(\"binaries/r41\")'"
+build-r42 = "Rscript -e 'source(\"build_binary.R\"); main(\"binaries/r42\")'"
+build-r43 = "Rscript -e 'source(\"build_binary.R\"); main(\"binaries/r43\")'"
+build-r44 = "Rscript -e 'source(\"build_binary.R\"); main(\"binaries/r44\")'"
+
+# Build all versions
+build-all = ["build-r41", "build-r42", "build-r43", "build-r44"]
+
+[dependencies]
+# Common system dependencies for all environments
+boost-cpp = "*"
+cget = "*"
+openblas = "*"
+zlib = "*"
+zstd = "*"
+savvy = "*"
+superlu = "*"
+zlib-ng = "*"
+nomkl = "*"
+llvm-openmp = "*"
+tbb = "*"
+tbb-devel = "*"
+cxx-compiler = "*"
+make = "*"
+libblas = { version = "*", build = "*openblas" }
+liblapack = { version = "*", build = "*openblas" }
+htslib = ">=1.22.1,<2"
+
+# Feature groups for different R versions
+[feature.r41.dependencies]
+r-base = "~4.1.0"
+r-devtools = "*"
+r-rcpp = "*"
+r-rcpparmadillo = "*"
+r-rcppeigen = "*"
+r-rcppparallel = "*"
+r-rcppnumerical = "*"
+r-bh = "*"
+r-cpp11 = "*"
+"r-data.table" = "*"
+r-dplyr = "*"
+r-dbplyr = "*"
+r-matrix = "*"
+r-furrr = "*"
+r-nlme = "*"
+r-mass = "*"
+r-skat = "*"
+r-metaskat = "*"
+r-spatest = "*"
+r-optparse = "*"
+r-rhpcblasctl = "*"
+r-rsqlite = "*"
+r-remotes = "*"
+
+[feature.r42.dependencies]
+r-base = "~4.2.0"
+r-devtools = "*"
+r-rcpp = "*"
+r-rcpparmadillo = "*"
+r-rcppeigen = "*"
+r-rcppparallel = "*"
+r-rcppnumerical = "*"
+r-bh = "*"
+r-cpp11 = "*"
+"r-data.table" = "*"
+r-dplyr = "*"
+r-dbplyr = "*"
+r-matrix = "*"
+r-furrr = "*"
+r-nlme = "*"
+r-mass = "*"
+r-skat = "*"
+r-metaskat = "*"
+r-spatest = "*"
+r-optparse = "*"
+r-rhpcblasctl = "*"
+r-rsqlite = "*"
+r-remotes = "*"
+
+[feature.r43.dependencies]
+r-base = "~4.3.0"
+r-devtools = "*"
+r-rcpp = "*"
+r-rcpparmadillo = "*"
+r-rcppeigen = "*"
+r-rcppparallel = "*"
+r-rcppnumerical = "*"
+r-bh = "*"
+r-cpp11 = "*"
+"r-data.table" = "*"
+r-dplyr = "*"
+r-dbplyr = "*"
+r-matrix = "*"
+r-furrr = "*"
+r-nlme = "*"
+r-mass = "*"
+r-skat = "*"
+r-metaskat = "*"
+r-spatest = "*"
+r-optparse = "*"
+r-rhpcblasctl = "*"
+r-rsqlite = "*"
+r-remotes = "*"
+
+[feature.r44.dependencies]
+r-base = "~4.4.0"
+r-devtools = "*"
+r-rcpp = "*"
+r-rcpparmadillo = "*"
+r-rcppeigen = "*"
+r-rcppparallel = "*"
+r-rcppnumerical = "*"
+r-bh = "*"
+r-cpp11 = "*"
+"r-data.table" = "*"
+r-dplyr = "*"
+r-dbplyr = "*"
+r-matrix = "*"
+r-furrr = "*"
+r-nlme = "*"
+r-mass = "*"
+r-skat = "*"
+r-metaskat = "*"
+r-spatest = "*"
+r-optparse = "*"
+r-rhpcblasctl = "*"
+r-rsqlite = "*"
+r-remotes = "*"

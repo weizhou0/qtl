@@ -21,7 +21,7 @@ RUN curl -fsSL https://pixi.sh/install.sh | sh && \
     mv /root/.pixi/bin/pixi /bin && pixi install && \
     rm -rf /root/.cache && \
     pixi run Rscript -e 'install.packages("lintools", repos="https://cloud.r-project.org")' && \
-    pixi run Rscript -e 'install.packages("remotes", repos="https://cloud.r-project.org"); remotes::install_github("barkasn/fastSave")'
+    pixi run install-github-deps
 
 #RUN pixi run R CMD INSTALL .
 RUN pixi run Rscript -e 'install.packages(".", repos=NULL, type="source")'

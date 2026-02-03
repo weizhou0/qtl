@@ -8,6 +8,10 @@ thirdParty/
 src/*.o
 src/*.so
 src/backup/*
+
+# Development documentation (private)
+DEVELOPER_GUIDE_PRIVATE.md
+*_PRIVATE.md
 extdata/input/nfam_100_nindep_0_step1_includeMoreRareVariants_poly.raw
 extdata/output/*
 extdata/GMMAT*
@@ -22,3 +26,11 @@ extdata/time.var.txt
 R/*.log
 R/*.lo
 R/.nfs00000013331217950004b123
+SAIGEQTL_DEVELOPMENT_WORKFLOW.md
+README_TESTING.md
+test_output/
+test_output/compare_outputs.R
+*.log
+.saigeqtl_config
+.claude.md
+.developer_guide.md

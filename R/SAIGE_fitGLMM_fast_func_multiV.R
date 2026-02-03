@@ -31,14 +31,14 @@ Get_Coef_multiV <- function(y, X, tau, family, alpha0, eta0, offset, maxiterPCG,
 
 
     Y <- eta - offset + (y - mu) / mu.eta
-    print("alpha")
-    print(alpha)
-    print("alpha0")
-    print(alpha0)
-    print("y[1]")
-    print(y[1])
-    print("y[2]")
-    print(y[2])
+    #print("alpha")
+    #print(alpha)
+    #print("alpha0")
+    #print(alpha0)
+    #print("y[1]")
+    #print(y[1])
+    #print("y[2]")
+    #print(y[2])
 
     # if(is.null(var_weights)){
     # sqrtW = mu.eta/sqrt(family$variance(mu))

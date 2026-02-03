@@ -1,14 +1,9 @@
-#!/usr/bin/env -S pixi run --manifest-path /app/pixi.toml Rscript
+#!/usr/bin/env -S pixi run --manifest-path ../pixi.toml Rscript
 
 options(stringsAsFactors = F)
 
 ## load R libraries
-
-library(SAIGEQTL)
-
 require(optparse) # install.packages("optparse")
-
-print(sessionInfo())
 
 ## set list of cmd line arguments
 option_list <- list(
@@ -257,14 +252,40 @@ option_list <- list(
   make_option("--isExportResiduals",
     type = "logical", default = FALSE,
     help = "Optional. Whether to export residual vector. [default, 'FALSE']"
+  ),
+  make_option("--varRatioBatchSize",
+    type = "integer", default = 1,
+    help = "Optional. Batch size for variance ratio estimation. Higher values use more memory but may be faster. Set to 1 for sequential processing (low memory), or >1 for batch processing. [default=1]"
+  ),
+  make_option("--solverMethod",
+    type = "character", default = "auto",
+    help = "Optional. Solver method for fitting null model: 'auto' (automatic selection based on data structure), 'pcg' (Preconditioned Conjugate Gradient), 'smw' (Sherman-Morrison-Woodbury). When 'auto': SMW for repeated cells without GRM, PCG when GRM is provided or no repeated cells. [default='auto']"
+  ),
+  make_option("--library",
+    type = "character", default = "",
+    help = "Optional. Path to custom R library directory where SAIGEQTL package is installed. If not specified, uses default R library paths."
   )
 )
 
-
-## list of options
+# Parse options to get library path
 parser <- OptionParser(usage = "%prog [options]", option_list = option_list)
 args <- parse_args(parser, positional_arguments = 0)
 opt <- args$options
+
+# Set custom library path if provided
+if (!is.null(opt$library) && opt$library != "") {
+  .libPaths(c(opt$library, .libPaths()))
+  cat("Using custom library path:", opt$library, "\n")
+}
+
+if (!is.null(opt$library) && opt$library != "") {
+  library(SAIGEQTL, lib.loc = opt$library)
+} else {
+  library(SAIGEQTL)
+}
+
+print(sessionInfo())
+
 print(opt)
 
 covars <- strsplit(opt$covarColList, ",")[[1]]
@@ -294,177 +315,397 @@ if (BLASctl_installed) {
 }
 
 
-# set seed
-set.seed(1)
-fitNULLGLMM_multiV(
-  plinkFile = opt$plinkFile,
-  bedFile = opt$bedFile,
-  bimFile = opt$bimFile,
-  famFile = opt$famFile,
-  useSparseGRMtoFitNULL = opt$useSparseGRMtoFitNULL,
-  sparseGRMFile = opt$sparseGRMFile,
-  sparseGRMSampleIDFile = opt$sparseGRMSampleIDFile,
-  phenoFile = opt$phenoFile,
-  phenoCol = opt$phenoCol,
-  isRemoveZerosinPheno = opt$isRemoveZerosinPheno,
-  sampleIDColinphenoFile = opt$sampleIDColinphenoFile,
-  cellIDColinphenoFile = opt$cellIDColinphenoFile,
-  traitType = opt$traitType,
-  outputPrefix = opt$outputPrefix,
-  isCovariateOffset = opt$isCovariateOffset,
-  nThreads = opt$nThreads,
-  useSparseGRMforVarRatio = opt$useSparseGRMforVarRatio,
-  invNormalize = opt$invNormalize,
-  covarColList = covars,
-  qCovarCol = qcovars,
-  tol = opt$tol,
-  maxiter = opt$maxiter,
-  tolPCG = opt$tolPCG,
-  maxiterPCG = opt$maxiterPCG,
-  SPAcutoff = opt$SPAcutoff,
-  numMarkersForVarRatio = opt$numRandomMarkerforVarianceRatio,
-  skipModelFitting = opt$skipModelFitting,
-  skipVarianceRatioEstimation = opt$skipVarianceRatioEstimation,
-  memoryChunk = opt$memoryChunk,
-  tauInit = tauInit,
-  LOCO = opt$LOCO,
-  isLowMemLOCO = opt$isLowMemLOCO,
-  traceCVcutoff = opt$traceCVcutoff,
-  nrun = opt$nrun,
-  ratioCVcutoff = opt$ratioCVcutoff,
-  outputPrefix_varRatio = opt$outputPrefix_varRatio,
-  IsOverwriteVarianceRatioFile = opt$IsOverwriteVarianceRatioFile,
-  relatednessCutoff = opt$relatednessCutoff,
-  isCateVarianceRatio = opt$isCateVarianceRatio,
-  cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
-  cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
-  isCovariateTransform = opt$isCovariateTransform,
-  isDiagofKinSetAsOne = opt$isDiagofKinSetAsOne,
-  minMAFforGRM = opt$minMAFforGRM,
-  maxMissingRateforGRM = opt$maxMissingRateforGRM,
-  minCovariateCount = opt$minCovariateCount,
-  includeNonautoMarkersforVarRatio = opt$includeNonautoMarkersforVarRatio,
-  sexCol = opt$sexCol,
-  FemaleCode = opt$FemaleCode,
-  FemaleOnly = opt$FemaleOnly,
-  MaleCode = opt$MaleCode,
-  MaleOnly = opt$MaleOnly,
-  SampleIDIncludeFile = opt$SampleIDIncludeFile,
-  VmatFilelist = opt$VmatFilelist,
-  VmatSampleFilelist = opt$VmatSampleFilelist,
-  longlCol = opt$longlCol,
-  useGRMtoFitNULL = opt$useGRMtoFitNULL,
-  offsetCol = opt$offsetCol,
-  varWeightsCol = opt$varWeightsCol,
-  sampleCovarCol = scovars,
-  isStoreSigma = opt$isStoreSigma,
-  isShrinkModelOutput = opt$isShrinkModelOutput,
-  isExportResiduals = opt$isExportResiduals
-)
+# Check if varRatioBatchSize parameter is supported in this version
+varRatioBatchSize_supported <- "varRatioBatchSize" %in% names(formals(fitNULLGLMM_multiV))
 
-if (!opt$isCovariateOffset) {
-  my_env <- new.env()
-  load(paste0(opt$outputPrefix, ".rda"), envir = my_env)
-  modglmm <- my_env$modglmm
-  print(modglmm$theta)
-  if (sum(modglmm$theta[2:length(modglmm$theta)]) <= 0 || sum(modglmm$theta[2:length(modglmm$theta)]) > 1) {
-    cat("All variance component parameter estiamtes are out of bounds, now try including all covariates as offset\n")
-    opt$isCovariateOffset <- TRUE
-    set.seed(1)
-    fitNULLGLMM_multiV(
-      plinkFile = opt$plinkFile,
-      bedFile = opt$bedFile,
-      bimFile = opt$bimFile,
-      famFile = opt$famFile,
-      useSparseGRMtoFitNULL = opt$useSparseGRMtoFitNULL,
-      sparseGRMFile = opt$sparseGRMFile,
-      sparseGRMSampleIDFile = opt$sparseGRMSampleIDFile,
-      phenoFile = opt$phenoFile,
-      phenoCol = opt$phenoCol,
-      isRemoveZerosinPheno = opt$isRemoveZerosinPheno,
-      sampleIDColinphenoFile = opt$sampleIDColinphenoFile,
-      cellIDColinphenoFile = opt$cellIDColinphenoFile,
-      traitType = opt$traitType,
-      outputPrefix = paste0(opt$outputPrefix, ".offset"),
-      isCovariateOffset = opt$isCovariateOffset,
-      nThreads = opt$nThreads,
-      useSparseGRMforVarRatio = opt$useSparseGRMforVarRatio,
-      invNormalize = opt$invNormalize,
-      covarColList = covars,
-      qCovarCol = qcovars,
-      tol = opt$tol,
-      maxiter = opt$maxiter,
-      tolPCG = opt$tolPCG,
-      maxiterPCG = opt$maxiterPCG,
-      SPAcutoff = opt$SPAcutoff,
-      numMarkersForVarRatio = opt$numRandomMarkerforVarianceRatio,
-      skipModelFitting = opt$skipModelFitting,
-      skipVarianceRatioEstimation = opt$skipVarianceRatioEstimation,
-      memoryChunk = opt$memoryChunk,
-      tauInit = tauInit,
-      LOCO = opt$LOCO,
-      isLowMemLOCO = opt$isLowMemLOCO,
-      traceCVcutoff = opt$traceCVcutoff,
-      nrun = opt$nrun,
-      ratioCVcutoff = opt$ratioCVcutoff,
-      outputPrefix_varRatio = opt$outputPrefix_varRatio,
-      IsOverwriteVarianceRatioFile = opt$IsOverwriteVarianceRatioFile,
-      relatednessCutoff = opt$relatednessCutoff,
-      isCateVarianceRatio = opt$isCateVarianceRatio,
-      cateVarRatioMinMACVecExclude = cateVarRatioMinMACVecExclude,
-      cateVarRatioMaxMACVecInclude = cateVarRatioMaxMACVecInclude,
-      isCovariateTransform = opt$isCovariateTransform,
-      isDiagofKinSetAsOne = opt$isDiagofKinSetAsOne,
-      minMAFforGRM = opt$minMAFforGRM,
-      maxMissingRateforGRM = opt$maxMissingRateforGRM,
-      minCovariateCount = opt$minCovariateCount,
-      includeNonautoMarkersforVarRatio = opt$includeNonautoMarkersforVarRatio,
-      sexCol = opt$sexCol,
-      FemaleCode = opt$FemaleCode,
-      FemaleOnly = opt$FemaleOnly,
-      MaleCode = opt$MaleCode,
-      MaleOnly = opt$MaleOnly,
-      SampleIDIncludeFile = opt$SampleIDIncludeFile,
-      VmatFilelist = opt$VmatFilelist,
-      VmatSampleFilelist = opt$VmatSampleFilelist,
-      longlCol = opt$longlCol,
-      useGRMtoFitNULL = opt$useGRMtoFitNULL,
-      offsetCol = opt$offsetCol,
-      varWeightsCol = opt$varWeightsCol,
-      sampleCovarCol = scovars,
-      isStoreSigma = opt$isStoreSigma,
-      isShrinkModelOutput = opt$isShrinkModelOutput,
-      isExportResiduals = opt$isExportResiduals
-    )
+# Debug: Print some key variables
+cat("covars:", covars, "\n")
+cat("qcovars:", qcovars, "\n") 
+cat("scovars:", scovars, "\n")
+
+# Prepare arguments list - remove empty/NULL values as we build it
+args_list <- list()
+
+# Add non-empty arguments only
+if (!is.null(opt$plinkFile) && opt$plinkFile != "") args_list$plinkFile <- opt$plinkFile
+if (!is.null(opt$bedFile) && opt$bedFile != "") args_list$bedFile <- opt$bedFile
+if (!is.null(opt$bimFile) && opt$bimFile != "") args_list$bimFile <- opt$bimFile
+if (!is.null(opt$famFile) && opt$famFile != "") args_list$famFile <- opt$famFile
+args_list$useSparseGRMtoFitNULL <- opt$useSparseGRMtoFitNULL
+if (!is.null(opt$sparseGRMFile) && opt$sparseGRMFile != "") args_list$sparseGRMFile <- opt$sparseGRMFile
+if (!is.null(opt$sparseGRMSampleIDFile) && opt$sparseGRMSampleIDFile != "") args_list$sparseGRMSampleIDFile <- opt$sparseGRMSampleIDFile
+args_list$phenoFile <- opt$phenoFile
+args_list$phenoCol <- opt$phenoCol
+args_list$isRemoveZerosinPheno <- opt$isRemoveZerosinPheno
+args_list$sampleIDColinphenoFile <- opt$sampleIDColinphenoFile
+if (!is.null(opt$cellIDColinphenoFile) && opt$cellIDColinphenoFile != "") args_list$cellIDColinphenoFile <- opt$cellIDColinphenoFile
+args_list$traitType <- opt$traitType
+args_list$outputPrefix <- opt$outputPrefix
+args_list$isCovariateOffset <- opt$isCovariateOffset
+args_list$nThreads <- opt$nThreads
+args_list$useSparseGRMforVarRatio <- opt$useSparseGRMforVarRatio
+args_list$invNormalize <- opt$invNormalize
+if (!is.null(covars) && length(covars) > 0 && !all(covars == "")) args_list$covarColList <- covars
+if (!is.null(qcovars) && length(qcovars) > 0 && !all(qcovars == "")) args_list$qCovarCol <- qcovars
+args_list$tol <- opt$tol
+args_list$maxiter <- opt$maxiter
+args_list$tolPCG <- opt$tolPCG
+args_list$maxiterPCG <- opt$maxiterPCG
+args_list$SPAcutoff <- opt$SPAcutoff
+args_list$numMarkersForVarRatio <- opt$numRandomMarkerforVarianceRatio
+args_list$skipModelFitting <- opt$skipModelFitting
+args_list$skipVarianceRatioEstimation <- opt$skipVarianceRatioEstimation
+args_list$memoryChunk <- opt$memoryChunk
+args_list$tauInit <- tauInit
+args_list$LOCO <- opt$LOCO
+args_list$isLowMemLOCO <- opt$isLowMemLOCO
+args_list$traceCVcutoff <- opt$traceCVcutoff
+args_list$nrun <- opt$nrun
+args_list$ratioCVcutoff <- opt$ratioCVcutoff
+if (!is.null(opt$outputPrefix_varRatio) && opt$outputPrefix_varRatio != "") args_list$outputPrefix_varRatio <- opt$outputPrefix_varRatio
+args_list$IsOverwriteVarianceRatioFile <- opt$IsOverwriteVarianceRatioFile
+args_list$relatednessCutoff <- opt$relatednessCutoff
+args_list$isCateVarianceRatio <- opt$isCateVarianceRatio
+args_list$cateVarRatioMinMACVecExclude <- cateVarRatioMinMACVecExclude
+args_list$cateVarRatioMaxMACVecInclude <- cateVarRatioMaxMACVecInclude
+args_list$isCovariateTransform <- opt$isCovariateTransform
+args_list$isDiagofKinSetAsOne <- opt$isDiagofKinSetAsOne
+args_list$minMAFforGRM <- opt$minMAFforGRM
+args_list$maxMissingRateforGRM <- opt$maxMissingRateforGRM
+args_list$minCovariateCount <- opt$minCovariateCount
+args_list$includeNonautoMarkersforVarRatio <- opt$includeNonautoMarkersforVarRatio
+if (!is.null(opt$sexCol) && opt$sexCol != "") args_list$sexCol <- opt$sexCol
+if (!is.null(opt$FemaleCode) && opt$FemaleCode != "") args_list$FemaleCode <- opt$FemaleCode
+args_list$FemaleOnly <- opt$FemaleOnly
+if (!is.null(opt$MaleCode) && opt$MaleCode != "") args_list$MaleCode <- opt$MaleCode
+args_list$MaleOnly <- opt$MaleOnly
+if (!is.null(opt$SampleIDIncludeFile) && opt$SampleIDIncludeFile != "") args_list$SampleIDIncludeFile <- opt$SampleIDIncludeFile
+if (!is.null(opt$VmatFilelist) && opt$VmatFilelist != "") args_list$VmatFilelist <- opt$VmatFilelist
+if (!is.null(opt$VmatSampleFilelist) && opt$VmatSampleFilelist != "") args_list$VmatSampleFilelist <- opt$VmatSampleFilelist
+if (!is.null(opt$longlCol) && opt$longlCol != "") args_list$longlCol <- opt$longlCol
+args_list$useGRMtoFitNULL <- opt$useGRMtoFitNULL
+if (!is.null(opt$offsetCol) && opt$offsetCol != "") args_list$offsetCol <- opt$offsetCol
+if (!is.null(opt$varWeightsCol) && opt$varWeightsCol != "") args_list$varWeightsCol <- opt$varWeightsCol
+if (!is.null(scovars) && length(scovars) > 0 && !all(scovars == "")) args_list$sampleCovarCol <- scovars
+args_list$isStoreSigma <- opt$isStoreSigma
+args_list$isShrinkModelOutput <- opt$isShrinkModelOutput
+args_list$isExportResiduals <- opt$isExportResiduals
+
+# Conditionally add varRatioBatchSize if supported
+if (varRatioBatchSize_supported) {
+  args_list$varRatioBatchSize <- opt$varRatioBatchSize
+}
+
+# Add solverMethod if function supports it
+solverMethod_supported <- "solverMethod" %in% names(formals(fitNULLGLMM_multiV))
+if (solverMethod_supported) {
+  args_list$solverMethod <- opt$solverMethod
+}
+
+cat("Final number of arguments:", length(args_list), "\n")
+
+# Function to remove all output files when convergence fails
+remove_failed_output_files <- function(output_prefix, output_prefix_varRatio = "") {
+  files_to_remove <- c(
+    paste0(output_prefix, ".rda"),
+    paste0(output_prefix, ".varianceRatio.txt")
+  )
+  
+  # Add variance ratio file with alternative prefix if specified
+  if (output_prefix_varRatio != "" && output_prefix_varRatio != output_prefix) {
+    files_to_remove <- c(files_to_remove, paste0(output_prefix_varRatio, ".varianceRatio.txt"))
+  }
+  
+  removed_files <- c()
+  for (file_path in files_to_remove) {
+    if (file.exists(file_path)) {
+      tryCatch({
+        file.remove(file_path)
+        removed_files <- c(removed_files, file_path)
+        cat(sprintf("Removed failed output file: %s\n", file_path))
+      }, error = function(e) {
+        cat(sprintf("Warning: Could not remove file %s: %s\n", file_path, e$message))
+      })
+    }
+  }
+  
+  if (length(removed_files) > 0) {
+    cat(sprintf("Cleaned up %d failed output files\n", length(removed_files)))
+  }
+  
+  return(removed_files)
+}
+
+# Function to check model convergence status and write status file
+check_convergence_and_write_status <- function(output_prefix, args_used, package_version, final_status = NULL) {
+  status_file <- paste0(output_prefix, ".status.txt")
+  
+  # Initialize status information
+  status_info <- list(
+    timestamp = Sys.time(),
+    package_version = package_version,
+    convergence_status = "UNKNOWN",
+    convergence_details = "",
+    final_model_file = "",
+    variance_ratio_file = "",
+    arguments_used = args_used
+  )
+  
+  # Check if model file exists and examine convergence
+  rda_file <- paste0(output_prefix, ".rda")
+  if (file.exists(rda_file)) {
+    tryCatch({
+      my_env <- new.env()
+      load(rda_file, envir = my_env)
+      modglmm <- my_env$modglmm
+      
+      if (!is.null(modglmm)) {
+        # Check convergence flag
+        model_converged <- modglmm$converged
+        
+        # Check variance component bounds
+        theta_valid <- TRUE
+        theta_sum <- sum(modglmm$theta[2:length(modglmm$theta)])
+        if (theta_sum <= 0 || theta_sum > 1) {
+          theta_valid <- FALSE
+        }
+        
+        # Determine overall status
+        if (model_converged && theta_valid) {
+          status_info$convergence_status <- "SUCCESS"
+          status_info$convergence_details <- sprintf("Model converged successfully. Theta sum: %.6f", theta_sum)
+        } else if (!model_converged) {
+          status_info$convergence_status <- "FAILED"
+          status_info$convergence_details <- sprintf("Model failed to converge. Theta sum: %.6f", theta_sum)
+        } else {
+          status_info$convergence_status <- "FAILED"
+          status_info$convergence_details <- sprintf("Variance components out of bounds. Theta sum: %.6f", theta_sum)
+        }
+        
+        status_info$final_model_file <- rda_file
+        
+        # Check for variance ratio file
+        var_ratio_file <- paste0(output_prefix, ".varianceRatio.txt")
+        if (file.exists(var_ratio_file)) {
+          status_info$variance_ratio_file <- var_ratio_file
+        }
+        
+      } else {
+        status_info$convergence_status <- "FAILED"
+        status_info$convergence_details <- "Model object not found in .rda file"
+      }
+    }, error = function(e) {
+      status_info$convergence_status <- "FAILED"
+      status_info$convergence_details <- paste("Error loading model:", e$message)
+    })
+  } else {
+    status_info$convergence_status <- "FAILED"
+    status_info$convergence_details <- "Model .rda file not found"
+  }
+  
+  # Override with final status if provided
+  if (!is.null(final_status)) {
+    status_info$convergence_status <- final_status$status
+    status_info$convergence_details <- final_status$details
+    # If final status indicates failure, ensure no output files remain
+    if (final_status$status == "FAILED") {
+      remove_failed_output_files(output_prefix, ifelse("outputPrefix_varRatio" %in% names(args_used), args_used$outputPrefix_varRatio, ""))
+      status_info$final_model_file <- ""
+      status_info$variance_ratio_file <- ""
+    }
+  }
+  
+  # Write status file
+  cat("=== SAIGEQTL Step 1 Analysis Status ===\n", file = status_file)
+  cat(sprintf("Timestamp: %s\n", status_info$timestamp), file = status_file, append = TRUE)
+  cat(sprintf("SAIGEQTL Version: %s\n", status_info$package_version), file = status_file, append = TRUE)
+  cat(sprintf("Convergence Status: %s\n", status_info$convergence_status), file = status_file, append = TRUE)
+  cat(sprintf("Details: %s\n", status_info$convergence_details), file = status_file, append = TRUE)
+  cat(sprintf("Final Model File: %s\n", ifelse(status_info$final_model_file != "", status_info$final_model_file, "None")), file = status_file, append = TRUE)
+  cat(sprintf("Variance Ratio File: %s\n", ifelse(status_info$variance_ratio_file != "", status_info$variance_ratio_file, "None")), file = status_file, append = TRUE)
+  cat("\n=== Arguments Used ===\n", file = status_file, append = TRUE)
+  
+  # Write all arguments
+  for (arg_name in names(status_info$arguments_used)) {
+    arg_value <- status_info$arguments_used[[arg_name]]
+    if (is.vector(arg_value) && length(arg_value) > 1) {
+      arg_value <- paste(arg_value, collapse = ",")
+    }
+    cat(sprintf("%s: %s\n", arg_name, arg_value), file = status_file, append = TRUE)
+  }
+  
+  cat(sprintf("\nStatus file written to: %s\n", status_file))
+  return(status_info)
+}
+
+# Get SAIGEQTL version
+package_version <- tryCatch({
+  as.character(packageVersion("SAIGEQTL"))
+}, error = function(e) {
+  "Unknown"
+})
+
+cat(sprintf("SAIGEQTL Version: %s\n", package_version))
+
+# Call the main function
+set.seed(1)
+
+fit_success <- TRUE
+initial_error <- NULL
+tryCatch({
+   do.call(fitNULLGLMM_multiV, args_list)
+}, error = function(e) {
+  message("Initial model failed with error: ", e$message)
+  initial_error <<- e$message
+  fit_success <<- FALSE  # Track failure
+  # Clean up any partial output files created during failed attempt
+  remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+})
+
+if(fit_success){
+  # Check initial model results if we started without offset
+  if (!opt$isCovariateOffset) {
     my_env <- new.env()
-    load(paste0(opt$outputPrefix, ".offset.rda"), envir = my_env)
+    load(paste0(opt$outputPrefix, ".rda"), envir = my_env)
     modglmm <- my_env$modglmm
     print(modglmm$theta)
-    if (sum(modglmm$theta[2:length(modglmm$theta)]) <= 0 || sum(modglmm$theta[2:length(modglmm$theta)]) > 1) {
-      cat("All variance component parameter estiamtes are out of bounds.\n")
-      file.remove(paste0(opt$outputPrefix, ".offset.rda"))
-      if (file.exists(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))) {
-        file.remove(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))
-        # Delete file if it exists
-      } else {
-        if (file.exists(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))) {
-          file.remove(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))
-        }
-      }
-    } else {
-      file.rename(paste0(opt$outputPrefix, ".offset.rda"), paste0(opt$outputPrefix, ".rda"))
-      if (file.exists(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"))) {
-        file.rename(paste0(opt$outputPrefix, ".offset.varianceRatio.txt"), paste0(opt$outputPrefix, ".varianceRatio.txt"))
-        # Delete file if it exists
-      } else {
-        if (file.exists(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"))) {
-          file.rename(paste0(opt$outputPrefix_varRatio, ".offset.varianceRatio.txt"), paste0(opt$outputPrefix_varRatio, ".varianceRatio.txt"))
-        }
-      }
+    
+    # Check if model failed or variance components are out of bounds
+    theta_sum <- sum(modglmm$theta[2:length(modglmm$theta)])
+    if (theta_sum <= 0 || theta_sum > 1 || !modglmm$converged) {
+      cat("Initial model failed (convergence: ", modglmm$converged, ", theta sum: ", theta_sum, ")\n")
+      cat("Retrying with all covariates as offset...\n")
+      
+      # Remove failed initial model files
+      remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+      
+      # Retry with offset
+      opt$isCovariateOffset <- TRUE
+      args_list$isCovariateOffset <- opt$isCovariateOffset
+      
+      set.seed(1)
+      tryCatch({
+        do.call(fitNULLGLMM_multiV, args_list)
+      }, error = function(e) {
+        message("Offset model also failed with error: ", e$message)
+        fit_success <<- FALSE
+        # Clean up any partial output files from failed retry
+        remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+      })
     }
+  } else {
+    # If we started with offset, just check convergence and retry with more iterations if needed
+    my_env <- new.env()
+    load(paste0(opt$outputPrefix, ".rda"), envir = my_env)
+    modglmm <- my_env$modglmm
+    
+    if(!modglmm$converged){
+      cat("Model didn't converge successfully. Trying with increased maxiter (", opt$maxiter + 500, ")\n")
+      opt$maxiter = opt$maxiter + 500
+      args_list$maxiter <- opt$maxiter
+      
+      # Remove failed files before retry
+      remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+      
+      tryCatch({
+        do.call(fitNULLGLMM_multiV, args_list)
+      }, error = function(e) {
+        message("Retry with increased iterations also failed: ", e$message)
+        fit_success <<- FALSE
+        # Clean up any partial output files from failed retry
+        remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+      })
+    }
+  }
+} else {
+  # Initial fitting completely failed, try with offset
+  cat("Initial model fitting failed completely\n")
+  if (!opt$isCovariateOffset) {
+    cat("Trying with all covariates as offset...\n")
+    opt$isCovariateOffset <- TRUE
+    args_list$isCovariateOffset <- opt$isCovariateOffset
+    
+    tryCatch({
+      do.call(fitNULLGLMM_multiV, args_list)
+      fit_success <<- TRUE  # Mark as successful if offset works
+    }, error = function(e) {
+      message("Offset model also failed with error: ", e$message)
+      fit_success <<- FALSE
+      # Clean up any partial output files from failed offset attempt
+      remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+    })
   }
 }
 
+# Final convergence check and cleanup
+final_convergence_check <- function() {
+  rda_file <- paste0(opt$outputPrefix, ".rda")
+  if (file.exists(rda_file)) {
+    tryCatch({
+      my_env <- new.env()
+      load(rda_file, envir = my_env)
+      modglmm <- my_env$modglmm
+      
+      if (!is.null(modglmm)) {
+        # Check both convergence flag and variance component bounds
+        theta_sum <- sum(modglmm$theta[2:length(modglmm$theta)])
+        theta_valid <- (theta_sum > 0 && theta_sum <= 1)
+        
+        if (!modglmm$converged || !theta_valid) {
+          cat("Final check: Model convergence failed (converged:", modglmm$converged, ", theta_sum:", theta_sum, "). Removing output files.\n")
+          remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+          
+          details_msg <- sprintf("Model failed (converged: %s, theta_sum: %.6f) and output files removed", 
+                               modglmm$converged, theta_sum)
+          return(list(status = "FAILED", details = details_msg))
+        }
+      } else {
+        cat("Final check: Model object not found. Removing output files.\n")
+        remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+        return(list(status = "FAILED", details = "Model object not found and output files removed"))
+      }
+      return(NULL)
+    }, error = function(e) {
+      return(list(status = "FAILED", details = paste("Error in final check:", e$message)))
+    })
+  }
+  return(NULL)
+}
+
+final_check_result <- final_convergence_check()
+
+# Generate comprehensive status report
+cat("\n=== Generating Final Status Report ===\n")
+
+# Handle case where initial fitting completely failed
+if (!fit_success && !is.null(initial_error)) {
+  # Ensure all output files are cleaned up for complete failure
+  remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
+  
+  final_status <- list(
+    status = "FAILED", 
+    details = paste("Initial model fitting failed with error:", initial_error)
+  )
+  check_convergence_and_write_status(opt$outputPrefix, args_list, package_version, final_status)
+} else {
+  # Normal status checking
+  status_result <- check_convergence_and_write_status(opt$outputPrefix, args_list, package_version, final_check_result)
+  
+  # Print final summary
+  cat("\n=== FINAL SUMMARY ===\n")
+  cat(sprintf("Analysis Status: %s\n", status_result$convergence_status))
+  cat(sprintf("Details: %s\n", status_result$convergence_details))
+  if (status_result$convergence_status == "SUCCESS") {
+    cat("✓ Step 1 completed successfully!\n")
+    cat(sprintf("✓ Model file: %s\n", status_result$final_model_file))
+    if (status_result$variance_ratio_file != "") {
+      cat(sprintf("✓ Variance ratio file: %s\n", status_result$variance_ratio_file))
+    }
+  } else {
+    cat("✗ Step 1 failed. Check status file for details.\n")
+  }
+  cat(sprintf("📄 Status report: %s.status.txt\n", opt$outputPrefix))
+}
 
 if (BLASctl_installed) {
   # Restore originally configured BLAS thread count

@@ -353,6 +353,10 @@ set_store_sigma <- function(isstoreSigma) {
     invisible(.Call('_SAIGEQTL_set_store_sigma', PACKAGE = 'SAIGEQTL', isstoreSigma))
 }
 
+set_solverMethod <- function(solverMethod) {
+    invisible(.Call('_SAIGEQTL_set_solverMethod', PACKAGE = 'SAIGEQTL', solverMethod))
+}
+
 set_num_Kmat <- function(t_num_Kmat) {
     invisible(.Call('_SAIGEQTL_set_num_Kmat', PACKAGE = 'SAIGEQTL', t_num_Kmat))
 }
