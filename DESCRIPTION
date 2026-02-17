@@ -8,7 +8,7 @@ Authors@R: c(
     person("Wei", "Zhou", email = "wzhou@broadinstitute.org", role = c("cre", "aut")),
     person("Anna", "Cuomo", email = "annacuomo92@gmail.com", role = c("aut", "ctb")),
     person("Linfeng", "Hu", email = "lhu@broadinstitute.org", role = c("aut", "ctb"))
-)
+    )
 Description: Implements the Scalable and Accurate Implementation of
     Generalized Poisson mixed model for expression quantitative trait locus
     (eQTL) mapping at the single-cell level. Provides functions for fitting

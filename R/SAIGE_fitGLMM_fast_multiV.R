@@ -1121,7 +1121,9 @@ print(start_7 - start_0)
 
     tau <- rep(0, k)
     fixtau <- rep(0, k)
-    # tauInit = tau
+    if (length(tauInit) < k) {
+      tauInit <- c(tauInit, rep(0, k - length(tauInit)))
+    }
 
     set_isSparseGRM(useSparseGRMtoFitNULL)
     set_useGRMtoFitNULL(useGRMtoFitNULL)
@@ -2203,6 +2205,7 @@ glmmkin.ai_PCG_Rcpp_multiV <- function(bedFile, bimFile, famFile, Xorig, isCovar
   if (is.null(subPheno$IndexGeno)) {
     subSampleInGeno <- subPheno$IndexPheno
   }
+  subSampleInGeno <- subSampleInGeno[!duplicated(subSampleInGeno)]
   if (verbose) {
     print("Start reading genotype plink file here")
   }
