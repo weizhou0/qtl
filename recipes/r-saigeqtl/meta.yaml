@@ -13,8 +13,7 @@ source:
   sha256: {{ sha }}
   patches:
     - patches/0001-use-shared-libs-in-makevars.patch
-    - patches/0002-suggest-fastSave-in-description.patch
-    - patches/0003-revert-pixi-shebangs.patch
+    - patches/0002-revert-pixi-shebangs.patch
 
 build:
   number: 0
@@ -46,7 +45,7 @@ requirements:
     - r-matrix
     - r-optparse
     - r-qlcmatrix
-    - r-rcpp
+    - r-rcpp >=1.0.7
     - r-rcpparmadillo >=0.10.7.5
     - r-rcppeigen
     - r-rcppparallel

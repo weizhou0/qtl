@@ -3,7 +3,7 @@ index 21e99a10..6f73946f 100644
 --- a/extdata/makeGroupFile.R
 +++ b/extdata/makeGroupFile.R
 @@ -1,4 +1,4 @@
--#!/usr/bin/env -S pixi run --manifest-path /app/pixi.toml Rscript
+-#!/usr/bin/env -S pixi run --manifest-path ../pixi.toml Rscript
 +#!/usr/bin/env Rscript
  
  options(stringsAsFactors = F)
@@ -13,7 +13,7 @@ index 8bec4453..878083a8 100644
 --- a/extdata/step1_fitNULLGLMM_qtl.R
 +++ b/extdata/step1_fitNULLGLMM_qtl.R
 @@ -1,4 +1,4 @@
--#!/usr/bin/env -S pixi run --manifest-path /app/pixi.toml Rscript
+-#!/usr/bin/env -S pixi run --manifest-path ../pixi.toml Rscript
 +#!/usr/bin/env Rscript
  
  options(stringsAsFactors = F)
@@ -23,7 +23,7 @@ index 2ae86292..dc511c61 100644
 --- a/extdata/step2_tests_qtl.R
 +++ b/extdata/step2_tests_qtl.R
 @@ -1,4 +1,4 @@
--#!/usr/bin/env -S pixi run --manifest-path /app/pixi.toml Rscript
+-#!/usr/bin/env -S pixi run --manifest-path ../pixi.toml Rscript
 +#!/usr/bin/env Rscript
  
  # options(stringsAsFactors=F, scipen = 999)
@@ -33,7 +33,7 @@ index d8037e70..bbe986e8 100644
 --- a/extdata/step3_gene_pvalue_qtl.R
 +++ b/extdata/step3_gene_pvalue_qtl.R
 @@ -1,4 +1,4 @@
--#!/usr/bin/env -S pixi run --manifest-path /app/pixi.toml Rscript
+-#!/usr/bin/env -S pixi run --manifest-path ../pixi.toml Rscript
 +#!/usr/bin/env Rscript
  
  # options(stringsAsFactors=F, scipen = 999)
