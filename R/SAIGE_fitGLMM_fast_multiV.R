@@ -123,7 +123,7 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
                                isExportResiduals = FALSE,
                                varRatioBatchSize = 10,
                                solverMethod = "auto") {
-      start_0 <- proc.time()
+  start_0 <- proc.time()
   ## set up output files
   modelOut <- paste0(outputPrefix, ".rda")
 
@@ -1467,7 +1467,9 @@ print(start_7 - start_0)
       subSampleInGeno_unique <- subSampleInGeno[!duplicated(subSampleInGeno)]
 
       # setgeno(bedFile, bimFile, famFile, subSampleInGeno, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
-      setgeno(bedFile, bimFile, famFile, subSampleInGeno_unique, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+      if(!useGRMtoFitNULL | useSparseGRMtoFitNULL){
+        setgeno(bedFile, bimFile, famFile, subSampleInGeno_unique, indicatorGenoSamplesWithPheno, memoryChunk, isDiagofKinSetAsOne)
+      }
     }
   } else {
     cat("Skip fitting the NULL GLMM\n")
