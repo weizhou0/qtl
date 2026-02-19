@@ -2,8 +2,8 @@ Package: SAIGEQTL
 Type: Package
 Title: Scalable and Accurate Expression Quantitative Trait Locus Mapping
     for Single-Cell Studies
-Version: 0.3.5
-Date: 2025-12-08
+Version: 0.3.5.1
+Date: 2026-2-19
 Authors@R: c(
     person("Wei", "Zhou", email = "wzhou@broadinstitute.org", role = c("cre", "aut")),
     person("Anna", "Cuomo", email = "annacuomo92@gmail.com", role = c("aut", "ctb")),

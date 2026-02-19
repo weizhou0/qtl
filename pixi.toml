@@ -2,7 +2,7 @@
 channels = ["conda-forge", "bioconda", "r"]
 name = "SAIGEQTL"
 platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64"]
-version = "0.3.5"
+version = "0.3.5.1"
 
 [tasks]
 install-github-deps = "Rscript -e 'remotes::install_github(\"barkasn/fastSave\")'"
