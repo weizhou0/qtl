@@ -4692,9 +4692,8 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
                 // SMW (Sherman-Morrison-Woodbury) method (g_solverMethod == 2 or default)
                 auto n = g_I_start_indices.n_elem - 1;
 
-                // OpenMP path is numerically unstable for repeated-cell count fits in practice.
-                // Keep deterministic serial execution for this SMW branch.
-                bool use_parallel = false;
+                // Use OpenMP only if we have more than 1 thread and sufficient work to parallelize
+                bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
 
 #ifdef _OPENMP
                 if (use_parallel) {
@@ -7884,8 +7883,8 @@ arma::fvec getprodImatbVec(arma::fvec & bVec) {
     auto n = g_I_start_indices.n_elem - 1;
     arma::fvec resultVec(g_I_longl_mat.n_rows, arma::fill::zeros);
 
-    // Keep deterministic serial execution. OpenMP versions can change null-fit outcomes.
-    bool use_parallel = false;
+    // Use OpenMP only if we have more than 1 thread and sufficient work to parallelize
+    bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
     
 #ifdef _OPENMP
     if (use_parallel) {
@@ -7928,15 +7927,54 @@ arma::fvec getprodImatbVec(arma::fvec & bVec) {
 arma::fvec getprodImattbVec(arma::fvec & bVec){
     auto n = g_I_start_indices.n_elem - 1;
     arma::fvec resultVec(n, arma::fill::zeros);
-    resultVec = g_I_longl_mat_t * bVec;
-    return(resultVec);
+    if(g_omp_num_threads > 1){
+        omp_set_num_threads(g_omp_num_threads);
+        #pragma omp parallel
+        {
+                auto thread_idx = omp_get_thread_num();
+                for(int j = thread_idx; j < n; j += g_omp_num_threads) {
+                        float sum = 0;
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j + 1];
+                        for(size_t k = start; k < end; k++) {
+                                sum += bVec[k];
+                        }
+                        //for(size_t k = start; k < end; k++) {
+                        resultVec[j] = sum;
+                        //}
+                }
+        }
+     }else{
+        resultVec = g_I_longl_mat_t * bVec;
+     }
+        return(resultVec);
 }
 
 
 // [[Rcpp::export]]
 arma::fvec getprodImatImattbVec(arma::fvec & bVec){
     arma::fvec resultVec(bVec.n_elem, arma::fill::zeros);
-    arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
-    resultVec = g_I_longl_mat * resultVec0;
-    return(resultVec);
+    if(g_omp_num_threads > 1){
+        omp_set_num_threads(g_omp_num_threads);
+        auto n = g_I_start_indices.n_elem - 1;
+        #pragma omp parallel
+        {
+                auto thread_idx = omp_get_thread_num();
+                for(int j = thread_idx; j < n; j += g_omp_num_threads) {
+                        float sum = 0;
+                        size_t start = g_I_start_indices[j];
+                        size_t end = g_I_start_indices[j + 1];
+                        for(size_t k = start; k < end; k++) {
+                                sum += bVec[k];
+                        }
+                        for(size_t k = start; k < end; k++) {
+                                resultVec[k] += sum;
+                        }
+                }
+        }
+     }else{
+	arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
+	resultVec = g_I_longl_mat * resultVec0;
+     }
+        return(resultVec);
 }
