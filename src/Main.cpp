@@ -9,6 +9,7 @@
 #include <cstdio>         // std::remove
 #include <fstream>
 #include <string.h>
+#include <algorithm>
 // Currently, omp does not work well, will check it later
 // error: SET_VECTOR_ELT() can only be applied to a 'list', not a 'character'
 // remove all Rcpp::List to check if it works
@@ -4691,8 +4692,9 @@ arma::fvec getPCG1ofSigmaAndVector_multiV(arma::fvec& wVec,  arma::fvec& tauVec,
                 // SMW (Sherman-Morrison-Woodbury) method (g_solverMethod == 2 or default)
                 auto n = g_I_start_indices.n_elem - 1;
 
-                // Use OpenMP only if we have more than 1 thread and sufficient work to parallelize
-                bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
+                // OpenMP path is numerically unstable for repeated-cell count fits in practice.
+                // Keep deterministic serial execution for this SMW branch.
+                bool use_parallel = false;
 
 #ifdef _OPENMP
                 if (use_parallel) {
@@ -4892,10 +4894,19 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
         arma::fvec Dtau(AI1.n_cols);
         //score1.print("score");
         try{
-                Dtau = arma::solve(AI1, score1, arma::solve_opts::allow_ugly);
+                arma::vec Dtau_d = arma::solve(
+                        arma::conv_to<arma::mat>::from(AI1),
+                        arma::conv_to<arma::vec>::from(score1),
+                        arma::solve_opts::allow_ugly
+                );
+                Dtau = arma::conv_to<arma::fvec>::from(Dtau_d);
         }
         catch(std::runtime_error){
                 std::cout << "arma::solve(AI, score): AI seems singular, using less variant components matrix is suggested." << std::endl;
+                Dtau.zeros();
+        }
+        if(!Dtau.is_finite()){
+                std::cout << "arma::solve(AI, score): non-finite update detected. Setting Dtau to zero." << std::endl;
                 Dtau.zeros();
         }
         //std::cout << "check 3" << std::endl;
@@ -4913,7 +4924,6 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
         // fill dtau using dtau_pre, padding 0
         int i2 = 0;
         for(int i=0; i<k1; i++){
-                std::cout << "i " << i << std::endl;
                 if(fixtauVec(i)==0){ // not fixed
                         Dtau_k1(i) = Dtau(i2);
                         i2++;
@@ -4935,6 +4945,17 @@ int nrun, int maxiterPCG, float tolPCG, float tol, float traceCVcutoff, bool LOC
                         tauVec = tau0 + step*Dtau_k1;
                         tauVec.elem( arma::find(tauVec < tol && tau0 < tol) ).zeros();
                 } // end while
+                // For the common two-component model with fixed residual variance (tau[0]=1),
+                // keep random-effect variance inside the same admissible range used in Step 1 checks.
+                if(tauVec.n_elem == 2 && fixtauVec.n_elem == 2 && fixtauVec(0) == 1 && fixtauVec(1) == 0){
+                        const float tau_lower = 1e-6f;
+                        const float tau_upper = 1.0f - 1e-6f;
+                        while((tauVec(1) <= tau_lower || tauVec(1) >= tau_upper) && step > 1e-8f){
+                                step = step * 0.5f;
+                                tauVec = tau0 + step * Dtau_k1;
+                        }
+                        tauVec(1) = std::min(std::max(tauVec(1), tau_lower), tau_upper);
+                }
                 tauVec.elem( arma::find(tauVec < tol) ).zeros();
         }else{
                 fixrhoidx0 = updatefixrhoidx0(tau0, tol);
@@ -7863,8 +7884,8 @@ arma::fvec getprodImatbVec(arma::fvec & bVec) {
     auto n = g_I_start_indices.n_elem - 1;
     arma::fvec resultVec(g_I_longl_mat.n_rows, arma::fill::zeros);
 
-    // Use OpenMP only if we have more than 1 thread and sufficient work to parallelize
-    bool use_parallel = (g_omp_num_threads > 1) && (n > 100);
+    // Keep deterministic serial execution. OpenMP versions can change null-fit outcomes.
+    bool use_parallel = false;
     
 #ifdef _OPENMP
     if (use_parallel) {
@@ -7907,54 +7928,15 @@ arma::fvec getprodImatbVec(arma::fvec & bVec) {
 arma::fvec getprodImattbVec(arma::fvec & bVec){
     auto n = g_I_start_indices.n_elem - 1;
     arma::fvec resultVec(n, arma::fill::zeros);
-    if(g_omp_num_threads > 1){
-        omp_set_num_threads(g_omp_num_threads);
-        #pragma omp parallel
-        {
-                auto thread_idx = omp_get_thread_num();
-                for(int j = thread_idx; j < n; j += g_omp_num_threads) {
-                        float sum = 0;
-                        size_t start = g_I_start_indices[j];
-                        size_t end = g_I_start_indices[j + 1];
-                        for(size_t k = start; k < end; k++) {
-                                sum += bVec[k];
-                        }
-                        //for(size_t k = start; k < end; k++) {
-                        resultVec[j] = sum;
-                        //}
-                }
-        }
-     }else{
-        resultVec = g_I_longl_mat_t * bVec;
-     }
-        return(resultVec);
+    resultVec = g_I_longl_mat_t * bVec;
+    return(resultVec);
 }
 
 
 // [[Rcpp::export]]
 arma::fvec getprodImatImattbVec(arma::fvec & bVec){
     arma::fvec resultVec(bVec.n_elem, arma::fill::zeros);
-    if(g_omp_num_threads > 1){
-        omp_set_num_threads(g_omp_num_threads);
-        auto n = g_I_start_indices.n_elem - 1;
-        #pragma omp parallel
-        {
-                auto thread_idx = omp_get_thread_num();
-                for(int j = thread_idx; j < n; j += g_omp_num_threads) {
-                        float sum = 0;
-                        size_t start = g_I_start_indices[j];
-                        size_t end = g_I_start_indices[j + 1];
-                        for(size_t k = start; k < end; k++) {
-                                sum += bVec[k];
-                        }
-                        for(size_t k = start; k < end; k++) {
-                                resultVec[k] += sum;
-                        }
-                }
-        }
-     }else{
-	arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
-	resultVec = g_I_longl_mat * resultVec0;
-     }
-        return(resultVec);
+    arma::fvec resultVec0 = g_I_longl_mat_t * bVec;
+    resultVec = g_I_longl_mat * resultVec0;
+    return(resultVec);
 }
