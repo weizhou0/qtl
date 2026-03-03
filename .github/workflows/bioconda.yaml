@@ -22,19 +22,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-13, macos-latest, ubuntu-24.04-arm]
+        os: [ubuntu-latest, macos-15-intel, macos-latest, ubuntu-24.04-arm]
         packagename: ["r-saigeqtl"]
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Miniforge
         uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: biobuild
           channels: conda-forge,bioconda,defaults
-          auto-activate-base: false
           miniforge-version: latest
           use-mamba: true
 
@@ -44,7 +43,7 @@ jobs:
         shell: bash
 
       - name: Cache Conda env
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.CONDA }}/envs
           key:
@@ -57,7 +56,7 @@ jobs:
       - name: Install biobuild environment
         shell: bash -el {0}
         run:
-          mamba create -y -n biobuild -c conda-forge -c bioconda -c nodefaults bioconda-utils anaconda-client
+          mamba create -y -n biobuild -c conda-forge -c bioconda -c nodefaults bioconda-utils
         if: steps.cache.outputs.cache-hit != 'true'
     
       - name: Set package metadata
@@ -87,7 +86,7 @@ jobs:
 
       - name: Upload built package as GitHub artifact
         id: artifact-upload
-        uses: "actions/upload-artifact@v4"
+        uses: "actions/upload-artifact@v7"
         with:
           name: ${{ matrix.packagename }}-${{ matrix.os }}
           path: ${{ env.CONDA }}/envs/biobuild/conda-bld/

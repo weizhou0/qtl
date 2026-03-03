@@ -1,10 +1,14 @@
 diff --git a/src/Makevars b/src/Makevars
-index f1e54541..5345d7b5 100644
+index bac0c4e9..fb2285e3 100644
 --- a/src/Makevars
 +++ b/src/Makevars
-@@ -1,12 +1,9 @@
+@@ -1,17 +1,10 @@
  PKG_CPPFLAGS = \
  -std=c++14 \
+--isystem ../.pixi/envs/default/include \
+--I ../.pixi/envs/default/lib/R/library/RcppNumerical/include \
+--I ../.pixi/envs/default/lib/R/library/RcppArmadillo/include \
+--I ../.pixi/envs/default/lib/R/library/RcppEigen/include \
 --I ../thirdParty/cget/include \
 --I ../thirdParty/cget/lib \
 --I ../thirdParty/cget/lib64 \
@@ -12,6 +16,8 @@ index f1e54541..5345d7b5 100644
  
  CXX_STD = CXX14
  
--PKG_LIBS = $(ZLIB_LIB) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -L../thirdParty/cget/lib/ -L../thirdParty/cget/lib64/ -lsuperlu -lzstd -L../lib64 -llapack
-+PKG_LIBS = $(ZLIB_LIB) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)  -lsuperlu -lzstd -llapack
+-PKG_LIBS = $(ZLIB_LIB) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -L../thirdParty/cget/lib/ -L../thirdParty/cget/lib64/ -lsuperlu -lzstd -L../lib64 -llapack -fopenmp
++PKG_LIBS = $(ZLIB_LIB) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) -lsuperlu -lzstd -llapack -fopenmp
  PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()")
+ 
+ 

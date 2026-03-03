@@ -13,8 +13,8 @@ source:
   sha256: {{ sha }}
   patches:
     - patches/0001-use-shared-libs-in-makevars.patch
-    - patches/0002-suggest-fastSave-in-description.patch
-    - patches/0003-revert-pixi-shebangs.patch
+    - patches/0002-revert-pixi-shebangs.patch
+    - patches/0003-link-import-DESCRIPTION.patch
 
 build:
   number: 0
@@ -46,7 +46,7 @@ requirements:
     - r-matrix
     - r-optparse
     - r-qlcmatrix
-    - r-rcpp
+    - r-rcpp >=1.0.7
     - r-rcpparmadillo >=0.10.7.5
     - r-rcppeigen
     - r-rcppparallel
@@ -92,7 +92,6 @@ test:
     - step2_tests_qtl.R --help
     - step3_gene_pvalue_qtl.R --help
     - makeGroupFile.R --help
-    - createSparseGRM.R --help
 
 about:
   home: https://github.com/{{ username }}/SAIGEQTL
