@@ -1341,7 +1341,7 @@ print(start_7 - start_0)
       # }
     }
     # }
-    #save(modglmm, file = modelOut)
+    save(modglmm, file = modelOut)
     tau <- modglmm$theta
     alpha0 <- modglmm$coefficients
 
