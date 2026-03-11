@@ -631,6 +631,7 @@ if(FALSE){
         by.x = "IID", by.y = "IIDgeno"
       )
       dataMerge_sort <- dataMerge[with(dataMerge, order(IndexGeno)), ]
+      dataMerge_sort$IIDgeno <- dataMerge_sort$IID
       # dataMerge_sort = dataMerge[with(dataMerge, order(IndexPheno)),]
     } else {
       dataMerge_sort <- mmat_nomissing
@@ -1340,7 +1341,7 @@ print(start_7 - start_0)
       # }
     }
     # }
-    # save(modglmm, file = modelOut)
+    save(modglmm, file = modelOut)
     tau <- modglmm$theta
     alpha0 <- modglmm$coefficients
 
@@ -2547,7 +2548,7 @@ glmmkin.ai_PCG_Rcpp_multiV <- function(bedFile, bimFile, famFile, Xorig, isCovar
         cat("leave chromosome ", j, " out\n")
         setStartEndIndex(startIndex, endIndex, j - 1)
         t_begin_Get_Coef_LOCO <- proc.time()
-        re.coef_LOCO <- Get_Coef_multiV(y, X, tau, family, alpha, eta, offset, verbose = verbose, maxiterPCG = maxiterPCG, tolPCG = tolPCG, maxiter = maxiter, LOCO = TRUE, var_weights = varWeights)
+        re.coef_LOCO <- Get_Coef_multiV(y, X, tau, family, alpha, eta, offset, verbose = verbose, maxiterPCG = maxiterPCG, tolPCG = tolPCG, maxiter = maxiter, LOCO = TRUE, var_weights = var_weights)
         t_end_Get_Coef_LOCO <- proc.time()
         cat("t_end_Get_Coef_LOCO - t_begin_Get_Coef_LOCO\n")
         print(t_end_Get_Coef_LOCO - t_begin_Get_Coef_LOCO)
