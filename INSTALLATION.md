@@ -219,7 +219,7 @@ step3_gene_pvalue_qtl.R --library='/path/to/your/R/library' [other_options]
 # Option 1: If you have conda/mamba installed
 conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 
-# Option 2: Create new environment with SAIGEQTL
+# Option 2: Create new environment with SAIGEQTL (recommended over option 1 to avoid conflicts with old packages)
 conda create -n saigeqtl -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 conda activate saigeqtl
 
