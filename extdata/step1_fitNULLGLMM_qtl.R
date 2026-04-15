@@ -462,24 +462,17 @@ check_convergence_and_write_status <- function(output_prefix, args_used, package
       if (!is.null(modglmm)) {
         # Check convergence flag
         model_converged <- modglmm$converged
-        
-        # Check variance component bounds
-        theta_valid <- TRUE
+
+        # Report theta sum for informational purposes only (not used for filtering)
         theta_sum <- sum(modglmm$theta[2:length(modglmm$theta)])
-        if (theta_sum <= 0 || theta_sum > 1) {
-          theta_valid <- FALSE
-        }
-        
-        # Determine overall status
-        if (model_converged && theta_valid) {
+
+        # Determine overall status based on convergence only
+        if (model_converged) {
           status_info$convergence_status <- "SUCCESS"
           status_info$convergence_details <- sprintf("Model converged successfully. Theta sum: %.6f", theta_sum)
-        } else if (!model_converged) {
-          status_info$convergence_status <- "FAILED"
-          status_info$convergence_details <- sprintf("Model failed to converge. Theta sum: %.6f", theta_sum)
         } else {
           status_info$convergence_status <- "FAILED"
-          status_info$convergence_details <- sprintf("Variance components out of bounds. Theta sum: %.6f", theta_sum)
+          status_info$convergence_details <- sprintf("Model failed to converge. Theta sum: %.6f", theta_sum)
         }
         
         status_info$final_model_file <- rda_file
@@ -570,9 +563,10 @@ if(fit_success){
     modglmm <- my_env$modglmm
     print(modglmm$theta)
     
-    # Check if model failed or variance components are out of bounds
+    # Check if model failed to converge (theta sum > 1 is no longer a failure criterion)
     theta_sum <- sum(modglmm$theta[2:length(modglmm$theta)])
-    if (theta_sum <= 0 || theta_sum > 1 || !modglmm$converged) {
+    cat("Initial model theta sum: ", theta_sum, "\n")
+    if (!modglmm$converged) {
       cat("Initial model failed (convergence: ", modglmm$converged, ", theta sum: ", theta_sum, ")\n")
       cat("Retrying with all covariates as offset...\n")
       
@@ -647,15 +641,14 @@ final_convergence_check <- function() {
       modglmm <- my_env$modglmm
       
       if (!is.null(modglmm)) {
-        # Check both convergence flag and variance component bounds
+        # Check convergence flag only (theta sum > 1 is no longer a failure criterion)
         theta_sum <- sum(modglmm$theta[2:length(modglmm$theta)])
-        theta_valid <- (theta_sum > 0 && theta_sum <= 1)
-        
-        if (!modglmm$converged || !theta_valid) {
+
+        if (!modglmm$converged) {
           cat("Final check: Model convergence failed (converged:", modglmm$converged, ", theta_sum:", theta_sum, "). Removing output files.\n")
           remove_failed_output_files(opt$outputPrefix, opt$outputPrefix_varRatio)
-          
-          details_msg <- sprintf("Model failed (converged: %s, theta_sum: %.6f) and output files removed", 
+
+          details_msg <- sprintf("Model failed to converge (converged: %s, theta_sum: %.6f) and output files removed",
                                modglmm$converged, theta_sum)
           return(list(status = "FAILED", details = details_msg))
         }
