@@ -11,5 +11,5 @@ fi
 $R CMD INSTALL --build .
 
 pushd extdata
-install "step1_fitNULLGLMM_qtl.R" "step2_tests_qtl.R" "step3_gene_pvalue_qtl.R" "makeGroupFile.R" "${PREFIX}/bin"
+install "step1_fitNULLGLMM_qtl.R" "step2_tests_qtl.R" "step2b_QC_qtl.R" "step3_gene_pvalue_qtl.R" "makeGroupFile.R" "${PREFIX}/bin"
 popd

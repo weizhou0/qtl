@@ -28,6 +28,16 @@ index 2ae86292..dc511c61 100644
  
  # options(stringsAsFactors=F, scipen = 999)
  options(stringsAsFactors = F)
+diff --git a/extdata/step2b_QC_qtl.R b/extdata/step2b_QC_qtl.R
+index 2ae86292..dc511c61 100644
+--- a/extdata/step2b_QC_qtl.R
++++ b/extdata/step2b_QC_qtl.R
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env -S pixi run --manifest-path ../pixi.toml Rscript
++#!/usr/bin/env Rscript
+ 
+ options(stringsAsFactors = F)
+ suppressPackageStartupMessages({
 diff --git a/extdata/step3_gene_pvalue_qtl.R b/extdata/step3_gene_pvalue_qtl.R
 index d8037e70..bbe986e8 100644
 --- a/extdata/step3_gene_pvalue_qtl.R

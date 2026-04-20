@@ -26,6 +26,7 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
@@ -90,6 +91,7 @@ test:
     - $R -e "library(\"SAIGEQTL\")"
     - step1_fitNULLGLMM_qtl.R --help
     - step2_tests_qtl.R --help
+    - step2b_QC_qtl.R --help
     - step3_gene_pvalue_qtl.R --help
     - makeGroupFile.R --help
 
