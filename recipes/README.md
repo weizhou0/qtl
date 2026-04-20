@@ -23,7 +23,7 @@ Occasional maintenance of the bioconda recipe must be performed. This may includ
 
 1. Updating the list of dependencies in the `requirements` section of the [meta.yaml](r-saigeqtl/meta.yaml) file when new packages are added or old ones removed
 2. Updating the patch files in the [patches/](r-saigeqtl/patches) directory whenever a substantial change is made to the `DESCRIPTION` or `src/Makevars` files
-3. Updating the list of `.R` scripts in the `test` section of the [meta.yaml](r-saigeqtl/meta.yaml) file and in the [build.sh](r-saigeqtl/build.sh) file when new scripts are added or old ones removed
+3. Updating the list of `.R` scripts in the `test` section of the [meta.yaml](r-saigeqtl/meta.yaml) file and in the [build.sh](r-saigeqtl/build.sh) file when new scripts are added or old ones removed. In this case, the shebang of the `.R` script might also need to be patched.
 
 You can search online for help with any of these.
 For example, you can refer to [this tutorial](https://bioconda.github.io/tutorials/2024-debugging-bioinformatic-software-to-bioconda.html) for debugging broken recipes on the Bioconda website.
