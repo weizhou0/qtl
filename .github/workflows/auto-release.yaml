@@ -92,7 +92,7 @@ jobs:
             
             **📦 Conda:**
             ```bash
-            conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
+            conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl==${{ needs.check-version-change.outputs.new_version }}'
             ```
             
             **⚡ Binary (Linux):**
