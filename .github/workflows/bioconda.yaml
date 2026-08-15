@@ -44,7 +44,7 @@ jobs:
         shell: bash
 
       - name: Cache Conda env
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ env.CONDA }}/envs
           key:
@@ -83,7 +83,7 @@ jobs:
       - name: Run test
         shell: bash -el {0}
         run: |
-          bioconda-utils build ${{ (startsWith(matrix.os, 'ubuntu') && format('--docker --mulled-test{0}', (endsWith(matrix.os, '-arm') && ' --docker-base-image quay.io/bioconda/bioconda-utils-build-env-cos7-aarch64') || '')) || ''  }} --packages ${{ matrix.packagename }}
+          bioconda-utils build ${{ (startsWith(matrix.os, 'ubuntu') && format('--docker --mulled-test --docker-base-image quay.io/bioconda/bioconda-utils-build-env-cos7{0}', (endsWith(matrix.os, '-arm') && '-aarch64') || '')) || ''  }} --packages ${{ matrix.packagename }}
 
       - name: Upload built package as GitHub artifact
         id: artifact-upload
