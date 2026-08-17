@@ -52,7 +52,7 @@ CONDA_OVERRIDE_GLIBC=2.28 pixi run R -e "install.packages('${BINARY_FILE}', repo
 **🥉 Moderate: Conda/Bioconda (Linux, macOS, managed environment):**
 ```bash
 # Conda handles all dependencies automatically
-conda install -c aryarm r-saigeqtl
+conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 ```
 
 **🔧 Moderate: Pixi Source (Linux, macOS, managed environment):**
@@ -217,16 +217,16 @@ step3_gene_pvalue_qtl.R --library='/path/to/your/R/library' [other_options]
 **Installation:**
 ```bash
 # Option 1: If you have conda/mamba installed
-conda install -c aryarm r-saigeqtl
+conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 
-# Option 2: Create new environment with SAIGEQTL
-conda create -n saigeqtl -c aryarm r-saigeqtl
+# Option 2: Create new environment with SAIGEQTL (recommended over option 1 to avoid conflicts with old packages)
+conda create -n saigeqtl -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 conda activate saigeqtl
 
 # Option 3: If you don't have conda, install miniconda first
 curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh -b
-~/miniconda3/bin/conda install -c aryarm r-saigeqtl
+~/miniconda3/bin/conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 ```
 
 **Usage:**
@@ -397,7 +397,7 @@ wsl --install
 
 # 2. Open WSL2 terminal and use any Linux installation method:
 # For example, using conda:
-conda install -c aryarm r-saigeqtl
+conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 
 # Or binary installation:
 curl -fsSL https://pixi.sh/install.sh | bash && source ~/.bashrc
@@ -588,7 +588,7 @@ docker run --rm weizhou0/saigeqtl:latest step1_fitNULLGLMM_qtl.R --help
 ### Linux & macOS:
 ```bash
 # Conda (easy, cross-platform)
-conda install -c aryarm r-saigeqtl
+conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 
 # Standard installation (source compilation)
 R -e "if (!require('remotes')) install.packages('remotes'); remotes::install_github('weizhou0/qtl')"

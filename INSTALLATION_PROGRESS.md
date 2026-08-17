@@ -156,7 +156,7 @@ If pixi continues to have issues:
 docker run --rm weizhou0/saigeqtl:latest step1_fitNULLGLMM_qtl.R --help
 
 # Conda (usually faster)
-conda install -c aryarm r-saigeqtl
+conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl'
 
 # Binary installer (uses pixi under hood, but optimized)
 Rscript scripts/install_binary.R

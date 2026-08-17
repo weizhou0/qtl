@@ -45,8 +45,8 @@ jobs:
         id: get-version
         run: |
           desc <- read.dcf("DESCRIPTION")
-          echo "version=${desc[,'Version']}" >> $GITHUB_OUTPUT
-          echo "name=${desc[,'Package']}" >> $GITHUB_OUTPUT
+          cat("version=", desc[,'Version'], "\n", file=Sys.getenv("GITHUB_OUTPUT"), append=TRUE)
+          cat("name=", desc[,'Package'], "\n", file=Sys.getenv("GITHUB_OUTPUT"), append=TRUE)
         shell: Rscript {0}
         
       - name: Build source package
@@ -55,7 +55,7 @@ jobs:
         shell: Rscript {0}
         
       - name: Upload source package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: source-package
           path: "*.tar.gz"
@@ -214,7 +214,7 @@ jobs:
         shell: Rscript {0}
         
       - name: Upload binary artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: binary-${{ matrix.platform }}-r${{ matrix.r-suffix }}
           path: "*_R-*.*"

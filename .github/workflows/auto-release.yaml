@@ -12,6 +12,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   check-version-change:
     runs-on: ubuntu-latest
@@ -89,7 +92,7 @@ jobs:
             
             **📦 Conda:**
             ```bash
-            conda install -c aryarm r-saigeqtl
+            conda install -c conda-forge -c bioconda 'aryarm::r-saigeqtl==${{ needs.check-version-change.outputs.new_version }}'
             ```
             
             **⚡ Binary (Linux):**

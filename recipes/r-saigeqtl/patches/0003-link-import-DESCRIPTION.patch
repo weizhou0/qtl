@@ -1,0 +1,12 @@
+diff --git a/DESCRIPTION b/DESCRIPTION
+index c5798428..ef42e598 100644
+--- a/DESCRIPTION
++++ b/DESCRIPTION
+@@ -44,6 +44,7 @@ LinkingTo:
+     BH,
+     Rcpp,
+     RcppArmadillo (>= 0.10.7.5),
++    RcppNumerical,
+     RcppEigen,
+     RcppParallel
+ VignetteBuilder: knitr
