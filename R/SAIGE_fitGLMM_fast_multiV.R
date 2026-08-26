@@ -291,6 +291,24 @@ fitNULLGLMM_multiV <- function(plinkFile = "",
       cat(nrow(sampleListwithGeno), " samples are in the sparse GRM\n")
     }
   }
+  if (is.null(sampleListwithGeno) && plinkFile != "") {
+    if (!file.exists(famFile)) {
+      stop("ERROR! fam file does not exsit\n")
+    } else {
+      sampleListwithGenov0 <- data.table::fread(famFile, header = F, colClasses = list(character = 1:4), data.table = FALSE)
+      colnames(sampleListwithGenov0) <- c(
+        "FIDgeno", "IIDgeno",
+        "father", "mother", "sex", "phe"
+      )
+      sampleListwithGeno <- NULL
+      sampleListwithGeno$IIDgeno <- sampleListwithGenov0$IIDgeno
+      sampleListwithGeno <- data.frame(sampleListwithGeno)
+      sampleListwithGeno$IndexGeno <- seq(1, nrow(sampleListwithGeno),
+        by = 1
+      )
+      cat(nrow(sampleListwithGeno), " genotype samples will be used to align phenotypes even though variance ratio estimation is skipped\n")
+    }
+  }
   if (!file.exists(phenoFile)) {
     stop("ERROR! phenoFile ", phenoFile, " does not exsit\n")
   } else {
